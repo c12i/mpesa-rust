@@ -7,6 +7,9 @@
 //!
 //! Currently work in progress, documentation will be added every step of the way.
 
+mod constants;
+mod utils;
+
 #[cfg(test)]
 mod tests {
     #[test]
