@@ -1,3 +1,6 @@
+//! # mpesa
+//! A Rust wrapper around the MPESA REST API
+
 #[cfg(test)]
 mod tests {
     #[test]
