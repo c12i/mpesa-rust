@@ -3,16 +3,11 @@
 
 > Instructions for local setup
 
-## Build
+## Install
 
 ```sh
-cargo build
-```
-
-## Usage
-
-```sh
-cargo run
+git clone https://github.com/collinsmuriuki/mpesa-rust.git
+cd mpesa-rust
 ```
 
 ## Run tests
