@@ -15,3 +15,7 @@ cd mpesa-rust
 ```sh
 cargo test
 ```
+
+## Contributing
+
+Fork the repo and create a feature branch. Push your changes and make a PR.

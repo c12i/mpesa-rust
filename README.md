@@ -12,24 +12,50 @@
   </a>
 </p>
 
-> A Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs?shell#introduction) for accessing M-Pesa services.
+## About
 
-## Build
+A Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs?shell#introduction) for accessing M-Pesa services.
+Currently a work in progress project using the following crates:
+```
+reqwest = { version = "0.10", features = ["blocking", "json"] }
+serde = "1.0.114"
+dotenv = "0.15.0"
+``` 
 
-```sh
-cargo build
+## Notes
+> Using reqwest::blocking for early build (will finally switch to async or have both options)
+
+## RoadMap
+
+- [x] Find Http Request Library
+- [x] Make mock Http requests on all endpoints via binary crate
+- [ ] Create Mpesa Client struct
+- [ ] Create Implementation methods + tests
+  - [ ] Implement B2B payment
+  - [ ] Query transaction status
+  - [ ] Simulate C2B Payment
+  - [ ] Query status of Lipa na M-Pesa
+  - [ ] Initiate Lipa na M-Pesa online w/ STK push
+  - [ ] Register C2B Confirmation and Validation URLs
+
+## Install
+`Cargo.toml`
+
+```
+[dependencies]
+mpesa = "0.0.1"
 ```
 
-## Usage
+```rs
+extern crate mpesa;
 
-```sh
-cargo run
+use mpesa::Client;
 ```
 
-## Run tests
-
-```sh
-cargo test
+## Examples
+Coming soon
+```rs
+//..
 ```
 
 ## Author
