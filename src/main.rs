@@ -5,30 +5,35 @@ use dotenv;
 use std::collections::HashMap;
 use std::env;
 
+use mpesa::{map, Mpesa, Environment};
+
 
 use reqwest::blocking::{Client, self};
 
+fn generate_creds() -> std::collections::HashMap<&'static str,&'static str> {
+    map!(
+        "production" => "https://api.safaricom.co.ke",
+        "sandbox" => "https://sandbox.safaricom.co.ke"
+    )
+}
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let constants = generate_creds();
+
     // safaricom credentials
     dotenv::dotenv().ok();
     let username = env::var("CLIENT_KEY").unwrap();
     let password = env::var("CLIENT_SECRET").unwrap();
 
-    let client = Client::new();
-    let resp: HashMap<String,String> = client.get("https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials")
-        .basic_auth(username, Some(password))
-        .send()?
-        .json()?;
-    println!("{:#?}", resp);
+    let client = Mpesa::new(username, password, Environment::Sandbox);
 
-    let t =resp.get("access_token").unwrap();
+    let token = client.auth().unwrap();
 
-    println!("token ==> {:?}", t);
+    println!("token ==> {:?}", token);
 
-    let res = client.post("http://httpbin.org/post")
-        .body("the exact body that is sent")
-        .send()?;
+    // let res = client.post("http://httpbin.org/post")
+    //     .body("the exact body that is sent")
+    //     .send()?;
 
-    println!("{:#?}", res);
+    // println!("{:#?}", res);
     Ok(())
 }
