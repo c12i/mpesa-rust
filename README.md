@@ -47,7 +47,7 @@ In your lib or binary crate:
 ```rs
 extern crate mpesa;
 
-use mpesa::Client;
+use mpesa::Mpesa;
 ```
 
 ## Examples
