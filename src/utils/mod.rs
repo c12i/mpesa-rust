@@ -33,7 +33,7 @@ macro_rules! map(
 ///     String::from("access_token") => String::from("12345abcde"),
 ///     String::from("expires") => String::from("infinite")
 ///  );
-///  assert_eq!(String::from("12345abcde"), mpesa::utils::extract_auth_token(&map).unwrap());
+///  assert_eq!(String::from("12345abcde"), mpesa::extract_auth_token(&map).unwrap());
 /// ```
 pub fn extract_auth_token(hm: &HashMap<String, String>) -> Result<String, Box<dyn Error>> {
     let token = hm.get("access_token").unwrap();

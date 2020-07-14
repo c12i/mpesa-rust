@@ -11,9 +11,9 @@ use std::collections::HashMap;
 use std::error::Error;
 use reqwest::blocking::{Client};
 
-pub mod utils;
+mod utils;
 
-use utils::extract_auth_token;
+pub use utils::extract_auth_token;
 
 pub enum Environment {
     Production,
