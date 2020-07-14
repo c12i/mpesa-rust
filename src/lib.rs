@@ -11,7 +11,7 @@ use std::collections::HashMap;
 use std::error::Error;
 use reqwest::blocking::{Client};
 
-mod utils;
+pub mod utils;
 
 use utils::extract_auth_token;
 
