@@ -22,17 +22,18 @@ Currently a work in progress project.
 
 ## RoadMap
 
-- [x] Find Http Request Library
-- [x] Make mock Http requests on all endpoints via binary crate
+## RoadMap
+
 - [x] Create Mpesa Client struct
-- [ ] Create Implementation methods + tests
-  - [x] Implement Auth
-  - [ ] Implement B2B payment
-  - [ ] Query transaction status
-  - [ ] Simulate C2B Payment
-  - [ ] Query status of Lipa na M-Pesa
-  - [ ] Initiate Lipa na M-Pesa online w/ STK push
-  - [ ] Register C2B Confirmation and Validation URLs
+- [x] Implement Auth
+- [ ] Implement B2C payment
+- [ ] Query transaction status
+- [ ] Simulate C2B Payment
+- [ ] Query status of Lipa na M-Pesa
+- [ ] Initiate Lipa na M-Pesa online w/ STK push
+- [ ] Register C2B Confirmation and Validation URLs
+- [ ] Integration tests
+- [ ] Rewrite in async
 
 ## Install & Usage
 In your `Cargo.toml` file:
