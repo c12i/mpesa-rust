@@ -15,5 +15,4 @@ opt-level = 0
 opt-level = 3
 
 [dependencies]
-hyper = "0.13"
-tokio = { version = "0.2", features = ["full"] }
+reqwest = { version = "0.10", features = ["blocking", "json"] }
