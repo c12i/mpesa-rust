@@ -24,8 +24,9 @@ Currently a work in progress project.
 
 - [x] Find Http Request Library
 - [x] Make mock Http requests on all endpoints via binary crate
-- [ ] Create Mpesa Client struct
+- [x] Create Mpesa Client struct
 - [ ] Create Implementation methods + tests
+  - [x] Implement Auth
   - [ ] Implement B2B payment
   - [ ] Query transaction status
   - [ ] Simulate C2B Payment
