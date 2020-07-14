@@ -24,7 +24,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let username = env::var("CLIENT_KEY").unwrap();
     let password = env::var("CLIENT_SECRET").unwrap();
 
-    let client = Mpesa::new(username, password, Environment::Sandbox);
+    let client = Mpesa::new(
+        username, 
+        password, 
+        Environment::Sandbox
+    );
 
     let token = client.auth().unwrap();
 
