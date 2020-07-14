@@ -39,6 +39,8 @@ cargo test
 - [ ] Register C2B Confirmation and Validation URLs
 - [ ] Integration tests
 - [ ] Rewrite in async
+- [ ] Publish on https://crates.io
+- [ ] Setup travis-ci
 
 
 ## Pull Requests

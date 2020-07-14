@@ -22,8 +22,6 @@ Currently a work in progress project.
 
 ## RoadMap
 
-## RoadMap
-
 - [x] Create Mpesa Client struct
 - [x] Implement Auth
 - [ ] Implement B2C payment
@@ -34,6 +32,8 @@ Currently a work in progress project.
 - [ ] Register C2B Confirmation and Validation URLs
 - [ ] Integration tests
 - [ ] Rewrite in async
+- [ ] Publish on https://crates.io
+- [ ] Setup travis-ci
 
 ## Install & Usage
 In your `Cargo.toml` file:
