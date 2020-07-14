@@ -15,12 +15,7 @@
 ## About
 
 A Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs?shell#introduction) for accessing M-Pesa services.
-Currently a work in progress project using the following crates:
-```
-reqwest = { version = "0.10", features = ["blocking", "json"] }
-serde = "1.0.114"
-dotenv = "0.15.0"
-``` 
+Currently a work in progress project.
 
 ## Notes
 > Using reqwest::blocking for early build (will finally switch to async or have both options)
@@ -38,14 +33,15 @@ dotenv = "0.15.0"
   - [ ] Initiate Lipa na M-Pesa online w/ STK push
   - [ ] Register C2B Confirmation and Validation URLs
 
-## Install
-`Cargo.toml`
+## Install & Usage
+In your `Cargo.toml` file:
 
 ```
 [dependencies]
 mpesa = "0.0.1"
 ```
 
+In your lib or binary crate:
 ```rs
 extern crate mpesa;
 
