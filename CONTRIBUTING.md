@@ -31,6 +31,7 @@ cargo test
 
 - [x] Create Mpesa Client struct
 - [x] Implement Auth
+- [ ] Generate security credentials
 - [ ] Implement B2C payment
 - [ ] Query transaction status
 - [ ] Simulate C2B Payment
