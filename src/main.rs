@@ -1,32 +1,16 @@
 #![allow(unused)]
-extern crate reqwest;
-
 use dotenv;
 use std::collections::HashMap;
 use std::env;
 
-use mpesa::{map, Mpesa, Environment};
+use mpesa::{Mpesa, Environment};
 
-
-use reqwest::blocking::{Client, self};
-
-fn generate_creds() -> std::collections::HashMap<&'static str,&'static str> {
-    map!(
-        "production" => "https://api.safaricom.co.ke",
-        "sandbox" => "https://sandbox.safaricom.co.ke"
-    )
-}
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let constants = generate_creds();
-
-    // safaricom credentials
     dotenv::dotenv().ok();
-    let username = env::var("CLIENT_KEY").unwrap();
-    let password = env::var("CLIENT_SECRET").unwrap();
 
     let client = Mpesa::new(
-        username, 
-        password, 
+        env::var("CLIENT_KEY").unwrap(), 
+        env::var("CLIENT_SECRET").unwrap(), 
         Environment::Sandbox
     );
 
