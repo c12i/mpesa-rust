@@ -57,13 +57,11 @@ Use [`dotenv`](https://docs.rs/dotenv/0.15.0/dotenv/fn.dotenv.html) crate to sto
 ```rs
 use mpesa::{Mpesa, Environment};
 
- {
-    let client = Mpesa::new(
-          String::from("your_client_key"),
-          String::from("your_client_secret"),
-          Environment::Sandbox
-    );
- }
+let client = Mpesa::new(
+      String::from("your_client_key"),
+      String::from("your_client_secret"),
+      Environment::Sandbox
+);
 ```
 
 ## Author
