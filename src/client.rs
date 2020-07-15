@@ -3,11 +3,13 @@ use std::error::Error;
 use reqwest::blocking::Client;
 
 use super::utils::extract_auth_token;
+
 #[derive(Debug)]
 pub enum Environment {
     Production,
     Sandbox,
 }
+
 #[derive(Debug)]
 pub struct Mpesa {
     client_key: String,
