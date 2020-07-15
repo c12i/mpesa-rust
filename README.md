@@ -38,7 +38,7 @@ Currently a work in progress project.
 ## Install & Usage
 In your `Cargo.toml` file:
 
-```
+```md
 [dependencies]
 mpesa = "0.0.1"
 ```
@@ -51,21 +51,33 @@ use mpesa::Mpesa;
 ```
 
 ## Examples
-Coming soon
 ```rs
-//..
+use mpesa::{Mpesa, Environment};
+use dotenv;
+
+ {
+  // -- snip -- //
+
+  dotenv::dotenv().ok();
+
+  let client = Mpesa::new(
+        env::var("CLIENT_KEY").unwrap(), 
+        env::var("CLIENT_SECRET").unwrap(), 
+        Environment::Sandbox
+  );
+ }
 ```
 
 ## Author
 
-👤 **Collins Muriuki**
+**Collins Muriuki**
 
 * Website: https://muriuki.dev
 * Twitter: [@collinsmuriuki\_](https://twitter.com/collinsmuriuki_)
 * Github: [@collinsmuriuki](https://github.com/collinsmuriuki)
 * LinkedIn: [@collinsmuriuki](https://linkedin.com/in/collinsmuriuki)
 
-## 🤝 Contributing
+## Contributing
 
 Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/collinsmuriuki/mpesa-rust/issues). You can also take a look at the [contributing guide](CONTRIBUTING.md).
 
@@ -73,7 +85,7 @@ Contributions, issues and feature requests are welcome!<br />Feel free to check 
 
 Give a ⭐️ if this project helped you!
 
-## 📝 License
+## License
 
 Copyright © 2020 [Collins Muriuki](https://github.com/collinsmuriuki).<br />
 This project is [MIT](LICENSE) licensed.
