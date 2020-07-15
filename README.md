@@ -51,20 +51,18 @@ use mpesa::Mpesa;
 ```
 
 ## Examples
+
+Use [`dotenv`](https://docs.rs/dotenv/0.15.0/dotenv/fn.dotenv.html) crate to store your keys as environmental variables instead of hard coding them like done in the example below.
+
 ```rs
 use mpesa::{Mpesa, Environment};
-use dotenv;
 
  {
-  // -- snip -- //
-
-  dotenv::dotenv().ok();
-
-  let client = Mpesa::new(
-        env::var("CLIENT_KEY").unwrap(), 
-        env::var("CLIENT_SECRET").unwrap(), 
-        Environment::Sandbox
-  );
+    let client = Mpesa::new(
+          String::from("your_client_key"),
+          String::from("your_client_secret"),
+          Environment::Sandbox
+    );
  }
 ```
 
