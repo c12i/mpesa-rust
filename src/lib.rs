@@ -9,5 +9,7 @@
 
 pub mod utils;
 mod client;
+mod environment;
 
-pub use client::{Mpesa,Environment};
+pub use client::Mpesa;
+pub use environment::Environment;

@@ -3,13 +3,8 @@ use std::error::Error;
 use reqwest::blocking::Client;
 
 use super::utils::extract_auth_token;
-/// Enum to match to either the production or sandox base url
-/// Use when instantiating the `Mpesa` struct.
-#[derive(Debug)]
-pub enum Environment {
-    Production,
-    Sandbox,
-}
+use super::environment::Environment;
+
 /// Mpesa client that will facliltate communication with the Safaricom API
 #[derive(Debug)]
 pub struct Mpesa {
@@ -21,15 +16,10 @@ pub struct Mpesa {
 impl Mpesa {
     /// Constructs a new `Mpesa` instance. 
     pub fn new(client_key: String, client_secret: String, environemt: Environment) -> Mpesa {
-        let base_url: &'static str = match environemt {
-            Environment::Production => "https://api.safaricom.co.ke",
-            Environment::Sandbox => "https://sandbox.safaricom.co.ke",
-        };
-
         Mpesa {
             client_key,
             client_secret,
-            base_url,
+            base_url: environemt.base_url(),
         }
     }
 
