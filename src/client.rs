@@ -15,15 +15,15 @@ pub enum Environment {
 pub struct Mpesa {
     client_key: String,
     client_secret: String,
-    base_url: String 
+    base_url: &'static str 
 }
 
 impl Mpesa {
     /// Constructs a new `Mpesa` instance. 
     pub fn new(client_key: String, client_secret: String, environemt: Environment) -> Mpesa {
-        let base_url = match environemt {
-            Environment::Production => String::from("https://api.safaricom.co.ke"),
-            Environment::Sandbox => String::from("https://sandbox.safaricom.co.ke"),
+        let base_url: &'static str = match environemt {
+            Environment::Production => "https://api.safaricom.co.ke",
+            Environment::Sandbox => "https://sandbox.safaricom.co.ke",
         };
 
         Mpesa {
@@ -35,7 +35,7 @@ impl Mpesa {
 
     /// Sends `GET` request to Safaricom oauth to acquire token for authentication
     pub fn auth(&self) -> Result<String, Box<dyn Error>> {
-        let url = format!("{}/oauth/v1/generate?grant_type=client_credentials", &self.base_url);
+        let url = format!("{}/oauth/v1/generate?grant_type=client_credentials", self.base_url);
 
         let resp: HashMap<String, String> = Client::new().get(&url)
             .basic_auth(&self.client_key, Some(&self.client_secret))
