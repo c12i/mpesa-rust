@@ -24,6 +24,7 @@ Currently a work in progress project.
 
 - [x] Create Mpesa Client struct
 - [x] Implement Auth
+- [ ] Error handling
 - [ ] Implement B2C payment
 - [ ] Query transaction status
 - [ ] Simulate C2B Payment
