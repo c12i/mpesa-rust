@@ -8,10 +8,12 @@ use mpesa::{Mpesa, Environment};
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv::dotenv().ok();
 
+    let environment: Environment = "sandbox".parse()?;
+
     let client = Mpesa::new(
         env::var("CLIENT_KEY").unwrap(), 
-        env::var("CLIENT_SECRET").unwrap(), 
-        Environment::Sandbox
+        env::var("CLIENT_SECRET").unwrap(),
+        Environment::Sandbox, // or environment variable
     );
 
     let token = client.auth().unwrap();
