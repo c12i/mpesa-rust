@@ -12,8 +12,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let environment: Environment = "sandbox".parse()?;
 
     let client = Mpesa::new(
-        env::var("CLIENT_KEY").unwrap(), 
-        env::var("CLIENT_SECRET").unwrap(),
+        env::var("CLIENT_KEY")?,
+        env::var("CLIENT_SECRET")?,
         Environment::Sandbox, // or environment variable
     );
 
