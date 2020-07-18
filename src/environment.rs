@@ -19,6 +19,7 @@ impl Environment {
     /// 
     /// let env: Environment = Environment::Production;
     /// let base_url: &str = env.base_url();
+    /// assert_eq!("https://api.safaricom.co.ke", base_url);
     /// ```
     pub fn base_url(&self) -> &'static str{
         let base_url = match self {
