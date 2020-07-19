@@ -5,7 +5,7 @@ use reqwest::blocking::Client;
 use super::utils::extract_auth_token;
 use super::environment::Environment;
 
-/// Mpesa client that will facliltate communication with the Safaricom API
+/// Mpesa client that will facilitate communication with the Safaricom API
 #[derive(Debug)]
 pub struct Mpesa {
     client_key: String,
