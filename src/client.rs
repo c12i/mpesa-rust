@@ -10,16 +10,16 @@ use super::environment::Environment;
 pub struct Mpesa {
     client_key: String,
     client_secret: String,
-    base_url: &'static str 
+    base_url: &'static str
 }
 
 impl Mpesa {
     /// Constructs a new `Mpesa` instance. 
-    pub fn new(client_key: String, client_secret: String, environemt: Environment) -> Mpesa {
+    pub fn new(client_key: String, client_secret: String, environment: Environment) -> Mpesa {
         Mpesa {
             client_key,
             client_secret,
-            base_url: environemt.base_url(),
+            base_url: environment.base_url(),
         }
     }
 
