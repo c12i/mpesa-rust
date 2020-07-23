@@ -14,9 +14,9 @@ fn main() {
     test_rsa();
     // test_encryption();
 
-    let cer = Environment::Production.get_private_key();
-
-    println!("{:?}",cer);
+    // let cer = Environment::Production.get_private_key();
+    //
+    // println!("{:?}",cer);
 }
 
 fn test() -> Result<(), Box<dyn std::error::Error>> {
