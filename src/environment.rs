@@ -6,7 +6,6 @@
 /// Use when instantiating the `Mpesa` struct.\
 
 use std::str::FromStr;
-use rsa::RSAPrivateKey;
 
 #[derive(Debug)]
 pub enum Environment {
@@ -122,32 +121,5 @@ HE05qm6HNyV5eTa6wvcbc4ewguN1UDZvPWetSyfBk10Wbpor4znQ4TJ3Y9uCvsJH
 -----END CERTIFICATE-----
  "#,
         }
-    }
-
-    pub fn get_private_key(&self) -> RSAPrivateKey {
-        match self {
-            Environment::Production => {
-                let file_content = self.get_certificate();
-                let der_encoded = self.encode(file_content);
-                let der_bytes = base64::decode(&der_encoded).expect("failed to decode base64 content");
-                RSAPrivateKey::from_pkcs1(&der_bytes).expect("failed to parse key")
-            },
-            Environment::Sandbox => {
-                let file_content = self.get_certificate();
-                let der_encoded = self.encode(file_content);
-                let der_bytes = base64::decode(&der_encoded).expect("failed to decode base64 content");
-                RSAPrivateKey::from_pkcs1(&der_bytes).expect("failed to parse key")
-            }
-        }
-    }
-
-    pub fn encode(&self, content: &str) -> String {
-        content
-            .lines()
-            .filter(|line| !line.starts_with("-"))
-            .fold(String::new(), |mut data, line| {
-                data.push_str(&line);
-                data
-            })
     }
 }
