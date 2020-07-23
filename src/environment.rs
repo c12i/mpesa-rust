@@ -43,7 +43,7 @@ impl Environment {
         }
     }
 
-    pub fn get_certificate(&self) -> &'static str {
+     pub fn get_certificate(&self) -> &'static str {
         match self {
             Environment::Production => r#"-----BEGIN CERTIFICATE-----
 MIIGkzCCBXugAwIBAgIKXfBp5gAAAD+hNjANBgkqhkiG9w0BAQsFADBbMRMwEQYK

@@ -10,6 +10,7 @@
 pub mod utils;
 mod client;
 mod environment;
+mod payloads;
 
 pub use client::Mpesa;
 pub use environment::Environment;

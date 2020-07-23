@@ -4,11 +4,13 @@ use std::collections::HashMap;
 use std::env;
 use reqwest::blocking::Client;
 
+use openssl::x509::{X509};
+use openssl::rsa::Padding;
+
 use mpesa::{Mpesa, Environment};
 
 
 fn main() {
-    // std::path::Path::new();
     test();
 }
 
@@ -23,7 +25,7 @@ fn test() -> Result<(), Box<dyn std::error::Error>> {
         Environment::Sandbox, // or environment variable
     );
 
-    let token = client.auth().unwrap();
+    let token = client.get_security_credentials().unwrap();
 
     println!("token ==> {:?}", token);
     Ok(())
