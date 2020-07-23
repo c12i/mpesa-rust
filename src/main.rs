@@ -1,4 +1,4 @@
-#![allow(unused)]
+#![allow(dead_code)]
 use dotenv;
 use std::collections::HashMap;
 use std::env;
@@ -8,6 +8,7 @@ use mpesa::{Mpesa, Environment};
 
 
 fn main() {
+    // std::path::Path::new();
     test();
 }
 
