@@ -10,7 +10,7 @@ use super::environment::Environment;
 pub struct Mpesa {
     client_key: String,
     client_secret: String,
-    base_url: &'static str
+    base_url: &'static str,
 }
 
 impl Mpesa {
@@ -33,5 +33,9 @@ impl Mpesa {
             .json()?;
         
         Ok(extract_auth_token(&resp)?)
+    }
+
+    fn get_security_credentials(&self) -> Result<String, Box<dyn Error>> {
+        unimplemented!()
     }
 }
