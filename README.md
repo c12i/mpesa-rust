@@ -4,6 +4,9 @@
   <a href="README.md" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
+  <a href="https://travis-ci.com/collinsmuriuki/mpesa-rust" target="_blank">
+      <img alt="mpesa travis-ci" src="https://travis-ci.com/collinsmuriuki/mpesa-rust.svg?branch=master" />
+   </a>
   <a href="LICENSE" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
   </a>
@@ -11,7 +14,7 @@
     <img alt="Twitter: collinsmuriuki_" src="https://img.shields.io/twitter/follow/collinsmuriuki_.svg?style=social" />
   </a>
 </p>
-
+https://travis-ci.com/collinsmuriuki/mpesa-rust.svg?branch=master
 ## About
 
 A Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs?shell#introduction) for accessing M-Pesa services.
