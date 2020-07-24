@@ -42,7 +42,7 @@ cargo test
 - [ ] Integration tests
 - [ ] Rewrite in async
 - [ ] Publish on https://crates.io
-- [ ] Setup travis-ci
+- [x] Setup travis-ci
 
 
 ## Pull Requests

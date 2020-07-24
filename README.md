@@ -40,7 +40,7 @@ Currently, a work in progress project.
 - [ ] Integration tests
 - [ ] Rewrite in async
 - [ ] Publish on https://crates.io
-- [ ] Setup travis-ci
+- [x] Setup travis-ci
 
 ## Install & Usage
 In your `Cargo.toml` file:
