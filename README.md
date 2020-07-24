@@ -1,7 +1,9 @@
 <h1 align="center">mpesa-rust</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.0.1-blue.svg?cacheSeconds=2592000" />
-  <a href="README.md" target="_blank">
+   <a href="https://crates.io/crates/mpesa" target="_blank">
+     <img alt="Version" src="https://img.shields.io/crates/v/mpesa" />
+   </a>
+  <a href="https://docs.rs/macroz/0.0.1/mpesa/" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
   <a href="https://travis-ci.com/collinsmuriuki/mpesa-rust" target="_blank">
@@ -18,10 +20,10 @@ https://travis-ci.com/collinsmuriuki/mpesa-rust.svg?branch=master
 ## About
 
 A Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs?shell#introduction) for accessing M-Pesa services.
-Currently a work in progress project.
+Currently, a work in progress project.
 
 ## Notes
-> Using reqwest::blocking for early build (will finally switch to async or have both options)
+> Do not use in production yet, still in development
 
 ## RoadMap
 
