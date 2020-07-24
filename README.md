@@ -47,7 +47,7 @@ In your `Cargo.toml` file:
 
 ```md
 [dependencies]
-mpesa = "0.0.1"
+mpesa = "0.1.0"
 ```
 
 In your lib or binary crate:
