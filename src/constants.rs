@@ -1,4 +1,5 @@
 /// Mpesa command ids
+#[derive(Debug)]
 pub enum CommandIds {
     TransactionReversal,
     SalaryPayment,
@@ -15,9 +16,31 @@ pub enum CommandIds {
     BusinessTransferFromMMFToUtility,
 }
 
+impl CommandIds {
+    /// Data to be sent alongside the payloads
+    pub fn get_command_id_str(&self) -> &'static str {
+        match self {
+            CommandIds::TransactionReversal => "TransactionReversal",
+            CommandIds::SalaryPayment => "SalaryPayment",
+            CommandIds::BusinessPayment => "BusinessPayment",
+            CommandIds::PromotionPayment => "PromotionPayment",
+            CommandIds::AccountBalance => "AccountBalance",
+            CommandIds::CustomerPayBillOnline => "CustomerPayBillOnline",
+            CommandIds::TransactionStatusQuery => "TransactionStatusQuery",
+            CommandIds::CheckIdentity => "CheckIdentity",
+            CommandIds::BusinessPayBill => "BusinessPayBill",
+            CommandIds::BusinessBuyGoods => "BusinessBuyGoods",
+            CommandIds::DisburseFundsToBusiness => "DisburseFundsToBusiness",
+            CommandIds::BusinessToBusinessTransfer => "BusinessToBusinessTransfer",
+            CommandIds::BusinessTransferFromMMFToUtility => "BusinessTransferFromMMFToUtility",
+        }
+    }
+}
+
 /// Identifier types - both sender and receiver - identify an M-Pesa transaction’s sending and receiving party as
 /// either a shortcode, a till number or a MSISDN (phone number).
 /// There are three identifier types that can be used with M-Pesa APIs.
+#[derive(Debug)]
 pub enum IdentifierTypes {
     MSISDN = 1,
     TillNumber = 2,
