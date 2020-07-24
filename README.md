@@ -3,7 +3,7 @@
    <a href="https://crates.io/crates/mpesa" target="_blank">
      <img alt="Version" src="https://img.shields.io/crates/v/mpesa" />
    </a>
-  <a href="https://docs.rs/mpesa/0.0.1/mpesa/" target="_blank">
+  <a href="https://docs.rs/mpesa/0.1.0/mpesa/" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
   <a href="https://travis-ci.com/collinsmuriuki/mpesa-rust" target="_blank">
