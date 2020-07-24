@@ -16,7 +16,7 @@
     <img alt="Twitter: collinsmuriuki_" src="https://img.shields.io/twitter/follow/collinsmuriuki_.svg?style=social" />
   </a>
 </p>
-https://travis-ci.com/collinsmuriuki/mpesa-rust.svg?branch=master
+
 ## About
 
 A Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs?shell#introduction) for accessing M-Pesa services.
