@@ -64,7 +64,8 @@ use mpesa::{Mpesa, Environment};
 let client = Mpesa::new(
       String::from("your_client_key"),
       String::from("your_client_secret"),
-      Environment::Sandbox
+      Environment::Sandbox,
+      String::from("your_initiator_password"),
 );
 ```
 
