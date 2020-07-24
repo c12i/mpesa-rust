@@ -1,4 +1,3 @@
-#![allow(dead_code)]
 use dotenv;
 use std::collections::HashMap;
 use std::env;
@@ -8,7 +7,7 @@ use mpesa::{Mpesa, Environment};
 
 
 fn main() {
-    test();
+    test().unwrap();
 }
 
 fn test() -> Result<(), Box<dyn std::error::Error>> {
@@ -22,7 +21,7 @@ fn test() -> Result<(), Box<dyn std::error::Error>> {
         Environment::Sandbox, // or environment variable
     );
 
-    let token = client.get_security_credentials().unwrap();
+    let token = client.gen_security_credentials().unwrap();
 
     println!("token ==> {:?}", token);
     Ok(())
