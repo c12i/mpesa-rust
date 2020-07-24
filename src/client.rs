@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::error::Error;
 use reqwest::blocking::Client;
-use openssl::x509::{X509};
+use openssl::x509::X509;
 use openssl::rsa::Padding;
 
 use super::utils::extract_auth_token;

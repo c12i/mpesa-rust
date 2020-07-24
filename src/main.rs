@@ -4,9 +4,6 @@ use std::collections::HashMap;
 use std::env;
 use reqwest::blocking::Client;
 
-use openssl::x509::{X509};
-use openssl::rsa::Padding;
-
 use mpesa::{Mpesa, Environment};
 
 
