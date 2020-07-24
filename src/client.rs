@@ -14,15 +14,17 @@ pub struct Mpesa {
     client_key: String,
     client_secret: String,
     environment: Environment,
+    initiator_password: String,
 }
 
 impl Mpesa {
     /// Constructs a new `Mpesa` instance. 
-    pub fn new(client_key: String, client_secret: String, environment: Environment) -> Mpesa {
-        Mpesa {
+    pub fn new(client_key: String, client_secret: String, environment: Environment, initiator_password: String) -> Self {
+        Self {
             client_key,
             client_secret,
             environment,
+            initiator_password,
         }
     }
 
@@ -36,7 +38,7 @@ impl Mpesa {
             .basic_auth(&self.client_key, Some(&self.client_secret))
             .send()?
             .json()?;
-        
+
         Ok(extract_auth_token(&resp)?)
     }
 
@@ -55,7 +57,7 @@ impl Mpesa {
         let mut buffer = vec![0; buf_len];
 
         rsa_key.public_encrypt(
-            self.client_secret.as_bytes(),
+            self.initiator_password.as_bytes(),
             &mut buffer,
             Padding::PKCS1,
         )?;

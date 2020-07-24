@@ -19,6 +19,7 @@ fn test() -> Result<(), Box<dyn std::error::Error>> {
         env::var("CLIENT_KEY")?,
         env::var("CLIENT_SECRET")?,
         Environment::Sandbox, // or environment variable
+        env::var("IMITATOR_PASSWORD")?,
     );
 
     let token = client.gen_security_credentials().unwrap();
