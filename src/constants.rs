@@ -1,6 +1,6 @@
 /// Mpesa command ids
 #[derive(Debug)]
-pub enum CommandIds {
+pub enum CommandId {
     TransactionReversal,
     SalaryPayment,
     BusinessPayment,
@@ -16,23 +16,23 @@ pub enum CommandIds {
     BusinessTransferFromMMFToUtility,
 }
 
-impl CommandIds {
+impl CommandId {
     /// Data to be sent alongside the payloads
     pub fn get_command_id_str(&self) -> &'static str {
         match self {
-            CommandIds::TransactionReversal => "TransactionReversal",
-            CommandIds::SalaryPayment => "SalaryPayment",
-            CommandIds::BusinessPayment => "BusinessPayment",
-            CommandIds::PromotionPayment => "PromotionPayment",
-            CommandIds::AccountBalance => "AccountBalance",
-            CommandIds::CustomerPayBillOnline => "CustomerPayBillOnline",
-            CommandIds::TransactionStatusQuery => "TransactionStatusQuery",
-            CommandIds::CheckIdentity => "CheckIdentity",
-            CommandIds::BusinessPayBill => "BusinessPayBill",
-            CommandIds::BusinessBuyGoods => "BusinessBuyGoods",
-            CommandIds::DisburseFundsToBusiness => "DisburseFundsToBusiness",
-            CommandIds::BusinessToBusinessTransfer => "BusinessToBusinessTransfer",
-            CommandIds::BusinessTransferFromMMFToUtility => "BusinessTransferFromMMFToUtility",
+            CommandId::TransactionReversal => "TransactionReversal",
+            CommandId::SalaryPayment => "SalaryPayment",
+            CommandId::BusinessPayment => "BusinessPayment",
+            CommandId::PromotionPayment => "PromotionPayment",
+            CommandId::AccountBalance => "AccountBalance",
+            CommandId::CustomerPayBillOnline => "CustomerPayBillOnline",
+            CommandId::TransactionStatusQuery => "TransactionStatusQuery",
+            CommandId::CheckIdentity => "CheckIdentity",
+            CommandId::BusinessPayBill => "BusinessPayBill",
+            CommandId::BusinessBuyGoods => "BusinessBuyGoods",
+            CommandId::DisburseFundsToBusiness => "DisburseFundsToBusiness",
+            CommandId::BusinessToBusinessTransfer => "BusinessToBusinessTransfer",
+            CommandId::BusinessTransferFromMMFToUtility => "BusinessTransferFromMMFToUtility",
         }
     }
 }

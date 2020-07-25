@@ -1,4 +1,4 @@
-use crate::constants::CommandIds;
+use crate::CommandId;
 
 #[derive(Debug)]
 /// Payload to allow for b2c transactions:
@@ -7,7 +7,7 @@ use crate::constants::CommandIds;
 pub struct B2cPayload<'a> {
     pub initiator_name: &'a str,
     pub security_credentials: &'a str,
-    pub command_id: CommandIds,
+    pub command_id: CommandId,
     pub amount: u32,
     pub party_a: &'a str,
     pub party_b: &'a str,

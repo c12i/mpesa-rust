@@ -16,4 +16,4 @@ mod constants;
 
 pub use client::Mpesa;
 pub use environment::Environment;
-pub use constants::CommandIds;
+pub use constants::CommandId;

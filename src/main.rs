@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use std::env;
 use reqwest::blocking::Client;
 
-use mpesa::{Mpesa, Environment, CommandIds};
+use mpesa::{Mpesa, Environment, CommandId};
 
 
 fn main() {
@@ -41,7 +41,7 @@ fn b2c_test() {
 
     let b2c_response = client.b2c(
         "testapi496",
-        CommandIds::BusinessPayment,
+        CommandId::BusinessPayment,
         1000,
         "600496",
         "254708374149",
