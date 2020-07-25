@@ -9,7 +9,7 @@ use serde_json::json;
 use super::utils::extract_auth_token;
 use super::environment::Environment;
 use super::payloads::B2cPayload;
-use crate::constants::CommandIds;
+use crate::constants::CommandId;
 
 /// Mpesa client that will facilitate communication with the Safaricom API
 #[derive(Debug)]
@@ -68,13 +68,19 @@ impl Mpesa {
     }
 
     /// # B2C API
+    /// Sends b2c payment request.
+    ///
     /// This API enables Business to Customer (B2C) transactions between a company and
     /// customers who are the end-users of its products or services. Use of this API requires a
-    /// valid and verified B2C M-Pesa Short code
+    /// valid and verified B2C M-Pesa Short code.
+    /// See more at: https://developer.safaricom.co.ke/docs?shell#b2c-api
+    ///
+    /// # Errors
+    /// TODO
     pub fn b2c(
         &self,
         initiator_name: &str,
-        command_id: CommandIds,
+        command_id: CommandId,
         amount: u32,
         party_a: &str,
         party_b: &str,
@@ -118,5 +124,34 @@ impl Mpesa {
             .send()?;
 
         Ok(response)
+    }
+
+    /// # B2B API
+    /// Sends b2b payment request.
+    ///
+    /// This API enables Business to Business (B2B) transactions between a business and another
+    /// business. Use of this API requires a valid and verified B2B M-Pesa short code for the
+    /// business initiating the transaction and the both businesses involved in the transaction
+    /// See more at https://developer.safaricom.co.ke/docs?shell#b2b-api
+    ///
+    /// # Errors
+    /// TODO
+    pub fn b2b(
+        &self,
+        initiator_name: &str,
+        command_id: CommandId,
+        amount: u32,
+        party_a: &str,
+        sender_id: &str,
+        party_b: &str,
+        receiver_id: &str,
+        remarks: &str,
+        queue_timeout_url: &str,
+        result_url: &str,
+        account_ref: &str,
+    ) -> Result<Response,Box<dyn Error>> {
+        let url = format!("{}/mpesa/b2b/v1/paymentrequest", self.environment.base_url());
+        let credentials = self.gen_security_credentials().unwrap();
+        todo!()
     }
 }
