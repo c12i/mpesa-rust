@@ -23,24 +23,7 @@ A Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs
 Currently, a work in progress project.
 
 ## Notes
-> Do not use in production yet, still in development
-
-## RoadMap
-
-- [x] Create Mpesa Client struct
-- [x] Implement Auth
-- [ ] Error handling
-- [x] Generate security credentials
-- [x] Implement B2C payment
-- [ ] Query transaction status
-- [ ] Simulate C2B Payment
-- [ ] Query status of Lipa na M-Pesa
-- [ ] Initiate Lipa na M-Pesa online w/ STK push
-- [ ] Register C2B Confirmation and Validation URLs
-- [ ] Integration tests
-- [ ] Rewrite in async
-- [x] Publish on https://crates.io
-- [x] Setup travis-ci
+ **Warning!** v0.*. Expect bugs therefore not recommended for use in production. Pull requests and issues very welcome.
 
 ## Install & Usage
 In your `Cargo.toml` file:
