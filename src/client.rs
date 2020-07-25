@@ -34,7 +34,7 @@ impl Mpesa {
     /// Generates an access token
     /// Sends `GET` request to Safaricom oauth to acquire token for token authentication
     /// The OAuth access token expires after an hour, after which, you will need to generate another access token
-    pub fn auth(&self) -> Result<String, Box<dyn Error>> {
+    fn auth(&self) -> Result<String, Box<dyn Error>> {
         let url = format!("{}/oauth/v1/generate?grant_type=client_credentials", self.environment.base_url());
 
         let resp: HashMap<String, String> = Client::new().get(&url)
@@ -151,7 +151,7 @@ impl Mpesa {
         account_ref: &str,
     ) -> Result<Response,Box<dyn Error>> {
         let url = format!("{}/mpesa/b2b/v1/paymentrequest", self.environment.base_url());
-        let credentials = self.gen_security_credentials().unwrap();
+        let credentials = self.gen_security_credentials()?;
         todo!()
     }
 }
