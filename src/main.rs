@@ -48,7 +48,7 @@ fn b2c_test() {
         "Test",
     ).unwrap();
 
-    println!("{:?}", b2c_response);
+    println!("{:#?}", b2c_response);
 }
 
 

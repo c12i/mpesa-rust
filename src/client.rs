@@ -88,7 +88,7 @@ impl Mpesa {
         queue_timeout_url: &str,
         result_url: &str,
         occasion: &str
-    ) -> Result<Response, Box<dyn Error>> {
+    ) -> Result<HashMap<String, String>, Box<dyn Error>> {
         let url = format!("{}/mpesa/b2c/v1/paymentrequest", self.environment.base_url());
         let credentials = self.gen_security_credentials()?;
 
@@ -118,10 +118,11 @@ impl Mpesa {
             "Occasion": payload.occasion,
         });
 
-        let response = Client::new().post(&url)
+        let response: HashMap<String, String> = Client::new().post(&url)
             .bearer_auth(self.auth().unwrap())
             .json(&data)
-            .send()?;
+            .send()?
+            .json()?;
 
         Ok(response)
     }
@@ -149,7 +150,7 @@ impl Mpesa {
         queue_timeout_url: &str,
         result_url: &str,
         account_ref: &str,
-    ) -> Result<Response,Box<dyn Error>> {
+    ) -> Result<HashMap<String,String>,Box<dyn Error>> {
         let url = format!("{}/mpesa/b2b/v1/paymentrequest", self.environment.base_url());
         let credentials = self.gen_security_credentials()?;
 
