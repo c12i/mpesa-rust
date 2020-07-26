@@ -6,11 +6,9 @@ use openssl::rsa::Padding;
 use base64::encode;
 use serde_json::json;
 
-use super::utils::extract_auth_token;
 use super::environment::Environment;
-use super::payloads::B2cPayload;
 use crate::CommandId;
-use crate::payloads::B2cResponse;
+use super::payloads::{B2cPayload,B2bResponse,B2cResponse,AuthResponse};
 
 /// Mpesa client that will facilitate communication with the Safaricom API
 #[derive(Debug)]
@@ -38,12 +36,12 @@ impl Mpesa {
     fn auth(&self) -> Result<String, Box<dyn Error>> {
         let url = format!("{}/oauth/v1/generate?grant_type=client_credentials", self.environment.base_url());
 
-        let resp: HashMap<String, String> = Client::new().get(&url)
+        let resp: AuthResponse = Client::new().get(&url)
             .basic_auth(&self.client_key, Some(&self.client_secret))
             .send()?
             .json()?;
 
-        Ok(extract_auth_token(&resp)?)
+        Ok(resp.access_token)
     }
 
     /// Generates security credentials
