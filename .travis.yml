@@ -1,10 +1,13 @@
-sudo: required
-
-services:
-  - docker
-
-before_install:
-  - docker build -t collinsmuriuki/mpesa -f Dockerfile .
-
+language: rust
+rust:
+  - stable
+  - beta
+  - nightly
+jobs:
+  allow_failures:
+    - rust: nightly
+  fast_finish: true
+cache: cargo
 script:
-  - docker run -e CI=true collinsmuriuki/mpesa cargo test
+  - cargo build --verbose --all
+  - cargo test --verbose --all
