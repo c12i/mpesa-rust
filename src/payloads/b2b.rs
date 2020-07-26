@@ -1,3 +1,4 @@
+use serde::Deserialize;
 use crate::CommandId;
 
 #[derive(Debug)]
@@ -16,10 +17,13 @@ pub struct B2bPayload<'a> {
     pub occasion: &'a str,
 }
 
-#[derive(Debug)]
+#[derive(Debug,Deserialize)]
+/// B2C response
+/// Field names deliberately in Pascal case to correctly deserialize the
+/// response data
 pub struct B2bResponse<'a> {
-    conversation_id: &'a str,
-    originator_conversation_id: &'a str,
-    response_description: &'a str,
+    pub ConversationID: &'a str,
+    pub OriginatorConversationID: &'a str,
+    pub ResponseDescription: &'a str,
 }
 
