@@ -9,7 +9,7 @@ use serde_json::json;
 use super::utils::extract_auth_token;
 use super::environment::Environment;
 use super::payloads::B2cPayload;
-use crate::constants::CommandId;
+use crate::CommandId;
 
 /// Mpesa client that will facilitate communication with the Safaricom API
 #[derive(Debug)]
@@ -21,7 +21,7 @@ pub struct Mpesa {
 }
 
 impl Mpesa {
-    /// Constructs a new `Mpesa` instance. 
+    /// Constructs a new `Mpesa` instance.
     pub fn new(client_key: String, client_secret: String, environment: Environment, initiator_password: String) -> Self {
         Self {
             client_key,
@@ -152,6 +152,8 @@ impl Mpesa {
     ) -> Result<Response,Box<dyn Error>> {
         let url = format!("{}/mpesa/b2b/v1/paymentrequest", self.environment.base_url());
         let credentials = self.gen_security_credentials()?;
-        todo!()
+
+        let data = json!({});
+        unimplemented!()
     }
 }

@@ -23,9 +23,6 @@ fn auth_test() -> Result<(), Box<dyn std::error::Error>> {
         env::var("INIT_PASSWORD")?,
     );
 
-    let token = client.auth().unwrap();
-
-    println!("token ==> {:?}", token);
     Ok(())
 }
 
