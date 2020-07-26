@@ -10,6 +10,7 @@ use super::utils::extract_auth_token;
 use super::environment::Environment;
 use super::payloads::B2cPayload;
 use crate::CommandId;
+use crate::payloads::B2cResponse;
 
 /// Mpesa client that will facilitate communication with the Safaricom API
 #[derive(Debug)]
@@ -88,7 +89,7 @@ impl Mpesa {
         queue_timeout_url: &str,
         result_url: &str,
         occasion: &str
-    ) -> Result<HashMap<String, String>, Box<dyn Error>> {
+    ) -> Result<B2cResponse, Box<dyn Error>> {
         let url = format!("{}/mpesa/b2c/v1/paymentrequest", self.environment.base_url());
         let credentials = self.gen_security_credentials()?;
 
@@ -118,7 +119,7 @@ impl Mpesa {
             "Occasion": payload.occasion,
         });
 
-        let response: HashMap<String, String> = Client::new().post(&url)
+        let response: B2cResponse = Client::new().post(&url)
             .bearer_auth(self.auth().unwrap())
             .json(&data)
             .send()?

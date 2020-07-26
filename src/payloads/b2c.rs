@@ -1,4 +1,5 @@
 use crate::CommandId;
+use serde::{Deserialize};
 
 #[derive(Debug)]
 /// Payload to allow for b2c transactions:
@@ -17,11 +18,13 @@ pub struct B2cPayload<'a> {
     pub occasion: &'a str,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 /// B2C response
-pub struct B2cResponse<'a> {
-    conversation_id: &'a str,
-    original_conversation_id: &'a str,
-    response_code: &'a str,
-    response_description: &'a str,
+/// Field names deliberately in Pascal case to correctly deserialize the
+/// response data
+pub struct B2cResponse {
+    pub ConversationID: String,
+    pub OriginatorConversationID: String,
+    pub ResponseCode: String,
+    pub ResponseDescription: String,
 }
