@@ -80,7 +80,6 @@ impl Mpesa {
     pub fn b2c(
         &self,
         initiator_name: &str,
-        command_id: CommandId,
         amount: u32,
         party_a: &str,
         party_b: &str,
@@ -95,7 +94,7 @@ impl Mpesa {
         let payload = B2cPayload {
             initiator_name,
             security_credentials: &credentials,
-            command_id,
+            command_id: CommandId::BusinessPayment,
             amount,
             party_a,
             party_b,
@@ -140,7 +139,6 @@ impl Mpesa {
     pub fn b2b(
         &self,
         initiator_name: &str,
-        command_id: CommandId,
         amount: u32,
         party_a: &str,
         sender_id: u32,
@@ -157,7 +155,7 @@ impl Mpesa {
         let payload = B2bPayload {
             initiator_name,
             security_credentials: &credentials,
-            command_id,
+            command_id: CommandId::BusinessToBusinessTransfer,
             amount,
             party_a,
             sender_id,

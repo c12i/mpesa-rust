@@ -10,7 +10,7 @@ use mpesa::{Mpesa, Environment, CommandId};
 
 fn main() {
     // auth_test().unwrap();
-    // b2c_test();
+    b2c_test();
     b2b_test();
 }
 
@@ -41,7 +41,6 @@ fn b2c_test() {
 
     let b2c_response = client.b2c(
         "testapi496",
-        CommandId::BusinessPayment,
         1000,
         "600496",
         "254708374149",
@@ -66,7 +65,6 @@ fn b2b_test() {
 
     let b2b_response = client.b2b(
         "testapi496",
-        CommandId::BusinessToBusinessTransfer,
         1000,
         "600496",
         4,
