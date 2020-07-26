@@ -9,11 +9,11 @@
 //!
 //! Currently work in progress, documentation will be added every step of the way.
 
-pub mod utils;
+mod utils;
 mod client;
-mod environment;
-mod payloads;
-mod constants;
+pub mod environment;
+pub mod payloads;
+pub mod constants;
 
 pub use client::Mpesa;
 pub use environment::Environment;
