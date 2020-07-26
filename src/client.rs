@@ -6,10 +6,10 @@ use openssl::rsa::Padding;
 use base64::encode;
 use serde_json::json;
 
-use super::utils::extract_auth_token;
 use super::environment::Environment;
-use super::payloads::B2cPayload;
-use crate::constants::CommandIds;
+use crate::CommandId;
+use super::payloads::{B2bResponse,B2cResponse,AuthResponse};
+use crate::payloads::{B2bPayload,B2cPayload};
 
 /// Mpesa client that will facilitate communication with the Safaricom API
 #[derive(Debug)]
@@ -21,7 +21,7 @@ pub struct Mpesa {
 }
 
 impl Mpesa {
-    /// Constructs a new `Mpesa` instance. 
+    /// Constructs a new `Mpesa` instance.
     pub fn new(client_key: String, client_secret: String, environment: Environment, initiator_password: String) -> Self {
         Self {
             client_key,
@@ -34,15 +34,15 @@ impl Mpesa {
     /// Generates an access token
     /// Sends `GET` request to Safaricom oauth to acquire token for token authentication
     /// The OAuth access token expires after an hour, after which, you will need to generate another access token
-    pub fn auth(&self) -> Result<String, Box<dyn Error>> {
+    fn auth(&self) -> Result<String, Box<dyn Error>> {
         let url = format!("{}/oauth/v1/generate?grant_type=client_credentials", self.environment.base_url());
 
-        let resp: HashMap<String, String> = Client::new().get(&url)
+        let resp: AuthResponse = Client::new().get(&url)
             .basic_auth(&self.client_key, Some(&self.client_secret))
             .send()?
             .json()?;
 
-        Ok(extract_auth_token(&resp)?)
+        Ok(resp.access_token)
     }
 
     /// Generates security credentials
@@ -68,13 +68,19 @@ impl Mpesa {
     }
 
     /// # B2C API
+    /// Sends b2c payment request.
+    ///
     /// This API enables Business to Customer (B2C) transactions between a company and
     /// customers who are the end-users of its products or services. Use of this API requires a
-    /// valid and verified B2C M-Pesa Short code
+    /// valid and verified B2C M-Pesa Short code.
+    /// See more at: https://developer.safaricom.co.ke/docs?shell#b2c-api
+    ///
+    /// # Errors
+    /// TODO
     pub fn b2c(
         &self,
         initiator_name: &str,
-        command_id: CommandIds,
+        command_id: CommandId,
         amount: u32,
         party_a: &str,
         party_b: &str,
@@ -82,7 +88,7 @@ impl Mpesa {
         queue_timeout_url: &str,
         result_url: &str,
         occasion: &str
-    ) -> Result<Response, Box<dyn Error>> {
+    ) -> Result<B2cResponse, Box<dyn Error>> {
         let url = format!("{}/mpesa/b2c/v1/paymentrequest", self.environment.base_url());
         let credentials = self.gen_security_credentials()?;
 
@@ -102,7 +108,7 @@ impl Mpesa {
         let data = json!({
             "InitiatorName": payload.initiator_name,
             "SecurityCredential": payload.security_credentials,
-            "CommandID": payload.command_id.get_command_id_str(),
+            "CommandID": payload.command_id.to_string(),
             "Amount": payload.amount,
             "PartyA": payload.party_a,
             "PartyB": payload.party_b,
@@ -112,10 +118,77 @@ impl Mpesa {
             "Occasion": payload.occasion,
         });
 
-        let response = Client::new().post(&url)
-            .bearer_auth(self.auth().unwrap())
+        let response: B2cResponse = Client::new().post(&url)
+            .bearer_auth(self.auth()?)
             .json(&data)
-            .send()?;
+            .send()?
+            .json()?;
+
+        Ok(response)
+    }
+
+    /// # B2B API
+    /// Sends b2b payment request.
+    ///
+    /// This API enables Business to Business (B2B) transactions between a business and another
+    /// business. Use of this API requires a valid and verified B2B M-Pesa short code for the
+    /// business initiating the transaction and the both businesses involved in the transaction
+    /// See more at https://developer.safaricom.co.ke/docs?shell#b2b-api
+    ///
+    /// # Errors
+    /// TODO
+    pub fn b2b(
+        &self,
+        initiator_name: &str,
+        command_id: CommandId,
+        amount: u32,
+        party_a: &str,
+        sender_id: u32,
+        party_b: &str,
+        receiver_id: u32,
+        remarks: &str,
+        queue_timeout_url: &str,
+        result_url: &str,
+        account_ref: &str,
+    ) -> Result<B2bResponse,Box<dyn Error>> {
+        let url = format!("{}/mpesa/b2b/v1/paymentrequest", self.environment.base_url());
+        let credentials = self.gen_security_credentials()?;
+
+        let payload = B2bPayload {
+            initiator_name,
+            security_credentials: &credentials,
+            command_id,
+            amount,
+            party_a,
+            sender_id,
+            party_b,
+            receiver_id,
+            remarks,
+            queue_timeout_url,
+            result_url,
+            account_ref,
+        };
+
+        let data = json!({
+            "Initiator": payload.initiator_name,
+            "SecurityCredential": payload.security_credentials,
+            "CommandID": payload.command_id.to_string(),
+            "SenderIdentifierType": payload.sender_id,
+            "RecieverIdentifierType": payload.receiver_id,
+            "Amount": payload.amount,
+            "PartyA": payload.party_a,
+            "PartyB": payload.party_b,
+            "AccountReference": payload.account_ref,
+            "Remarks": payload.remarks,
+            "QueueTimeOutURL": payload.queue_timeout_url,
+            "ResultURL": payload.result_url,
+        });
+
+        let response: B2bResponse = Client::new().post(&url)
+            .bearer_auth(self.auth()?)
+            .json(&data)
+            .send()?
+            .json()?;
 
         Ok(response)
     }

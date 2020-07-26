@@ -1,10 +1,6 @@
 ///! # environment
 ///! Code related to setting up the desired Safaricom API environment
 
-
-/// Enum to match to either the production or sandbox base url
-/// Use when instantiating the `Mpesa` struct.\
-
 use std::str::FromStr;
 
 #[derive(Debug)]
@@ -42,10 +38,12 @@ impl Environment {
     pub fn base_url(&self) -> &'static str{
         match self {
             Environment::Production => "https://api.safaricom.co.ke",
-            Environment::Sandbox => "https://sandbox.safaricom.co.ke"
+            Environment::Sandbox => "https://sandbox.safaricom.co.ke",
         }
     }
 
+    /// Match to X509 public key certificate based on
+    /// environment variant
      pub fn get_certificate(&self) -> &'static str {
         match self {
             Environment::Production => r#"-----BEGIN CERTIFICATE-----

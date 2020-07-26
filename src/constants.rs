@@ -1,6 +1,8 @@
+use std::fmt::{Display,Formatter,Result as FmtResult};
+
 /// Mpesa command ids
 #[derive(Debug)]
-pub enum CommandIds {
+pub enum CommandId {
     TransactionReversal,
     SalaryPayment,
     BusinessPayment,
@@ -16,24 +18,9 @@ pub enum CommandIds {
     BusinessTransferFromMMFToUtility,
 }
 
-impl CommandIds {
-    /// Data to be sent alongside the payloads
-    pub fn get_command_id_str(&self) -> &'static str {
-        match self {
-            CommandIds::TransactionReversal => "TransactionReversal",
-            CommandIds::SalaryPayment => "SalaryPayment",
-            CommandIds::BusinessPayment => "BusinessPayment",
-            CommandIds::PromotionPayment => "PromotionPayment",
-            CommandIds::AccountBalance => "AccountBalance",
-            CommandIds::CustomerPayBillOnline => "CustomerPayBillOnline",
-            CommandIds::TransactionStatusQuery => "TransactionStatusQuery",
-            CommandIds::CheckIdentity => "CheckIdentity",
-            CommandIds::BusinessPayBill => "BusinessPayBill",
-            CommandIds::BusinessBuyGoods => "BusinessBuyGoods",
-            CommandIds::DisburseFundsToBusiness => "DisburseFundsToBusiness",
-            CommandIds::BusinessToBusinessTransfer => "BusinessToBusinessTransfer",
-            CommandIds::BusinessTransferFromMMFToUtility => "BusinessTransferFromMMFToUtility",
-        }
+impl Display for CommandId {
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
+        write!(f, "{:?}", self)
     }
 }
 
@@ -47,8 +34,15 @@ pub enum IdentifierTypes {
     Shortcode = 4,
 }
 
+impl Display for IdentifierTypes {
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
+        write!(f, "{:?}", self)
+    }
+}
+
 /// M-pesa result and response codes
-pub enum MpesaResponse {
+#[derive(Debug)]
+pub enum MpesaResponseCode {
     Success = 0,
     InsufficientFunds = 1,
     LessThanMinimum = 2,
@@ -66,4 +60,10 @@ pub enum MpesaResponse {
     InternalFailure = 17,
     UnresolvedInitiator = 20,
     TrafficBlocking = 26,
+}
+
+impl Display for MpesaResponseCode {
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
+        write!(f, "{:?}", self)
+    }
 }

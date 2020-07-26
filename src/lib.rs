@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+#![allow(unused_imports)]
 //! # mpesa
 //! WIP
 //! ## About
@@ -16,4 +17,4 @@ mod constants;
 
 pub use client::Mpesa;
 pub use environment::Environment;
-pub use constants::CommandIds;
+pub use constants::CommandId;
