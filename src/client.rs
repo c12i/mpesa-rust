@@ -8,7 +8,8 @@ use serde_json::json;
 
 use super::environment::Environment;
 use crate::CommandId;
-use super::payloads::{B2cPayload,B2bResponse,B2cResponse,AuthResponse};
+use super::payloads::{B2bResponse,B2cResponse,AuthResponse};
+use crate::payloads::{B2bPayload,B2cPayload};
 
 /// Mpesa client that will facilitate communication with the Safaricom API
 #[derive(Debug)]
@@ -118,7 +119,7 @@ impl Mpesa {
         });
 
         let response: B2cResponse = Client::new().post(&url)
-            .bearer_auth(self.auth().unwrap())
+            .bearer_auth(self.auth()?)
             .json(&data)
             .send()?
             .json()?;
@@ -142,18 +143,53 @@ impl Mpesa {
         command_id: CommandId,
         amount: u32,
         party_a: &str,
-        sender_id: &str,
+        sender_id: u32,
         party_b: &str,
-        receiver_id: &str,
+        receiver_id: u32,
         remarks: &str,
         queue_timeout_url: &str,
         result_url: &str,
         account_ref: &str,
-    ) -> Result<HashMap<String,String>,Box<dyn Error>> {
+    ) -> Result<B2bResponse,Box<dyn Error>> {
         let url = format!("{}/mpesa/b2b/v1/paymentrequest", self.environment.base_url());
         let credentials = self.gen_security_credentials()?;
 
-        let data = json!({});
-        unimplemented!()
+        let payload = B2bPayload {
+            initiator_name,
+            security_credentials: &credentials,
+            command_id,
+            amount,
+            party_a,
+            sender_id,
+            party_b,
+            receiver_id,
+            remarks,
+            queue_timeout_url,
+            result_url,
+            account_ref,
+        };
+
+        let data = json!({
+            "Initiator": payload.initiator_name,
+            "SecurityCredential": payload.security_credentials,
+            "CommandID": payload.command_id.to_string(),
+            "SenderIdentifierType": payload.sender_id,
+            "RecieverIdentifierType": payload.receiver_id,
+            "Amount": payload.amount,
+            "PartyA": payload.party_a,
+            "PartyB": payload.party_b,
+            "AccountReference": payload.account_ref,
+            "Remarks": payload.remarks,
+            "QueueTimeOutURL": payload.queue_timeout_url,
+            "ResultURL": payload.result_url,
+        });
+
+        let response: B2bResponse = Client::new().post(&url)
+            .bearer_auth(self.auth()?)
+            .json(&data)
+            .send()?
+            .json()?;
+
+        Ok(response)
     }
 }

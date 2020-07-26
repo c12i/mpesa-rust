@@ -18,8 +18,13 @@ Copy your safaricom credentials to an `.env` file in the root of the project, ch
 
 See [here](https://developer.safaricom.co.ke/docs#developer-sign-up) if you need to acquire app keys.
 ```sh
-echo CLIENT_KEY="<your_client_key>" >> .env && echo CLIENT_SECRET="<your_client_secret>" >> .env
+echo CLIENT_KEY="<your_client_key>" >> .env
+echo CLIENT_SECRET="<your_client_secret>" >> .env
+echo INIT_PASSWORD="<your_initiator_password>" >> .env
 ```
+
+## Test Credentials
+You can get test credentials [here](https://developer.safaricom.co.ke/test_credentials)
 
 ## Run tests
 
@@ -34,6 +39,7 @@ cargo test
 - [ ] Error handling
 - [x] Generate security credentials
 - [x] Implement B2C payment
+- [x] Implement B2B payment
 - [ ] Query transaction status
 - [ ] Simulate C2B Payment
 - [ ] Query status of Lipa na M-Pesa

@@ -8,22 +8,23 @@ pub struct B2bPayload<'a> {
     pub command_id: CommandId,
     pub amount: u32,
     pub party_a: &'a str,
-    pub sender_id: &'a str,
+    pub sender_id: u32,
     pub party_b: &'a str,
-    pub receiver_id: &'a str,
+    pub receiver_id: u32,
     pub remarks: &'a str,
     pub queue_timeout_url: &'a str,
     pub result_url: &'a str,
-    pub occasion: &'a str,
+    pub account_ref: &'a str,
 }
 
 #[derive(Debug,Deserialize)]
 /// B2C response
 /// Field names deliberately in Pascal case to correctly deserialize the
 /// response data
-pub struct B2bResponse<'a> {
-    pub ConversationID: &'a str,
-    pub OriginatorConversationID: &'a str,
-    pub ResponseDescription: &'a str,
+pub struct B2bResponse {
+    pub ConversationID: String,
+    pub OriginatorConversationID: String,
+    pub ResponseCode: String,
+    pub ResponseDescription: String,
 }
 
