@@ -42,10 +42,12 @@ impl Environment {
     pub fn base_url(&self) -> &'static str{
         match self {
             Environment::Production => "https://api.safaricom.co.ke",
-            Environment::Sandbox => "https://sandbox.safaricom.co.ke"
+            Environment::Sandbox => "https://sandbox.safaricom.co.ke",
         }
     }
 
+    /// Match to X509 public key certificate based on
+    /// environment variant
      pub fn get_certificate(&self) -> &'static str {
         match self {
             Environment::Production => r#"-----BEGIN CERTIFICATE-----

@@ -35,8 +35,6 @@ mpesa = "0.1.0"
 
 In your lib or binary crate:
 ```rs
-extern crate mpesa;
-
 use mpesa::Mpesa;
 ```
 
