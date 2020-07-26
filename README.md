@@ -3,8 +3,8 @@
    <a href="https://crates.io/crates/mpesa" target="_blank">
      <img alt="Version" src="https://img.shields.io/crates/v/mpesa" />
    </a>
-  <a href="https://docs.rs/mpesa/0.1.0/mpesa/" target="_blank">
-    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
+  <a href="https://docs.rs/mpesa/0.1.1/mpesa/" target="_blank">
+    <img alt="Documentation" src="https://img.shields.io/badge/documentation-v0.1.1-blue.svg" />
   </a>
   <a href="https://travis-ci.com/collinsmuriuki/mpesa-rust" target="_blank">
       <img alt="mpesa travis-ci" src="https://travis-ci.com/collinsmuriuki/mpesa-rust.svg?branch=master" />
@@ -30,7 +30,7 @@ In your `Cargo.toml` file:
 
 ```md
 [dependencies]
-mpesa = "0.1.0"
+mpesa = "0.1.1"
 ```
 
 In your lib or binary crate:
