@@ -3,7 +3,6 @@ use dotenv;
 use std::env;
 
 #[test]
-#[ignore]
 fn b2c_test() {
     dotenv::dotenv().ok();
 
@@ -26,6 +25,8 @@ fn b2c_test() {
         "https://muriuki.dev/blog",
         "Test",
     ).unwrap();
+
+    println!("B2c response -> {:#?}", b2c_response);
 
     assert_eq!(b2c_response.ResponseCode, "0".to_string());
 }
