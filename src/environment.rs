@@ -1,10 +1,6 @@
 ///! # environment
 ///! Code related to setting up the desired Safaricom API environment
 
-
-/// Enum to match to either the production or sandbox base url
-/// Use when instantiating the `Mpesa` struct.\
-
 use std::str::FromStr;
 
 #[derive(Debug)]
