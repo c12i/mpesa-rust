@@ -107,7 +107,7 @@ impl Mpesa {
         let data = json!({
             "InitiatorName": payload.initiator_name,
             "SecurityCredential": payload.security_credentials,
-            "CommandID": payload.command_id.get_command_id_str(),
+            "CommandID": payload.command_id.to_string(),
             "Amount": payload.amount,
             "PartyA": payload.party_a,
             "PartyB": payload.party_b,
