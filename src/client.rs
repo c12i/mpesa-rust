@@ -8,8 +8,8 @@ use serde_json::json;
 
 use super::environment::Environment;
 use crate::CommandId;
-use super::payloads::{B2bResponse,B2cResponse,AuthResponse};
-use crate::payloads::{B2bPayload,B2cPayload};
+use super::payloads::{B2bResponse,B2cResponse,AuthResponse,C2bRegisterResponse};
+use crate::payloads::{B2bPayload,B2cPayload,C2bRegisterPayload};
 
 /// Mpesa client that will facilitate communication with the Safaricom API
 #[derive(Debug)]
@@ -198,7 +198,45 @@ impl Mpesa {
         Ok(response)
     }
 
-    pub fn c2b_register() {
+    /// Registers the the 3rd party’s confirmation and validation URLs to M-Pesa
+    ///
+    /// Registering maps these URLs to the 3rd party shortcode.
+    /// Whenever M-Pesa receives a transaction on the shortcode,
+    /// M-Pesa triggers a validation request against the validation URL and
+    /// the 3rd party system responds to M-Pesa with a validation response (either a success or an error code).
+    /// The response expected is the success code the 3rd party
+    pub fn c2b_register(
+        &self,
+        validation_url: &str,
+        confirmation_url: &str,
+        response_type: &str,
+        short_code: &str,
+    ) -> Result<Response, Box<dyn Error>> {
+        let url = format!("{}/mpesa/c2b/v1/registerurl", self.environment.base_url());
+
+        let payload = C2bRegisterPayload {
+            validation_url,
+            confirmation_url,
+            response_type,
+            short_code,
+        };
+
+        let data = json!({
+            "ValidationURL": payload.validation_url,
+            "ConfirmationURL": payload.confirmation_url,
+            "ResponseType": payload.response_type,
+            "ShortCode": payload.short_code,
+        });
+
+        let response = Client::new().post(&url)
+            .bearer_auth(self.auth()?)
+            .json(&data)
+            .send()?;
+
+        Ok(response)
+    }
+
+    pub fn c2b_simulate() {
         unimplemented!()
     }
 }
