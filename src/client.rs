@@ -8,8 +8,8 @@ use serde_json::json;
 
 use super::environment::Environment;
 use crate::CommandId;
-use super::payloads::{B2bResponse,B2cResponse,AuthResponse,C2bRegisterResponse};
-use crate::payloads::{B2bPayload,B2cPayload,C2bRegisterPayload};
+use super::payloads::{B2bResponse,B2cResponse,AuthResponse,C2bRegisterResponse,C2bSimulateResponse};
+use crate::payloads::{B2bPayload,B2cPayload,C2bRegisterPayload,C2bSimulatePayload};
 use crate::payloads::ResponseType;
 
 /// Mpesa client that will facilitate communication with the Safaricom API
@@ -88,6 +88,7 @@ impl Mpesa {
     pub fn b2c(
         &self,
         initiator_name: &str,
+        command_id: CommandId,
         amount: u32,
         party_a: &str,
         party_b: &str,
@@ -102,7 +103,7 @@ impl Mpesa {
         let payload = B2cPayload {
             initiator_name,
             security_credentials: &credentials,
-            command_id: CommandId::BusinessPayment,
+            command_id,
             amount,
             party_a,
             party_b,
@@ -147,6 +148,7 @@ impl Mpesa {
     pub fn b2b(
         &self,
         initiator_name: &str,
+        command_id: CommandId,
         amount: u32,
         party_a: &str,
         sender_id: u32,
@@ -163,7 +165,7 @@ impl Mpesa {
         let payload = B2bPayload {
             initiator_name,
             security_credentials: &credentials,
-            command_id: CommandId::BusinessToBusinessTransfer,
+            command_id,
             amount,
             party_a,
             sender_id,
@@ -206,6 +208,9 @@ impl Mpesa {
     /// M-Pesa triggers a validation request against the validation URL and
     /// the 3rd party system responds to M-Pesa with a validation response (either a success or an error code).
     /// The response expected is the success code the 3rd party
+    ///
+    /// # Errors
+    /// TODO
     pub fn c2b_register(
         &self,
         validation_url: &str,
@@ -237,7 +242,45 @@ impl Mpesa {
         Ok(response)
     }
 
-    pub fn c2b_simulate(&self) {
-        unimplemented!()
+    /// Make payment requests from Client to Business
+    ///
+    /// This enables you to receive the payment requests in real time.
+    /// See more here: https://developer.safaricom.co.ke/c2b/apis/post/simulate
+    ///
+    /// # Errors
+    /// TODO
+    pub fn c2b_simulate(
+        &self,
+        command_id: CommandId,
+        amount: u32,
+        msisdn: &str,
+        bill_ref_number: &str,
+        short_code: &str,
+    ) -> Result<C2bSimulateResponse, Box<dyn Error>> {
+        let url = format!("{}/mpesa/c2b/v1/simulate", self.environment.base_url());
+
+        let payload = C2bSimulatePayload {
+            command_id,
+            amount,
+            msisdn,
+            bill_ref_number,
+            short_code
+        };
+
+        let data = json!({
+            "CommandID": payload.command_id.to_string(),
+            "Amount": payload.amount,
+            "Msisdn": payload.msisdn,
+            "BillRefNumber": payload.bill_ref_number,
+            "ShortCode": short_code,
+        });
+
+        let response: C2bSimulateResponse = Client::new().post(&url)
+            .bearer_auth(self.auth()?)
+            .json(&data)
+            .send()?
+            .json()?;
+
+        Ok(response)
     }
 }
