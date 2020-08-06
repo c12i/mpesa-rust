@@ -1,4 +1,4 @@
-use mpesa::{Environment,Mpesa};
+use mpesa::{Environment,Mpesa,ResponseType};
 use dotenv;
 use std::env;
 
@@ -16,7 +16,7 @@ fn c2b_register_test() {
     let c2b_register_response = client.c2b_register(
         "https://muriuki.dev/api",
         "https://muriuki.dev/verify",
-        "ResponseType",
+        ResponseType::Complete,
         "600496"
     ).unwrap();
 

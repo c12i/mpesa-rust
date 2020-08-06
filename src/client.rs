@@ -10,6 +10,7 @@ use super::environment::Environment;
 use crate::CommandId;
 use super::payloads::{B2bResponse,B2cResponse,AuthResponse,C2bRegisterResponse};
 use crate::payloads::{B2bPayload,B2cPayload,C2bRegisterPayload};
+use crate::payloads::ResponseType;
 
 /// Mpesa client that will facilitate communication with the Safaricom API
 #[derive(Debug)]
@@ -209,7 +210,7 @@ impl Mpesa {
         &self,
         validation_url: &str,
         confirmation_url: &str,
-        response_type: &str,
+        response_type: ResponseType,
         short_code: &str,
     ) -> Result<Response, Box<dyn Error>> {
         let url = format!("{}/mpesa/c2b/v1/registerurl", self.environment.base_url());
@@ -224,7 +225,7 @@ impl Mpesa {
         let data = json!({
             "ValidationURL": payload.validation_url,
             "ConfirmationURL": payload.confirmation_url,
-            "ResponseType": payload.response_type,
+            "ResponseType": payload.response_type.to_string(),
             "ShortCode": payload.short_code,
         });
 
