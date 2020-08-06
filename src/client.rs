@@ -198,7 +198,7 @@ impl Mpesa {
         Ok(response)
     }
 
-    pub fn c2b() {
+    pub fn c2b_register() {
         unimplemented!()
     }
 }
