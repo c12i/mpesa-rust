@@ -236,7 +236,7 @@ impl Mpesa {
         Ok(response)
     }
 
-    pub fn c2b_simulate() {
+    pub fn c2b_simulate(&self) {
         unimplemented!()
     }
 }
