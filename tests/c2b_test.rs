@@ -1,4 +1,4 @@
-use mpesa::{Environment,Mpesa,ResponseType};
+use mpesa::{Environment,Mpesa,ResponseType,CommandId};
 use dotenv;
 use std::env;
 
