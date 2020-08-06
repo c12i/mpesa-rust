@@ -1,4 +1,4 @@
-use mpesa::{Mpesa,Environment};
+use mpesa::{Mpesa,Environment,CommandId};
 use dotenv;
 use std::env;
 
@@ -17,6 +17,7 @@ fn b2c_test() {
 
     let b2c_response = client.b2c(
         "testapi496",
+        CommandId::BusinessPayment,
         1000,
         "600496",
         "254708374149",

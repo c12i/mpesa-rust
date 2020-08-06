@@ -41,10 +41,10 @@ cargo test
 - [x] Implement B2C payment
 - [x] Implement B2B payment
 - [ ] Query transaction status
-- [ ] Simulate C2B Payment
+- [x] Simulate C2B Payment
 - [ ] Query status of Lipa na M-Pesa
 - [ ] Initiate Lipa na M-Pesa online w/ STK push
-- [ ] Register C2B Confirmation and Validation URLs
+- [x] Register C2B Confirmation and Validation URLs
 - [ ] Integration tests
 - [ ] Rewrite in async
 - [x] Publish on https://crates.io
