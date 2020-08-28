@@ -375,9 +375,7 @@ impl Mpesa {
 
     pub fn account_balance(
         &self,
-        command_id: CommandId,
         party_a: &str,
-        identifier_type: IdentifierTypes,
         remarks: &str,
         initiator_name: &str,
         queue_timeout_url: &str,
@@ -387,9 +385,9 @@ impl Mpesa {
         let credentials = self.gen_security_credentials()?;
 
         let payload = AccountBalancePayload {
-            command_id,
+            command_id: CommandId::AccountBalance,
             party_a,
-            identifier_type,
+            identifier_type: IdentifierTypes::Shortcode,
             remarks,
             initiator_name,
             queue_timeout_url,
@@ -400,7 +398,7 @@ impl Mpesa {
         let data = json!({
             "CommandID": payload.command_id.to_string(),
             "PartyA": payload.party_a,
-            "IdentifierType": payload.identifier_type.to_string(),
+            "IdentifierType": "4", // FIXME
             "Remarks": payload.remarks,
             "Initiator": payload.initiator_name,
             "SecurityCredential": payload.security_credentials,
@@ -408,7 +406,7 @@ impl Mpesa {
             "ResultURL": payload.result_url,
         });
 
-        let response: AccountBalanceResponse = Client::new().post(&url)
+        let response = Client::new().post(&url)
             .bearer_auth(self.auth()?)
             .json(&data)
             .send()?
