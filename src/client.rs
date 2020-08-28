@@ -7,10 +7,11 @@ use base64::encode;
 use serde_json::json;
 
 use super::environment::Environment;
-use crate::CommandId;
+use crate::{CommandId, IdentifierTypes};
 use super::payloads::{B2bResponse,B2cResponse,AuthResponse,C2bRegisterResponse,C2bSimulateResponse};
 use crate::payloads::{B2bPayload,B2cPayload,C2bRegisterPayload,C2bSimulatePayload};
 use crate::payloads::ResponseType;
+use crate::payloads::{AccountBalanceResponse,AccountBalancePayload};
 
 /// Mpesa client that will facilitate communication with the Safaricom API
 #[derive(Debug)]
@@ -364,6 +365,72 @@ impl Mpesa {
         });
 
         let response: C2bSimulateResponse = Client::new().post(&url)
+            .bearer_auth(self.auth()?)
+            .json(&data)
+            .send()?
+            .json()?;
+
+        Ok(response)
+    }
+
+    /// Enquire the balance on an M-Pesa BuyGoods (Till Number).
+    ///
+    /// # Example
+    /// ```
+    /// dotenv::dotenv().ok();
+    ///
+    /// let client = mpesa::Mpesa::new(
+    ///    std::env::var("CLIENT_KEY").unwrap(),
+    ///    std::env::var("CLIENT_SECRET").unwrap(),
+    ///    mpesa::Environment::Sandbox,
+    ///    std::env::var("INIT_PASSWORD").unwrap(),
+    /// );
+    ///
+    /// let account_balance_response = client.account_balance(
+    ///         "600496",
+    ///         "none",
+    ///         "collins",
+    ///         "https://hell.world/api",
+    ///         "https://hello.world/api"
+    ///     ).unwrap();
+    /// ```
+    ///
+    /// # Errors
+    /// TODO
+    pub fn account_balance(
+        &self,
+        party_a: &str,
+        remarks: &str,
+        initiator_name: &str,
+        queue_timeout_url: &str,
+        result_url: &str,
+    ) -> Result<AccountBalanceResponse, Box<dyn Error>> {
+        let url = format!("{}/mpesa/accountbalance/v1/query", self.environment.base_url());
+        let credentials = self.gen_security_credentials()?;
+
+        let payload = AccountBalancePayload {
+            command_id: CommandId::AccountBalance,
+            party_a,
+            identifier_type: IdentifierTypes::Shortcode,
+            remarks,
+            initiator_name,
+            queue_timeout_url,
+            result_url,
+            security_credentials: &credentials,
+        };
+
+        let data = json!({
+            "CommandID": payload.command_id.to_string(),
+            "PartyA": payload.party_a,
+            "IdentifierType": "4", // FIXME
+            "Remarks": payload.remarks,
+            "Initiator": payload.initiator_name,
+            "SecurityCredential": payload.security_credentials,
+            "QueueTimeOutURL": payload.queue_timeout_url,
+            "ResultURL": payload.result_url,
+        });
+
+        let response = Client::new().post(&url)
             .bearer_auth(self.auth()?)
             .json(&data)
             .send()?
