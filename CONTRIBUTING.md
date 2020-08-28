@@ -40,7 +40,7 @@ cargo test
 - [x] Generate security credentials
 - [x] Implement B2C payment
 - [x] Implement B2B payment
-- [ ] Query transaction status
+- [x] Query transaction status
 - [x] Simulate C2B Payment
 - [ ] Query status of Lipa na M-Pesa
 - [ ] Initiate Lipa na M-Pesa online w/ STK push
