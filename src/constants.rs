@@ -34,9 +34,19 @@ pub enum IdentifierTypes {
     Shortcode = 4,
 }
 
+impl IdentifierTypes {
+    pub fn get_code(&self) -> &str {
+        match self {
+            IdentifierTypes::MSISDN => "1",
+            IdentifierTypes::TillNumber => "2",
+            IdentifierTypes::Shortcode => "4",
+        }
+    }
+}
+
 impl Display for IdentifierTypes {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        write!(f, "{:?}", self)
+        write!(f, "{:?}", self.get_code())
     }
 }
 
