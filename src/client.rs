@@ -373,6 +373,30 @@ impl Mpesa {
         Ok(response)
     }
 
+    /// Enquire the balance on an M-Pesa BuyGoods (Till Number).
+    ///
+    /// # Example
+    /// ```
+    /// dotenv::dotenv().ok();
+    ///
+    /// let client = mpesa::Mpesa::new(
+    ///    std::env::var("CLIENT_KEY").unwrap(),
+    ///    std::env::var("CLIENT_SECRET").unwrap(),
+    ///    mpesa::Environment::Sandbox,
+    ///    std::env::var("INIT_PASSWORD").unwrap(),
+    /// );
+    ///
+    /// let account_balance_response = client.account_balance(
+    ///         "600496",
+    ///         "none",
+    ///         "collins",
+    ///         "https://hell.world/api",
+    ///         "https://hello.world/api"
+    ///     ).unwrap();
+    /// ```
+    ///
+    /// # Errors
+    /// TODO
     pub fn account_balance(
         &self,
         party_a: &str,
