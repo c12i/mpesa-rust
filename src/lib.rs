@@ -17,5 +17,5 @@ pub mod constants;
 
 pub use client::Mpesa;
 pub use environment::Environment;
-pub use constants::CommandId;
+pub use constants::{CommandId,IdentifierTypes};
 pub use payloads::ResponseType;

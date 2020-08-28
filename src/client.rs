@@ -7,10 +7,11 @@ use base64::encode;
 use serde_json::json;
 
 use super::environment::Environment;
-use crate::CommandId;
+use crate::{CommandId, IdentifierTypes};
 use super::payloads::{B2bResponse,B2cResponse,AuthResponse,C2bRegisterResponse,C2bSimulateResponse};
 use crate::payloads::{B2bPayload,B2cPayload,C2bRegisterPayload,C2bSimulatePayload};
 use crate::payloads::ResponseType;
+use crate::payloads::{AccountBalanceResponse,AccountBalancePayload};
 
 /// Mpesa client that will facilitate communication with the Safaricom API
 #[derive(Debug)]
@@ -364,6 +365,50 @@ impl Mpesa {
         });
 
         let response: C2bSimulateResponse = Client::new().post(&url)
+            .bearer_auth(self.auth()?)
+            .json(&data)
+            .send()?
+            .json()?;
+
+        Ok(response)
+    }
+
+    pub fn account_balance(
+        &self,
+        command_id: CommandId,
+        party_a: &str,
+        identifier_type: IdentifierTypes,
+        remarks: &str,
+        initiator_name: &str,
+        queue_timeout_url: &str,
+        result_url: &str,
+    ) -> Result<AccountBalanceResponse, Box<dyn Error>> {
+        let url = format!("{}/mpesa/accountbalance/v1/query", self.environment.base_url());
+        let credentials = self.gen_security_credentials()?;
+
+        let payload = AccountBalancePayload {
+            command_id,
+            party_a,
+            identifier_type,
+            remarks,
+            initiator_name,
+            queue_timeout_url,
+            result_url,
+            security_credentials: &credentials,
+        };
+
+        let data = json!({
+            "CommandID": payload.command_id.to_string(),
+            "PartyA": payload.party_a,
+            "IdentifierType": payload.identifier_type.to_string(),
+            "Remarks": payload.remarks,
+            "Initiator": payload.initiator_name,
+            "SecurityCredential": payload.security_credentials,
+            "QueueTimeOutURL": payload.queue_timeout_url,
+            "ResultURL": payload.result_url,
+        });
+
+        let response: AccountBalanceResponse = Client::new().post(&url)
             .bearer_auth(self.auth()?)
             .json(&data)
             .send()?
