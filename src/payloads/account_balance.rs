@@ -18,7 +18,8 @@ pub struct AccountBalancePayload<'a> {
 /// response data
 #[derive(Debug,Deserialize)]
 pub struct AccountBalanceResponse {
-    pub OriginatorConverstionID: String,
+    pub OriginatorConversationID: String,
     pub ConversationID: String,
+    pub ResponseCode: String,
     pub ResponseDescription: String,
 }
