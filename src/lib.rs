@@ -1,14 +1,45 @@
-#![allow(dead_code)]
-#![allow(unused_imports)]
-//! # mpesa
-//! A work in progress implementation
 //! ## About
+//!
 //! A Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs?shell#introduction) for accessing M-Pesa services.
+// Currently, a work in progress project.
+//
+//! ## Notes
+//!  **Warning!** v0.*. Expect bugs therefore not recommended for use in production. Pull requests and issues very welcome.
 //!
-//! This will allow you to make hassle free requests to the daraja API to perform B2B, B2C, and C2B transactions.
+//! ## Install & Usage
+//! In your `Cargo.toml` file:
 //!
-//! Currently work in progress, documentation will be added every step of the way.
-
+//! ```md
+//! [dependencies]
+//! mpesa = "0.1.5"
+//! ```
+//!
+//! In your lib or binary crate:
+//! ```rs
+//! use mpesa::Mpesa;
+//! ```
+//!
+//! ## Examples
+//!
+//! Use [`dotenv`](https://docs.rs/dotenv/0.15.0/dotenv/fn.dotenv.html) crate to store your keys as environmental variables instead of hard coding them like done in the example below.
+//!
+//! ```rs
+//! use mpesa::{Mpesa, Environment};
+//!
+//! let client = Mpesa::new(
+//!       String::from("your_client_key"),
+//!       String::from("your_client_secret"),
+//!       Environment::Sandbox,
+//!       String::from("your_initiator_password"),
+//! );
+//! ```
+//!
+//! ## Author
+//!
+//! **Collins Muriuki**
+//!
+//! ## License
+//! This project is MIT licensed
 mod utils;
 mod client;
 pub mod environment;
