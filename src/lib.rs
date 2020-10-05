@@ -40,7 +40,7 @@
 //!
 //! ## License
 //! This project is MIT licensed
-mod utils;
+
 mod client;
 pub mod environment;
 pub mod payloads;

@@ -1,3 +1,4 @@
+#![allow(non_snake_case)]
 mod auth;
 mod b2c;
 mod b2b;
