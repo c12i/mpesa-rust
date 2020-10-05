@@ -14,8 +14,10 @@ mod client;
 pub mod environment;
 pub mod payloads;
 pub mod constants;
+pub mod mpesa_security;
 
 pub use client::Mpesa;
 pub use environment::Environment;
 pub use constants::{CommandId,IdentifierTypes};
 pub use payloads::ResponseType;
+pub use mpesa_security::MpesaSecurity;
