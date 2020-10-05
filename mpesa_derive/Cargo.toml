@@ -3,6 +3,9 @@ name = "mpesa_derive"
 version = "0.1.0"
 authors = ["Collins Muriuki <murerwacollins@gmail.com>"]
 edition = "2018"
+description = "A wrapper around the M-PESA API in Rust."
+repository = "https://github.com/collinsmuriuki/mpesa-rust"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
