@@ -1,5 +1,5 @@
-use mpesa::{Environment,Mpesa,ResponseType,CommandId};
 use dotenv;
+use mpesa::{CommandId, Environment, Mpesa, ResponseType};
 use std::env;
 
 #[test]
@@ -13,12 +13,17 @@ fn c2b_register_test() {
         env::var("INIT_PASSWORD").unwrap(),
     );
 
-    let c2b_register_response = client.c2b_register(
-        "https://muriuki.dev/api",
-        "https://muriuki.dev/verify",
-        ResponseType::Complete,
-        "600496"
-    ).unwrap();
+    let c2b_register_response = client
+        .c2b_register(
+            "https://muriuki.dev/api",
+            "https://muriuki.dev/verify",
+            ResponseType::Complete,
+            "600496",
+        )
+        .unwrap();
 
-    assert_eq!("https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl", c2b_register_response.url().as_str());
+    assert_eq!(
+        "https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl",
+        c2b_register_response.url().as_str()
+    );
 }

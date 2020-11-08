@@ -1,15 +1,17 @@
-use std::collections::HashMap;
+use mpesa_derive::MpesaSecurity;
 use reqwest::blocking::{Client, Response};
 use serde_json::json;
-use mpesa_derive::MpesaSecurity;
+use std::collections::HashMap;
 
 use super::environment::Environment;
-use crate::{CommandId, IdentifierTypes};
-use super::payloads::{B2bResponse,B2cResponse,AuthResponse,C2bRegisterResponse,C2bSimulateResponse};
-use crate::payloads::{B2bPayload,B2cPayload,C2bRegisterPayload,C2bSimulatePayload};
-use crate::payloads::ResponseType;
-use crate::payloads::{AccountBalanceResponse,AccountBalancePayload};
+use super::payloads::{
+    AuthResponse, B2bResponse, B2cResponse, C2bRegisterResponse, C2bSimulateResponse,
+};
 use crate::mpesa_security::MpesaSecurity;
+use crate::payloads::ResponseType;
+use crate::payloads::{AccountBalancePayload, AccountBalanceResponse};
+use crate::payloads::{B2bPayload, B2cPayload, C2bRegisterPayload, C2bSimulatePayload};
+use crate::{CommandId, IdentifierTypes};
 
 /// Mpesa client that will facilitate communication with the Safaricom API
 #[derive(Debug, MpesaSecurity)]
@@ -22,7 +24,12 @@ pub struct Mpesa {
 
 impl Mpesa {
     /// Constructs a new `Mpesa` instance.
-    pub fn new(client_key: String, client_secret: String, environment: Environment, initiator_password: String) -> Self {
+    pub fn new(
+        client_key: String,
+        client_secret: String,
+        environment: Environment,
+        initiator_password: String,
+    ) -> Self {
         Self {
             client_key,
             client_secret,
@@ -35,9 +42,13 @@ impl Mpesa {
     /// Sends `GET` request to Safaricom oauth to acquire token for token authentication
     /// The OAuth access token expires after an hour, after which, you will need to generate another access token
     fn auth(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let url = format!("{}/oauth/v1/generate?grant_type=client_credentials", self.environment.base_url());
+        let url = format!(
+            "{}/oauth/v1/generate?grant_type=client_credentials",
+            self.environment.base_url()
+        );
 
-        let resp: AuthResponse = Client::new().get(&url)
+        let resp: AuthResponse = Client::new()
+            .get(&url)
             .basic_auth(&self.client_key, Some(&self.client_secret))
             .send()?
             .json()?;
@@ -89,9 +100,12 @@ impl Mpesa {
         remarks: &str,
         queue_timeout_url: &str,
         result_url: &str,
-        occasion: &str
+        occasion: &str,
     ) -> Result<B2cResponse, Box<dyn std::error::Error>> {
-        let url = format!("{}/mpesa/b2c/v1/paymentrequest", self.environment.base_url());
+        let url = format!(
+            "{}/mpesa/b2c/v1/paymentrequest",
+            self.environment.base_url()
+        );
         let credentials = self.gen_security_credentials()?;
 
         let payload = B2cPayload {
@@ -120,7 +134,8 @@ impl Mpesa {
             "Occasion": payload.occasion,
         });
 
-        let response: B2cResponse = Client::new().post(&url)
+        let response: B2cResponse = Client::new()
+            .post(&url)
             .bearer_auth(self.auth()?)
             .json(&data)
             .send()?
@@ -177,8 +192,11 @@ impl Mpesa {
         queue_timeout_url: &str,
         result_url: &str,
         account_ref: &str,
-    ) -> Result<B2bResponse,Box<dyn std::error::Error>> {
-        let url = format!("{}/mpesa/b2b/v1/paymentrequest", self.environment.base_url());
+    ) -> Result<B2bResponse, Box<dyn std::error::Error>> {
+        let url = format!(
+            "{}/mpesa/b2b/v1/paymentrequest",
+            self.environment.base_url()
+        );
         let credentials = self.gen_security_credentials()?;
 
         let payload = B2bPayload {
@@ -211,7 +229,8 @@ impl Mpesa {
             "ResultURL": payload.result_url,
         });
 
-        let response: B2bResponse = Client::new().post(&url)
+        let response: B2bResponse = Client::new()
+            .post(&url)
             .bearer_auth(self.auth()?)
             .json(&data)
             .send()?
@@ -272,7 +291,8 @@ impl Mpesa {
             "ShortCode": payload.short_code,
         });
 
-        let response = Client::new().post(&url)
+        let response = Client::new()
+            .post(&url)
             .bearer_auth(self.auth()?)
             .json(&data)
             .send()?;
@@ -322,7 +342,7 @@ impl Mpesa {
             amount,
             msisdn,
             bill_ref_number,
-            short_code
+            short_code,
         };
 
         let data = json!({
@@ -333,7 +353,8 @@ impl Mpesa {
             "ShortCode": short_code,
         });
 
-        let response: C2bSimulateResponse = Client::new().post(&url)
+        let response: C2bSimulateResponse = Client::new()
+            .post(&url)
             .bearer_auth(self.auth()?)
             .json(&data)
             .send()?
@@ -374,7 +395,10 @@ impl Mpesa {
         queue_timeout_url: &str,
         result_url: &str,
     ) -> Result<AccountBalanceResponse, Box<dyn std::error::Error>> {
-        let url = format!("{}/mpesa/accountbalance/v1/query", self.environment.base_url());
+        let url = format!(
+            "{}/mpesa/accountbalance/v1/query",
+            self.environment.base_url()
+        );
         let credentials = self.gen_security_credentials()?;
 
         let payload = AccountBalancePayload {
@@ -399,7 +423,8 @@ impl Mpesa {
             "ResultURL": payload.result_url,
         });
 
-        let response = Client::new().post(&url)
+        let response = Client::new()
+            .post(&url)
             .bearer_auth(self.auth()?)
             .json(&data)
             .send()?

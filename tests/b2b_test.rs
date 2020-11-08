@@ -1,5 +1,5 @@
-use mpesa::{Mpesa,Environment,CommandId};
 use dotenv;
+use mpesa::{CommandId, Environment, Mpesa};
 use std::env;
 
 #[test]
@@ -13,19 +13,21 @@ fn b2b_test() {
         env::var("INIT_PASSWORD").unwrap(),
     );
 
-    let b2b_response = client.b2b(
-        "testapi496",
-        CommandId::BusinessToBusinessTransfer,
-        1000,
-        "600496",
-        4,
-        "600000",
-        4,
-        "gg",
-        "https://muriuki.dev",
-        "https://muriuki.dev/blog",
-        "254708374149",
-    ).unwrap();
+    let b2b_response = client
+        .b2b(
+            "testapi496",
+            CommandId::BusinessToBusinessTransfer,
+            1000,
+            "600496",
+            4,
+            "600000",
+            4,
+            "gg",
+            "https://muriuki.dev",
+            "https://muriuki.dev/blog",
+            "254708374149",
+        )
+        .unwrap();
 
     println!("B2b response -> {:#?}", b2b_response);
 

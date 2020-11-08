@@ -1,5 +1,5 @@
-use mpesa::{Mpesa,Environment,CommandId};
 use dotenv;
+use mpesa::{CommandId, Environment, Mpesa};
 use std::env;
 
 #[test]
@@ -13,14 +13,15 @@ fn b2b_test() {
         env::var("INIT_PASSWORD").unwrap(),
     );
 
-    let account_balance_response = client.account_balance(
-        "600496",
-        "none",
-        "collins",
-        "https://hell.world/api",
-        "https://hello.world/api"
-    ).unwrap();
-
+    let account_balance_response = client
+        .account_balance(
+            "600496",
+            "none",
+            "collins",
+            "https://hell.world/api",
+            "https://hello.world/api",
+        )
+        .unwrap();
 
     println!("B2b response -> {:#?}", account_balance_response);
 

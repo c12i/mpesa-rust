@@ -1,5 +1,5 @@
-use serde::{Deserialize};
 use crate::CommandId;
+use serde::Deserialize;
 
 #[derive(Debug)]
 /// Payload to allow for b2c transactions:

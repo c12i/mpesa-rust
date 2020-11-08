@@ -1,6 +1,6 @@
-use serde::Deserialize;
-use std::fmt::{Display,Formatter,Result as FmtResult};
 use crate::CommandId;
+use serde::Deserialize;
+use std::fmt::{Display, Formatter, Result as FmtResult};
 
 #[derive(Debug)]
 /// Payload to register the 3rd party’s confirmation and validation URLs to M-Pesa
@@ -12,7 +12,7 @@ pub struct C2bRegisterPayload<'a> {
     pub short_code: &'a str,
 }
 
-#[derive(Debug,Deserialize)]
+#[derive(Debug, Deserialize)]
 /// C2B register response
 /// Field names deliberately in Pascal case to correctly deserialize the
 /// response data

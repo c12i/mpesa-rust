@@ -9,7 +9,6 @@ pub fn mpesa_security_derive(input: TokenStream) -> TokenStream {
     let ast = syn::parse(input).expect("Error parsing input");
 
     impl_mpesa_security(&ast)
-
 }
 
 fn impl_mpesa_security(ast: &syn::DeriveInput) -> TokenStream {

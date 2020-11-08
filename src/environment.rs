@@ -1,6 +1,5 @@
 ///! # environment
 ///! Code related to setting up the desired Safaricom API environment
-
 use std::str::FromStr;
 
 #[derive(Debug)]
@@ -19,23 +18,23 @@ impl FromStr for Environment {
         match s {
             "production" => Ok(Self::Production),
             "sandbox" => Ok(Self::Sandbox),
-            _ => Err(String::from("error"))
+            _ => Err(String::from("error")),
         }
     }
 }
 
 impl Environment {
     /// Matches to intended base_url depending on Environment variant
-    /// 
+    ///
     /// ## Example
     /// ```
     /// use mpesa::Environment;
-    /// 
+    ///
     /// let env: Environment = Environment::Production;
     /// let base_url: &str = env.base_url();
     /// assert_eq!("https://api.safaricom.co.ke", base_url);
     /// ```
-    pub fn base_url(&self) -> &'static str{
+    pub fn base_url(&self) -> &'static str {
         match self {
             Environment::Production => "https://api.safaricom.co.ke",
             Environment::Sandbox => "https://sandbox.safaricom.co.ke",
@@ -44,9 +43,10 @@ impl Environment {
 
     /// Match to X509 public key certificate based on
     /// environment variant
-     pub fn get_certificate(&self) -> &'static str {
+    pub fn get_certificate(&self) -> &'static str {
         match self {
-            Environment::Production => r#"-----BEGIN CERTIFICATE-----
+            Environment::Production => {
+                r#"-----BEGIN CERTIFICATE-----
 MIIGkzCCBXugAwIBAgIKXfBp5gAAAD+hNjANBgkqhkiG9w0BAQsFADBbMRMwEQYK
 CZImiZPyLGQBGRYDbmV0MRkwFwYKCZImiZPyLGQBGRYJc2FmYXJpY29tMSkwJwYD
 VQQDEyBTYWZhcmljb20gSW50ZXJuYWwgSXNzdWluZyBDQSAwMjAeFw0xNzA0MjUx
@@ -84,8 +84,10 @@ dqAmj8WYkYdWIHQlkKFP9ba0RJv7aBKb8/KP+qZ5hJip0I5Ey6JJ3wlEWRWUYUKh
 gYoPHrJ92ToadnFCCpOlLKWc0xVxANofy6fqreOVboPO0qTAYpoXakmgeRNLUiar
 0ah6M/q/KA==
 -----END CERTIFICATE-----
-"#,
-            Environment::Sandbox => r#"-----BEGIN CERTIFICATE-----
+"#
+            }
+            Environment::Sandbox => {
+                r#"-----BEGIN CERTIFICATE-----
 MIIGKzCCBROgAwIBAgIQDL7NH8cxSdUpl0ihH0A1wTANBgkqhkiG9w0BAQsFADBN
 MQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMScwJQYDVQQDEx5E
 aWdpQ2VydCBTSEEyIFNlY3VyZSBTZXJ2ZXIgQ0EwHhcNMTgwODI3MDAwMDAwWhcN
@@ -120,7 +122,8 @@ gh7AkKnqcf+g8F/MvCCVdNAiVMdz6UpCscf6BRPHNZ5ifvChGh7aUKjrVLLuF4Ls
 HE05qm6HNyV5eTa6wvcbc4ewguN1UDZvPWetSyfBk10Wbpor4znQ4TJ3Y9uCvsJH
 41ldblDvZZ2z4kB2UYQ7iBkPlJSxSOaFgW/GGDXq49sz/995xzhVITHxh2SdLkI=
 -----END CERTIFICATE-----
- "#,
+ "#
+            }
         }
     }
 }

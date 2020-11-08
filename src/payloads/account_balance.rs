@@ -1,5 +1,5 @@
+use crate::{CommandId, IdentifierTypes};
 use serde::Deserialize;
-use crate::{CommandId,IdentifierTypes};
 
 #[derive(Debug)]
 pub struct AccountBalancePayload<'a> {
@@ -16,7 +16,7 @@ pub struct AccountBalancePayload<'a> {
 /// B2C response
 /// Field names deliberately in Pascal case to correctly deserialize the
 /// response data
-#[derive(Debug,Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct AccountBalanceResponse {
     pub OriginatorConversationID: String,
     pub ConversationID: String,

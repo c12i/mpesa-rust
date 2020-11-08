@@ -42,13 +42,13 @@
 //! This project is MIT licensed
 
 mod client;
-pub mod environment;
-pub mod payloads;
 pub mod constants;
+pub mod environment;
 pub mod mpesa_security;
+pub mod payloads;
 
 pub use client::Mpesa;
+pub use constants::{CommandId, IdentifierTypes};
 pub use environment::Environment;
-pub use constants::{CommandId,IdentifierTypes};
-pub use payloads::ResponseType;
 pub use mpesa_security::MpesaSecurity;
+pub use payloads::ResponseType;

@@ -1,5 +1,5 @@
-use mpesa::{Mpesa,Environment,CommandId};
 use dotenv;
+use mpesa::{CommandId, Environment, Mpesa};
 use std::env;
 
 #[test]
@@ -15,17 +15,19 @@ fn b2c_test() {
 
     println!("{:#?}", client);
 
-    let b2c_response = client.b2c(
-        "testapi496",
-        CommandId::BusinessPayment,
-        1000,
-        "600496",
-        "254708374149",
-        "gg",
-        "https://muriuki.dev",
-        "https://muriuki.dev/blog",
-        "Test",
-    ).unwrap();
+    let b2c_response = client
+        .b2c(
+            "testapi496",
+            CommandId::BusinessPayment,
+            1000,
+            "600496",
+            "254708374149",
+            "gg",
+            "https://muriuki.dev",
+            "https://muriuki.dev/blog",
+            "Test",
+        )
+        .unwrap();
 
     println!("B2c response -> {:#?}", b2c_response);
 

@@ -1,4 +1,4 @@
-use std::fmt::{Display,Formatter,Result as FmtResult};
+use std::fmt::{Display, Formatter, Result as FmtResult};
 
 /// Mpesa command ids
 #[derive(Debug)]
