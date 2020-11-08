@@ -36,7 +36,7 @@ cargo test
 
 - [x] Create Mpesa Client struct
 - [x] Implement Auth
-- [ ] Error handling
+- [ ] Error handling - potentially use [failure](https://crates.io/crates/failure) crate for this
 - [x] Generate security credentials
 - [x] Implement B2C payment
 - [x] Implement B2B payment
@@ -49,6 +49,7 @@ cargo test
 - [ ] Rewrite in async
 - [x] Publish on https://crates.io
 - [x] Setup travis-ci
+- [ ] Improve documentation
 
 
 ## Pull Requests
