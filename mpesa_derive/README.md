@@ -1,3 +1,3 @@
 # mpesa_derive
 
-`MpesaSecurity` trait derive macro crate. See [mpesa](https://crates.io/mpesa)
+`MpesaSecurity` trait derive macro crate. See [mpesa](https://crates.io/crates/mpesa)
