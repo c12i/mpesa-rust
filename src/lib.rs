@@ -11,7 +11,7 @@
 //!
 //! ```md
 //! [dependencies]
-//! mpesa = "0.1.5"
+//! mpesa = "0.1.6"
 //! ```
 //!
 //! In your lib or binary crate:
@@ -25,12 +25,13 @@
 //!
 //! ```rs
 //! use mpesa::{Mpesa, Environment};
+//! use std::env;
 //!
 //! let client = Mpesa::new(
-//!       String::from("your_client_key"),
-//!       String::from("your_client_secret"),
+//!       env::var("CLIENT_KEY")?,
+//!       env::var("CLIENT_SECRET")?,
 //!       Environment::Sandbox,
-//!       String::from("your_initiator_password"),
+//!       env::var("INIT_PASSWORD")?,
 //! );
 //! ```
 //!

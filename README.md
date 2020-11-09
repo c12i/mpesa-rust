@@ -26,7 +26,7 @@ A Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs
 
 ```md
 [dependencies]
-mpesa = "0.1.5"
+mpesa = "0.1.6"
 ```
 
 In your lib or binary crate:
@@ -36,16 +36,15 @@ use mpesa::Mpesa;
 
 ## Examples
 
-Use [`dotenv`](https://docs.rs/dotenv/0.15.0/dotenv/fn.dotenv.html) crate to store your keys as environmental variables instead of hard coding them like done in the example below.
-
 ```rs
 use mpesa::{Mpesa, Environment};
+use std::env;
 
 let client = Mpesa::new(
-      String::from("your_client_key"),
-      String::from("your_client_secret"),
+      env::var("CLIENT_KEY")?,
+      env::var("CLIENT_SECRET")?,
       Environment::Sandbox,
-      String::from("your_initiator_password"),
+      env::var("INIT_PASSWORD")?,
 );
 ```
 
