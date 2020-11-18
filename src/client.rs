@@ -76,7 +76,8 @@ impl<'a> Mpesa {
     /// # B2C Builder
     /// Creates a `B2cBuilder` for building a B2C transaction struct.
     /// The builder is consumed and request made by calling its `send` method.
-    /// Requires an `initiator_name`.
+    ///
+    /// Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
     ///
     /// # Example
     /// ```
@@ -93,7 +94,8 @@ impl<'a> Mpesa {
 
     /// # B2B Builder
     /// Creates a `B2bBuilder` for building B2B transaction struct.
-    /// Requires an `initiator_name`
+    ///
+    /// Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
     /// ```
     /// let b2b_response = client.b2b("testapi496")
     ///     .parties("600496", "600000")

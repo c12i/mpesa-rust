@@ -40,7 +40,7 @@ pub struct B2bBuilder<'a> {
 
 impl<'a> B2bBuilder<'a> {
     /// Creates a new B2B builder
-    /// Requires a `initiator_name`
+    /// Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
     pub fn new(client: &'a Mpesa, initiator_name: &'a str) -> B2bBuilder<'a> {
         B2bBuilder {
             client,
