@@ -1,6 +1,7 @@
 use super::environment::Environment;
-use super::services::{B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bSimulateBuilder};
-use crate::services::{AccountBalancePayload, AccountBalanceResponse};
+use super::services::{
+    AccountBalanceBuilder, B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bSimulateBuilder,
+};
 use crate::MpesaError;
 use crate::{CommandId, IdentifierTypes};
 use reqwest::blocking::Client;
@@ -96,6 +97,8 @@ impl<'a> Mpesa {
     /// Creates a `B2bBuilder` for building B2B transaction struct.
     ///
     /// Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
+    ///
+    /// # Example
     /// ```
     /// let b2b_response = client.b2b("testapi496")
     ///     .parties("600496", "600000")
@@ -110,6 +113,8 @@ impl<'a> Mpesa {
 
     /// # C2B Register builder
     /// Creates a `C2bRegisterBuilder` for registering URLs to the 3rd party shortcode.
+    ///
+    /// # Example
     /// ```
     /// let response = client
     ///     .c2b_register()
@@ -124,6 +129,8 @@ impl<'a> Mpesa {
 
     /// # C2B Simulate Builder
     /// Creates a `C2bSimulateBuilder` for simulating C2B transactions
+    ///
+    /// # Example
     /// ```
     /// let response = client.c2b_simulate()
     ///         .short_code("600496")
@@ -135,73 +142,19 @@ impl<'a> Mpesa {
         C2bSimulateBuilder::new(&self)
     }
 
-    // /// Enquire the balance on an M-Pesa BuyGoods (Till Number).
-    // ///
-    // /// # Example
-    // /// ```
-    // /// dotenv::dotenv().ok();
-    // ///
-    // /// let client = mpesa::Mpesa::new(
-    // ///    std::env::var("CLIENT_KEY").unwrap(),
-    // ///    std::env::var("CLIENT_SECRET").unwrap(),
-    // ///    mpesa::Environment::Sandbox,
-    // ///    std::env::var("INIT_PASSWORD").unwrap(),
-    // /// );
-    // ///
-    // /// let account_balance_response = client.account_balance(
-    // ///         "600496",
-    // ///         "none",
-    // ///         "collins",
-    // ///         "https://hell.world/api",
-    // ///         "https://hello.world/api"
-    // ///     ).unwrap();
-    // /// ```
-    // ///
-    // /// # Errors
-    // /// TODO
-    // pub fn account_balance(
-    //     &self,
-    //     party_a: &str,
-    //     remarks: &str,
-    //     initiator_name: &str,
-    //     queue_timeout_url: &str,
-    //     result_url: &str,
-    // ) -> Result<AccountBalanceResponse, Box<dyn std::error::Error>> {
-    //     let url = format!(
-    //         "{}/mpesa/accountbalance/v1/query",
-    //         self.environment.base_url()
-    //     );
-    //     let credentials = self.gen_security_credentials()?;
-    //
-    //     let payload = AccountBalancePayload {
-    //         command_id: CommandId::AccountBalance,
-    //         party_a,
-    //         identifier_type: IdentifierTypes::Shortcode,
-    //         remarks,
-    //         initiator_name,
-    //         queue_timeout_url,
-    //         result_url,
-    //         security_credentials: &credentials,
-    //     };
-    //
-    //     let data = json!({
-    //         "CommandID": payload.command_id.to_string(),
-    //         "PartyA": payload.party_a,
-    //         "IdentifierType": "4", // FIXME
-    //         "Remarks": payload.remarks,
-    //         "Initiator": payload.initiator_name,
-    //         "SecurityCredential": payload.security_credentials,
-    //         "QueueTimeOutURL": payload.queue_timeout_url,
-    //         "ResultURL": payload.result_url,
-    //     });
-    //
-    //     let response = Client::new()
-    //         .post(&url)
-    //         .bearer_auth(self.auth()?)
-    //         .json(&data)
-    //         .send()?
-    //         .json()?;
-    //
-    //     Ok(response)
-    // }
+    /// # Account Balance Builder
+    /// Creates an `AccountBalanceBuilder` for enquiring the balance on an MPESA BuyGoods.
+    /// Requires an `initiator_name`
+    ///
+    /// # Example
+    /// ```
+    /// let response = client
+    ///         .account_balance("testapi496")
+    ///         .urls("https://testdomain.com/err", "https://testdomain.com/ok")
+    ///         .party_a("600496")
+    ///         .send();
+    /// ```
+    pub fn account_balance(&'a self, initiator_name: &'a str) -> AccountBalanceBuilder<'a> {
+        AccountBalanceBuilder::new(&self, initiator_name)
+    }
 }
