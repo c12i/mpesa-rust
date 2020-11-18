@@ -97,6 +97,14 @@ impl<'a> Mpesa {
     /// # B2B Builder
     /// Creates a `B2bBuilder` for building B2B transaction struct.
     /// Requires an `initiator_name`
+    /// ```
+    /// let b2b_response = client.b2b("testapi496")
+    ///     .parties("600496", "600000")
+    ///     .urls("https://testdomain.com/err", "https://testdomain.com/api")
+    ///     .account_ref("254708374149")
+    ///     .amount(1000)
+    ///     .send();
+    /// ```
     pub fn b2b(&'a self, initiator_name: &'a str) -> B2bBuilder<'a> {
         B2bBuilder::new(&self, initiator_name)
     }

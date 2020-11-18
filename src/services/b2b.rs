@@ -3,7 +3,7 @@ use crate::client::{Mpesa, MpesaResult};
 use crate::errors::MpesaError;
 use reqwest::blocking::Client;
 use serde::Deserialize;
-use serde_json::Value;
+use serde_json::{json, Value};
 use crate::MpesaSecurity;
 
 #[derive(Debug)]
@@ -39,7 +39,7 @@ pub struct B2bBuilder<'a> {
     account_ref: Option<&'a str>,
 }
 
-impl<'a> B2bBuilder {
+impl<'a> B2bBuilder<'a> {
     /// Creates a new B2B builder
     /// Requires a `initiator_name`
     pub fn new(client: &'a Mpesa, initiator_name: &'a str) -> B2bBuilder<'a> {
@@ -115,7 +115,7 @@ impl<'a> B2bBuilder {
         self
     }
 
-    /// Adds `remarks`. This field is optional, will default to empty string if not explicitly passed
+    /// Adds `remarks`. This field is optional, will default to "None" if not explicitly passed
     pub fn remarks(mut self, remarks: &'a str) -> B2bBuilder<'a> {
         self.remarks = Some(remarks);
         self
@@ -134,7 +134,7 @@ impl<'a> B2bBuilder {
     pub fn send(self) -> MpesaResult<Value> {
         let url = format!(
             "{}/mpesa/b2b/v1/paymentrequest",
-            self.environment.base_url()
+            self.client.environment().base_url()
         );
         let credentials = self.client.gen_security_credentials()?;
 
@@ -147,7 +147,7 @@ impl<'a> B2bBuilder {
             sender_id: self.sender_id.unwrap_or(IdentifierTypes::Shortcode).get_code(),
             party_b: self.party_b.unwrap_or(""),
             receiver_id: self.receiver_id.unwrap_or(IdentifierTypes::Shortcode).get_code(),
-            remarks: self.remarks.unwrap_or(""),
+            remarks: self.remarks.unwrap_or("None"),
             queue_timeout_url: self.queue_timeout_url.unwrap_or(""),
             result_url: self.result_url.unwrap_or(""),
             account_ref: self.account_ref.unwrap_or(""),
