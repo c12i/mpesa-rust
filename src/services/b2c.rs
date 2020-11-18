@@ -83,7 +83,7 @@ impl<'a> B2cBuilder<'a> {
     /// This is a required field
     ///
     /// # Errors
-    /// If the amount
+    /// If the amount is less than 10?
     pub fn amount(mut self, amount: u32) -> B2cBuilder<'a> {
         self.amount = Some(amount);
         self
