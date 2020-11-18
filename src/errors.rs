@@ -1,7 +1,7 @@
-use std::env::VarError;
 use failure_derive::*;
-use serde_json;
 use reqwest;
+use serde_json;
+use std::env::VarError;
 
 #[derive(Debug, Fail)]
 /// Mpesa error stack

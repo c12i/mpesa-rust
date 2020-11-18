@@ -45,13 +45,13 @@
 mod client;
 pub mod constants;
 pub mod environment;
+pub mod errors;
 pub mod mpesa_security;
 pub mod services;
-pub mod errors;
 
 pub use client::Mpesa;
 pub use constants::{CommandId, IdentifierTypes};
 pub use environment::Environment;
+pub use errors::MpesaError;
 pub use mpesa_security::MpesaSecurity;
 pub use services::ResponseType;
-pub use errors::MpesaError;

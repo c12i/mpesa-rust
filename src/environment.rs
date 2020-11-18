@@ -1,7 +1,7 @@
+use crate::MpesaError;
 ///! # environment
 ///! Code related to setting up the desired Safaricom API environment
 use std::str::FromStr;
-use crate::MpesaError;
 
 #[derive(Debug)]
 /// Enum to map to desired environment so as to access certificate
@@ -19,7 +19,9 @@ impl FromStr for Environment {
         match s {
             "production" => Ok(Self::Production),
             "sandbox" => Ok(Self::Sandbox),
-            _ => Err(MpesaError::Message("Could not parse the provided environment name")),
+            _ => Err(MpesaError::Message(
+                "Could not parse the provided environment name",
+            )),
         }
     }
 }

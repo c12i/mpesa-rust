@@ -11,8 +11,8 @@ use crate::mpesa_security::MpesaSecurity;
 use crate::services::ResponseType;
 use crate::services::{AccountBalancePayload, AccountBalanceResponse};
 use crate::services::{B2bPayload, B2cPayload, C2bRegisterPayload, C2bSimulatePayload};
-use crate::{CommandId, IdentifierTypes};
 use crate::MpesaError;
+use crate::{CommandId, IdentifierTypes};
 
 /// Mpesa client that will facilitate communication with the Safaricom API
 #[derive(Debug, MpesaSecurity)]
@@ -55,7 +55,9 @@ impl<'a> Mpesa {
             let value: Value = resp.json()?;
             return Ok(value["access_token"].to_string());
         }
-        Err(MpesaError::Message("Could not authenticate to Safaricom, please check your credentials"))
+        Err(MpesaError::Message(
+            "Could not authenticate to Safaricom, please check your credentials",
+        ))
     }
 
     /// # B2C API
