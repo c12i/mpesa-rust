@@ -152,10 +152,11 @@ impl<'a> B2cBuilder<'a> {
             .json(&data)
             .send()?;
 
-        if response.status() == 200 {
+        if response.status().is_success() {
             let value: Value = response.json()?;
             return Ok(value);
         }
+
         let value: Value = response.json()?;
         Err(MpesaError::ErrorResponse(value))
     }

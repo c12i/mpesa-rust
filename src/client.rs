@@ -68,7 +68,7 @@ impl<'a> Mpesa {
             .get(&url)
             .basic_auth(&self.client_key, Some(&self.client_secret))
             .send()?;
-        if resp.status() == 200 {
+        if resp.status().is_success() {
             let value: Value = resp.json()?;
             // "value" -> value
             return Ok(value["access_token"].to_string().replace("\"", ""));
