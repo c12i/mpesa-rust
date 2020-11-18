@@ -3,7 +3,6 @@ use crate::{Mpesa, MpesaError};
 use base64::encode;
 use openssl::rsa::Padding;
 use openssl::x509::X509;
-use std::error::Error;
 
 /// Trait responsible for implementation of security configs for Mpesa
 pub trait MpesaSecurity {
