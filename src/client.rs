@@ -1,6 +1,6 @@
 use mpesa_derive::MpesaSecurity;
 use reqwest::blocking::{Client, Response};
-use serde_json::json;
+use serde_json::{json, Value};
 use std::collections::HashMap;
 
 use super::environment::Environment;
@@ -12,6 +12,7 @@ use crate::services::ResponseType;
 use crate::services::{AccountBalancePayload, AccountBalanceResponse};
 use crate::services::{B2bPayload, B2cPayload, C2bRegisterPayload, C2bSimulatePayload};
 use crate::{CommandId, IdentifierTypes};
+use crate::MpesaError;
 
 /// Mpesa client that will facilitate communication with the Safaricom API
 #[derive(Debug, MpesaSecurity)]
@@ -22,7 +23,7 @@ pub struct Mpesa {
     initiator_password: String,
 }
 
-impl Mpesa {
+impl<'a> Mpesa {
     /// Constructs a new `Mpesa` instance.
     pub fn new(
         client_key: String,
@@ -41,19 +42,20 @@ impl Mpesa {
     /// Generates an access token
     /// Sends `GET` request to Safaricom oauth to acquire token for token authentication
     /// The OAuth access token expires after an hour, after which, you will need to generate another access token
-    fn auth(&self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn auth(&self) -> Result<String, MpesaError> {
         let url = format!(
             "{}/oauth/v1/generate?grant_type=client_credentials",
             self.environment.base_url()
         );
-
-        let resp: AuthResponse = Client::new()
+        let resp = Client::new()
             .get(&url)
             .basic_auth(&self.client_key, Some(&self.client_secret))
-            .send()?
-            .json()?;
-
-        Ok(resp.access_token)
+            .send()?;
+        if resp.status() == 200 {
+            let value: Value = resp.json()?;
+            return Ok(value["access_token"].to_string());
+        }
+        Err(MpesaError::Message("Could not authenticate to Safaricom, please check your credentials"))
     }
 
     /// # B2C API

@@ -54,3 +54,4 @@ pub use constants::{CommandId, IdentifierTypes};
 pub use environment::Environment;
 pub use mpesa_security::MpesaSecurity;
 pub use services::ResponseType;
+pub use errors::MpesaError;
