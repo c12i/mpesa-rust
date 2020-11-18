@@ -1,3 +1,4 @@
+use crate::client::MpesaResult;
 use crate::{Mpesa, MpesaError};
 use base64::encode;
 use openssl::rsa::Padding;
@@ -13,11 +14,11 @@ pub trait MpesaSecurity {
     ///
     /// # Error
     /// Returns `EncryptionError` variant of `MpesaError`
-    fn gen_security_credentials(&self) -> Result<String, MpesaError>;
+    fn gen_security_credentials(&self) -> MpesaResult<String>;
 }
 
 impl MpesaSecurity for Mpesa {
-    fn gen_security_credentials(&self) -> Result<String, MpesaError> {
+    fn gen_security_credentials(&self) -> MpesaResult<String> {
         let pem = self.environment().get_certificate().as_bytes();
         let cert = X509::from_pem(pem)?;
         // getting the public and rsa keys
