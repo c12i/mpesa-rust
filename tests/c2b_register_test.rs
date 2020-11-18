@@ -1,22 +1,23 @@
 use dotenv;
-use mpesa::{Environment, Mpesa};
+use mpesa::Mpesa;
 use std::env;
 
 #[test]
-fn account_balance_test() {
+fn c2b_register_test() {
     dotenv::dotenv().ok();
 
     let client = Mpesa::new(
         env::var("CLIENT_KEY").unwrap(),
         env::var("CLIENT_SECRET").unwrap(),
-        Environment::Sandbox,
+        "sandbox".parse().unwrap(),
         env::var("INIT_PASSWORD").unwrap(),
     );
 
     let response = client
-        .account_balance("testapi496")
-        .urls("https://testdomain.com/err", "https://testdomain.com/ok")
-        .party_a("600496")
+        .c2b_register()
+        .short_code("600496")
+        .confirmation_url("https://testdomain.com/true")
+        .validation_url("https://testdomain.com/valid")
         .send();
 
     assert!(response.is_ok())
