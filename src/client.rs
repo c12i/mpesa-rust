@@ -3,7 +3,6 @@ use super::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bSimulateBuilder,
 };
 use crate::MpesaError;
-use crate::{CommandId, IdentifierTypes};
 use reqwest::blocking::Client;
 use serde_json::Value;
 
