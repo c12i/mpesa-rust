@@ -6,14 +6,14 @@ use serde_json::{json, Value};
 
 #[derive(Debug)]
 /// Payload to register the 3rd party’s confirmation and validation URLs to M-Pesa
-/// See more here: https://developer.safaricom.co.ke/docs?shell#c2b-api
-pub struct C2bRegisterPayload<'a> {
+struct C2bRegisterPayload<'a> {
     validation_url: &'a str,
     confirmation_url: &'a str,
     response_type: ResponseType,
     short_code: &'a str,
 }
 
+#[derive(Debug)]
 /// C2B Register builder
 pub struct C2bRegisterBuilder<'a> {
     client: &'a Mpesa,
@@ -34,7 +34,7 @@ impl<'a> C2bRegisterBuilder<'a> {
         }
     }
 
-    /// Adds `ValidationURL`. This is a required field
+    /// Adds `ValidationURL` for the client. This is a required field
     ///
     /// # Error
     /// If `ValidationURL` is invalid or not provided
@@ -43,7 +43,7 @@ impl<'a> C2bRegisterBuilder<'a> {
         self
     }
 
-    /// Adds `ConfirmationUrl`. This is a required field
+    /// Adds `ConfirmationUrl` for the client. This is a required field
     ///
     /// # Error
     /// If `ConfirmationUrl` is invalid or not provided
@@ -52,13 +52,16 @@ impl<'a> C2bRegisterBuilder<'a> {
         self
     }
 
-    /// Adds `ResponseType`. Will default to `ResponseType::Complete` if not explicitly provided
+    /// Adds `ResponseType` for timeout. Will default to `ResponseType::Complete` if not explicitly provided
     pub fn response_type(mut self, response_type: ResponseType) -> C2bRegisterBuilder<'a> {
         self.response_type = Some(response_type);
         self
     }
 
-    /// Adds `ShortCode`. This is a required field.
+    /// Adds `ShortCode` for the organization. This is a required field.
+    ///
+    /// # Error
+    /// If `ShortCode` is invalid
     pub fn short_code(mut self, short_code: &'a str) -> C2bRegisterBuilder<'a> {
         self.short_code = Some(short_code);
         self
@@ -71,6 +74,7 @@ impl<'a> C2bRegisterBuilder<'a> {
     /// Whenever M-Pesa receives a transaction on the shortcode,
     /// M-Pesa triggers a validation request against the validation URL and
     /// the 3rd party system responds to M-Pesa with a validation response (either a success or an error code).
+    /// See more [here](https://developer.safaricom.co.ke/docs?shell#c2b-api)
     ///
     /// The response expected is the success code the 3rd party
     ///
