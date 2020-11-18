@@ -49,9 +49,13 @@ impl<'a> Mpesa {
         &self.initiator_password
     }
 
+    /// # Safaricom Oauth
+    ///
     /// Generates an access token
     /// Sends `GET` request to Safaricom oauth to acquire token for token authentication
     /// The OAuth access token expires after an hour, after which, you will need to generate another access token
+    ///
+    /// Returns the auth token as a `String`.
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
@@ -78,6 +82,16 @@ impl<'a> Mpesa {
     /// Creates a `B2cBuilder` for building a B2C transaction struct.
     /// The builder is consumed and request made by calling its `send` method.
     /// Requires an `initiator_name`.
+    ///
+    /// # Example
+    /// ```
+    /// let res = client
+    ///     .b2c("testapi496")
+    ///     .parties("600496", "254708374149")
+    ///     .urls("https://testdomain.com/err", "https://testdomain.com/res")
+    ///     .amount(1000)
+    ///     .send();
+    /// ```
     pub fn b2c(&'a self, initiator_name: &'a str) -> B2cBuilder<'a> {
         B2cBuilder::new(&self, initiator_name)
     }

@@ -36,7 +36,8 @@ pub struct B2cBuilder<'a> {
 }
 
 impl<'a> B2cBuilder<'a> {
-    /// Create a new B2C builder
+    /// Create a new B2C builder.
+    /// Requires an `initiator_name`
     pub fn new(client: &'a Mpesa, initiator_name: &'a str) -> B2cBuilder<'a> {
         B2cBuilder {
             client,
@@ -52,13 +53,14 @@ impl<'a> B2cBuilder<'a> {
         }
     }
 
-    /// Adds the `CommandId`
+    /// Adds the `CommandId`. Defaults to `CommandId::BusinessPayment` if not explicitly provided.
     pub fn command_id(mut self, commandId: CommandId) -> B2cBuilder<'a> {
         self.command_id = Some(commandId);
         self
     }
 
-    /// Adds `Party A` and `Party B`
+    /// Adds `Party A` and `Party B`. Both are required fields
+    /// `Party A` should be a paybill number while `Party B` should be a mobile number.
     pub fn parties(mut self, party_a: &'a str, party_b: &'a str) -> B2cBuilder<'a> {
         // TODO: add validation
         self.party_a = Some(party_a);
@@ -66,24 +68,28 @@ impl<'a> B2cBuilder<'a> {
         self
     }
 
-    /// Adds `Remarks`
+    /// Adds `Remarks`. This is an optional field, will default to an empty string
     pub fn remarks(mut self, remarks: &'a str) -> B2cBuilder<'a> {
         self.remarks = Some(remarks);
         self
     }
 
-    /// Adds `Occasion`
+    /// Adds `Occasion`. This is an optional field, will default to an empty string
     pub fn occasion(mut self, occasion: &'a str) -> B2cBuilder<'a> {
         self.occasion = Some(occasion);
         self
     }
 
+    /// This is a required field
+    ///
+    /// # Errors
+    /// If the amount
     pub fn amount(mut self, amount: u32) -> B2cBuilder<'a> {
         self.amount = Some(amount);
         self
     }
 
-    /// Adds `QueueTimeoutUrl` and `ResultUrl`
+    /// Adds `QueueTimeoutUrl` and `ResultUrl`. This is a required field
     pub fn urls(mut self, timeout_url: &'a str, result_url: &'a str) -> B2cBuilder<'a> {
         // TODO: validate urls; will probably return a `Result` from this
         self.queue_timeout_url = Some(timeout_url);
