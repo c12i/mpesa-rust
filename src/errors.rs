@@ -2,6 +2,7 @@ use failure_derive::*;
 use reqwest;
 use serde_json;
 use std::env::VarError;
+use openssl;
 
 #[derive(Debug, Fail)]
 /// Mpesa error stack
@@ -22,8 +23,12 @@ pub enum MpesaError {
     ParseError(serde_json::Error),
     #[fail(display = "Error getting environmental variables: {}", 0)]
     EnvironmentalVariableError(VarError),
+    #[fail(display = "Error extracting X509 from pem: {}", 0)]
+    EncryptionError(openssl::error::ErrorStack),
     #[fail(display = "Error: {}", 0)]
     Message(&'static str),
+    #[fail(display = "Error: {:#?}", 0)]
+    ErrorResponse(serde_json::Value),
 }
 
 impl From<serde_json::Error> for MpesaError {
@@ -47,5 +52,11 @@ impl From<VarError> for MpesaError {
 impl From<&'static str> for MpesaError {
     fn from(e: &'static str) -> Self {
         MpesaError::Message(e)
+    }
+}
+
+impl From<openssl::error::ErrorStack> for MpesaError {
+    fn from(e: openssl::error::ErrorStack) -> Self {
+        MpesaError::EncryptionError(e)
     }
 }

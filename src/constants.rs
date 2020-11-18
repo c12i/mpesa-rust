@@ -1,7 +1,8 @@
 use std::fmt::{Display, Formatter, Result as FmtResult};
+use serde::Serialize;
 
 /// Mpesa command ids
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub enum CommandId {
     TransactionReversal,
     SalaryPayment,
