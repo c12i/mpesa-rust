@@ -1,6 +1,6 @@
-use crate::MpesaError;
 ///! # environment
 ///! Code related to setting up the desired Safaricom API environment
+use crate::MpesaError;
 use std::str::FromStr;
 
 #[derive(Debug)]
