@@ -14,6 +14,8 @@ use crate::services::{B2bPayload, B2cPayload, C2bRegisterPayload, C2bSimulatePay
 use crate::MpesaError;
 use crate::{CommandId, IdentifierTypes};
 
+type MpesaResult<T> = Result<T, MpesaError>;
+
 /// Mpesa client that will facilitate communication with the Safaricom API
 #[derive(Debug, MpesaSecurity)]
 pub struct Mpesa {
@@ -42,7 +44,7 @@ impl<'a> Mpesa {
     /// Generates an access token
     /// Sends `GET` request to Safaricom oauth to acquire token for token authentication
     /// The OAuth access token expires after an hour, after which, you will need to generate another access token
-    pub fn auth(&self) -> Result<String, MpesaError> {
+    fn auth(&self) -> MpesaResult<String> {
         let url = format!(
             "{}/oauth/v1/generate?grant_type=client_credentials",
             self.environment.base_url()
