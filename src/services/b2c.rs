@@ -1,8 +1,8 @@
-use crate::{CommandId, Mpesa, MpesaSecurity, MpesaError};
-use serde_json::{json, Value};
-use serde::Serialize;
-use reqwest::blocking::Client;
 use crate::client::MpesaResult;
+use crate::{CommandId, Mpesa, MpesaError, MpesaSecurity};
+use reqwest::blocking::Client;
+use serde::Serialize;
+use serde_json::{json, Value};
 
 #[derive(Debug, Serialize)]
 /// Payload to allow for b2c transactions:
@@ -48,7 +48,7 @@ impl<'a> B2cBuilder<'a> {
             queue_timeout_url: None,
             result_url: None,
             occasion: None,
-            command_id: None
+            command_id: None,
         }
     }
 

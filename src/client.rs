@@ -1,12 +1,10 @@
 use mpesa_derive::MpesaSecurity;
 use reqwest::blocking::{Client, Response};
-use std::collections::HashMap;
 use serde_json::Value;
+use std::collections::HashMap;
 
 use super::environment::Environment;
-use super::services::{
-    AuthResponse, B2bResponse, C2bRegisterResponse, C2bSimulateResponse,
-};
+use super::services::{AuthResponse, B2bResponse, C2bRegisterResponse, C2bSimulateResponse};
 
 use crate::services::ResponseType;
 use crate::services::{AccountBalancePayload, AccountBalanceResponse};
@@ -80,10 +78,7 @@ impl<'a> Mpesa {
     /// Creates a `B2cBuilder` for building a B2C transaction struct.
     /// The builder is consumed and request made by calling its `send` method.
     /// Requires an `initiator_name`.
-    pub fn b2c(
-        &'a self,
-        initiator_name: &'a str,
-    ) -> B2cBuilder<'a> {
+    pub fn b2c(&'a self, initiator_name: &'a str) -> B2cBuilder<'a> {
         B2cBuilder::new(&self, initiator_name)
     }
 

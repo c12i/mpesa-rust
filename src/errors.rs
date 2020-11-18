@@ -1,8 +1,8 @@
 use failure_derive::*;
+use openssl;
 use reqwest;
 use serde_json;
 use std::env::VarError;
-use openssl;
 
 #[derive(Debug, Fail)]
 /// Mpesa error stack

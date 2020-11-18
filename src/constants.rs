@@ -1,5 +1,5 @@
-use std::fmt::{Display, Formatter, Result as FmtResult};
 use serde::Serialize;
+use std::fmt::{Display, Formatter, Result as FmtResult};
 
 /// Mpesa command ids
 #[derive(Debug, Serialize)]
