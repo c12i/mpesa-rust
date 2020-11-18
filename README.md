@@ -41,6 +41,8 @@ You will first need to create an instance of the `Mpesa` instance (the client). 
 **CLIENT_SECRET** and **INIT_PASSWORD** (initiator password). [Here](https://developer.safaricom.co.ke/test_credentials) is how you can get these credentials for the Safaricom sandbox
 environment.
 
+*NOTE*: only calling `unwrap` for demonstration purposes. Errors are handled appropriately in the lib via the `MpesaError` enum.
+
 There are two ways you can instantiate `Mpesa`:
 
 ```rust
