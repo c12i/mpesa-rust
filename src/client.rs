@@ -2,13 +2,10 @@ use reqwest::blocking::{Client, Response};
 use serde_json::Value;
 
 use super::environment::Environment;
-use super::services::{
-    B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bRegisterResponse, C2bSimulateResponse,
-};
+use super::services::{B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bSimulateResponse};
 
-use crate::services::ResponseType;
 use crate::services::{AccountBalancePayload, AccountBalanceResponse};
-use crate::services::{C2bRegisterPayload, C2bSimulatePayload};
+use crate::services::{C2bSimulatePayload};
 use crate::MpesaError;
 use crate::{CommandId, IdentifierTypes};
 
