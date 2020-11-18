@@ -61,6 +61,9 @@ impl<'a> B2cBuilder<'a> {
 
     /// Adds `Party A` and `Party B`. Both are required fields
     /// `Party A` should be a paybill number while `Party B` should be a mobile number.
+    ///
+    /// # Errors
+    /// If either `Party A` or `Party B` is invalid or not provided
     pub fn parties(mut self, party_a: &'a str, party_b: &'a str) -> B2cBuilder<'a> {
         // TODO: add validation
         self.party_a = Some(party_a);
@@ -90,6 +93,9 @@ impl<'a> B2cBuilder<'a> {
     }
 
     /// Adds `QueueTimeoutUrl` and `ResultUrl`. This is a required field
+    ///
+    /// # Error
+    /// If either `QueueTimeoutUrl` and `ResultUrl` is invalid or not provided
     pub fn urls(mut self, timeout_url: &'a str, result_url: &'a str) -> B2cBuilder<'a> {
         // TODO: validate urls; will probably return a `Result` from this
         self.queue_timeout_url = Some(timeout_url);
@@ -106,7 +112,7 @@ impl<'a> B2cBuilder<'a> {
     /// See more at: https://developer.safaricom.co.ke/docs?shell#b2c-api
     ///
     /// # Errors
-    /// Returns a `MpesaError` on failure
+    /// Returns a `MpesaError` on failure.
     pub fn send(self) -> MpesaResult<Value> {
         let url = format!(
             "{}/mpesa/b2c/v1/paymentrequest",
