@@ -2,11 +2,13 @@ use reqwest::blocking::{Client, Response};
 use serde_json::Value;
 
 use super::environment::Environment;
-use super::services::{B2bBuilder, C2bRegisterResponse, C2bSimulateResponse};
+use super::services::{
+    B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bRegisterResponse, C2bSimulateResponse,
+};
 
 use crate::services::ResponseType;
 use crate::services::{AccountBalancePayload, AccountBalanceResponse};
-use crate::services::{B2bPayload, B2cBuilder, C2bRegisterPayload, C2bSimulatePayload};
+use crate::services::{C2bRegisterPayload, C2bSimulatePayload};
 use crate::MpesaError;
 use crate::{CommandId, IdentifierTypes};
 
@@ -109,67 +111,20 @@ impl<'a> Mpesa {
         B2bBuilder::new(&self, initiator_name)
     }
 
-    // /// Registers the the 3rd party’s confirmation and validation URLs to M-Pesa
-    // ///
-    // /// Registering maps these URLs to the 3rd party shortcode.
-    // /// Whenever M-Pesa receives a transaction on the shortcode,
-    // /// M-Pesa triggers a validation request against the validation URL and
-    // /// the 3rd party system responds to M-Pesa with a validation response (either a success or an error code).
-    // /// The response expected is the success code the 3rd party
-    // ///
-    // /// # Example
-    // /// ```
-    // /// dotenv::dotenv().ok();
-    // ///
-    // /// let client = mpesa::Mpesa::new(
-    // ///    std::env::var("CLIENT_KEY").unwrap(),
-    // ///    std::env::var("CLIENT_SECRET").unwrap(),
-    // ///    mpesa::Environment::Sandbox,
-    // ///    std::env::var("INIT_PASSWORD").unwrap(),
-    // /// );
-    // ///
-    // /// let c2b_register_response = client.c2b_register(
-    // ///         "https://muriuki.dev/api",
-    // ///         "https://muriuki.dev/verify",
-    // ///         mpesa::ResponseType::Complete,
-    // ///         "600496"
-    // ///     ).unwrap();
-    // /// ```
-    // ///
-    // /// # Errors
-    // /// TODO
-    // pub fn c2b_register(
-    //     &self,
-    //     validation_url: &str,
-    //     confirmation_url: &str,
-    //     response_type: ResponseType,
-    //     short_code: &str,
-    // ) -> Result<Response, Box<dyn std::error::Error>> {
-    //     let url = format!("{}/mpesa/c2b/v1/registerurl", self.environment.base_url());
-    //
-    //     let payload = C2bRegisterPayload {
-    //         validation_url,
-    //         confirmation_url,
-    //         response_type,
-    //         short_code,
-    //     };
-    //
-    //     let data = json!({
-    //         "ValidationURL": payload.validation_url,
-    //         "ConfirmationURL": payload.confirmation_url,
-    //         "ResponseType": payload.response_type.to_string(),
-    //         "ShortCode": payload.short_code,
-    //     });
-    //
-    //     let response = Client::new()
-    //         .post(&url)
-    //         .bearer_auth(self.auth()?)
-    //         .json(&data)
-    //         .send()?;
-    //
-    //     Ok(response)
-    // }
-    //
+    /// # C2B Register builder
+    /// Creates a `C2bRegisterBuilder` for registering URLs to the 3rd party shortcode.
+    /// ```
+    /// let response = client
+    ///     .c2b_register()
+    ///     .short_code("600496")
+    ///     .confirmation_url("https://testdomain.com/true")
+    ///     .validation_url("https://testdomain.com/valid")
+    ///     .send();
+    /// ```
+    pub fn c2b_register(&'a self) -> C2bRegisterBuilder<'a> {
+        C2bRegisterBuilder::new(&self)
+    }
+
     // /// Make payment requests from Client to Business
     // ///
     // /// This enables you to receive the payment requests in real time.

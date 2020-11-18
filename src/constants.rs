@@ -78,3 +78,26 @@ impl Display for MpesaResponseCode {
         write!(f, "{:?}", self)
     }
 }
+
+#[derive(Debug)]
+/// C2B Register Response types
+pub enum ResponseType {
+    Complete,
+    Cancelled,
+}
+
+impl ResponseType {
+    /// Stringify response type
+    pub fn response_type_string(&self) -> &'static str {
+        match self {
+            ResponseType::Cancelled => "Cancelled",
+            ResponseType::Complete => "Complete",
+        }
+    }
+}
+
+impl Display for ResponseType {
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
+        write!(f, "{:?}", self.response_type_string())
+    }
+}

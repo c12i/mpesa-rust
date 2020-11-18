@@ -3,11 +3,10 @@ use crate::constants::{CommandId, IdentifierTypes};
 use crate::errors::MpesaError;
 use crate::MpesaSecurity;
 use reqwest::blocking::Client;
-use serde::Deserialize;
 use serde_json::{json, Value};
 
 #[derive(Debug)]
-pub struct B2bPayload<'a> {
+struct B2bPayload<'a> {
     initiator_name: &'a str,
     security_credentials: &'a str,
     command_id: CommandId,
