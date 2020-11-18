@@ -3,7 +3,7 @@ use mpesa::{Environment, Mpesa};
 use std::env;
 
 #[test]
-fn account_balance_test() {
+fn c2b_simulate_test() {
     dotenv::dotenv().ok();
 
     let client = Mpesa::new(
@@ -14,9 +14,10 @@ fn account_balance_test() {
     );
 
     let response = client
-        .account_balance("testapi496")
-        .urls("https://testdomain.com/err", "https://testdomain.com/ok")
-        .party_a("600496")
+        .c2b_simulate()
+        .short_code("600496")
+        .msisdn("254700000000")
+        .amount(1000)
         .send();
 
     assert!(response.is_ok())

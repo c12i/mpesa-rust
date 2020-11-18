@@ -1,14 +1,12 @@
 #![allow(non_snake_case)]
 mod account_balance;
-mod auth;
 mod b2b;
 mod b2c;
-mod c2b;
+mod c2b_register;
+mod c2b_simulate;
 
-pub use account_balance::{AccountBalancePayload, AccountBalanceResponse};
-pub use auth::AuthResponse;
-pub use b2b::{B2bPayload, B2bResponse};
-pub use b2c::{B2cPayload, B2cResponse};
-pub use c2b::{
-    C2bRegisterPayload, C2bRegisterResponse, C2bSimulatePayload, C2bSimulateResponse, ResponseType,
-};
+pub use account_balance::AccountBalanceBuilder;
+pub use b2b::B2bBuilder;
+pub use b2c::B2cBuilder;
+pub use c2b_register::C2bRegisterBuilder;
+pub use c2b_simulate::C2bSimulateBuilder;

@@ -1,7 +1,8 @@
+use serde::Serialize;
 use std::fmt::{Display, Formatter, Result as FmtResult};
 
 /// Mpesa command ids
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub enum CommandId {
     TransactionReversal,
     SalaryPayment,
@@ -35,11 +36,11 @@ pub enum IdentifierTypes {
 }
 
 impl IdentifierTypes {
-    pub fn get_code(&self) -> &str {
+    pub fn get_code(&self) -> u32 {
         match self {
-            IdentifierTypes::MSISDN => "1",
-            IdentifierTypes::TillNumber => "2",
-            IdentifierTypes::Shortcode => "4",
+            IdentifierTypes::MSISDN => 1,
+            IdentifierTypes::TillNumber => 2,
+            IdentifierTypes::Shortcode => 4,
         }
     }
 }
@@ -52,6 +53,7 @@ impl Display for IdentifierTypes {
 
 /// M-pesa result and response codes
 #[derive(Debug)]
+#[allow(unused)]
 pub enum MpesaResponseCode {
     Success = 0,
     InsufficientFunds = 1,
@@ -75,5 +77,28 @@ pub enum MpesaResponseCode {
 impl Display for MpesaResponseCode {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
         write!(f, "{:?}", self)
+    }
+}
+
+#[derive(Debug)]
+/// C2B Register Response types
+pub enum ResponseType {
+    Complete,
+    Cancelled,
+}
+
+impl ResponseType {
+    /// Stringify response type
+    pub fn response_type_string(&self) -> &'static str {
+        match self {
+            ResponseType::Cancelled => "Cancelled",
+            ResponseType::Complete => "Complete",
+        }
+    }
+}
+
+impl Display for ResponseType {
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
+        write!(f, "{:?}", self.response_type_string())
     }
 }
