@@ -4,7 +4,7 @@ use serde_json::Value;
 use std::collections::HashMap;
 
 use super::environment::Environment;
-use super::services::{AuthResponse, B2bResponse, C2bRegisterResponse, C2bSimulateResponse};
+use super::services::{B2bResponse, C2bRegisterResponse, C2bSimulateResponse};
 
 use crate::services::ResponseType;
 use crate::services::{AccountBalancePayload, AccountBalanceResponse};

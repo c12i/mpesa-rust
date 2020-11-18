@@ -43,10 +43,10 @@
 //! This project is MIT licensed
 
 mod client;
-pub mod constants;
-pub mod environment;
-pub mod errors;
-pub mod mpesa_security;
+mod constants;
+mod environment;
+mod errors;
+mod mpesa_security;
 pub mod services;
 
 pub use client::Mpesa;
