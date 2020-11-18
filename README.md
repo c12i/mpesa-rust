@@ -26,7 +26,7 @@ A Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs
 
 ```md
 [dependencies]
-mpesa = "0.1.6"
+mpesa = "0.2.0"
 ```
 
 In your lib or binary crate:
@@ -34,9 +34,16 @@ In your lib or binary crate:
 use mpesa::Mpesa;
 ```
 
-## Examples
+## Usage
 
-```rs
+### Creating a `Client`
+You will first need to create an instance of the `Mpesa` instance (the client). You are required to provide a **CLIENT_KEY**,
+**CLIENT_SECRET** and **INIT_PASSWORD** (initiator password). [Here](https://developer.safaricom.co.ke/test_credentials) is how you can get these credentials for the Safaricom sandbox
+environment.
+
+There are two ways you can instantiate `Mpesa`:
+
+```rust
 use mpesa::{Mpesa, Environment};
 use std::env;
 
@@ -48,6 +55,81 @@ let client = Mpesa::new(
 );
 ```
 
+Since the `Environment` enum implements `FromStr`, you can pass the name of the environment as a `&str` and call the `parse()`
+method to create an `Enviroment` type from the string slice:
+
+```rust
+use mpesa::Mpesa;
+use std::env;
+
+let client = Mpesa::new(
+      env::var("CLIENT_KEY")?,
+      env::var("CLIENT_SECRET")?,
+      "sandbox".parse()?,
+      env::var("INIT_PASSWORD")?,
+);``
+```
+
+### Services
+The following services are currently available from the `Mpesa` client as methods that return builders:
+* B2C
+```rust
+let response = client
+    .b2c("testapi496")
+    .parties("600496", "254708374149")
+    .urls("https://testdomain.com/err", "https://testdomain.com/res")
+    .amount(1000)
+    .send();
+assert!(response.is_ok())
+```
+
+* B2B
+```rust
+let response = client
+    .b2b("testapi496")
+    .parties("600496", "600000")
+    .urls("https://testdomain.com/err", "https://testdomain.com/api")
+    .account_ref("254708374149")
+    .amount(1000)
+    .send();
+assert!(response.is_ok())
+```
+
+* C2B Register
+```rust
+let response = client
+    .c2b_register()
+    .short_code("600496")
+    .confirmation_url("https://testdomain.com/true")
+    .validation_url("https://testdomain.com/valid")
+    .send();
+assert!(response.is_ok())
+```
+
+* C2B Simulate
+```rust
+
+let response = client
+    .c2b_simulate()
+    .short_code("600496")
+    .msisdn("254700000000")
+    .amount(1000)
+    .send();
+assert!(response.is_ok())
+```
+
+* Account Balance
+
+```rust
+let response = client
+    .account_balance("testapi496")
+    .urls("https://testdomain.com/err", "https://testdomain.com/ok")
+    .party_a("600496")
+    .send();
+assert!(response.is_ok())
+```
+
+More will be added progressively, pull requests welcome
 ## Author
 
 **Collins Muriuki**

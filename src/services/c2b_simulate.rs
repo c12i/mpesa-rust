@@ -1,5 +1,5 @@
 use crate::client::{Mpesa, MpesaResult};
-use crate::constants::{CommandId, IdentifierTypes};
+use crate::constants::CommandId;
 use crate::errors::MpesaError;
 use reqwest::blocking::Client;
 use serde_json::{json, Value};

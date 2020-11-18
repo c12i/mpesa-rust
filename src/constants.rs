@@ -53,6 +53,7 @@ impl Display for IdentifierTypes {
 
 /// M-pesa result and response codes
 #[derive(Debug)]
+#[allow(unused)]
 pub enum MpesaResponseCode {
     Success = 0,
     InsufficientFunds = 1,

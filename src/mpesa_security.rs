@@ -1,5 +1,5 @@
 use crate::client::MpesaResult;
-use crate::{Mpesa, MpesaError};
+use crate::Mpesa;
 use base64::encode;
 use openssl::rsa::Padding;
 use openssl::x509::X509;

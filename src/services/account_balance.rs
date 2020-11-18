@@ -2,7 +2,6 @@ use crate::client::MpesaResult;
 use crate::constants::{CommandId, IdentifierTypes};
 use crate::{Mpesa, MpesaError, MpesaSecurity};
 use reqwest::blocking::Client;
-use serde::Serialize;
 use serde_json::{json, Value};
 
 #[derive(Debug)]

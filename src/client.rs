@@ -80,7 +80,7 @@ impl<'a> Mpesa {
     /// Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
     ///
     /// # Example
-    /// ```
+    /// ```rs
     /// let res = client
     ///     .b2c("testapi496")
     ///     .parties("600496", "254708374149")
@@ -98,13 +98,13 @@ impl<'a> Mpesa {
     /// Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
     ///
     /// # Example
-    /// ```
+    /// ```rs
     /// let b2b_response = client.b2b("testapi496")
-    ///     .parties("600496", "600000")
-    ///     .urls("https://testdomain.com/err", "https://testdomain.com/api")
-    ///     .account_ref("254708374149")
-    ///     .amount(1000)
-    ///     .send();
+    ///    .parties("600496", "600000")
+    ///    .urls("https://testdomain.com/err", "https://testdomain.com/api")
+    ///    .account_ref("254708374149")
+    ///    .amount(1000)
+    ///    .send();
     /// ```
     pub fn b2b(&'a self, initiator_name: &'a str) -> B2bBuilder<'a> {
         B2bBuilder::new(&self, initiator_name)
@@ -114,13 +114,13 @@ impl<'a> Mpesa {
     /// Creates a `C2bRegisterBuilder` for registering URLs to the 3rd party shortcode.
     ///
     /// # Example
-    /// ```
+    /// ```rs
     /// let response = client
-    ///     .c2b_register()
-    ///     .short_code("600496")
-    ///     .confirmation_url("https://testdomain.com/true")
-    ///     .validation_url("https://testdomain.com/valid")
-    ///     .send();
+    ///    .c2b_register()
+    ///    .short_code("600496")
+    ///    .confirmation_url("https://testdomain.com/true")
+    ///    .validation_url("https://testdomain.com/valid")
+    ///    .send();
     /// ```
     pub fn c2b_register(&'a self) -> C2bRegisterBuilder<'a> {
         C2bRegisterBuilder::new(&self)
@@ -130,12 +130,12 @@ impl<'a> Mpesa {
     /// Creates a `C2bSimulateBuilder` for simulating C2B transactions
     ///
     /// # Example
-    /// ```
+    /// ```rs
     /// let response = client.c2b_simulate()
-    ///         .short_code("600496")
-    ///         .msisdn("254700000000")
-    ///         .amount(1000)
-    ///         .send();
+    ///    .short_code("600496")
+    ///    .msisdn("254700000000")
+    ///    .amount(1000)
+    ///    .send();
     /// ```
     pub fn c2b_simulate(&'a self) -> C2bSimulateBuilder<'a> {
         C2bSimulateBuilder::new(&self)
@@ -146,12 +146,12 @@ impl<'a> Mpesa {
     /// Requires an `initiator_name`
     ///
     /// # Example
-    /// ```
+    /// ```rs
     /// let response = client
-    ///         .account_balance("testapi496")
-    ///         .urls("https://testdomain.com/err", "https://testdomain.com/ok")
-    ///         .party_a("600496")
-    ///         .send();
+    ///    .account_balance("testapi496")
+    ///    .urls("https://testdomain.com/err", "https://testdomain.com/ok")
+    ///    .party_a("600496")
+    ///    .send();
     /// ```
     pub fn account_balance(&'a self, initiator_name: &'a str) -> AccountBalanceBuilder<'a> {
         AccountBalanceBuilder::new(&self, initiator_name)
