@@ -1,12 +1,10 @@
-use reqwest::blocking::{Client, Response};
-use serde_json::Value;
-
 use super::environment::Environment;
 use super::services::{B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bSimulateBuilder};
-
 use crate::services::{AccountBalancePayload, AccountBalanceResponse};
 use crate::MpesaError;
 use crate::{CommandId, IdentifierTypes};
+use reqwest::blocking::Client;
+use serde_json::Value;
 
 /// `Result` enum type alias
 pub type MpesaResult<T> = Result<T, MpesaError>;
@@ -134,7 +132,6 @@ impl<'a> Mpesa {
     pub fn c2b_simulate(&'a self) -> C2bSimulateBuilder<'a> {
         C2bSimulateBuilder::new(&self)
     }
-
 
     // /// Enquire the balance on an M-Pesa BuyGoods (Till Number).
     // ///

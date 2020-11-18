@@ -22,7 +22,7 @@ pub struct C2bSimulateBuilder<'a> {
     amount: Option<u32>,
     msisdn: Option<&'a str>,
     bill_ref_number: Option<&'a str>,
-    short_code: Option<&'a str>
+    short_code: Option<&'a str>,
 }
 
 impl<'a> C2bSimulateBuilder<'a> {
@@ -34,7 +34,7 @@ impl<'a> C2bSimulateBuilder<'a> {
             amount: None,
             msisdn: None,
             bill_ref_number: None,
-            short_code: None
+            short_code: None,
         }
     }
 
@@ -87,7 +87,10 @@ impl<'a> C2bSimulateBuilder<'a> {
     /// This enables you to receive the payment requests in real time.
     /// See more [here](https://developer.safaricom.co.ke/c2b/apis/post/simulate)
     pub fn send(self) -> MpesaResult<Value> {
-        let url = format!("{}/mpesa/c2b/v1/simulate", self.client.environment().base_url());
+        let url = format!(
+            "{}/mpesa/c2b/v1/simulate",
+            self.client.environment().base_url()
+        );
 
         let payload = C2bSimulatePayload {
             command_id: self.command_id.unwrap_or(CommandId::CustomerPayBillOnline),

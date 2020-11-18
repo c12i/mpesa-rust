@@ -6,8 +6,6 @@ use serde_json::{json, Value};
 
 #[derive(Debug, Serialize)]
 /// Payload to allow for b2c transactions:
-/// See https://developer.safaricom.co.ke/docs#b2c-api for a
-/// detailed description of each field.
 struct B2cPayload<'a> {
     initiator_name: &'a str,
     security_credentials: &'a str,
@@ -110,7 +108,7 @@ impl<'a> B2cBuilder<'a> {
     /// This API enables Business to Customer (B2C) transactions between a company and
     /// customers who are the end-users of its products or services. Use of this API requires a
     /// valid and verified B2C M-Pesa Short code.
-    /// See more at: https://developer.safaricom.co.ke/docs?shell#b2c-api
+    /// See more [here](https://developer.safaricom.co.ke/docs?shell#b2c-api)
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure.
