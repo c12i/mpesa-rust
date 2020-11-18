@@ -1,10 +1,10 @@
-use crate::constants::{IdentifierTypes,CommandId};
 use crate::client::{Mpesa, MpesaResult};
+use crate::constants::{CommandId, IdentifierTypes};
 use crate::errors::MpesaError;
+use crate::MpesaSecurity;
 use reqwest::blocking::Client;
 use serde::Deserialize;
 use serde_json::{json, Value};
-use crate::MpesaSecurity;
 
 #[derive(Debug)]
 pub struct B2bPayload<'a> {
@@ -55,7 +55,7 @@ impl<'a> B2bBuilder<'a> {
             queue_timeout_url: None,
             result_url: None,
             command_id: None,
-            account_ref: None
+            account_ref: None,
         }
     }
 
@@ -141,12 +141,20 @@ impl<'a> B2bBuilder<'a> {
         let payload = B2bPayload {
             initiator_name: self.initiator_name,
             security_credentials: &credentials,
-            command_id: self.command_id.unwrap_or(CommandId::BusinessToBusinessTransfer),
+            command_id: self
+                .command_id
+                .unwrap_or(CommandId::BusinessToBusinessTransfer),
             amount: self.amount.unwrap_or(10),
             party_a: self.party_a.unwrap_or(""),
-            sender_id: self.sender_id.unwrap_or(IdentifierTypes::Shortcode).get_code(),
+            sender_id: self
+                .sender_id
+                .unwrap_or(IdentifierTypes::Shortcode)
+                .get_code(),
             party_b: self.party_b.unwrap_or(""),
-            receiver_id: self.receiver_id.unwrap_or(IdentifierTypes::Shortcode).get_code(),
+            receiver_id: self
+                .receiver_id
+                .unwrap_or(IdentifierTypes::Shortcode)
+                .get_code(),
             remarks: self.remarks.unwrap_or("None"),
             queue_timeout_url: self.queue_timeout_url.unwrap_or(""),
             result_url: self.result_url.unwrap_or(""),
