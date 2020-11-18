@@ -36,11 +36,11 @@ pub enum IdentifierTypes {
 }
 
 impl IdentifierTypes {
-    pub fn get_code(&self) -> &str {
+    pub fn get_code(&self) -> u32 {
         match self {
-            IdentifierTypes::MSISDN => "1",
-            IdentifierTypes::TillNumber => "2",
-            IdentifierTypes::Shortcode => "4",
+            IdentifierTypes::MSISDN => 1,
+            IdentifierTypes::TillNumber => 2,
+            IdentifierTypes::Shortcode => 4,
         }
     }
 }

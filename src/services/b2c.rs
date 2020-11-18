@@ -22,6 +22,7 @@ struct B2cPayload<'a> {
 }
 
 #[derive(Debug)]
+/// B2C transaction builder struct
 pub struct B2cBuilder<'a> {
     initiator_name: &'a str,
     client: &'a Mpesa,
@@ -54,8 +55,8 @@ impl<'a> B2cBuilder<'a> {
     }
 
     /// Adds the `CommandId`. Defaults to `CommandId::BusinessPayment` if not explicitly provided.
-    pub fn command_id(mut self, commandId: CommandId) -> B2cBuilder<'a> {
-        self.command_id = Some(commandId);
+    pub fn command_id(mut self, command_id: CommandId) -> B2cBuilder<'a> {
+        self.command_id = Some(command_id);
         self
     }
 

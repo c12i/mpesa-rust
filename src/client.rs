@@ -1,10 +1,8 @@
-use mpesa_derive::MpesaSecurity;
 use reqwest::blocking::{Client, Response};
 use serde_json::Value;
-use std::collections::HashMap;
 
 use super::environment::Environment;
-use super::services::{B2bResponse, C2bRegisterResponse, C2bSimulateResponse};
+use super::services::{B2bBuilder, C2bRegisterResponse, C2bSimulateResponse};
 
 use crate::services::ResponseType;
 use crate::services::{AccountBalancePayload, AccountBalanceResponse};
@@ -96,101 +94,13 @@ impl<'a> Mpesa {
         B2cBuilder::new(&self, initiator_name)
     }
 
-    // /// # B2B API
-    // /// Sends b2b payment request.
-    // ///
-    // /// This API enables Business to Business (B2B) transactions between a business and another
-    // /// business. Use of this API requires a valid and verified B2B M-Pesa short code for the
-    // /// business initiating the transaction and the both businesses involved in the transaction
-    // /// See more at https://developer.safaricom.co.ke/docs?shell#b2b-api
-    // ///
-    // /// # Example
-    // /// ```
-    // /// dotenv::dotenv().ok();
-    // ///
-    // /// let client = mpesa::Mpesa::new(
-    // ///    std::env::var("CLIENT_KEY").unwrap(),
-    // ///    std::env::var("CLIENT_SECRET").unwrap(),
-    // ///    mpesa::Environment::Sandbox,
-    // ///    std::env::var("INIT_PASSWORD").unwrap(),
-    // /// );
-    // ///
-    // /// let b2b_response = client.b2b(
-    // ///         "testapi496",
-    // ///         mpesa::CommandId::BusinessToBusinessTransfer,
-    // ///         1000,
-    // ///         "600496",
-    // ///         4,
-    // ///         "600000",
-    // ///         4,
-    // ///         "gg",
-    // ///         "https://muriuki.dev/api/a",
-    // ///         "https://muriuki.dev/api/b",
-    // ///         "254708374149",
-    // ///     ).unwrap();
-    // /// ```
-    // /// # Errors
-    // /// TODO
-    // pub fn b2b(
-    //     &self,
-    //     initiator_name: &str,
-    //     command_id: CommandId,
-    //     amount: u32,
-    //     party_a: &str,
-    //     sender_id: u32,
-    //     party_b: &str,
-    //     receiver_id: u32,
-    //     remarks: &str,
-    //     queue_timeout_url: &str,
-    //     result_url: &str,
-    //     account_ref: &str,
-    // ) -> Result<B2bResponse, Box<dyn std::error::Error>> {
-    //     let url = format!(
-    //         "{}/mpesa/b2b/v1/paymentrequest",
-    //         self.environment.base_url()
-    //     );
-    //     let credentials = self.gen_security_credentials()?;
-    //
-    //     let payload = B2bPayload {
-    //         initiator_name,
-    //         security_credentials: &credentials,
-    //         command_id,
-    //         amount,
-    //         party_a,
-    //         sender_id,
-    //         party_b,
-    //         receiver_id,
-    //         remarks,
-    //         queue_timeout_url,
-    //         result_url,
-    //         account_ref,
-    //     };
-    //
-    //     let data = json!({
-    //         "Initiator": payload.initiator_name,
-    //         "SecurityCredential": payload.security_credentials,
-    //         "CommandID": payload.command_id.to_string(),
-    //         "SenderIdentifierType": payload.sender_id,
-    //         "RecieverIdentifierType": payload.receiver_id,
-    //         "Amount": payload.amount,
-    //         "PartyA": payload.party_a,
-    //         "PartyB": payload.party_b,
-    //         "AccountReference": payload.account_ref,
-    //         "Remarks": payload.remarks,
-    //         "QueueTimeOutURL": payload.queue_timeout_url,
-    //         "ResultURL": payload.result_url,
-    //     });
-    //
-    //     let response: B2bResponse = Client::new()
-    //         .post(&url)
-    //         .bearer_auth(self.auth()?)
-    //         .json(&data)
-    //         .send()?
-    //         .json()?;
-    //
-    //     Ok(response)
-    // }
-    //
+    /// # B2B Builder
+    /// Creates a `B2bBuilder` for building B2B transaction struct.
+    /// Requires an `initiator_name`
+    pub fn b2b(&'a self, initiator_name: &'a str) -> B2bBuilder<'a> {
+        B2bBuilder::new(&self, initiator_name)
+    }
+
     // /// Registers the the 3rd party’s confirmation and validation URLs to M-Pesa
     // ///
     // /// Registering maps these URLs to the 3rd party shortcode.
