@@ -2,13 +2,13 @@ use reqwest::blocking::{Client, Response};
 use serde_json::Value;
 
 use super::environment::Environment;
-use super::services::{B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bSimulateResponse};
+use super::services::{B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bSimulateBuilder};
 
 use crate::services::{AccountBalancePayload, AccountBalanceResponse};
-use crate::services::{C2bSimulatePayload};
 use crate::MpesaError;
 use crate::{CommandId, IdentifierTypes};
 
+/// `Result` enum type alias
 pub type MpesaResult<T> = Result<T, MpesaError>;
 
 /// Mpesa client that will facilitate communication with the Safaricom API
@@ -122,69 +122,20 @@ impl<'a> Mpesa {
         C2bRegisterBuilder::new(&self)
     }
 
-    // /// Make payment requests from Client to Business
-    // ///
-    // /// This enables you to receive the payment requests in real time.
-    // /// See more here: https://developer.safaricom.co.ke/c2b/apis/post/simulate
-    // ///
-    // /// # Example
-    // /// ```
-    // /// dotenv::dotenv().ok();
-    // ///
-    // /// let client = mpesa::Mpesa::new(
-    // ///    std::env::var("CLIENT_KEY").unwrap(),
-    // ///    std::env::var("CLIENT_SECRET").unwrap(),
-    // ///    mpesa::Environment::Sandbox,
-    // ///    std::env::var("INIT_PASSWORD").unwrap(),
-    // /// );
-    // ///
-    // /// let c2b_simulate_response = client.c2b_simulate(
-    // ///         mpesa::CommandId::CustomerPayBillOnline,
-    // ///         1,
-    // ///         "254705583540",
-    // ///         "123abc",
-    // ///         "600496"
-    // ///     ).unwrap();
-    // /// ```
-    // ///
-    // /// # Errors
-    // /// TODO
-    // pub fn c2b_simulate(
-    //     &self,
-    //     command_id: CommandId,
-    //     amount: u32,
-    //     msisdn: &str,
-    //     bill_ref_number: &str,
-    //     short_code: &str,
-    // ) -> Result<C2bSimulateResponse, Box<dyn std::error::Error>> {
-    //     let url = format!("{}/mpesa/c2b/v1/simulate", self.environment.base_url());
-    //
-    //     let payload = C2bSimulatePayload {
-    //         command_id,
-    //         amount,
-    //         msisdn,
-    //         bill_ref_number,
-    //         short_code,
-    //     };
-    //
-    //     let data = json!({
-    //         "CommandID": payload.command_id.to_string(),
-    //         "Amount": payload.amount,
-    //         "Msisdn": payload.msisdn,
-    //         "BillRefNumber": payload.bill_ref_number,
-    //         "ShortCode": short_code,
-    //     });
-    //
-    //     let response: C2bSimulateResponse = Client::new()
-    //         .post(&url)
-    //         .bearer_auth(self.auth()?)
-    //         .json(&data)
-    //         .send()?
-    //         .json()?;
-    //
-    //     Ok(response)
-    // }
-    //
+    /// # C2B Simulate Builder
+    /// Creates a `C2bSimulateBuilder` for simulating C2B transactions
+    /// ```
+    /// let response = client.c2b_simulate()
+    ///         .short_code("600496")
+    ///         .msisdn("254700000000")
+    ///         .amount(1000)
+    ///         .send();
+    /// ```
+    pub fn c2b_simulate(&'a self) -> C2bSimulateBuilder<'a> {
+        C2bSimulateBuilder::new(&self)
+    }
+
+
     // /// Enquire the balance on an M-Pesa BuyGoods (Till Number).
     // ///
     // /// # Example
