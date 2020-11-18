@@ -72,7 +72,7 @@ impl<'a> B2cBuilder<'a> {
         self
     }
 
-    /// Adds `Remarks`. This is an optional field, will default to an empty string
+    /// Adds `Remarks`. This is an optional field, will default to "None" if not explicitly provided
     pub fn remarks(mut self, remarks: &'a str) -> B2cBuilder<'a> {
         self.remarks = Some(remarks);
         self
