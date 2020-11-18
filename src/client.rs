@@ -4,13 +4,13 @@ use serde_json::json;
 use std::collections::HashMap;
 
 use super::environment::Environment;
-use super::payloads::{
+use super::services::{
     AuthResponse, B2bResponse, B2cResponse, C2bRegisterResponse, C2bSimulateResponse,
 };
 use crate::mpesa_security::MpesaSecurity;
-use crate::payloads::ResponseType;
-use crate::payloads::{AccountBalancePayload, AccountBalanceResponse};
-use crate::payloads::{B2bPayload, B2cPayload, C2bRegisterPayload, C2bSimulatePayload};
+use crate::services::ResponseType;
+use crate::services::{AccountBalancePayload, AccountBalanceResponse};
+use crate::services::{B2bPayload, B2cPayload, C2bRegisterPayload, C2bSimulatePayload};
 use crate::{CommandId, IdentifierTypes};
 
 /// Mpesa client that will facilitate communication with the Safaricom API
