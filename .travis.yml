@@ -8,6 +8,5 @@ jobs:
   fast_finish: true
 cache: cargo
 script:
-  - echo "TODO"
-#  - cargo build --verbose --all
-#  - cargo test --verbose --all
+  - cargo build --verbose --all
+  - cargo test --verbose --all
