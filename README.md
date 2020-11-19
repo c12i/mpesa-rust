@@ -26,7 +26,7 @@ A Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs
 
 ```md
 [dependencies]
-mpesa = "0.2.0"
+mpesa = "0.2.2"
 ```
 
 In your lib or binary crate:
