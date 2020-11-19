@@ -97,6 +97,7 @@ impl<'a> AccountBalanceBuilder<'a> {
 
     /// # AccountBalance API
     /// Enquire the balance on an M-Pesa BuyGoods (Till Number).
+    /// A successful request returns a `serde_json::Value` type
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure

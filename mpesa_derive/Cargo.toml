@@ -1,6 +1,6 @@
 [package]
 name = "mpesa_derive"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Collins Muriuki <murerwacollins@gmail.com>"]
 edition = "2018"
 description = "`MpesaSecurity` trait derive macro crate."

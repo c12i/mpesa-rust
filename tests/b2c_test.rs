@@ -11,7 +11,6 @@ fn b2c_test() {
         env::var("CLIENT_KEY").unwrap(),
         env::var("CLIENT_SECRET").unwrap(),
         Environment::Sandbox,
-        env::var("INIT_PASSWORD").unwrap(),
     );
 
     let response = client

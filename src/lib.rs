@@ -36,8 +36,8 @@
 //!     env::var("CLIENT_KEY").unwrap(),
 //!     env::var("CLIENT_SECRET").unwrap(),
 //!     Environment::Sandbox,
-//!     env::var("INIT_PASSWORD").unwrap(),
 //! );
+//! assert!(client.is_connected().unwrap())
 //! ```
 //!
 //! Since the `Environment` enum implements `FromStr`, you can pass the name of the environment as a `&str` and call the `parse()`
@@ -51,8 +51,8 @@
 //!     env::var("CLIENT_KEY").unwrap(),
 //!     env::var("CLIENT_SECRET").unwrap(),
 //!     "sandbox".parse().unwrap(),
-//!     env::var("INIT_PASSWORD").unwrap(),
 //! );
+//! assert!(client.is_connected().unwrap())
 //! ```
 //!
 //! ### Services
@@ -66,7 +66,6 @@
 //!     env::var("CLIENT_KEY").unwrap(),
 //!     env::var("CLIENT_SECRET").unwrap(),
 //!     "sandbox".parse().unwrap(),
-//!     env::var("INIT_PASSWORD").unwrap(),
 //! );
 //!
 //! let response = client
@@ -87,7 +86,6 @@
 //!     env::var("CLIENT_KEY").unwrap(),
 //!     env::var("CLIENT_SECRET").unwrap(),
 //!     "sandbox".parse().unwrap(),
-//!     env::var("INIT_PASSWORD").unwrap(),
 //! );
 //!
 //! let response = client
@@ -109,7 +107,6 @@
 //!     env::var("CLIENT_KEY").unwrap(),
 //!     env::var("CLIENT_SECRET").unwrap(),
 //!     "sandbox".parse().unwrap(),
-//!     env::var("INIT_PASSWORD").unwrap(),
 //! );
 //!
 //! let response = client
@@ -130,7 +127,6 @@
 //!     env::var("CLIENT_KEY").unwrap(),
 //!     env::var("CLIENT_SECRET").unwrap(),
 //!     "sandbox".parse().unwrap(),
-//!     env::var("INIT_PASSWORD").unwrap(),
 //! );
 //!
 //! let response = client
@@ -152,7 +148,6 @@
 //!     env::var("CLIENT_KEY").unwrap(),
 //!     env::var("CLIENT_SECRET").unwrap(),
 //!     "sandbox".parse().unwrap(),
-//!     env::var("INIT_PASSWORD").unwrap(),
 //! );
 //!
 //! let response = client
@@ -169,6 +164,7 @@
 //! **Collins Muriuki**
 //!
 //! * Twitter: [@collinsmuriuki\_](https://twitter.com/collinsmuriuki_)
+//! * Not affiliated with Safaricom in any way.
 //!
 //! ## License
 //! This project is MIT licensed
@@ -181,7 +177,7 @@ mod mpesa_security;
 pub mod services;
 
 pub use client::Mpesa;
-pub use constants::{CommandId, IdentifierTypes};
+pub use constants::{CommandId, IdentifierTypes, ResponseType};
 pub use environment::Environment;
 pub use errors::MpesaError;
 pub use mpesa_security::MpesaSecurity;

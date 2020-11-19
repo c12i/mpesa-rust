@@ -10,7 +10,6 @@ fn b2b_test() {
         env::var("CLIENT_KEY").unwrap(),
         env::var("CLIENT_SECRET").unwrap(),
         "sandbox".parse().unwrap(),
-        env::var("INIT_PASSWORD").unwrap(),
     );
 
     let response = client

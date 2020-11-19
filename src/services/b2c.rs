@@ -110,6 +110,8 @@ impl<'a> B2cBuilder<'a> {
     /// valid and verified B2C M-Pesa Short code.
     /// See more [here](https://developer.safaricom.co.ke/docs?shell#b2c-api)
     ///
+    /// A successful request returns a `serde_json::Value` type
+    ///
     /// # Errors
     /// Returns a `MpesaError` on failure.
     pub fn send(self) -> MpesaResult<Value> {
@@ -124,12 +126,12 @@ impl<'a> B2cBuilder<'a> {
             security_credentials: &credentials,
             command_id: self.command_id.unwrap_or(CommandId::BusinessPayment),
             amount: self.amount.unwrap_or(10),
-            party_a: self.party_a.unwrap_or(""),
-            party_b: self.party_b.unwrap_or(""),
+            party_a: self.party_a.unwrap_or("None"),
+            party_b: self.party_b.unwrap_or("None"),
             remarks: self.remarks.unwrap_or("None"),
-            queue_timeout_url: self.queue_timeout_url.unwrap_or(""),
-            result_url: self.result_url.unwrap_or(""),
-            occasion: self.occasion.unwrap_or(""),
+            queue_timeout_url: self.queue_timeout_url.unwrap_or("None"),
+            result_url: self.result_url.unwrap_or("None"),
+            occasion: self.occasion.unwrap_or("None"),
         };
 
         let data = json!({

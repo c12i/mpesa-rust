@@ -59,6 +59,9 @@ impl<'a> B2bBuilder<'a> {
     }
 
     /// Adds the `CommandId`. Defaults to `CommandId::BusinessToBusinessTransfer` if not explicitly provided.
+    ///
+    /// # Errors
+    /// If invalid `CommandId` is provided
     pub fn command_id(mut self, command_id: CommandId) -> B2bBuilder<'a> {
         self.command_id = Some(command_id);
         self
@@ -126,7 +129,9 @@ impl<'a> B2bBuilder<'a> {
     /// This API enables Business to Business (B2B) transactions between a business and another
     /// business. Use of this API requires a valid and verified B2B M-Pesa short code for the
     /// business initiating the transaction and the both businesses involved in the transaction
-    /// See more at https://developer.safaricom.co.ke/docs?shell#b2b-api
+    /// See more [here](https://developer.safaricom.co.ke/docs?shell#b2b-api)
+    ///
+    /// A successful request returns a `serde_json::Value` type
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure

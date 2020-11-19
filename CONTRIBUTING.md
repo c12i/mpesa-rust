@@ -20,7 +20,6 @@ See [here](https://developer.safaricom.co.ke/docs#developer-sign-up) if you need
 ```sh
 echo CLIENT_KEY="<your_client_key>" >> .env
 echo CLIENT_SECRET="<your_client_secret>" >> .env
-echo INIT_PASSWORD="<your_initiator_password>" >> .env
 ```
 
 ## Test Credentials

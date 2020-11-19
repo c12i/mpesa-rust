@@ -15,7 +15,6 @@ pub struct Mpesa {
     client_key: String,
     client_secret: String,
     environment: Environment,
-    initiator_password: String,
 }
 
 impl<'a> Mpesa {
@@ -24,13 +23,11 @@ impl<'a> Mpesa {
         client_key: String,
         client_secret: String,
         environment: Environment,
-        initiator_password: String,
     ) -> Self {
         Self {
             client_key,
             client_secret,
             environment,
-            initiator_password,
         }
     }
 
@@ -39,9 +36,18 @@ impl<'a> Mpesa {
         &self.environment
     }
 
-    /// Gets the initiator password
-    pub fn initiator_password(&'a self) -> &String {
-        &self.initiator_password
+    /// Gets the initiator password as a byte slice
+    pub fn initiator_password(&'a self) -> &'a [u8] {
+        &self.client_key.as_bytes()
+    }
+
+    /// Checks if the client can be authenticated
+    pub fn is_connected(&self) -> Option<bool> {
+        let token = self.auth().ok();
+        if let Some(_) = token {
+            return Some(true);
+        }
+        None
     }
 
     /// # Safaricom Oauth
@@ -86,6 +92,9 @@ impl<'a> Mpesa {
     ///     .parties("600496", "254708374149")
     ///     .urls("https://testdomain.com/err", "https://testdomain.com/res")
     ///     .amount(1000)
+    ///     .remarks("Your Remark") // optional, defaults to "None"
+    ///     .occasion("Your Occasion") // optional, defaults to "None"
+    ///     .command_id(mpesa::CommandId::BusinessPayment) // optional, defaults to `CommandId::BusinessPayment`
     ///     .send();
     /// ```
     pub fn b2c(&'a self, initiator_name: &'a str) -> B2cBuilder<'a> {
@@ -104,6 +113,8 @@ impl<'a> Mpesa {
     ///    .urls("https://testdomain.com/err", "https://testdomain.com/api")
     ///    .account_ref("254708374149")
     ///    .amount(1000)
+    ///    .command_id(mpesa::CommandId::BusinessToBusinessTransfer) // optional, defaults to `CommandId::BusinessToBusinessTransfer`
+    ///    .remarks("None") // optional, defaults to "None"
     ///    .send();
     /// ```
     pub fn b2b(&'a self, initiator_name: &'a str) -> B2bBuilder<'a> {
@@ -120,6 +131,7 @@ impl<'a> Mpesa {
     ///    .short_code("600496")
     ///    .confirmation_url("https://testdomain.com/true")
     ///    .validation_url("https://testdomain.com/valid")
+    ///    .response_type(mpesa::ResponseTypes::Complete) // optional, defaults to `ResponseTypes::Complete`
     ///    .send();
     /// ```
     pub fn c2b_register(&'a self) -> C2bRegisterBuilder<'a> {
@@ -135,6 +147,8 @@ impl<'a> Mpesa {
     ///    .short_code("600496")
     ///    .msisdn("254700000000")
     ///    .amount(1000)
+    ///    .command_id(mpesa::CommandId::CustomerPayBillOnline) // optional, defaults to `CommandId::CustomerPayBillOnline`
+    ///    .bill_ref_number("Your_BillRefNumber>") // optional, defaults to "None"
     ///    .send();
     /// ```
     pub fn c2b_simulate(&'a self) -> C2bSimulateBuilder<'a> {
@@ -151,6 +165,9 @@ impl<'a> Mpesa {
     ///    .account_balance("testapi496")
     ///    .urls("https://testdomain.com/err", "https://testdomain.com/ok")
     ///    .party_a("600496")
+    ///    .command_id(mpesa::CommandId::AccountBalance) // optional, defaults to `CommandId::AccountBalance`
+    ///    .identifier_type(mpesa::IdentifierTypes::ShortCode) // optional, defaults to `IdentifierTypes::ShortCode`
+    ///    .remarks("Your Remarks") // optional, defaults to "None"
     ///    .send();
     /// ```
     pub fn account_balance(&'a self, initiator_name: &'a str) -> AccountBalanceBuilder<'a> {

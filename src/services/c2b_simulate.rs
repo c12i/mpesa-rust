@@ -86,6 +86,11 @@ impl<'a> C2bSimulateBuilder<'a> {
     ///
     /// This enables you to receive the payment requests in real time.
     /// See more [here](https://developer.safaricom.co.ke/c2b/apis/post/simulate)
+    ///
+    /// A successful request returns a `serde_json::Value` type
+    ///
+    /// # Errors
+    /// Returns a `MpesaError` on failure
     pub fn send(self) -> MpesaResult<Value> {
         let url = format!(
             "{}/mpesa/c2b/v1/simulate",

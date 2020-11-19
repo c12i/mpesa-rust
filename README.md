@@ -37,8 +37,8 @@ use mpesa::Mpesa;
 ## Usage
 
 ### Creating a `Client`
-You will first need to create an instance of the `Mpesa` instance (the client). You are required to provide a **CLIENT_KEY**,
-**CLIENT_SECRET** and **INIT_PASSWORD** (initiator password). [Here](https://developer.safaricom.co.ke/test_credentials) is how you can get these credentials for the Safaricom sandbox
+You will first need to create an instance of the `Mpesa` instance (the client). You are required to provide a **CLIENT_KEY** and
+**CLIENT_SECRET**. [Here](https://developer.safaricom.co.ke/test_credentials) is how you can get these credentials for the Safaricom sandbox
 environment.
 
 *NOTE*: only calling `unwrap` for demonstration purposes. Errors are handled appropriately in the lib via the `MpesaError` enum.
@@ -53,7 +53,6 @@ let client = Mpesa::new(
       env::var("CLIENT_KEY")?,
       env::var("CLIENT_SECRET")?,
       Environment::Sandbox,
-      env::var("INIT_PASSWORD")?,
 );
 ```
 
@@ -68,7 +67,6 @@ let client = Mpesa::new(
       env::var("CLIENT_KEY")?,
       env::var("CLIENT_SECRET")?,
       "sandbox".parse()?,
-      env::var("INIT_PASSWORD")?,
 );``
 ```
 
@@ -137,6 +135,7 @@ More will be added progressively, pull requests welcome
 **Collins Muriuki**
 
 * Twitter: [@collinsmuriuki\_](https://twitter.com/collinsmuriuki_)
+* Not affiliated with Safaricom in any way
 
 ## Contributing
 
