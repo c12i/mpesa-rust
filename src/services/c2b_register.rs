@@ -24,6 +24,7 @@ pub struct C2bRegisterBuilder<'a> {
 }
 
 impl<'a> C2bRegisterBuilder<'a> {
+    /// Creates a new C2B Builder
     pub fn new(client: &'a Mpesa) -> C2bRegisterBuilder<'a> {
         C2bRegisterBuilder {
             client,

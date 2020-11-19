@@ -3,14 +3,14 @@
 //! A Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs?shell#introduction) for accessing M-Pesa services.
 //!
 //! ## Disclaimer
-//! **Warning!** WIP, not production ready
+//! **Warning!** WIP, not recommended for use in production
 //!
 //! ## Install
 //! `Cargo.toml`
 //!
 //! ```md
 //! [dependencies]
-//! mpesa = "0.2.0"
+//! mpesa = "0.2.4"
 //! ```
 //!
 //! In your lib or binary crate:
@@ -21,8 +21,8 @@
 //! ## Usage
 //!
 //! ### Creating a `Client`
-//! You will first need to create an instance of the `Mpesa` instance (the client). You are required to provide a **CLIENT_KEY**,
-//! **CLIENT_SECRET** and **INIT_PASSWORD** (initiator password). [Here](https://developer.safaricom.co.ke/test_credentials) is how you can get these credentials for the Safaricom sandbox
+//! You will first need to create an instance of the `Mpesa` instance (the client). You are required to provide a **CLIENT_KEY** and
+//! **CLIENT_SECRET**. [Here](https://developer.safaricom.co.ke/test_credentials) is how you can get these credentials for the Safaricom sandbox
 //! environment.
 //!
 //! There are two ways you can instantiate `Mpesa`:
