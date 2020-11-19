@@ -19,11 +19,7 @@ pub struct Mpesa {
 
 impl<'a> Mpesa {
     /// Constructs a new `Mpesa` instance.
-    pub fn new(
-        client_key: String,
-        client_secret: String,
-        environment: Environment,
-    ) -> Self {
+    pub fn new(client_key: String, client_secret: String, environment: Environment) -> Self {
         Self {
             client_key,
             client_secret,

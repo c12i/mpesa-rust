@@ -27,11 +27,7 @@ impl MpesaSecurity for Mpesa {
         let buf_len = pub_key.size();
         let mut buffer = vec![0; buf_len];
 
-        rsa_key.public_encrypt(
-            self.initiator_password(),
-            &mut buffer,
-            Padding::PKCS1,
-        )?;
+        rsa_key.public_encrypt(self.initiator_password(), &mut buffer, Padding::PKCS1)?;
         Ok(encode(buffer))
     }
 }
