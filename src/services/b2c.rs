@@ -159,6 +159,6 @@ impl<'a> B2cBuilder<'a> {
         }
 
         let value: Value = response.json()?;
-        Err(MpesaError::ErrorResponse(value))
+        Err(MpesaError::B2cError(value))
     }
 }

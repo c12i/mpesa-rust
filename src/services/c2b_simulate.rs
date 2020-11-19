@@ -125,6 +125,6 @@ impl<'a> C2bSimulateBuilder<'a> {
         }
 
         let value: Value = response.json()?;
-        Err(MpesaError::ErrorResponse(value))
+        Err(MpesaError::C2bSimulateError(value))
     }
 }

@@ -115,6 +115,6 @@ impl<'a> C2bRegisterBuilder<'a> {
         }
 
         let value: Value = response.json()?;
-        Err(MpesaError::ErrorResponse(value))
+        Err(MpesaError::C2bRegisterError(value))
     }
 }

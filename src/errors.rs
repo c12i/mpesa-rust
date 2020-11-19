@@ -8,15 +8,17 @@ use std::env::VarError;
 /// Mpesa error stack
 pub enum MpesaError {
     #[fail(display = "Error Authenticating: {}", 0)]
-    AuthenticationError(&'static str),
+    AuthenticationError(serde_json::Value),
     #[fail(display = "Error performing B2B transaction: {}", 0)]
-    B2BError(&'static str),
+    B2bError(serde_json::Value),
     #[fail(display = "Error performing B2C transaction: {}", 0)]
-    B2CError(&'static str),
+    B2cError(serde_json::Value),
+    #[fail(display = "Error performing C2B registration: {}", 0)]
+    C2bRegisterError(serde_json::Value),
     #[fail(display = "Error performing C2B simulation: {}", 0)]
-    C2BSimulateError(&'static str),
+    C2bSimulateError(serde_json::Value),
     #[fail(display = "Error getting account balance: {}", 0)]
-    AccountBalanceError(&'static str),
+    AccountBalanceError(serde_json::Value),
     #[fail(display = "Network Error: {}", 0)]
     NetworkError(reqwest::Error),
     #[fail(display = "Error parsing JSON data: {}", 0)]

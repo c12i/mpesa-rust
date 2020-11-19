@@ -143,6 +143,6 @@ impl<'a> AccountBalanceBuilder<'a> {
         }
 
         let value: Value = response.json()?;
-        Err(MpesaError::ErrorResponse(value))
+        Err(MpesaError::AccountBalanceError(value))
     }
 }
