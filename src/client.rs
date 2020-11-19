@@ -82,8 +82,8 @@ impl<'a> Mpesa {
     /// Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
     ///
     /// # Example
-    /// ```rs
-    /// let res = client
+    /// ```ignore
+    /// let response = client
     ///     .b2c("testapi496")
     ///     .parties("600496", "254708374149")
     ///     .urls("https://testdomain.com/err", "https://testdomain.com/res")
@@ -103,8 +103,8 @@ impl<'a> Mpesa {
     /// Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
     ///
     /// # Example
-    /// ```rs
-    /// let b2b_response = client.b2b("testapi496")
+    /// ```ignore
+    /// let response = client.b2b("testapi496")
     ///    .parties("600496", "600000")
     ///    .urls("https://testdomain.com/err", "https://testdomain.com/api")
     ///    .account_ref("254708374149")
@@ -121,7 +121,7 @@ impl<'a> Mpesa {
     /// Creates a `C2bRegisterBuilder` for registering URLs to the 3rd party shortcode.
     ///
     /// # Example
-    /// ```rs
+    /// ```ignore
     /// let response = client
     ///    .c2b_register()
     ///    .short_code("600496")
@@ -138,7 +138,7 @@ impl<'a> Mpesa {
     /// Creates a `C2bSimulateBuilder` for simulating C2B transactions
     ///
     /// # Example
-    /// ```rs
+    /// ```ignore
     /// let response = client.c2b_simulate()
     ///    .short_code("600496")
     ///    .msisdn("254700000000")
@@ -156,7 +156,7 @@ impl<'a> Mpesa {
     /// Requires an `initiator_name`
     ///
     /// # Example
-    /// ```rs
+    /// ```ignore
     /// let response = client
     ///    .account_balance("testapi496")
     ///    .urls("https://testdomain.com/err", "https://testdomain.com/ok")

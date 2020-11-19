@@ -5,7 +5,7 @@
 //! ## Disclaimer
 //! **Warning!** WIP, not production ready
 //!
-//! ## Install & Usage
+//! ## Install
 //! `Cargo.toml`
 //!
 //! ```md
@@ -28,11 +28,14 @@
 //! There are two ways you can instantiate `Mpesa`:
 //! NOTE: only calling `unwrap` for demonstration purposes. Errors are handled appropriately in the lib via the `MpesaError` enum.
 //!
-//! ```rs
+//! ```rust
 //! use mpesa::{Mpesa, Environment};
 //! use std::env;
+//! use dotenv::dotenv;
 //!
-//! let client = Mpesa::new(
+//! dotenv().ok();
+//!
+//! let client: Mpesa = Mpesa::new(
 //!     env::var("CLIENT_KEY").unwrap(),
 //!     env::var("CLIENT_SECRET").unwrap(),
 //!     Environment::Sandbox,
@@ -43,11 +46,14 @@
 //! Since the `Environment` enum implements `FromStr`, you can pass the name of the environment as a `&str` and call the `parse()`
 //! method to create an `Environment` type from the string slice:
 //!
-//! ```rs
+//! ```rust
 //! use mpesa::Mpesa;
 //! use std::env;
+//! use dotenv::dotenv;
 //!
-//! let client = Mpesa::new(
+//! dotenv().ok();
+//!
+//! let client: Mpesa = Mpesa::new(
 //!     env::var("CLIENT_KEY").unwrap(),
 //!     env::var("CLIENT_SECRET").unwrap(),
 //!     "sandbox".parse().unwrap(),
@@ -58,17 +64,21 @@
 //! ### Services
 //! The following services are currently available from the `Mpesa` client as methods that return builders:
 //! * B2C
-//! ```rs
-//! use mpesa::Mpesa;
+//! ```ignore
+//! use mpesa::{Mpesa, MpesaResult};
+//! use serde_json::Value;
 //! use std::env;
+//! use dotenv::dotenv;
 //!
-//! let client = Mpesa::new(
+//! dotenv().ok();
+//! 
+//! let client: Mpesa = Mpesa::new(
 //!     env::var("CLIENT_KEY").unwrap(),
 //!     env::var("CLIENT_SECRET").unwrap(),
 //!     "sandbox".parse().unwrap(),
 //! );
 //!
-//! let response = client
+//! let response: MpesaResult<Value> = client
 //!     .b2c("testapi496")
 //!     .parties("600496", "254708374149")
 //!     .urls("https://testdomain.com/err", "https://testdomain.com/res")
@@ -78,17 +88,21 @@
 //! ```
 //!
 //! * B2B
-//! ```rs
-//! use mpesa::Mpesa;
+//! ```rust
+//! use mpesa::{Mpesa, MpesaResult};
+//! use serde_json::Value;
 //! use std::env;
+//! use dotenv::dotenv;
 //!
-//! let client = Mpesa::new(
+//! dotenv().ok();
+//! 
+//! let client: Mpesa = Mpesa::new(
 //!     env::var("CLIENT_KEY").unwrap(),
 //!     env::var("CLIENT_SECRET").unwrap(),
 //!     "sandbox".parse().unwrap(),
 //! );
 //!
-//! let response = client
+//! let response: MpesaResult<Value> = client
 //!     .b2b("testapi496")
 //!     .parties("600496", "600000")
 //!     .urls("https://testdomain.com/err", "https://testdomain.com/api")
@@ -99,17 +113,21 @@
 //! ```
 //!
 //! * C2B Register
-//! ```rs
-//! use mpesa::Mpesa;
+//! ```rust
+//! use mpesa::{Mpesa, MpesaResult};
+//! use serde_json::Value;
 //! use std::env;
+//! use dotenv::dotenv;
 //!
-//! let client = Mpesa::new(
+//! dotenv().ok();
+//!
+//! let client: Mpesa = Mpesa::new(
 //!     env::var("CLIENT_KEY").unwrap(),
 //!     env::var("CLIENT_SECRET").unwrap(),
 //!     "sandbox".parse().unwrap(),
 //! );
 //!
-//! let response = client
+//! let response: MpesaResult<Value> = client
 //!     .c2b_register()
 //!     .short_code("600496")
 //!     .confirmation_url("https://testdomain.com/true")
@@ -119,17 +137,21 @@
 //! ```
 //!
 //! * C2B Simulate
-//! ```rs
-//! use mpesa::Mpesa;
+//! ```rust
+//! use mpesa::{Mpesa, MpesaResult};
+//! use serde_json::Value;
 //! use std::env;
+//! use dotenv::dotenv;
 //!
-//! let client = Mpesa::new(
+//! dotenv().ok();
+//! 
+//! let client: Mpesa = Mpesa::new(
 //!     env::var("CLIENT_KEY").unwrap(),
 //!     env::var("CLIENT_SECRET").unwrap(),
 //!     "sandbox".parse().unwrap(),
 //! );
 //!
-//! let response = client
+//! let response: MpesaResult<Value> = client
 //!     .c2b_simulate()
 //!     .short_code("600496")
 //!     .msisdn("254700000000")
@@ -140,17 +162,21 @@
 //!
 //! * Account Balance
 //!
-//! ```rs
-//! use mpesa::Mpesa;
+//! ```rust
+//! use mpesa::{Mpesa, MpesaResult};
+//! use serde_json::Value;
 //! use std::env;
+//! use dotenv::dotenv;
 //!
-//! let client = Mpesa::new(
+//! dotenv().ok();
+//! 
+//! let client: Mpesa = Mpesa::new(
 //!     env::var("CLIENT_KEY").unwrap(),
 //!     env::var("CLIENT_SECRET").unwrap(),
 //!     "sandbox".parse().unwrap(),
 //! );
 //!
-//! let response = client
+//! let response: MpesaResult<Value> = client
 //!     .account_balance("testapi496")
 //!     .urls("https://testdomain.com/err", "https://testdomain.com/ok")
 //!     .party_a("600496")
@@ -176,7 +202,7 @@ mod errors;
 mod mpesa_security;
 pub mod services;
 
-pub use client::Mpesa;
+pub use client::{Mpesa, MpesaResult};
 pub use constants::{CommandId, IdentifierTypes, ResponseType};
 pub use environment::Environment;
 pub use errors::MpesaError;
