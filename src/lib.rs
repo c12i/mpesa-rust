@@ -1,11 +1,11 @@
-//! ## About
+//!## About
 //!
 //! A Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs?shell#introduction) for accessing M-Pesa services.
 //!
-//! ## Disclaimer
+//!## Disclaimer
 //! **Warning!** WIP, not recommended for use in production
 //!
-//! ## Install
+//!## Install
 //! `Cargo.toml`
 //!
 //! ```md
@@ -18,15 +18,19 @@
 //! use mpesa::Mpesa;
 //! ```
 //!
-//! ## Usage
+//!## Usage
 //!
-//! ### Creating a `Client`
+//!### Creating a `Client`
 //! You will first need to create an instance of the `Mpesa` instance (the client). You are required to provide a **CLIENT_KEY** and
 //! **CLIENT_SECRET**. [Here](https://developer.safaricom.co.ke/test_credentials) is how you can get these credentials for the Safaricom sandbox
-//! environment.
+//! environment. It's worth noting that these credentials are only valid in the sandbox environment. To go live and get production keys
+//! read the docs [here](https://developer.safaricom.co.ke/docs?javascript#going-live).
 //!
-//! There are two ways you can instantiate `Mpesa`:
-//! NOTE: only calling `unwrap` for demonstration purposes. Errors are handled appropriately in the lib via the `MpesaError` enum.
+//! These are the following ways you can instantiate `Mpesa`:
+//!
+//! _NOTE_:
+//! * Only calling `unwrap` for demonstration purposes. Errors are handled appropriately in the lib via the `MpesaError` enum.
+//! * Use of `dotenv` is optional.
 //!
 //! ```rust
 //! use mpesa::{Mpesa, Environment};
@@ -60,8 +64,25 @@
 //! );
 //! assert!(client.is_connected().unwrap())
 //! ```
+//! If you intend to use in production, you will need to call a the `set_initiator_password` method from `Mpesa` after initially
+//! creating the client. Here you provide your initiator password, which overrides the default password used in sandbox `"Safcom496!"`:
 //!
-//! ### Services
+//! ```rust
+//! use mpesa::Mpesa;
+//! use std::env;
+//! use dotenv::dotenv;
+//!
+//! dotenv().ok();
+//!
+//! let client: Mpesa = Mpesa::new(
+//!     env::var("CLIENT_KEY").unwrap(),
+//!     env::var("CLIENT_SECRET").unwrap(),
+//!     "sandbox".parse().unwrap(),
+//! ).set_initiator_password("new_password");
+//! assert!(client.is_connected().unwrap())
+//! ```
+//!
+//!### Services
 //! The following services are currently available from the `Mpesa` client as methods that return builders:
 //! * B2C
 //! ```ignore
@@ -185,14 +206,14 @@
 //! ```
 //!
 //! More will be added progressively, pull requests welcome
-//! ## Author
+//!## Author
 //!
 //! **Collins Muriuki**
 //!
 //! * Twitter: [@collinsmuriuki\_](https://twitter.com/collinsmuriuki_)
 //! * Not affiliated with Safaricom in any way.
 //!
-//! ## License
+//!## License
 //! This project is MIT licensed
 
 mod client;

@@ -1,6 +1,6 @@
 [package]
 name = "mpesa"
-version = "0.2.4"
+version = "0.2.5"
 authors = ["Collins Muriuki <murerwacollins@gmail.com>"]
 edition = "2018"
 description = "A wrapper around the M-PESA API in Rust."

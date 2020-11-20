@@ -14,6 +14,7 @@ pub type MpesaResult<T> = Result<T, MpesaError>;
 pub struct Mpesa {
     client_key: String,
     client_secret: String,
+    initiator_password: Option<String>,
     environment: Environment,
 }
 
@@ -23,6 +24,7 @@ impl<'a> Mpesa {
         Self {
             client_key,
             client_secret,
+            initiator_password: None,
             environment,
         }
     }
@@ -33,8 +35,28 @@ impl<'a> Mpesa {
     }
 
     /// Gets the initiator password as a byte slice
+    /// If `None`, the default password is b"Safcom496!"
     pub fn initiator_password(&'a self) -> &'a [u8] {
-        &self.client_key.as_bytes()
+        if let Some(p) = &self.initiator_password {
+            return p.as_bytes();
+        }
+        b"Safcom496!"
+    }
+
+    /// Optional in development but required for production, you will need to call this method and set your production initiator password.
+    /// If in development, default initiator password is already pre-set
+    /// ```ignore
+    /// use mpesa::Mpesa;
+    ///
+    /// let client: Mpesa = Mpesa::new(
+    ///     env::var("CLIENT_KEY").unwrap(),
+    ///     env::var("CLIENT_SECRET").unwrap(),
+    ///     "sandbox".parse().unwrap(),
+    /// ).set_initiator_password("your_initiator_password");
+    /// ```
+    pub fn set_initiator_password(mut self, initiator_password: &str) -> Self {
+        self.initiator_password = Some(initiator_password.into());
+        self
     }
 
     /// Checks if the client can be authenticated
@@ -111,6 +133,8 @@ impl<'a> Mpesa {
     ///    .amount(1000)
     ///    .command_id(mpesa::CommandId::BusinessToBusinessTransfer) // optional, defaults to `CommandId::BusinessToBusinessTransfer`
     ///    .remarks("None") // optional, defaults to "None"
+    ///    .sender_id(mpesa::IdentifierTypes::ShortCode) // optional, defaults to `IdentifierTypes::ShortCode`
+    ///    .receiver_id(mpesa::IdentifierTypes::ShortCode) // optional, defaults to `IdentifierTypes::ShortCode`
     ///    .send();
     /// ```
     pub fn b2b(&'a self, initiator_name: &'a str) -> B2bBuilder<'a> {
