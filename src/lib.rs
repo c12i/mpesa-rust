@@ -92,7 +92,7 @@
 //! use dotenv::dotenv;
 //!
 //! dotenv().ok();
-//! 
+//!
 //! let client: Mpesa = Mpesa::new(
 //!     env::var("CLIENT_KEY").unwrap(),
 //!     env::var("CLIENT_SECRET").unwrap(),
@@ -116,7 +116,7 @@
 //! use dotenv::dotenv;
 //!
 //! dotenv().ok();
-//! 
+//!
 //! let client: Mpesa = Mpesa::new(
 //!     env::var("CLIENT_KEY").unwrap(),
 //!     env::var("CLIENT_SECRET").unwrap(),
@@ -165,7 +165,7 @@
 //! use dotenv::dotenv;
 //!
 //! dotenv().ok();
-//! 
+//!
 //! let client: Mpesa = Mpesa::new(
 //!     env::var("CLIENT_KEY").unwrap(),
 //!     env::var("CLIENT_SECRET").unwrap(),
@@ -190,7 +190,7 @@
 //! use dotenv::dotenv;
 //!
 //! dotenv().ok();
-//! 
+//!
 //! let client: Mpesa = Mpesa::new(
 //!     env::var("CLIENT_KEY").unwrap(),
 //!     env::var("CLIENT_SECRET").unwrap(),

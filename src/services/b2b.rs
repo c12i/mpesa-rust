@@ -123,7 +123,8 @@ impl<'a> B2bBuilder<'a> {
         self
     }
 
-    /// # B2B API
+    /// **B2B API**
+    ///
     /// Sends b2b payment request.
     ///
     /// This API enables Business to Business (B2B) transactions between a business and another

@@ -95,9 +95,11 @@ impl<'a> AccountBalanceBuilder<'a> {
         self
     }
 
-    /// # AccountBalance API
+    /// **AccountBalance API**
+    ///
     /// Enquire the balance on an M-Pesa BuyGoods (Till Number).
-    /// A successful request returns a `serde_json::Value` type
+    /// A successful request returns a `serde_json::Value` type.
+    /// See more [here](https://developer.safaricom.co.ke/docs#account-balance-api)
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure

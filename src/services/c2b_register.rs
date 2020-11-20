@@ -68,7 +68,8 @@ impl<'a> C2bRegisterBuilder<'a> {
         self
     }
 
-    /// # C2B Register API
+    /// **C2B Register API**
+    ///
     /// Registers the the 3rd party’s confirmation and validation URLs to M-Pesa
     ///
     /// Registering maps these URLs to the 3rd party shortcode.

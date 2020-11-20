@@ -81,7 +81,8 @@ impl<'a> C2bSimulateBuilder<'a> {
         self
     }
 
-    /// # C2B Simulate API
+    /// **C2B Simulate API**
+    ///
     /// Make payment requests from Client to Business
     ///
     /// This enables you to receive the payment requests in real time.

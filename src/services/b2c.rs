@@ -102,7 +102,8 @@ impl<'a> B2cBuilder<'a> {
         self
     }
 
-    ///# B2C API
+    /// **B2C API**
+    ///
     /// Sends b2c payment request.
     ///
     /// This API enables Business to Customer (B2C) transactions between a company and

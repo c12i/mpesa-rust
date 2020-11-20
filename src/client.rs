@@ -68,11 +68,13 @@ impl<'a> Mpesa {
         None
     }
 
-    /// # Safaricom Oauth
+    /// **Safaricom Oauth**
     ///
     /// Generates an access token
     /// Sends `GET` request to Safaricom oauth to acquire token for token authentication
     /// The OAuth access token expires after an hour, after which, you will need to generate another access token
+    ///
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/docs#authentication)
     ///
     /// Returns the auth token as a `String`.
     ///
@@ -97,9 +99,10 @@ impl<'a> Mpesa {
         ))
     }
 
-    /// # B2C Builder
+    /// **B2C Builder**
     /// Creates a `B2cBuilder` for building a B2C transaction struct.
     /// The builder is consumed and request made by calling its `send` method.
+    /// See more from Safaricom the API docs [here](https://developer.safaricom.co.ke/docs?shell#b2c-api).
     ///
     /// Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
     ///
@@ -119,8 +122,11 @@ impl<'a> Mpesa {
         B2cBuilder::new(&self, initiator_name)
     }
 
-    /// # B2B Builder
+    /// **B2B Builder**
+    ///
     /// Creates a `B2bBuilder` for building B2B transaction struct.
+    ///
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/docs#b2b-api)
     ///
     /// Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
     ///
@@ -141,8 +147,11 @@ impl<'a> Mpesa {
         B2bBuilder::new(&self, initiator_name)
     }
 
-    /// # C2B Register builder
+    /// **C2B Register builder**
+    ///
     /// Creates a `C2bRegisterBuilder` for registering URLs to the 3rd party shortcode.
+    ///
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/docs?shell#c2b-api)
     ///
     /// # Example
     /// ```ignore
@@ -158,8 +167,11 @@ impl<'a> Mpesa {
         C2bRegisterBuilder::new(&self)
     }
 
-    /// # C2B Simulate Builder
+    /// **C2B Simulate Builder**
+    ///
     /// Creates a `C2bSimulateBuilder` for simulating C2B transactions
+    ///
+    /// See more [here](https://developer.safaricom.co.ke/c2b/apis/post/simulate)
     ///
     /// # Example
     /// ```ignore
@@ -175,9 +187,12 @@ impl<'a> Mpesa {
         C2bSimulateBuilder::new(&self)
     }
 
-    /// # Account Balance Builder
+    /// **Account Balance Builder**
+    ///
     /// Creates an `AccountBalanceBuilder` for enquiring the balance on an MPESA BuyGoods.
-    /// Requires an `initiator_name`
+    /// Requires an `initiator_name`.
+    ///
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/docs#account-balance-api)
     ///
     /// # Example
     /// ```ignore
