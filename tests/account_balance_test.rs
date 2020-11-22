@@ -18,7 +18,5 @@ fn account_balance_test() {
         .party_a("600496")
         .send();
 
-    println!("{:?}", response);
-
     assert!(response.is_ok())
 }
