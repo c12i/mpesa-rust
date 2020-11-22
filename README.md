@@ -45,7 +45,7 @@ use mpesa::Mpesa;
 You will first need to create an instance of the `Mpesa` instance (the client). You are required to provide a **CLIENT_KEY** and
 **CLIENT_SECRET**. [Here](https://developer.safaricom.co.ke/test_credentials) is how you can get these credentials for the Safaricom sandbox
 environment. It's worth noting that these credentials are only valid in the sandbox environment. To go live and get production keys
-read the docs [here](https://developer.safaricom.co.ke/docs?javascript#going-live)``.
+read the docs [here](https://developer.safaricom.co.ke/docs?javascript#going-live).
 
 _NOTE_:
 * Only calling `unwrap` for demonstration purposes. Errors are handled appropriately in the lib via the `MpesaError` enum.
