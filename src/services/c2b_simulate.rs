@@ -2,17 +2,18 @@ use crate::client::{Mpesa, MpesaResult};
 use crate::constants::CommandId;
 use crate::errors::MpesaError;
 use reqwest::blocking::Client;
-use serde_json::{json, Value};
+use serde::Serialize;
+use serde_json::Value;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 /// Payload to make payment requests from C2B.
 /// See more: https://developer.safaricom.co.ke/docs#c2b-api
 struct C2bSimulatePayload<'a> {
-    command_id: CommandId,
-    amount: u32,
-    msisdn: &'a str,
-    bill_ref_number: &'a str,
-    short_code: &'a str,
+    CommandID: CommandId,
+    Amount: u32,
+    Msisdn: &'a str,
+    BillRefNumber: &'a str,
+    ShortCode: &'a str,
 }
 
 #[derive(Debug)]
@@ -99,25 +100,17 @@ impl<'a> C2bSimulateBuilder<'a> {
         );
 
         let payload = C2bSimulatePayload {
-            command_id: self.command_id.unwrap_or(CommandId::CustomerPayBillOnline),
-            amount: self.amount.unwrap_or(10),
-            msisdn: self.msisdn.unwrap_or("None"),
-            bill_ref_number: self.bill_ref_number.unwrap_or("None"),
-            short_code: self.short_code.unwrap_or("None"),
+            CommandID: self.command_id.unwrap_or(CommandId::CustomerPayBillOnline),
+            Amount: self.amount.unwrap_or(10),
+            Msisdn: self.msisdn.unwrap_or("None"),
+            BillRefNumber: self.bill_ref_number.unwrap_or("None"),
+            ShortCode: self.short_code.unwrap_or("None"),
         };
-
-        let data = json!({
-            "CommandID": payload.command_id.to_string(),
-            "Amount": payload.amount,
-            "Msisdn": payload.msisdn,
-            "BillRefNumber": payload.bill_ref_number,
-            "ShortCode": payload.short_code,
-        });
 
         let response = Client::new()
             .post(&url)
             .bearer_auth(self.client.auth()?)
-            .json(&data)
+            .json(&payload)
             .send()?;
 
         if response.status().is_success() {

@@ -29,7 +29,7 @@ An unofficial Rust wrapper around the [Safaricom API](https://developer.safarico
 
 ```md
 [dependencies]
-mpesa = "0.2.5"
+mpesa = "0.2.6"
 ```
 
 In your lib or binary crate:
@@ -90,7 +90,7 @@ use std::env;
 let client = Mpesa::new(
       env::var("CLIENT_KEY")?,
       env::var("CLIENT_SECRET")?,
-      "sandbox".parse()?,
+      "production".parse()?,
 ).set_initiator_password("new_password");
 assert!(client.is_connected())
 ```
@@ -166,8 +166,8 @@ More will be added progressively, pull requests welcome
 
 **Collins Muriuki**
 
-- Twitter: [@collinsmuriuki\_](https://twitter.com/collinsmuriuki_)
-- Not affiliated with Safaricom in any way
+- Twitter: [@collinsmuriuki_](https://twitter.com/collinsmuriuki_)
+- Not affiliated with Safaricom.
 
 ## Contributing
 

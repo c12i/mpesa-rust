@@ -1,6 +1,6 @@
 //!## About
 //!
-//! A Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs?shell#introduction) for accessing M-Pesa services.
+//! An unofficial Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs?shell#introduction) for accessing M-Pesa services.
 //!
 //!## Disclaimer
 //! **Warning!** WIP, not recommended for use in production
@@ -210,15 +210,15 @@
 //!
 //! **Collins Muriuki**
 //!
-//! * Twitter: [@collinsmuriuki\_](https://twitter.com/collinsmuriuki_)
-//! * Not affiliated with Safaricom in any way.
+//! * Twitter: [@collinsmuriuki_](https://twitter.com/collinsmuriuki_)
+//! * Not affiliated with Safaricom.
 //!
 //!## License
 //! This project is MIT licensed
 
 mod client;
 mod constants;
-mod environment;
+pub mod environment;
 mod errors;
 mod mpesa_security;
 pub mod services;

@@ -1,5 +1,15 @@
-///! # environment
-///! Code related to setting up the desired Safaricom API environment
+//!# MPESA Environment
+//!
+//! Code related to setting up the desired Safaricom API environment. Environment can be either
+//! sandbox or production.
+//! you will need environment specific credentials (`CLIENT_KEY` AND `CLIENT_SECRET`) when creating
+//! an instance of the `Mpesa` client struct. Note that you cannot use sandbox credentials in
+//! production and vice versa.
+//!
+//! Based on selected environment. You are able to access environment specific data such as the `base_url`
+//! and the `public key` an X509 certificate used for encrypting initiator passwords. You can read more about that from
+//! the Safaricom API [docs](https://developer.safaricom.co.ke/docs?javascript#security-credentials).
+
 use crate::MpesaError;
 use std::str::FromStr;
 

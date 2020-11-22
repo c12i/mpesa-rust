@@ -20,6 +20,15 @@ pub struct Mpesa {
 
 impl<'a> Mpesa {
     /// Constructs a new `Mpesa` instance.
+    ///
+    /// # Example
+    /// ```ignore
+    /// let client: Mpesa = Mpesa::new(
+    ///     env::var("CLIENT_KEY").unwrap(),
+    ///     env::var("CLIENT_SECRET").unwrap(),
+    ///     "sandbox".parse().unwrap(),
+    /// );
+    /// ```
     pub fn new(client_key: String, client_secret: String, environment: Environment) -> Self {
         Self {
             client_key,
@@ -100,6 +109,7 @@ impl<'a> Mpesa {
     }
 
     /// **B2C Builder**
+    ///
     /// Creates a `B2cBuilder` for building a B2C transaction struct.
     /// The builder is consumed and request made by calling its `send` method.
     /// See more from Safaricom the API docs [here](https://developer.safaricom.co.ke/docs?shell#b2c-api).

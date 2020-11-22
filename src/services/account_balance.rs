@@ -2,19 +2,20 @@ use crate::client::MpesaResult;
 use crate::constants::{CommandId, IdentifierTypes};
 use crate::{Mpesa, MpesaError, MpesaSecurity};
 use reqwest::blocking::Client;
-use serde_json::{json, Value};
+use serde::Serialize;
+use serde_json::Value;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 /// Account Balance payload
 struct AccountBalancePayload<'a> {
-    initiator_name: &'a str,
-    security_credentials: &'a str,
-    command_id: CommandId,
-    party_a: &'a str,
-    identifier_type: IdentifierTypes,
-    remarks: &'a str,
-    queue_timeout_url: &'a str,
-    result_url: &'a str,
+    Initiator: &'a str,
+    SecurityCredential: &'a str,
+    CommandID: CommandId,
+    PartyA: &'a str,
+    IdentifierType: &'a str,
+    Remarks: &'a str,
+    QueueTimeOutURL: &'a str,
+    ResultURL: &'a str,
 }
 
 #[derive(Debug)]
@@ -112,31 +113,23 @@ impl<'a> AccountBalanceBuilder<'a> {
         let credentials = self.client.gen_security_credentials()?;
 
         let payload = AccountBalancePayload {
-            command_id: self.command_id.unwrap_or(CommandId::AccountBalance),
-            party_a: self.party_a.unwrap_or("None"),
-            identifier_type: self.identifier_type.unwrap_or(IdentifierTypes::Shortcode),
-            remarks: self.remarks.unwrap_or("None"),
-            initiator_name: self.initiator_name,
-            queue_timeout_url: self.queue_timeout_url.unwrap_or("None"),
-            result_url: self.result_url.unwrap_or("None"),
-            security_credentials: &credentials,
+            CommandID: self.command_id.unwrap_or(CommandId::AccountBalance),
+            PartyA: self.party_a.unwrap_or("None"),
+            IdentifierType: &self
+                .identifier_type
+                .unwrap_or(IdentifierTypes::ShortCode)
+                .to_string(),
+            Remarks: self.remarks.unwrap_or("None"),
+            Initiator: self.initiator_name,
+            QueueTimeOutURL: self.queue_timeout_url.unwrap_or("None"),
+            ResultURL: self.result_url.unwrap_or("None"),
+            SecurityCredential: &credentials,
         };
-
-        let data = json!({
-            "CommandID": payload.command_id.to_string(),
-            "PartyA": payload.party_a,
-            "IdentifierType": payload.identifier_type.get_code(),
-            "Remarks": payload.remarks,
-            "Initiator": payload.initiator_name,
-            "SecurityCredential": payload.security_credentials,
-            "QueueTimeOutURL": payload.queue_timeout_url,
-            "ResultURL": payload.result_url,
-        });
 
         let response = Client::new()
             .post(&url)
             .bearer_auth(self.client.auth()?)
-            .json(&data)
+            .json(&payload)
             .send()?;
 
         if response.status().is_success() {
