@@ -3,22 +3,23 @@ use crate::constants::{CommandId, IdentifierTypes};
 use crate::errors::MpesaError;
 use crate::MpesaSecurity;
 use reqwest::blocking::Client;
-use serde_json::{json, Value};
+use serde::Serialize;
+use serde_json::Value;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 struct B2bPayload<'a> {
-    initiator_name: &'a str,
-    security_credentials: &'a str,
-    command_id: CommandId,
-    amount: u32,
-    party_a: &'a str,
-    sender_id: u32,
-    party_b: &'a str,
-    receiver_id: u32,
-    remarks: &'a str,
-    queue_timeout_url: &'a str,
-    result_url: &'a str,
-    account_ref: &'a str,
+    Initiator: &'a str,
+    SecurityCredential: &'a str,
+    CommandID: CommandId,
+    Amount: u32,
+    PartyA: &'a str,
+    SenderIdentifierType: &'a str,
+    PartyB: &'a str,
+    RecieverIdentifierType: &'a str,
+    Remarks: &'a str,
+    QueueTimeOutURL: &'a str,
+    ResultURL: &'a str,
+    AccountReference: &'a str,
 }
 
 #[derive(Debug)]
@@ -144,47 +145,32 @@ impl<'a> B2bBuilder<'a> {
         let credentials = self.client.gen_security_credentials()?;
 
         let payload = B2bPayload {
-            initiator_name: self.initiator_name,
-            security_credentials: &credentials,
-            command_id: self
+            Initiator: self.initiator_name,
+            SecurityCredential: &credentials,
+            CommandID: self
                 .command_id
                 .unwrap_or(CommandId::BusinessToBusinessTransfer),
-            amount: self.amount.unwrap_or(10),
-            party_a: self.party_a.unwrap_or(""),
-            sender_id: self
+            Amount: self.amount.unwrap_or(10),
+            PartyA: self.party_a.unwrap_or(""),
+            SenderIdentifierType: &self
                 .sender_id
-                .unwrap_or(IdentifierTypes::Shortcode)
-                .get_code(),
-            party_b: self.party_b.unwrap_or(""),
-            receiver_id: self
+                .unwrap_or(IdentifierTypes::ShortCode)
+                .to_string(),
+            PartyB: self.party_b.unwrap_or(""),
+            RecieverIdentifierType: &self
                 .receiver_id
-                .unwrap_or(IdentifierTypes::Shortcode)
-                .get_code(),
-            remarks: self.remarks.unwrap_or("None"),
-            queue_timeout_url: self.queue_timeout_url.unwrap_or(""),
-            result_url: self.result_url.unwrap_or(""),
-            account_ref: self.account_ref.unwrap_or(""),
+                .unwrap_or(IdentifierTypes::ShortCode)
+                .to_string(),
+            Remarks: self.remarks.unwrap_or("None"),
+            QueueTimeOutURL: self.queue_timeout_url.unwrap_or(""),
+            ResultURL: self.result_url.unwrap_or(""),
+            AccountReference: self.account_ref.unwrap_or(""),
         };
-
-        let data = json!({
-            "Initiator": payload.initiator_name,
-            "SecurityCredential": payload.security_credentials,
-            "CommandID": payload.command_id.to_string(),
-            "SenderIdentifierType": payload.sender_id,
-            "RecieverIdentifierType": payload.receiver_id,
-            "Amount": payload.amount,
-            "PartyA": payload.party_a,
-            "PartyB": payload.party_b,
-            "AccountReference": payload.account_ref,
-            "Remarks": payload.remarks,
-            "QueueTimeOutURL": payload.queue_timeout_url,
-            "ResultURL": payload.result_url,
-        });
 
         let response = Client::new()
             .post(&url)
             .bearer_auth(self.client.auth()?)
-            .json(&data)
+            .json(&payload)
             .send()?;
 
         if response.status().is_success() {

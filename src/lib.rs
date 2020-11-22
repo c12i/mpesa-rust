@@ -1,6 +1,6 @@
 //!## About
 //!
-//! A Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs?shell#introduction) for accessing M-Pesa services.
+//! An unofficial Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs?shell#introduction) for accessing M-Pesa services.
 //!
 //!## Disclaimer
 //! **Warning!** WIP, not recommended for use in production
@@ -10,7 +10,7 @@
 //!
 //! ```md
 //! [dependencies]
-//! mpesa = "0.2.4"
+//! mpesa = "0.2.6"
 //! ```
 //!
 //! In your lib or binary crate:
@@ -44,7 +44,7 @@
 //!     env::var("CLIENT_SECRET").unwrap(),
 //!     Environment::Sandbox,
 //! );
-//! assert!(client.is_connected().unwrap())
+//! assert!(client.is_connected())
 //! ```
 //!
 //! Since the `Environment` enum implements `FromStr`, you can pass the name of the environment as a `&str` and call the `parse()`
@@ -62,7 +62,7 @@
 //!     env::var("CLIENT_SECRET").unwrap(),
 //!     "sandbox".parse().unwrap(),
 //! );
-//! assert!(client.is_connected().unwrap())
+//! assert!(client.is_connected())
 //! ```
 //! If you intend to use in production, you will need to call a the `set_initiator_password` method from `Mpesa` after initially
 //! creating the client. Here you provide your initiator password, which overrides the default password used in sandbox `"Safcom496!"`:
@@ -79,7 +79,7 @@
 //!     env::var("CLIENT_SECRET").unwrap(),
 //!     "sandbox".parse().unwrap(),
 //! ).set_initiator_password("new_password");
-//! assert!(client.is_connected().unwrap())
+//! assert!(client.is_connected())
 //! ```
 //!
 //!### Services
@@ -210,15 +210,15 @@
 //!
 //! **Collins Muriuki**
 //!
-//! * Twitter: [@collinsmuriuki\_](https://twitter.com/collinsmuriuki_)
-//! * Not affiliated with Safaricom in any way.
+//! * Twitter: [@collinsmuriuki_](https://twitter.com/collinsmuriuki_)
+//! * Not affiliated with Safaricom.
 //!
 //!## License
 //! This project is MIT licensed
 
 mod client;
 mod constants;
-mod environment;
+pub mod environment;
 mod errors;
 mod mpesa_security;
 pub mod services;

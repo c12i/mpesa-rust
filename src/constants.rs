@@ -21,38 +21,28 @@ pub enum CommandId {
 
 impl Display for CommandId {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        write!(f, "{:?}", self)
+        write!(f, "{}", self)
     }
 }
 
 /// Identifier types - both sender and receiver - identify an M-Pesa transaction’s sending and receiving party as
 /// either a shortcode, a till number or a MSISDN (phone number).
 /// There are three identifier types that can be used with M-Pesa APIs.
-#[derive(Debug)]
+#[derive(Debug, Serialize, Copy, Clone)]
 pub enum IdentifierTypes {
     MSISDN = 1,
     TillNumber = 2,
-    Shortcode = 4,
-}
-
-impl IdentifierTypes {
-    pub fn get_code(&self) -> u32 {
-        match self {
-            IdentifierTypes::MSISDN => 1,
-            IdentifierTypes::TillNumber => 2,
-            IdentifierTypes::Shortcode => 4,
-        }
-    }
+    ShortCode = 4,
 }
 
 impl Display for IdentifierTypes {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        write!(f, "{:?}", self.get_code())
+        write!(f, "{}", *self as u16)
     }
 }
 
 /// M-pesa result and response codes
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[allow(unused)]
 pub enum MpesaResponseCode {
     Success = 0,
@@ -76,29 +66,19 @@ pub enum MpesaResponseCode {
 
 impl Display for MpesaResponseCode {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        write!(f, "{:?}", self)
+        write!(f, "{}", *self as u16)
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 /// C2B Register Response types
 pub enum ResponseType {
     Complete,
     Cancelled,
 }
 
-impl ResponseType {
-    /// Stringify response type
-    pub fn response_type_string(&self) -> &'static str {
-        match self {
-            ResponseType::Cancelled => "Cancelled",
-            ResponseType::Complete => "Complete",
-        }
-    }
-}
-
 impl Display for ResponseType {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        write!(f, "{:?}", self.response_type_string())
+        write!(f, "{}", self)
     }
 }

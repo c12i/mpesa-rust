@@ -2,21 +2,21 @@ use crate::client::MpesaResult;
 use crate::{CommandId, Mpesa, MpesaError, MpesaSecurity};
 use reqwest::blocking::Client;
 use serde::Serialize;
-use serde_json::{json, Value};
+use serde_json::Value;
 
 #[derive(Debug, Serialize)]
 /// Payload to allow for b2c transactions:
 struct B2cPayload<'a> {
-    initiator_name: &'a str,
-    security_credentials: &'a str,
-    command_id: CommandId,
-    amount: u32,
-    party_a: &'a str,
-    party_b: &'a str,
-    remarks: &'a str,
-    queue_timeout_url: &'a str,
-    result_url: &'a str,
-    occasion: &'a str,
+    InitiatorName: &'a str,
+    SecurityCredential: &'a str,
+    CommandID: CommandId,
+    Amount: u32,
+    PartyA: &'a str,
+    PartyB: &'a str,
+    Remarks: &'a str,
+    QueueTimeOutURL: &'a str,
+    ResultURL: &'a str,
+    Occasion: &'a str,
 }
 
 #[derive(Debug)]
@@ -123,35 +123,22 @@ impl<'a> B2cBuilder<'a> {
         let credentials = self.client.gen_security_credentials()?;
 
         let payload = B2cPayload {
-            initiator_name: self.initiator_name,
-            security_credentials: &credentials,
-            command_id: self.command_id.unwrap_or(CommandId::BusinessPayment),
-            amount: self.amount.unwrap_or(10),
-            party_a: self.party_a.unwrap_or("None"),
-            party_b: self.party_b.unwrap_or("None"),
-            remarks: self.remarks.unwrap_or("None"),
-            queue_timeout_url: self.queue_timeout_url.unwrap_or("None"),
-            result_url: self.result_url.unwrap_or("None"),
-            occasion: self.occasion.unwrap_or("None"),
+            InitiatorName: self.initiator_name,
+            SecurityCredential: &credentials,
+            CommandID: self.command_id.unwrap_or(CommandId::BusinessPayment),
+            Amount: self.amount.unwrap_or(10),
+            PartyA: self.party_a.unwrap_or("None"),
+            PartyB: self.party_b.unwrap_or("None"),
+            Remarks: self.remarks.unwrap_or("None"),
+            QueueTimeOutURL: self.queue_timeout_url.unwrap_or("None"),
+            ResultURL: self.result_url.unwrap_or("None"),
+            Occasion: self.occasion.unwrap_or("None"),
         };
-
-        let data = json!({
-            "InitiatorName": payload.initiator_name,
-            "SecurityCredential": payload.security_credentials,
-            "CommandID": payload.command_id.to_string(),
-            "Amount": payload.amount,
-            "PartyA": payload.party_a,
-            "PartyB": payload.party_b,
-            "Remarks": payload.remarks,
-            "QueueTimeOutURL": payload.queue_timeout_url,
-            "ResultURL": payload.result_url,
-            "Occasion": payload.occasion,
-        });
 
         let response = Client::new()
             .post(&url)
             .bearer_auth(self.client.auth()?)
-            .json(&data)
+            .json(&payload)
             .send()?;
 
         if response.status().is_success() {

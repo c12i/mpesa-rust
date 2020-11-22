@@ -2,15 +2,16 @@ use crate::client::{Mpesa, MpesaResult};
 use crate::constants::ResponseType;
 use crate::errors::MpesaError;
 use reqwest::blocking::Client;
-use serde_json::{json, Value};
+use serde::Serialize;
+use serde_json::Value;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 /// Payload to register the 3rd party’s confirmation and validation URLs to M-Pesa
 struct C2bRegisterPayload<'a> {
-    validation_url: &'a str,
-    confirmation_url: &'a str,
-    response_type: ResponseType,
-    short_code: &'a str,
+    ValidationURL: &'a str,
+    ConfirmationURL: &'a str,
+    ResponseType: ResponseType,
+    ShortCode: &'a str,
 }
 
 #[derive(Debug)]
@@ -91,23 +92,16 @@ impl<'a> C2bRegisterBuilder<'a> {
         );
 
         let payload = C2bRegisterPayload {
-            validation_url: self.validation_url.unwrap_or("None"),
-            confirmation_url: self.confirmation_url.unwrap_or("None"),
-            response_type: self.response_type.unwrap_or(ResponseType::Complete),
-            short_code: self.short_code.unwrap_or("None"),
+            ValidationURL: self.validation_url.unwrap_or("None"),
+            ConfirmationURL: self.confirmation_url.unwrap_or("None"),
+            ResponseType: self.response_type.unwrap_or(ResponseType::Complete),
+            ShortCode: self.short_code.unwrap_or("None"),
         };
-
-        let data = json!({
-            "ValidationURL": payload.validation_url,
-            "ConfirmationURL": payload.confirmation_url,
-            "ResponseType": payload.response_type.to_string(),
-            "ShortCode": payload.short_code,
-        });
 
         let response = Client::new()
             .post(&url)
             .bearer_auth(self.client.auth()?)
-            .json(&data)
+            .json(&payload)
             .send()?;
 
         if response.status().is_success() {

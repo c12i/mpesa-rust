@@ -1,14 +1,13 @@
 [package]
 name = "mpesa"
-version = "0.2.5"
+version = "0.2.6"
 authors = ["Collins Muriuki <murerwacollins@gmail.com>"]
 edition = "2018"
 description = "A wrapper around the M-PESA API in Rust."
+keywords = ["api"]
 repository = "https://github.com/collinsmuriuki/mpesa-rust"
 readme = "README.md"
 license = "MIT"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [profile.dev]
 opt-level = 0
