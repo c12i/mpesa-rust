@@ -62,7 +62,7 @@ let client = Mpesa::new(
       Environment::Sandbox,
 );
 
-assert!(client.is_connected().unwrap())
+assert!(client.is_connected())
 ```
 
 Since the `Environment` enum implements `FromStr`, you can pass the name of the environment as a `&str` and call the `parse()`
@@ -77,7 +77,7 @@ let client = Mpesa::new(
       env::var("CLIENT_SECRET")?,
       "sandbox".parse()?,
 );
-assert!(client.is_connected().unwrap())
+assert!(client.is_connected())
 ```
 
 If you intend to use in production, you will need to call a the `set_initiator_password` method from `Mpesa` after initially
@@ -92,7 +92,7 @@ let client = Mpesa::new(
       env::var("CLIENT_SECRET")?,
       "sandbox".parse()?,
 ).set_initiator_password("new_password");
-assert!(client.is_connected().unwrap())
+assert!(client.is_connected())
 ```
 
 ### Services
