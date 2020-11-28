@@ -27,8 +27,8 @@ impl FromStr for Environment {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "production" => Ok(Self::Production),
-            "sandbox" => Ok(Self::Sandbox),
+            "production" | "Production" => Ok(Self::Production),
+            "sandbox" | "Sandbox" => Ok(Self::Sandbox),
             _ => Err(MpesaError::Message(
                 "Could not parse the provided environment name",
             )),
