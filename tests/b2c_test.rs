@@ -3,7 +3,6 @@ use mpesa::{Environment, Mpesa};
 use std::env;
 
 #[test]
-#[ignore] // b2c in sandbox under maintenance
 fn b2c_test() {
     dotenv::dotenv().ok();
 
