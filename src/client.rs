@@ -5,6 +5,7 @@ use super::services::{
 use crate::MpesaError;
 use reqwest::blocking::Client;
 use serde_json::Value;
+use crate::services::MpesaExpressRequestBuilder;
 
 /// `Result` enum type alias
 pub type MpesaResult<T> = Result<T, MpesaError>;
@@ -217,5 +218,12 @@ impl<'a> Mpesa {
     /// ```
     pub fn account_balance(&'a self, initiator_name: &'a str) -> AccountBalanceBuilder<'a> {
         AccountBalanceBuilder::new(&self, initiator_name)
+    }
+
+    /// **Mpesa Express Request/ STK push Builder**
+    ///
+    /// Creates a `MpesaExpressRequestBuilder` struct
+    pub fn express_request(&'a self) -> MpesaExpressRequestBuilder<'a> {
+        MpesaExpressRequestBuilder::new(&self)
     }
 }
