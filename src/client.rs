@@ -2,10 +2,10 @@ use super::environment::Environment;
 use super::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bSimulateBuilder,
 };
+use crate::services::MpesaExpressRequestBuilder;
 use crate::MpesaError;
 use reqwest::blocking::Client;
 use serde_json::Value;
-use crate::services::MpesaExpressRequestBuilder;
 
 /// `Result` enum type alias
 pub type MpesaResult<T> = Result<T, MpesaError>;
@@ -46,11 +46,11 @@ impl<'a> Mpesa {
 
     /// Gets the initiator password as a byte slice
     /// If `None`, the default password is b"Safcom496!"
-    pub fn initiator_password(&'a self) -> &'a [u8] {
+    pub fn initiator_password(&'a self) -> &'a str {
         if let Some(p) = &self.initiator_password {
-            return p.as_bytes();
+            return p;
         }
-        b"Safcom496!"
+        "Safcom496!"
     }
 
     /// Optional in development but required for production, you will need to call this method and set your production initiator password.
@@ -223,7 +223,10 @@ impl<'a> Mpesa {
     /// **Mpesa Express Request/ STK push Builder**
     ///
     /// Creates a `MpesaExpressRequestBuilder` struct
-    pub fn express_request(&'a self) -> MpesaExpressRequestBuilder<'a> {
-        MpesaExpressRequestBuilder::new(&self)
+    pub fn express_request(
+        &'a self,
+        business_short_code: &'a str,
+    ) -> MpesaExpressRequestBuilder<'a> {
+        MpesaExpressRequestBuilder::new(&self, business_short_code)
     }
 }
