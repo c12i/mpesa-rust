@@ -228,9 +228,9 @@ impl<'a> Mpesa {
     /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/docs#lipa-na-m-pesa-online-payment)
     ///
     /// # Example
-    ///```
-    /// let response: MpesaResult<Value> = client
-    ///       .express_request("174379")
+    ///```ignore
+    /// let response = client
+    ///        .express_request("174379")
     ///        .phone_number("254708374149")
     ///        .party_a("254708374149")
     ///        .party_b("174379")
