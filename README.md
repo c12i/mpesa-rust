@@ -29,7 +29,7 @@ An unofficial Rust wrapper around the [Safaricom API](https://developer.safarico
 
 ```md
 [dependencies]
-mpesa = "0.2.6"
+mpesa = "0.2.7"
 ```
 
 In your lib or binary crate:
