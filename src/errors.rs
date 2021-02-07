@@ -19,6 +19,8 @@ pub enum MpesaError {
     C2bSimulateError(serde_json::Value),
     #[fail(display = "Error getting account balance: {}", 0)]
     AccountBalanceError(serde_json::Value),
+    #[fail(display = "Error making mpesa express request: {}", 0)]
+    MpesaExpressRequestError(serde_json::Value),
     #[fail(display = "Network Error: {}", 0)]
     NetworkError(reqwest::Error),
     #[fail(display = "Error parsing JSON data: {}", 0)]

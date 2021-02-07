@@ -2,6 +2,7 @@ use super::environment::Environment;
 use super::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bSimulateBuilder,
 };
+use crate::services::MpesaExpressRequestBuilder;
 use crate::MpesaError;
 use reqwest::blocking::Client;
 use serde_json::Value;
@@ -45,11 +46,11 @@ impl<'a> Mpesa {
 
     /// Gets the initiator password as a byte slice
     /// If `None`, the default password is b"Safcom496!"
-    pub fn initiator_password(&'a self) -> &'a [u8] {
+    pub fn initiator_password(&'a self) -> &'a str {
         if let Some(p) = &self.initiator_password {
-            return p.as_bytes();
+            return p;
         }
-        b"Safcom496!"
+        "Safcom496!"
     }
 
     /// Optional in development but required for production, you will need to call this method and set your production initiator password.
@@ -217,5 +218,32 @@ impl<'a> Mpesa {
     /// ```
     pub fn account_balance(&'a self, initiator_name: &'a str) -> AccountBalanceBuilder<'a> {
         AccountBalanceBuilder::new(&self, initiator_name)
+    }
+
+    /// **Mpesa Express Request/ STK push Builder**
+    ///
+    /// Creates a `MpesaExpressRequestBuilder` struct
+    /// Requires a `business_short_code` - The organization shortcode used to receive the transaction
+    ///
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/docs#lipa-na-m-pesa-online-payment)
+    ///
+    /// # Example
+    ///```ignore
+    /// let response = client
+    ///        .express_request("174379")
+    ///        .phone_number("254708374149")
+    ///        .party_a("254708374149")
+    ///        .party_b("174379")
+    ///        .amount(500)
+    ///        .callback_url("https://test.example.com/api")
+    ///        .transaction_type(CommandId::CustomerPayBillOnline) // Optional, defaults to `CommandId::CustomerPayBillOnline`
+    ///        .transaction_desc("Description") // Optional, defaults to "None"
+    ///        .send();
+    /// ```
+    pub fn express_request(
+        &'a self,
+        business_short_code: &'a str,
+    ) -> MpesaExpressRequestBuilder<'a> {
+        MpesaExpressRequestBuilder::new(&self, business_short_code)
     }
 }
