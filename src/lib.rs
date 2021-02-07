@@ -205,6 +205,32 @@
 //! assert!(response.is_ok())
 //! ```
 //!
+//! * Mpesa Express Request / STK push/ Lipa na M-PESA online
+//!
+//! ```rust
+//! use mpesa::{Mpesa, MpesaResult};
+//! use serde_json::Value;
+//! use std::env;
+//! use dotenv::dotenv;
+//!
+//! dotenv().ok();
+//!
+//! let client: Mpesa = Mpesa::new(
+//!     env::var("CLIENT_KEY").unwrap(),
+//!     env::var("CLIENT_SECRET").unwrap(),
+//!     "sandbox".parse().unwrap(),
+//! );
+//!
+//! let response: MpesaResult<Value> = client
+//!        .express_request("174379")
+//!        .phone_number("254708374149")
+//!        .party_a("254708374149")
+//!        .party_b("174379")
+//!        .amount(500)
+//!        .callback_url("https://test.example.com/api")
+//!        .send();
+//! assert!(response.is_ok())
+//! ```
 //! More will be added progressively, pull requests welcome
 //!## Author
 //!

@@ -48,7 +48,8 @@ environment. It's worth noting that these credentials are only valid in the sand
 read the docs [here](https://developer.safaricom.co.ke/docs?javascript#going-live).
 
 _NOTE_:
-* Only calling `unwrap` for demonstration purposes. Errors are handled appropriately in the lib via the `MpesaError` enum.
+
+- Only calling `unwrap` for demonstration purposes. Errors are handled appropriately in the lib via the `MpesaError` enum.
 
 These are the following ways you can instantiate `Mpesa`:
 
@@ -160,13 +161,27 @@ let response = client
 assert!(response.is_ok())
 ```
 
+- Mpesa Express Request / STK push / Lipa na M-PESA online
+
+```rust
+let response = client
+       .express_request("174379")
+       .phone_number("254708374149")
+       .party_a("254708374149")
+       .party_b("174379")
+       .amount(500)
+       .callback_url("https://test.example.com/api")
+       .send();
+assert!(response.is_ok())
+```
+
 More will be added progressively, pull requests welcome
 
 ## Author
 
 **Collins Muriuki**
 
-- Twitter: [@collinsmuriuki_](https://twitter.com/collinsmuriuki_)
+- Twitter: [@collinsmuriuki\_](https://twitter.com/collinsmuriuki_)
 - Not affiliated with Safaricom.
 
 ## Contributing

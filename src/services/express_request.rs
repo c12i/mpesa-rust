@@ -52,10 +52,12 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
         }
     }
 
+    /// Public method get the `business_short_code`
     pub fn business_short_code(&'a self) -> &'a str {
         self.business_short_code
     }
 
+    /// Retreives the production passkey if present or defaults to the key provided in Safaricom's [test credentials](https://developer.safaricom.co.ke/test_credentials)
     fn get_pass_key(&'a self) -> &'a str {
         if let Some(key) = self.pass_key {
             return key;
@@ -63,6 +65,8 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
         "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
     }
 
+    /// Utility method to generate base64 encoded password as per Safaricom's [specifications](https://developer.safaricom.co.ke/docs#lipa-na-m-pesa-online-payment)
+    /// Returns the encoded password and a timestap string
     fn generate_password_and_timestamp(&self) -> (String, String) {
         let timestamp = Local::now().format("%Y%m%d%H%M%S").to_string();
         let encoded_password = base64::encode(
@@ -77,51 +81,91 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
         (encoded_password, timestamp)
     }
 
+    /// Your passkey.
+    /// Optional in sandbox, will default to key provided in Sfaricom's [test credentials](https://developer.safaricom.co.ke/test_credentials)
+    /// Required in production
+    ///
+    /// # Errors
+    /// If thee `pass_key` is invalid
     pub fn pass_key(mut self, pass_key: &'a str) -> MpesaExpressRequestBuilder<'a> {
         self.pass_key = Some(pass_key);
         self
     }
 
+    /// Amount to be transacted
+    ///
+    /// # Errors
+    /// If `amount` is invalid
     pub fn amount(mut self, amount: u32) -> MpesaExpressRequestBuilder<'a> {
         self.amount = Some(amount);
         self
     }
 
+    /// The MSISDN sending the funds
+    ///
+    /// # Errors
+    /// If `phone_number` is invalid
     pub fn phone_number(mut self, phone_number: &'a str) -> MpesaExpressRequestBuilder<'a> {
         self.phone_number = Some(phone_number);
         self
     }
 
+    /// The url to where responses from M-Pesa will be sent to.
+    ///
+    /// # Errors
+    /// If the `callback_url` is invalid
     pub fn callback_url(mut self, callback_url: &'a str) -> MpesaExpressRequestBuilder<'a> {
         self.callback_url = Some(callback_url);
         self
     }
 
+    /// The MSISDN sending the funds
+    ///
+    /// # Errors
+    /// If `party_a` is invalid
     pub fn party_a(mut self, party_a: &'a str) -> MpesaExpressRequestBuilder<'a> {
         self.party_a = Some(party_a);
         self
     }
 
+    /// The organization shortcode receiving the funds
+    ///
+    /// # Errors
+    /// If `party_b` is invalid
     pub fn party_b(mut self, party_b: &'a str) -> MpesaExpressRequestBuilder<'a> {
         self.party_b = Some(party_b);
         self
     }
 
+    /// Optional - Used with M-Pesa PayBills.
     pub fn account_ref(mut self, account_ref: &'a str) -> MpesaExpressRequestBuilder<'a> {
         self.account_ref = Some(account_ref);
         self
     }
 
+    /// Optional, defaults to `CommandId::CustomerPayBillOnline`
+    ///
+    /// # Errors
+    /// If the `CommandId` is invald
     pub fn transaction_type(mut self, command_id: CommandId) -> MpesaExpressRequestBuilder<'a> {
         self.transaction_type = Some(command_id);
         self
     }
 
+    /// A description of the transaction.
+    /// Optional - defaults to "None"
     pub fn transaction_desc(mut self, description: &'a str) -> MpesaExpressRequestBuilder<'a> {
         self.transaction_desc = Some(description);
         self
     }
 
+    /// *Lipa na M-Pesa Online Payment / Mpesa Express/ Stk push*
+    ///
+    /// Initiates a M-Pesa transaction on behalf of a customer using STK Push
+    ///
+    /// # Errors
+    /// Returns a `MpesaError` on failure
+    /// ```
     pub fn send(self) -> MpesaResult<Value> {
         let url = format!(
             "{}/mpesa/stkpush/v1/processrequest",

@@ -223,6 +223,23 @@ impl<'a> Mpesa {
     /// **Mpesa Express Request/ STK push Builder**
     ///
     /// Creates a `MpesaExpressRequestBuilder` struct
+    /// Requires a `business_short_code` - The organization shortcode used to receive the transaction
+    ///
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/docs#lipa-na-m-pesa-online-payment)
+    ///
+    /// # Example
+    ///```
+    /// let response: MpesaResult<Value> = client
+    ///       .express_request("174379")
+    ///        .phone_number("254708374149")
+    ///        .party_a("254708374149")
+    ///        .party_b("174379")
+    ///        .amount(500)
+    ///        .callback_url("https://test.example.com/api")
+    ///        .transaction_type(CommandId::CustomerPayBillOnline) // Optional, defaults to `CommandId::CustomerPayBillOnline`
+    ///        .transaction_desc("Description") // Optional, defaults to "None"
+    ///        .send();
+    /// ```
     pub fn express_request(
         &'a self,
         business_short_code: &'a str,
