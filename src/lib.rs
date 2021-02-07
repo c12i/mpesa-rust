@@ -222,13 +222,13 @@
 //! );
 //!
 //! let response: MpesaResult<Value> = client
-//!        .express_request("174379")
-//!        .phone_number("254708374149")
-//!        .party_a("254708374149")
-//!        .party_b("174379")
-//!        .amount(500)
-//!        .callback_url("https://test.example.com/api")
-//!        .send();
+//!     .express_request("174379")
+//!     .phone_number("254708374149")
+//!     .party_a("254708374149")
+//!     .party_b("174379")
+//!     .amount(500)
+//!     .callback_url("https://test.example.com/api")
+//!     .send();
 //! assert!(response.is_ok())
 //! ```
 //! More will be added progressively, pull requests welcome

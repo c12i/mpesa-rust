@@ -19,17 +19,13 @@
 
 An unofficial Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs?shell#introduction) for accessing M-Pesa services.
 
-## Notes
-
-**Warning!** WIP, not recommended for use in production
-
 ## Install
 
 `Cargo.toml`
 
 ```md
 [dependencies]
-mpesa = "0.2.7"
+mpesa = "0.2.8"
 ```
 
 In your lib or binary crate:
@@ -165,13 +161,13 @@ assert!(response.is_ok())
 
 ```rust
 let response = client
-       .express_request("174379")
-       .phone_number("254708374149")
-       .party_a("254708374149")
-       .party_b("174379")
-       .amount(500)
-       .callback_url("https://test.example.com/api")
-       .send();
+    .express_request("174379")
+    .phone_number("254708374149")
+    .party_a("254708374149")
+    .party_b("174379")
+    .amount(500)
+    .callback_url("https://test.example.com/api")
+    .send();
 assert!(response.is_ok())
 ```
 
