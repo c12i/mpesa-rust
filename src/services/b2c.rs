@@ -1,7 +1,7 @@
 use crate::client::MpesaResult;
 use crate::{CommandId, Mpesa, MpesaError, MpesaSecurity};
 use reqwest::blocking::Client;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 #[derive(Debug, Serialize)]
@@ -17,6 +17,14 @@ struct B2cPayload<'a> {
     QueueTimeOutURL: &'a str,
     ResultURL: &'a str,
     Occasion: &'a str,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct B2cResponse {
+    ConversationID: String,
+    OriginatorConversationID: String,
+    ResponseCode: String,
+    ResponseDescription: String,
 }
 
 #[derive(Debug)]
@@ -115,7 +123,7 @@ impl<'a> B2cBuilder<'a> {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure.
-    pub fn send(self) -> MpesaResult<Value> {
+    pub fn send(self) -> MpesaResult<B2cResponse> {
         let url = format!(
             "{}/mpesa/b2c/v1/paymentrequest",
             self.client.environment().base_url()
@@ -142,7 +150,7 @@ impl<'a> B2cBuilder<'a> {
             .send()?;
 
         if response.status().is_success() {
-            let value: Value = response.json()?;
+            let value: B2cResponse = response.json()?;
             return Ok(value);
         }
 

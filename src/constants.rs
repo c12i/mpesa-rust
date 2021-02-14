@@ -1,8 +1,8 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter, Result as FmtResult};
 
 /// Mpesa command ids
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum CommandId {
     TransactionReversal,
     SalaryPayment,
@@ -42,7 +42,7 @@ impl Display for IdentifierTypes {
 }
 
 /// M-pesa result and response codes
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Deserialize)]
 #[allow(unused)]
 pub enum MpesaResponseCode {
     Success = 0,
@@ -70,7 +70,7 @@ impl Display for MpesaResponseCode {
     }
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 /// C2B Register Response types
 pub enum ResponseType {
     Complete,
