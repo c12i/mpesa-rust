@@ -3,7 +3,7 @@ use crate::constants::CommandId;
 use crate::errors::MpesaError;
 use chrono::prelude::Local;
 use reqwest::blocking::Client;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 #[derive(Debug, Serialize)]
@@ -19,6 +19,34 @@ struct MpesaExpressRequestPayload<'a> {
     CallBackURL: &'a str,
     AccountReference: &'a str,
     TransactionDesc: &'a str,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct MpesaExpressRequestResponse {
+    CheckoutRequestID: String,
+    CustomerMessage: String,
+    MerchantRequestID: String,
+    ResponseCode: String,
+    ResponseDescription: String,
+}
+
+#[allow(dead_code)]
+impl<'a> MpesaExpressRequestResponse {
+    pub fn checkout_request_id(&'a self) -> &'a String {
+        &self.CheckoutRequestID
+    }
+
+    pub fn customer_message(&'a self) -> &'a String {
+        &self.CustomerMessage
+    }
+
+    pub fn merchant_request_id(&'a self) -> &'a String {
+        &self.MerchantRequestID
+    }
+
+    pub fn response_code(&'a self) -> &'a String {
+        &self.ResponseDescription
+    }
 }
 
 pub struct MpesaExpressRequestBuilder<'a> {
@@ -165,7 +193,7 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
-    pub fn send(self) -> MpesaResult<Value> {
+    pub fn send(self) -> MpesaResult<MpesaExpressRequestResponse> {
         let url = format!(
             "{}/mpesa/stkpush/v1/processrequest",
             self.client.environment().base_url()
@@ -196,7 +224,7 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
             .send()?;
 
         if response.status().is_success() {
-            let value: Value = response.json()?;
+            let value: MpesaExpressRequestResponse = response.json()?;
             return Ok(value);
         }
 
