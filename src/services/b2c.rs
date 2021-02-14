@@ -27,6 +27,25 @@ pub struct B2cResponse {
     ResponseDescription: String,
 }
 
+#[allow(dead_code)]
+impl B2cResponse {
+    pub fn conversation_id(&self) -> &String {
+        &self.ConversationID
+    }
+
+    pub fn originator_conversation_id(&self) -> &String {
+        &self.OriginatorConversationID
+    }
+
+    pub fn response_code(&self) -> &String {
+        &self.ResponseCode
+    }
+
+    pub fn response_description(&self) -> &String {
+        &self.ResponseDescription
+    }
+}
+
 #[derive(Debug)]
 /// B2C transaction builder struct
 pub struct B2cBuilder<'a> {
