@@ -2,7 +2,7 @@ use crate::client::MpesaResult;
 use crate::constants::{CommandId, IdentifierTypes};
 use crate::{Mpesa, MpesaError, MpesaSecurity};
 use reqwest::blocking::Client;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 #[derive(Debug, Serialize)]
@@ -16,6 +16,33 @@ struct AccountBalancePayload<'a> {
     Remarks: &'a str,
     QueueTimeOutURL: &'a str,
     ResultURL: &'a str,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct AccountBalanceResponse {
+    ConversationID: String,
+    OriginatorConversationID: String,
+    ResponseCode: String,
+    ResponseDescription: String,
+}
+
+#[allow(dead_code)]
+impl AccountBalanceResponse {
+    pub fn conversation_id(&self) -> &String {
+        &self.ConversationID
+    }
+
+    pub fn originator_conversation_id(&self) -> &String {
+        &self.OriginatorConversationID
+    }
+
+    pub fn response_code(&self) -> &String {
+        &self.ResponseCode
+    }
+
+    pub fn response_description(&self) -> &String {
+        &self.ResponseDescription
+    }
 }
 
 #[derive(Debug)]
@@ -104,7 +131,7 @@ impl<'a> AccountBalanceBuilder<'a> {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
-    pub fn send(self) -> MpesaResult<Value> {
+    pub fn send(self) -> MpesaResult<AccountBalanceResponse> {
         let url = format!(
             "{}/mpesa/accountbalance/v1/query",
             self.client.environment().base_url()
@@ -133,7 +160,7 @@ impl<'a> AccountBalanceBuilder<'a> {
             .send()?;
 
         if response.status().is_success() {
-            let value: Value = response.json()?;
+            let value: AccountBalanceResponse = response.json()?;
             return Ok(value);
         }
 
