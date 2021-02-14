@@ -25,7 +25,7 @@ An unofficial Rust wrapper around the [Safaricom API](https://developer.safarico
 
 ```md
 [dependencies]
-mpesa = "0.2.8"
+mpesa = "0.3.0"
 ```
 
 In your lib or binary crate:
@@ -36,7 +36,7 @@ use mpesa::Mpesa;
 
 ## Usage
 
-### Creating a `Client`
+### Creating a `Mpesa` client
 
 You will first need to create an instance of the `Mpesa` instance (the client). You are required to provide a **CLIENT_KEY** and
 **CLIENT_SECRET**. [Here](https://developer.safaricom.co.ke/test_credentials) is how you can get these credentials for the Safaricom sandbox

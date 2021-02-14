@@ -2,15 +2,12 @@
 //!
 //! An unofficial Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs?shell#introduction) for accessing M-Pesa services.
 //!
-//!## Disclaimer
-//! **Warning!** WIP, not recommended for use in production
-//!
 //!## Install
 //! `Cargo.toml`
 //!
 //! ```md
 //! [dependencies]
-//! mpesa = "0.2.6"
+//! mpesa = "0.3.0"
 //! ```
 //!
 //! In your lib or binary crate:
@@ -20,7 +17,7 @@
 //!
 //!## Usage
 //!
-//!### Creating a `Client`
+//!### Creating a `Mpesa` client
 //! You will first need to create an instance of the `Mpesa` instance (the client). You are required to provide a **CLIENT_KEY** and
 //! **CLIENT_SECRET**. [Here](https://developer.safaricom.co.ke/test_credentials) is how you can get these credentials for the Safaricom sandbox
 //! environment. It's worth noting that these credentials are only valid in the sandbox environment. To go live and get production keys
@@ -86,8 +83,7 @@
 //! The following services are currently available from the `Mpesa` client as methods that return builders:
 //! * B2C
 //! ```ignore
-//! use mpesa::{Mpesa, MpesaResult};
-//! use serde_json::Value;
+//! use mpesa::{Mpesa, MpesaResult, B2cResponse};
 //! use std::env;
 //! use dotenv::dotenv;
 //!
@@ -99,7 +95,7 @@
 //!     "sandbox".parse().unwrap(),
 //! );
 //!
-//! let response: MpesaResult<Value> = client
+//! let response: MpesaResult<B2cResponse> = client
 //!     .b2c("testapi496")
 //!     .parties("600496", "254708374149")
 //!     .urls("https://testdomain.com/err", "https://testdomain.com/res")
@@ -110,8 +106,7 @@
 //!
 //! * B2B
 //! ```rust
-//! use mpesa::{Mpesa, MpesaResult};
-//! use serde_json::Value;
+//! use mpesa::{Mpesa, MpesaResult, B2bResponse};
 //! use std::env;
 //! use dotenv::dotenv;
 //!
@@ -123,7 +118,7 @@
 //!     "sandbox".parse().unwrap(),
 //! );
 //!
-//! let response: MpesaResult<Value> = client
+//! let response: MpesaResult<B2bResponse> = client
 //!     .b2b("testapi496")
 //!     .parties("600496", "600000")
 //!     .urls("https://testdomain.com/err", "https://testdomain.com/api")
@@ -135,7 +130,7 @@
 //!
 //! * C2B Register
 //! ```rust
-//! use mpesa::{Mpesa, MpesaResult};
+//! use mpesa::{Mpesa, MpesaResult, C2bRegisterResponse};
 //! use serde_json::Value;
 //! use std::env;
 //! use dotenv::dotenv;
@@ -148,7 +143,7 @@
 //!     "sandbox".parse().unwrap(),
 //! );
 //!
-//! let response: MpesaResult<Value> = client
+//! let response: MpesaResult<C2bRegisterResponse> = client
 //!     .c2b_register()
 //!     .short_code("600496")
 //!     .confirmation_url("https://testdomain.com/true")
@@ -159,8 +154,7 @@
 //!
 //! * C2B Simulate
 //! ```rust
-//! use mpesa::{Mpesa, MpesaResult};
-//! use serde_json::Value;
+//! use mpesa::{Mpesa, MpesaResult, C2bSimulateResponse};
 //! use std::env;
 //! use dotenv::dotenv;
 //!
@@ -172,7 +166,7 @@
 //!     "sandbox".parse().unwrap(),
 //! );
 //!
-//! let response: MpesaResult<Value> = client
+//! let response: MpesaResult<C2bSimulateResponse> = client
 //!     .c2b_simulate()
 //!     .short_code("600496")
 //!     .msisdn("254700000000")
@@ -184,8 +178,7 @@
 //! * Account Balance
 //!
 //! ```rust
-//! use mpesa::{Mpesa, MpesaResult};
-//! use serde_json::Value;
+//! use mpesa::{Mpesa, MpesaResult, AccountBalanceResponse};
 //! use std::env;
 //! use dotenv::dotenv;
 //!
@@ -197,7 +190,7 @@
 //!     "sandbox".parse().unwrap(),
 //! );
 //!
-//! let response: MpesaResult<Value> = client
+//! let response: MpesaResult<AccountBalanceResponse> = client
 //!     .account_balance("testapi496")
 //!     .urls("https://testdomain.com/err", "https://testdomain.com/ok")
 //!     .party_a("600496")
@@ -208,8 +201,7 @@
 //! * Mpesa Express Request / STK push/ Lipa na M-PESA online
 //!
 //! ```rust
-//! use mpesa::{Mpesa, MpesaResult};
-//! use serde_json::Value;
+//! use mpesa::{Mpesa, MpesaResult, MpesaExpressRequestResponse};
 //! use std::env;
 //! use dotenv::dotenv;
 //!
@@ -221,7 +213,7 @@
 //!     "sandbox".parse().unwrap(),
 //! );
 //!
-//! let response: MpesaResult<Value> = client
+//! let response: MpesaResult<MpesaExpressRequestResponse> = client
 //!     .express_request("174379")
 //!     .phone_number("254708374149")
 //!     .party_a("254708374149")
@@ -254,3 +246,7 @@ pub use constants::{CommandId, IdentifierTypes, MpesaResponseCode, ResponseType}
 pub use environment::Environment;
 pub use errors::MpesaError;
 pub use mpesa_security::MpesaSecurity;
+pub use services::{
+    AccountBalanceResponse, B2bResponse, B2cResponse, C2bRegisterResponse, C2bSimulateResponse,
+    MpesaExpressRequestResponse,
+};
