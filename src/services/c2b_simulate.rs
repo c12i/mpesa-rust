@@ -2,7 +2,7 @@ use crate::client::{Mpesa, MpesaResult};
 use crate::constants::CommandId;
 use crate::errors::MpesaError;
 use reqwest::blocking::Client;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 #[derive(Debug, Serialize)]
@@ -14,6 +14,28 @@ struct C2bSimulatePayload<'a> {
     Msisdn: &'a str,
     BillRefNumber: &'a str,
     ShortCode: &'a str,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct C2bSimulateResponse {
+    ConversationID: String,
+    OriginatorCoversationID: String,
+    ResponseDescription: String,
+}
+
+#[allow(dead_code)]
+impl C2bSimulateResponse {
+    pub fn conversation_id(&self) -> &String {
+        &self.ConversationID
+    }
+
+    pub fn originator_conversation_id(&self) -> &String {
+        &self.OriginatorCoversationID
+    }
+
+    pub fn response_description(&self) -> &String {
+        &self.ResponseDescription
+    }
 }
 
 #[derive(Debug)]
@@ -93,7 +115,7 @@ impl<'a> C2bSimulateBuilder<'a> {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
-    pub fn send(self) -> MpesaResult<Value> {
+    pub fn send(self) -> MpesaResult<C2bSimulateResponse> {
         let url = format!(
             "{}/mpesa/c2b/v1/simulate",
             self.client.environment().base_url()
@@ -114,7 +136,7 @@ impl<'a> C2bSimulateBuilder<'a> {
             .send()?;
 
         if response.status().is_success() {
-            let value: Value = response.json()?;
+            let value: C2bSimulateResponse = response.json()?;
             return Ok(value);
         }
 
