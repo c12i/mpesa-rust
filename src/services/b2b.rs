@@ -3,7 +3,7 @@ use crate::constants::{CommandId, IdentifierTypes};
 use crate::errors::MpesaError;
 use crate::MpesaSecurity;
 use reqwest::blocking::Client;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 #[derive(Debug, Serialize)]
@@ -20,6 +20,33 @@ struct B2bPayload<'a> {
     QueueTimeOutURL: &'a str,
     ResultURL: &'a str,
     AccountReference: &'a str,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct B2bResponse {
+    ConversationID: String,
+    OriginatorConversationID: String,
+    ResponseCode: String,
+    ResponseDescription: String,
+}
+
+#[allow(dead_code)]
+impl B2bResponse {
+    pub fn conversation_id(&self) -> &String {
+        &self.ConversationID
+    }
+
+    pub fn originator_conversation_id(&self) -> &String {
+        &self.OriginatorConversationID
+    }
+
+    pub fn response_code(&self) -> &String {
+        &self.ResponseCode
+    }
+
+    pub fn response_description(&self) -> &String {
+        &self.ResponseDescription
+    }
 }
 
 #[derive(Debug)]
@@ -137,7 +164,7 @@ impl<'a> B2bBuilder<'a> {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
-    pub fn send(self) -> MpesaResult<Value> {
+    pub fn send(self) -> MpesaResult<B2bResponse> {
         let url = format!(
             "{}/mpesa/b2b/v1/paymentrequest",
             self.client.environment().base_url()
@@ -174,7 +201,7 @@ impl<'a> B2bBuilder<'a> {
             .send()?;
 
         if response.status().is_success() {
-            let value: Value = response.json()?;
+            let value: B2bResponse = response.json()?;
             return Ok(value);
         }
 
