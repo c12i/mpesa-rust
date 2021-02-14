@@ -22,16 +22,16 @@ pub struct C2bRegisterResponse {
 }
 
 #[allow(dead_code)]
-impl C2bRegisterResponse {
-    pub fn conversation_id(&self) -> &String {
+impl<'a> C2bRegisterResponse {
+    pub fn conversation_id(&'a self) -> &'a String {
         &self.ConversationID
     }
 
-    pub fn originator_conversation_id(&self) -> &String {
+    pub fn originator_conversation_id(&'a self) -> &'a String {
         &self.OriginatorCoversationID
     }
 
-    pub fn response_description(&self) -> &String {
+    pub fn response_description(&'a self) -> &'a String {
         &self.ResponseDescription
     }
 }

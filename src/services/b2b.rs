@@ -22,7 +22,7 @@ struct B2bPayload<'a> {
     AccountReference: &'a str,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct B2bResponse {
     ConversationID: String,
     OriginatorConversationID: String,
@@ -31,20 +31,20 @@ pub struct B2bResponse {
 }
 
 #[allow(dead_code)]
-impl B2bResponse {
-    pub fn conversation_id(&self) -> &String {
+impl<'a> B2bResponse {
+    pub fn conversation_id(&'a self) -> &'a String {
         &self.ConversationID
     }
 
-    pub fn originator_conversation_id(&self) -> &String {
+    pub fn originator_conversation_id(&'a self) -> &'a String {
         &self.OriginatorConversationID
     }
 
-    pub fn response_code(&self) -> &String {
+    pub fn response_code(&'a self) -> &'a String {
         &self.ResponseCode
     }
 
-    pub fn response_description(&self) -> &String {
+    pub fn response_description(&'a self) -> &'a String {
         &self.ResponseDescription
     }
 }

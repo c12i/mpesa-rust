@@ -18,7 +18,7 @@ struct AccountBalancePayload<'a> {
     ResultURL: &'a str,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct AccountBalanceResponse {
     ConversationID: String,
     OriginatorConversationID: String,
@@ -27,20 +27,20 @@ pub struct AccountBalanceResponse {
 }
 
 #[allow(dead_code)]
-impl AccountBalanceResponse {
-    pub fn conversation_id(&self) -> &String {
+impl<'a> AccountBalanceResponse {
+    pub fn conversation_id(&'a self) -> &'a String {
         &self.ConversationID
     }
 
-    pub fn originator_conversation_id(&self) -> &String {
+    pub fn originator_conversation_id(&'a self) -> &'a String {
         &self.OriginatorConversationID
     }
 
-    pub fn response_code(&self) -> &String {
+    pub fn response_code(&'a self) -> &'a String {
         &self.ResponseCode
     }
 
-    pub fn response_description(&self) -> &String {
+    pub fn response_description(&'a self) -> &'a String {
         &self.ResponseDescription
     }
 }
