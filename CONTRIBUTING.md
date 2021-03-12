@@ -42,9 +42,9 @@ cargo test
 - [x] Query transaction status
 - [x] Simulate C2B Payment
 - [ ] Query status of Lipa na M-Pesa
-- [ ] Initiate Lipa na M-Pesa online w/ STK push
+- [x] Initiate Lipa na M-Pesa online w/ STK push
 - [x] Register C2B Confirmation and Validation URLs
-- [ ] Integration tests
+- [x] Integration tests
 - [ ] Rewrite in async
 - [x] Publish on https://crates.io
 - [x] Setup travis-ci

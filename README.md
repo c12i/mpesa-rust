@@ -25,7 +25,7 @@ An unofficial Rust wrapper around the [Safaricom API](https://developer.safarico
 
 ```md
 [dependencies]
-mpesa = "0.3.0"
+mpesa = "0.3.1"
 ```
 
 In your lib or binary crate:
@@ -63,7 +63,7 @@ assert!(client.is_connected())
 ```
 
 Since the `Environment` enum implements `FromStr`, you can pass the name of the environment as a `&str` and call the `parse()`
-method to create an `Environment` type from the string slice:
+method to create an `Environment` type from the string slice (Pascal case and Uppercase string slices also valid):
 
 ```rust
 use mpesa::Mpesa;
@@ -72,7 +72,7 @@ use std::env;
 let client = Mpesa::new(
       env::var("CLIENT_KEY")?,
       env::var("CLIENT_SECRET")?,
-      "sandbox".parse()?,
+      "sandbox".parse()?, // "production"
 );
 assert!(client.is_connected())
 ```
@@ -101,8 +101,10 @@ The following services are currently available from the `Mpesa` client as method
 ```rust
 let response = client
     .b2c("testapi496")
-    .parties("600496", "254708374149")
-    .urls("https://testdomain.com/err", "https://testdomain.com/res")
+    .party_a("600496")
+    .party_b("254708374149")
+    .result_url("https://testdomain.com/ok")
+    .timeout_url("https://testdomain.com/err")
     .amount(1000)
     .send();
 assert!(response.is_ok())
@@ -113,8 +115,10 @@ assert!(response.is_ok())
 ```rust
 let response = client
     .b2b("testapi496")
-    .parties("600496", "600000")
-    .urls("https://testdomain.com/err", "https://testdomain.com/api")
+    .party_a("600496")
+    .party_b("254708374149")
+    .result_url("https://testdomain.com/ok")
+    .timeout_url("https://testdomain.com/err")
     .account_ref("254708374149")
     .amount(1000)
     .send();
@@ -151,7 +155,8 @@ assert!(response.is_ok())
 ```rust
 let response = client
     .account_balance("testapi496")
-    .urls("https://testdomain.com/err", "https://testdomain.com/ok")
+    .result_url("https://testdomain.com/ok")
+    .timeout_url("https://testdomain.com/err")
     .party_a("600496")
     .send();
 assert!(response.is_ok())
