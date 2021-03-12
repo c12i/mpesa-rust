@@ -29,19 +29,19 @@ pub struct B2cResponse {
 
 #[allow(dead_code)]
 impl<'a> B2cResponse {
-    pub fn conversation_id(&'a self) -> &'a String {
+    pub fn conversation_id(&'a self) -> &'a str {
         &self.ConversationID
     }
 
-    pub fn originator_conversation_id(&'a self) -> &'a String {
+    pub fn originator_conversation_id(&'a self) -> &'a str {
         &self.OriginatorConversationID
     }
 
-    pub fn response_code(&'a self) -> &'a String {
+    pub fn response_code(&'a self) -> &'a str {
         &self.ResponseCode
     }
 
-    pub fn response_description(&'a self) -> &'a String {
+    pub fn response_description(&'a self) -> &'a str {
         &self.ResponseDescription
     }
 }
@@ -85,6 +85,27 @@ impl<'a> B2cBuilder<'a> {
         self
     }
 
+    /// Adds `Party A` which is a required field
+    /// `Party A` should be a paybill number.
+    ///
+    /// # Errors
+    /// If `Party A` is invalid or not provided
+    pub fn party_a(mut self, party_a: &'a str) -> B2cBuilder<'a> {
+        self.party_a = Some(party_a);
+        self
+    }
+
+    /// Adds `Party B` which is a required field
+    /// `Party B` should be a mobile number.
+    ///
+    /// # Errors
+    /// If `Party B` is invalid or not provided
+    pub fn party_b(mut self, party_b: &'a str) -> B2cBuilder<'a> {
+        self.party_b = Some(party_b);
+        self
+    }
+
+    #[deprecated]
     /// Adds `Party A` and `Party B`. Both are required fields
     /// `Party A` should be a paybill number while `Party B` should be a mobile number.
     ///
@@ -118,6 +139,25 @@ impl<'a> B2cBuilder<'a> {
         self
     }
 
+    // Adds `QueueTimeoutUrl` This is a required field
+    ///
+    /// # Error
+    /// If `QueueTimeoutUrl` is invalid or not provided
+    pub fn timeout_url(mut self, timeout_url: &'a str) -> B2cBuilder<'a> {
+        self.queue_timeout_url =  Some(timeout_url);
+        self
+    }
+
+    // Adds `ResultUrl` This is a required field
+    ///
+    /// # Error
+    /// If `ResultUrl` is invalid or not provided
+    pub fn result_url(mut self, result_url: &'a str) -> B2cBuilder<'a> {
+        self.result_url = Some(result_url);
+        self
+    }
+
+    #[deprecated]
     /// Adds `QueueTimeoutUrl` and `ResultUrl`. This is a required field
     ///
     /// # Error

@@ -45,7 +45,7 @@
 //! ```
 //!
 //! Since the `Environment` enum implements `FromStr`, you can pass the name of the environment as a `&str` and call the `parse()`
-//! method to create an `Environment` type from the string slice:
+//! method to create an `Environment` type from the string slice (Pascal case or Uppercase string slices also valid):
 //!
 //! ```rust
 //! use mpesa::Mpesa;
@@ -57,7 +57,7 @@
 //! let client: Mpesa = Mpesa::new(
 //!     env::var("CLIENT_KEY").unwrap(),
 //!     env::var("CLIENT_SECRET").unwrap(),
-//!     "sandbox".parse().unwrap(),
+//!     "sandbox".parse().unwrap(), // "production"
 //! );
 //! assert!(client.is_connected())
 //! ```
@@ -76,13 +76,14 @@
 //!     env::var("CLIENT_SECRET").unwrap(),
 //!     "sandbox".parse().unwrap(),
 //! ).set_initiator_password("new_password");
+//!
 //! assert!(client.is_connected())
 //! ```
 //!
 //!### Services
 //! The following services are currently available from the `Mpesa` client as methods that return builders:
 //! * B2C
-//! ```ignore
+//! ```rust
 //! use mpesa::{Mpesa, MpesaResult, B2cResponse};
 //! use std::env;
 //! use dotenv::dotenv;
@@ -97,8 +98,10 @@
 //!
 //! let response: MpesaResult<B2cResponse> = client
 //!     .b2c("testapi496")
-//!     .parties("600496", "254708374149")
-//!     .urls("https://testdomain.com/err", "https://testdomain.com/res")
+//!     .party_a("600496")
+//!     .party_b("254708374149")
+//!     .result_url("https://testdomain.com/ok")
+//!     .timeout_url("https://testdomain.com/err")
 //!     .amount(1000)
 //!     .send();
 //! assert!(response.is_ok())
@@ -120,8 +123,10 @@
 //!
 //! let response: MpesaResult<B2bResponse> = client
 //!     .b2b("testapi496")
-//!     .parties("600496", "600000")
-//!     .urls("https://testdomain.com/err", "https://testdomain.com/api")
+//!     .party_a("600496")
+//!     .party_b("600000")
+//!     .result_url("https://testdomain.com/ok")
+//!     .timeout_url("https://testdomain.com/err")
 //!     .account_ref("254708374149")
 //!     .amount(1000)
 //!     .send();
@@ -192,7 +197,8 @@
 //!
 //! let response: MpesaResult<AccountBalanceResponse> = client
 //!     .account_balance("testapi496")
-//!     .urls("https://testdomain.com/err", "https://testdomain.com/ok")
+//!     .result_url("https://testdomain.com/ok")
+//!     .timeout_url("https://testdomain.com/err")
 //!     .party_a("600496")
 //!     .send();
 //! assert!(response.is_ok())
@@ -219,8 +225,9 @@
 //!     .party_a("254708374149")
 //!     .party_b("174379")
 //!     .amount(500)
-//!     .callback_url("https://test.example.com/api")
+//!     .callback_url("https://testdomain.com/ok")
 //!     .send();
+//!
 //! assert!(response.is_ok())
 //! ```
 //! More will be added progressively, pull requests welcome

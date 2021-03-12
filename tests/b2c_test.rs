@@ -14,8 +14,10 @@ fn b2c_test() {
 
     let response = client
         .b2c("testapi496")
-        .parties("600496", "254708374149")
-        .urls("https://testdomain.com/err", "https://testdomain.com/res")
+        .party_a("600496")
+        .party_b("254708374149")
+        .result_url("https://testdomain.com/ok")
+        .timeout_url("https://testdomain.com/err")
         .amount(1000)
         .send();
 

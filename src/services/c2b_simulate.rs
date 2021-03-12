@@ -25,15 +25,15 @@ pub struct C2bSimulateResponse {
 
 #[allow(dead_code)]
 impl<'a> C2bSimulateResponse {
-    pub fn conversation_id(&'a self) -> &'a String {
+    pub fn conversation_id(&'a self) -> &'a str {
         &self.ConversationID
     }
 
-    pub fn originator_conversation_id(&'a self) -> &'a String {
+    pub fn originator_conversation_id(&'a self) -> &'a str {
         &self.OriginatorCoversationID
     }
 
-    pub fn response_description(&'a self) -> &'a String {
+    pub fn response_description(&'a self) -> &'a str {
         &self.ResponseDescription
     }
 }

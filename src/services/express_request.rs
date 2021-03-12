@@ -85,7 +85,7 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
         self.business_short_code
     }
 
-    /// Retreives the production passkey if present or defaults to the key provided in Safaricom's [test credentials](https://developer.safaricom.co.ke/test_credentials)
+    /// Retrieves the production passkey if present or defaults to the key provided in Safaricom's [test credentials](https://developer.safaricom.co.ke/test_credentials)
     fn get_pass_key(&'a self) -> &'a str {
         if let Some(key) = self.pass_key {
             return key;
@@ -94,7 +94,7 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
     }
 
     /// Utility method to generate base64 encoded password as per Safaricom's [specifications](https://developer.safaricom.co.ke/docs#lipa-na-m-pesa-online-payment)
-    /// Returns the encoded password and a timestap string
+    /// Returns the encoded password and a timestamp string
     fn generate_password_and_timestamp(&self) -> (String, String) {
         let timestamp = Local::now().format("%Y%m%d%H%M%S").to_string();
         let encoded_password = base64::encode(
@@ -110,7 +110,7 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
     }
 
     /// Your passkey.
-    /// Optional in sandbox, will default to key provided in Sfaricom's [test credentials](https://developer.safaricom.co.ke/test_credentials)
+    /// Optional in sandbox, will default to key provided in Safaricom's [test credentials](https://developer.safaricom.co.ke/test_credentials)
     /// Required in production
     ///
     /// # Errors
@@ -174,7 +174,7 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
     /// Optional, defaults to `CommandId::CustomerPayBillOnline`
     ///
     /// # Errors
-    /// If the `CommandId` is invald
+    /// If the `CommandId` is invalid
     pub fn transaction_type(mut self, command_id: CommandId) -> MpesaExpressRequestBuilder<'a> {
         self.transaction_type = Some(command_id);
         self

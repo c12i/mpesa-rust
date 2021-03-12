@@ -14,7 +14,8 @@ fn account_balance_test() {
 
     let response = client
         .account_balance("testapi496")
-        .urls("https://testdomain.com/err", "https://testdomain.com/ok")
+        .result_url("https://testdomain.com/ok")
+        .timeout_url("https://testdomain.com/err")
         .party_a("600496")
         .send();
 

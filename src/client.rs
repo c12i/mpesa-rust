@@ -121,8 +121,10 @@ impl<'a> Mpesa {
     /// ```ignore
     /// let response = client
     ///     .b2c("testapi496")
-    ///     .parties("600496", "254708374149")
-    ///     .urls("https://testdomain.com/err", "https://testdomain.com/res")
+    ///     .party_a("600496")
+    ///     .party_b("600000")
+    ///     .result_url("https://testdomain.com/err")
+    ///     .timeout_url("https://testdomain.com/ok")
     ///     .amount(1000)
     ///     .remarks("Your Remark") // optional, defaults to "None"
     ///     .occasion("Your Occasion") // optional, defaults to "None"
@@ -144,8 +146,10 @@ impl<'a> Mpesa {
     /// # Example
     /// ```ignore
     /// let response = client.b2b("testapi496")
-    ///    .parties("600496", "600000")
-    ///    .urls("https://testdomain.com/err", "https://testdomain.com/api")
+    ///    .party_a("600496")
+    ///    .party_b("600000")
+    ///    .result_url("https://testdomain.com/err")
+    ///    .timeout_url("https://testdomain.com/ok")
     ///    .account_ref("254708374149")
     ///    .amount(1000)
     ///    .command_id(mpesa::CommandId::BusinessToBusinessTransfer) // optional, defaults to `CommandId::BusinessToBusinessTransfer`
@@ -209,7 +213,8 @@ impl<'a> Mpesa {
     /// ```ignore
     /// let response = client
     ///    .account_balance("testapi496")
-    ///    .urls("https://testdomain.com/err", "https://testdomain.com/ok")
+    ///    .result_url("https://testdomain.com/err")
+    ///    .timeout_url("https://testdomain.com/ok")
     ///    .party_a("600496")
     ///    .command_id(mpesa::CommandId::AccountBalance) // optional, defaults to `CommandId::AccountBalance`
     ///    .identifier_type(mpesa::IdentifierTypes::ShortCode) // optional, defaults to `IdentifierTypes::ShortCode`
@@ -237,8 +242,8 @@ impl<'a> Mpesa {
     ///    .amount(500)
     ///    .callback_url("https://test.example.com/api")
     ///    .transaction_type(CommandId::CustomerPayBillOnline) // Optional, defaults to `CommandId::CustomerPayBillOnline`
-    ///        .transaction_desc("Description") // Optional, defaults to "None"
-    ///        .send();
+    ///    .transaction_desc("Description") // Optional, defaults to "None"
+    ///    .send();
     /// ```
     pub fn express_request(
         &'a self,

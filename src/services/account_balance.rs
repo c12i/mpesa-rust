@@ -28,19 +28,19 @@ pub struct AccountBalanceResponse {
 
 #[allow(dead_code)]
 impl<'a> AccountBalanceResponse {
-    pub fn conversation_id(&'a self) -> &'a String {
+    pub fn conversation_id(&'a self) -> &'a str {
         &self.ConversationID
     }
 
-    pub fn originator_conversation_id(&'a self) -> &'a String {
+    pub fn originator_conversation_id(&'a self) -> &'a str {
         &self.OriginatorConversationID
     }
 
-    pub fn response_code(&'a self) -> &'a String {
+    pub fn response_code(&'a self) -> &'a str {
         &self.ResponseCode
     }
 
-    pub fn response_description(&'a self) -> &'a String {
+    pub fn response_description(&'a self) -> &'a str {
         &self.ResponseDescription
     }
 }
@@ -113,6 +113,25 @@ impl<'a> AccountBalanceBuilder<'a> {
         self
     }
 
+    // Adds `QueueTimeoutUrl` This is a required field
+    ///
+    /// # Error
+    /// If `QueueTimeoutUrl` is invalid or not provided
+    pub fn timeout_url(mut self, timeout_url: &'a str) -> AccountBalanceBuilder<'a> {
+        self.queue_timeout_url =  Some(timeout_url);
+        self
+    }
+
+    // Adds `ResultUrl` This is a required field
+    ///
+    /// # Error
+    /// If `ResultUrl` is invalid or not provided
+    pub fn result_url(mut self, result_url: &'a str) -> AccountBalanceBuilder<'a> {
+        self.result_url = Some(result_url);
+        self
+    }
+
+    #[deprecated]
     /// Adds `QueueTimeoutUrl` and `ResultUrl`. This is a required field
     ///
     /// # Error
