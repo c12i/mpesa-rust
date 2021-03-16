@@ -11,7 +11,7 @@
 //! the Safaricom API [docs](https://developer.safaricom.co.ke/docs?javascript#security-credentials).
 
 use crate::MpesaError;
-use std::str::FromStr;
+use std::{convert::TryFrom, str::FromStr};
 
 #[derive(Debug)]
 /// Enum to map to desired environment so as to access certificate
@@ -27,6 +27,20 @@ impl FromStr for Environment {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
+            "production" | "Production" | "PRODUCTION" => Ok(Self::Production),
+            "sandbox" | "Sandbox" | "SANDBOX" => Ok(Self::Sandbox),
+            _ => Err(MpesaError::Message(
+                "Could not parse the provided environment name",
+            )),
+        }
+    }
+}
+
+impl TryFrom<&'static str> for Environment {
+    type Error = MpesaError;
+
+    fn try_from(v: &'static str) -> Result<Self, Self::Error> {
+        match v {
             "production" | "Production" | "PRODUCTION" => Ok(Self::Production),
             "sandbox" | "Sandbox" | "SANDBOX" => Ok(Self::Sandbox),
             _ => Err(MpesaError::Message(

@@ -62,7 +62,7 @@ let client = Mpesa::new(
 assert!(client.is_connected())
 ```
 
-Since the `Environment` enum implements `FromStr`, you can pass the name of the environment as a `&str` and call the `parse()`
+Since the `Environment` enum implements `FromStr` and `TryFrom`, you can pass the name of the environment as a `&str` and call the `parse()` or `try_into()`
 method to create an `Environment` type from the string slice (Pascal case and Uppercase string slices also valid):
 
 ```rust
