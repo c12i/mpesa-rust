@@ -25,7 +25,7 @@ An unofficial Rust wrapper around the [Safaricom API](https://developer.safarico
 
 ```md
 [dependencies]
-mpesa = "0.3.1"
+mpesa = "0.3.3"
 ```
 
 In your lib or binary crate:
@@ -88,7 +88,10 @@ let client = Mpesa::new(
       env::var("CLIENT_KEY")?,
       env::var("CLIENT_SECRET")?,
       "production".parse()?,
-).set_initiator_password("new_password");
+);
+
+client.set_initiator_password("new_password");
+
 assert!(client.is_connected())
 ```
 
@@ -189,5 +192,5 @@ More will be added progressively, pull requests welcome
 
 Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/collinsmuriuki/mpesa-rust/issues). You can also take a look at the [contributing guide](CONTRIBUTING.md).
 
-Copyright © 2020 [Collins Muriuki](https://github.com/collinsmuriuki).<br />
+Copyright © 2021 [Collins Muriuki](https://github.com/collinsmuriuki).<br />
 This project is [MIT](LICENSE) licensed.

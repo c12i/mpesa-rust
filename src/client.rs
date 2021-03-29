@@ -6,6 +6,7 @@ use crate::services::MpesaExpressRequestBuilder;
 use crate::MpesaError;
 use reqwest::blocking::Client;
 use serde_json::Value;
+use std::cell::RefCell;
 
 /// `Result` enum type alias
 pub type MpesaResult<T> = Result<T, MpesaError>;
@@ -15,7 +16,7 @@ pub type MpesaResult<T> = Result<T, MpesaError>;
 pub struct Mpesa {
     client_key: String,
     client_secret: String,
-    initiator_password: Option<String>,
+    initiator_password: RefCell<Option<String>>,
     environment: Environment,
 }
 
@@ -34,23 +35,23 @@ impl<'a> Mpesa {
         Self {
             client_key,
             client_secret,
-            initiator_password: None,
+            initiator_password: RefCell::new(None),
             environment,
         }
     }
 
     /// Gets the current `Environment`
-    pub fn environment(&'a self) -> &Environment {
+    pub(crate) fn environment(&'a self) -> &Environment {
         &self.environment
     }
 
     /// Gets the initiator password as a byte slice
     /// If `None`, the default password is b"Safcom496!"
-    pub fn initiator_password(&'a self) -> &'a str {
-        if let Some(p) = &self.initiator_password {
-            return p;
+    pub(crate) fn initiator_password(&'a self) -> String {
+        if let Some(p) = &*self.initiator_password.borrow() {
+            return p.to_owned();
         }
-        "Safcom496!"
+        "Safcom496!".to_owned()
     }
 
     /// Optional in development but required for production, you will need to call this method and set your production initiator password.
@@ -62,11 +63,12 @@ impl<'a> Mpesa {
     ///     env::var("CLIENT_KEY").unwrap(),
     ///     env::var("CLIENT_SECRET").unwrap(),
     ///     "sandbox".parse().unwrap(),
-    /// ).set_initiator_password("your_initiator_password");
+    /// );
+    ///
+    /// client.set_initiator_password("your_initiator_password");
     /// ```
-    pub fn set_initiator_password(mut self, initiator_password: &str) -> Self {
-        self.initiator_password = Some(initiator_password.into());
-        self
+    pub fn set_initiator_password(&self, initiator_password: &str) {
+        *self.initiator_password.borrow_mut() = Some(initiator_password.to_string());
     }
 
     /// Checks if the client can be authenticated

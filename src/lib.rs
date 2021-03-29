@@ -75,7 +75,9 @@
 //!     env::var("CLIENT_KEY").unwrap(),
 //!     env::var("CLIENT_SECRET").unwrap(),
 //!     "sandbox".parse().unwrap(),
-//! ).set_initiator_password("new_password");
+//! );
+//!
+//! client.set_initiator_password("new_password");
 //!
 //! assert!(client.is_connected())
 //! ```
