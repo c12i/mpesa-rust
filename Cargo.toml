@@ -1,10 +1,10 @@
 [package]
 name = "mpesa"
-version = "0.3.2"
+version = "0.3.3"
 authors = ["Collins Muriuki <murerwacollins@gmail.com>"]
 edition = "2018"
 description = "A wrapper around the M-PESA API in Rust."
-keywords = ["api"]
+keywords = ["api", "mpesa", "mobile"]
 repository = "https://github.com/collinsmuriuki/mpesa-rust"
 readme = "README.md"
 license = "MIT"
