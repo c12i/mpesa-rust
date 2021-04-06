@@ -32,19 +32,19 @@ pub struct MpesaExpressRequestResponse {
 
 #[allow(dead_code)]
 impl<'a> MpesaExpressRequestResponse {
-    pub fn checkout_request_id(&'a self) -> &'a String {
+    pub fn checkout_request_id(&'a self) -> &'a str {
         &self.CheckoutRequestID
     }
 
-    pub fn customer_message(&'a self) -> &'a String {
+    pub fn customer_message(&'a self) -> &'a str {
         &self.CustomerMessage
     }
 
-    pub fn merchant_request_id(&'a self) -> &'a String {
+    pub fn merchant_request_id(&'a self) -> &'a str {
         &self.MerchantRequestID
     }
 
-    pub fn response_code(&'a self) -> &'a String {
+    pub fn response_code(&'a self) -> &'a str {
         &self.ResponseDescription
     }
 }

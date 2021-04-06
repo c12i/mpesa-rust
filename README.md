@@ -25,7 +25,7 @@ An unofficial Rust wrapper around the [Safaricom API](https://developer.safarico
 
 ```md
 [dependencies]
-mpesa = "0.3.3"
+mpesa = "0.3.4"
 ```
 
 In your lib or binary crate:
@@ -45,7 +45,7 @@ read the docs [here](https://developer.safaricom.co.ke/docs?javascript#going-liv
 
 _NOTE_:
 
-- Only calling `unwrap` for demonstration purposes. Errors are handled appropriately in the lib via the `MpesaError` enum.
+-   Only calling `unwrap` for demonstration purposes. Errors are handled appropriately in the lib via the `MpesaError` enum.
 
 These are the following ways you can instantiate `Mpesa`:
 
@@ -99,7 +99,7 @@ assert!(client.is_connected())
 
 The following services are currently available from the `Mpesa` client as methods that return builders:
 
-- B2C
+-   B2C
 
 ```rust
 let response = client
@@ -113,7 +113,7 @@ let response = client
 assert!(response.is_ok())
 ```
 
-- B2B
+-   B2B
 
 ```rust
 let response = client
@@ -128,7 +128,7 @@ let response = client
 assert!(response.is_ok())
 ```
 
-- C2B Register
+-   C2B Register
 
 ```rust
 let response = client
@@ -140,7 +140,7 @@ let response = client
 assert!(response.is_ok())
 ```
 
-- C2B Simulate
+-   C2B Simulate
 
 ```rust
 
@@ -153,7 +153,7 @@ let response = client
 assert!(response.is_ok())
 ```
 
-- Account Balance
+-   Account Balance
 
 ```rust
 let response = client
@@ -165,7 +165,7 @@ let response = client
 assert!(response.is_ok())
 ```
 
-- Mpesa Express Request / STK push / Lipa na M-PESA online
+-   Mpesa Express Request / STK push / Lipa na M-PESA online
 
 ```rust
 let response = client
@@ -185,8 +185,8 @@ More will be added progressively, pull requests welcome
 
 **Collins Muriuki**
 
-- Twitter: [@collinsmuriuki\_](https://twitter.com/collinsmuriuki_)
-- Not affiliated with Safaricom.
+-   Twitter: [@collinsmuriuki\_](https://twitter.com/collinsmuriuki_)
+-   Not affiliated with Safaricom.
 
 ## Contributing
 

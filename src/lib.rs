@@ -7,7 +7,7 @@
 //!
 //! ```md
 //! [dependencies]
-//! mpesa = "0.3.0"
+//! mpesa = "0.3.4"
 //! ```
 //!
 //! In your lib or binary crate:
