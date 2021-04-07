@@ -7,8 +7,8 @@
   <a href="https://docs.rs/mpesa" target="_blank">
     <img alt="Documentation" src="https://docs.rs/mpesa/badge.svg" />
   </a>
-  <a href="https://travis-ci.com/collinsmuriuki/mpesa-rust" target="_blank">
-      <img alt="mpesa travis-ci" src="https://travis-ci.com/collinsmuriuki/mpesa-rust.svg?branch=master" />
+  <a href="https://github.com/collinsmuriuki/mpesa-rust/actions" target="_blank">
+      <img alt="mpesa travis-ci" src="https://img.shields.io/github/workflow/status/collinsmuriuki/mpesa-rust/ci/master" />
    </a>
   <a href="LICENSE" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
