@@ -20,7 +20,10 @@ jobs:
       with:
           toolchain: stable
           override: true
-    - name: build and run tests
-      run: |
-        cargo build --verbose
-        cargo test --verbose
+    - name: Build
+      run: cargo build --verbose
+    - uses: actions-rs/cargo@v1
+      with:
+          command: test
+          args: --all-features --no-fail-fast
+        
