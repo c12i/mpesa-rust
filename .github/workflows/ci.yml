@@ -8,9 +8,6 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  CLIENT_KEY: ${{ secrets.CLIENT_KEY }}
-  CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-  INIT_PASSWORD: ${{ secrets.INIT_PASSWORD }}
 
 jobs:
   build:
@@ -38,5 +35,8 @@ jobs:
           override: true
     - name: Run Tests
       run: |
+        export CLIENT_KEY=${{ secrets.CLIENT_KEY }}
+        export CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
+        export INIT_PASSWORD=${{ secrets.INIT_PASSWORD }}
         cargo test --verbose --no-fail-fast
         
