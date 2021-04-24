@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Build
     - uses: actions/checkout@v2
     - uses: actions-rs/toolchain@v1
       with:
@@ -28,6 +29,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Run tests
+      env:
+          CLIENT_KEY: ${{ secrets.CLIENT_KEY }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          INIT_PASSWORD: ${{ secrets.INIT_PASSWORD }}
     - uses: actions/checkout@v2
     - uses: actions-rs/toolchain@v1
       with:
