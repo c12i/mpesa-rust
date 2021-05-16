@@ -92,7 +92,7 @@ impl<'a> Mpesa {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
-    pub fn auth(&self) -> MpesaResult<String> {
+    pub(crate) fn auth(&self) -> MpesaResult<String> {
         let url = format!(
             "{}/oauth/v1/generate?grant_type=client_credentials",
             self.environment.base_url()
