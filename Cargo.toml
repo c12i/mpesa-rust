@@ -1,7 +1,2 @@
 [workspace]
 members = ["mpesa_derive", "mpesa_core"]
-
-[profile.release]
-lto = "fat"
-debug = 1
-codegen-units = 1
