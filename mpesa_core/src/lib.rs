@@ -160,7 +160,7 @@
 //! ```
 //!
 //! * C2B Simulate
-//! ```rust
+//! ```no_run
 //! use mpesa::{Mpesa, MpesaResult, C2bSimulateResponse};
 //! use std::env;
 //! use dotenv::dotenv;
@@ -208,7 +208,7 @@
 //!
 //! * Mpesa Express Request / STK push/ Lipa na M-PESA online
 //!
-//! ```rust
+//! ```no_run
 //! use mpesa::{Mpesa, MpesaResult, MpesaExpressRequestResponse};
 //! use std::env;
 //! use dotenv::dotenv;
