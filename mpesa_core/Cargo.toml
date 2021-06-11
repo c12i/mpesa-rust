@@ -6,7 +6,7 @@ edition = "2018"
 description = "A wrapper around the M-PESA API in Rust."
 keywords = ["api", "mpesa", "mobile"]
 repository = "https://github.com/collinsmuriuki/mpesa-rust"
-readme = "README.md"
+readme = "../README.md"
 license = "MIT"
 
 [dependencies]
