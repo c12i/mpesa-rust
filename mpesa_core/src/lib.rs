@@ -5,9 +5,15 @@
 //!## Install
 //! `Cargo.toml`
 //!
-//! ```md
+//! ```toml
 //! [dependencies]
-//! mpesa = "0.3.5"
+//! mpesa = "0.3.6"
+//! ```
+//! Optionally, you can disable default-features, which is basically the entire suite of MPESA APIs to conditionally select from either `["b2b", "b2c", "account_balance"]` services, which make use of `openssl` and `base64` dependencies that can be opted out of compilation if not required.
+//!
+//! ```toml
+//! [dependencies]
+//! mpesa = { version = "0.3.6", default_features = false, features = ["b2b"] }
 //! ```
 //!
 //! In your lib or binary crate:
