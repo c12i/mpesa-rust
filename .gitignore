@@ -3,4 +3,4 @@
 Cargo.lock
 .env
 .DS_Store
-/src/main.rs
+main.rs
