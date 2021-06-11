@@ -7,13 +7,14 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mpesa = "0.3.6"
+//! mpesa = "0.3.7"
 //! ```
-//! Optionally, you can disable default-features, which is basically the entire suite of MPESA APIs to conditionally select from either `["b2b", "b2c", "account_balance"]` services, which make use of `openssl` and `base64` dependencies that can be opted out of compilation if not required.
+//! Optionally, you can disable default-features, which is basically the entire suite of MPESA APIs to conditionally select from either `["b2b", "b2c" ,"account_balance", "c2b_register", "c2b_simulate", "express_request"]` services.
+//! Example:
 //!
 //! ```toml
 //! [dependencies]
-//! mpesa = { version = "0.3.6", default_features = false, features = ["b2b"] }
+//! mpesa = { version = "0.3.7", default_features = false, features = ["b2b", "express_request"] }
 //! ```
 //!
 //! In your lib or binary crate:

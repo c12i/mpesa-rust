@@ -182,6 +182,7 @@ impl<'a> Mpesa {
     ///    .response_type(mpesa::ResponseTypes::Complete) // optional, defaults to `ResponseTypes::Complete`
     ///    .send();
     /// ```
+    #[cfg(feature = "c2b_register")]
     pub fn c2b_register(&'a self) -> C2bRegisterBuilder<'a> {
         C2bRegisterBuilder::new(&self)
     }
@@ -202,6 +203,7 @@ impl<'a> Mpesa {
     ///    .bill_ref_number("Your_BillRefNumber>") // optional, defaults to "None"
     ///    .send();
     /// ```
+    #[cfg(feature = "c2b_simulate")]
     pub fn c2b_simulate(&'a self) -> C2bSimulateBuilder<'a> {
         C2bSimulateBuilder::new(&self)
     }
@@ -250,6 +252,7 @@ impl<'a> Mpesa {
     ///    .transaction_desc("Description") // Optional, defaults to "None"
     ///    .send();
     /// ```
+    #[cfg(feature = "express_request")]
     pub fn express_request(
         &'a self,
         business_short_code: &'a str,
