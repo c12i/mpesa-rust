@@ -136,7 +136,7 @@
 //! ```
 //!
 //! * C2B Register
-//! ```rust
+//! ```ignore
 //! use mpesa::{Mpesa, MpesaResult, C2bRegisterResponse};
 //! use serde_json::Value;
 //! use std::env;

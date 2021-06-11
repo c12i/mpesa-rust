@@ -133,6 +133,7 @@ impl<'a> Mpesa {
     ///     .command_id(mpesa::CommandId::BusinessPayment) // optional, defaults to `CommandId::BusinessPayment`
     ///     .send();
     /// ```
+    #[cfg(feature = "b2c")]
     pub fn b2c(&'a self, initiator_name: &'a str) -> B2cBuilder<'a> {
         B2cBuilder::new(&self, initiator_name)
     }
@@ -160,6 +161,7 @@ impl<'a> Mpesa {
     ///    .receiver_id(mpesa::IdentifierTypes::ShortCode) // optional, defaults to `IdentifierTypes::ShortCode`
     ///    .send();
     /// ```
+    #[cfg(feature = "b2b")]
     pub fn b2b(&'a self, initiator_name: &'a str) -> B2bBuilder<'a> {
         B2bBuilder::new(&self, initiator_name)
     }
@@ -223,6 +225,7 @@ impl<'a> Mpesa {
     ///    .remarks("Your Remarks") // optional, defaults to "None"
     ///    .send();
     /// ```
+    #[cfg(feature = "account_balance")]
     pub fn account_balance(&'a self, initiator_name: &'a str) -> AccountBalanceBuilder<'a> {
         AccountBalanceBuilder::new(&self, initiator_name)
     }
