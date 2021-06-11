@@ -9,4 +9,4 @@ jobs:
 cache: cargo
 script:
   - cargo build --verbose --all
-  - cargo test --verbose --al
+  - cargo test --verbose --all-features --no-fail-fast
