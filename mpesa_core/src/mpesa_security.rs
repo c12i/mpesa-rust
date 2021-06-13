@@ -1,8 +1,4 @@
 use crate::client::MpesaResult;
-use crate::Mpesa;
-use base64::encode;
-use openssl::rsa::Padding;
-use openssl::x509::X509;
 
 /// Trait responsible for implementation of security configs for Mpesa
 pub trait MpesaSecurity {
@@ -14,24 +10,4 @@ pub trait MpesaSecurity {
     /// # Error
     /// Returns `EncryptionError` variant of `MpesaError`
     fn gen_security_credentials(&self) -> MpesaResult<String>;
-}
-
-impl MpesaSecurity for Mpesa {
-    fn gen_security_credentials(&self) -> MpesaResult<String> {
-        let pem = self.environment().get_certificate().as_bytes();
-        let cert = X509::from_pem(pem)?;
-        // getting the public and rsa keys
-        let pub_key = cert.public_key()?;
-        let rsa_key = pub_key.rsa()?;
-        // configuring the buffer
-        let buf_len = pub_key.size();
-        let mut buffer = vec![0; buf_len];
-
-        rsa_key.public_encrypt(
-            self.initiator_password().as_bytes(),
-            &mut buffer,
-            Padding::PKCS1,
-        )?;
-        Ok(encode(buffer))
-    }
 }
