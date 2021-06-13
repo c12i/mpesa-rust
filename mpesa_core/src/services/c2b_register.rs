@@ -20,8 +20,8 @@ struct C2bRegisterPayload<'a> {
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct C2bRegisterResponse {
-    #[serde(rename(deserialize = "ConversationID"))]
-    pub conversation_id: String,
+    #[serde(rename(deserialize = "ConversationID"), skip_serializing_if = "None")]
+    pub conversation_id: Option<String>,
     #[serde(rename(deserialize = "OriginatorCoversationID"))]
     pub originator_coversation_id: String,
     #[serde(rename(deserialize = "ResponseDescription"))]

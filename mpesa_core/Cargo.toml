@@ -1,6 +1,6 @@
 [package]
 name = "mpesa"
-version = "0.4.0"
+version = "0.4.1"
 authors = ["Collins Muriuki <murerwacollins@gmail.com>"]
 edition = "2018"
 description = "A wrapper around the M-PESA API in Rust."
@@ -12,15 +12,18 @@ license = "MIT"
 [dependencies]
 serde_json = "1.0"
 dotenv = "0.15.0"
-mpesa_derive = "0.2.1"
 openssl = "0.10.30"
-base64 = "0.12.3"
+base64 = "0.13.0"
 failure = "0.1.5"
 failure_derive = "0.1.5"
 chrono = "0.4"
 
+[dependencies.mpesa_derive]
+version = "0.3.0"
+path = "../mpesa_derive"
+
 [dependencies.reqwest]
-version = "0.10"
+version = "0.11.3"
 features = ["blocking", "json"]
 
 [dependencies.serde]
