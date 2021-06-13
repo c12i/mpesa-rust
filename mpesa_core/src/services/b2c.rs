@@ -7,43 +7,38 @@ use serde_json::Value;
 #[derive(Debug, Serialize)]
 /// Payload to allow for b2c transactions:
 struct B2cPayload<'a> {
-    InitiatorName: &'a str,
-    SecurityCredential: &'a str,
-    CommandID: CommandId,
-    Amount: u32,
-    PartyA: &'a str,
-    PartyB: &'a str,
-    Remarks: &'a str,
-    QueueTimeOutURL: &'a str,
-    ResultURL: &'a str,
-    Occasion: &'a str,
+    #[serde(rename(serialize = "InitiatorName"))]
+    initiator_name: &'a str,
+    #[serde(rename(serialize = "SecurityCredential"))]
+    security_credential: &'a str,
+    #[serde(rename(serialize = "CommandID"))]
+    command_id: CommandId,
+    #[serde(rename(serialize = "Amount"))]
+    amount: u32,
+    #[serde(rename(serialize = "PartyA"))]
+    party_a: &'a str,
+    #[serde(rename(serialize = "PartyB"))]
+    party_b: &'a str,
+    #[serde(rename(serialize = "Remarks"))]
+    remarks: &'a str,
+    #[serde(rename(serialize = "QueueTimeOutURL"))]
+    queue_time_out_url: &'a str,
+    #[serde(rename(serialize = "ResultURL"))]
+    result_url: &'a str,
+    #[serde(rename(serialize = "Occasion"))]
+    occasion: &'a str,
 }
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct B2cResponse {
-    ConversationID: String,
-    OriginatorConversationID: String,
-    ResponseCode: String,
-    ResponseDescription: String,
-}
-
-#[allow(dead_code)]
-impl<'a> B2cResponse {
-    pub fn conversation_id(&'a self) -> &'a str {
-        &self.ConversationID
-    }
-
-    pub fn originator_conversation_id(&'a self) -> &'a str {
-        &self.OriginatorConversationID
-    }
-
-    pub fn response_code(&'a self) -> &'a str {
-        &self.ResponseCode
-    }
-
-    pub fn response_description(&'a self) -> &'a str {
-        &self.ResponseDescription
-    }
+    #[serde(rename(deserialize = "ConversationID"))]
+    pub conversation_id: String,
+    #[serde(rename(deserialize = "OriginatorConversationID"))]
+    pub originator_conversation_id: String,
+    #[serde(rename(deserialize = "ResponseCode"))]
+    pub response_code: String,
+    #[serde(rename(deserialize = "ResponseDescription"))]
+    pub response_description: String,
 }
 
 #[derive(Debug)]
@@ -105,12 +100,12 @@ impl<'a> B2cBuilder<'a> {
         self
     }
 
-    #[deprecated]
     /// Adds `Party A` and `Party B`. Both are required fields
     /// `Party A` should be a paybill number while `Party B` should be a mobile number.
     ///
     /// # Errors
     /// If either `Party A` or `Party B` is invalid or not provided
+    #[deprecated]
     pub fn parties(mut self, party_a: &'a str, party_b: &'a str) -> B2cBuilder<'a> {
         // TODO: add validation
         self.party_a = Some(party_a);
@@ -144,7 +139,7 @@ impl<'a> B2cBuilder<'a> {
     /// # Error
     /// If `QueueTimeoutUrl` is invalid or not provided
     pub fn timeout_url(mut self, timeout_url: &'a str) -> B2cBuilder<'a> {
-        self.queue_timeout_url =  Some(timeout_url);
+        self.queue_timeout_url = Some(timeout_url);
         self
     }
 
@@ -157,11 +152,11 @@ impl<'a> B2cBuilder<'a> {
         self
     }
 
-    #[deprecated]
     /// Adds `QueueTimeoutUrl` and `ResultUrl`. This is a required field
     ///
     /// # Error
     /// If either `QueueTimeoutUrl` and `ResultUrl` is invalid or not provided
+    #[deprecated]
     pub fn urls(mut self, timeout_url: &'a str, result_url: &'a str) -> B2cBuilder<'a> {
         // TODO: validate urls; will probably return a `Result` from this
         self.queue_timeout_url = Some(timeout_url);
@@ -190,16 +185,16 @@ impl<'a> B2cBuilder<'a> {
         let credentials = self.client.gen_security_credentials()?;
 
         let payload = B2cPayload {
-            InitiatorName: self.initiator_name,
-            SecurityCredential: &credentials,
-            CommandID: self.command_id.unwrap_or(CommandId::BusinessPayment),
-            Amount: self.amount.unwrap_or(10),
-            PartyA: self.party_a.unwrap_or("None"),
-            PartyB: self.party_b.unwrap_or("None"),
-            Remarks: self.remarks.unwrap_or("None"),
-            QueueTimeOutURL: self.queue_timeout_url.unwrap_or("None"),
-            ResultURL: self.result_url.unwrap_or("None"),
-            Occasion: self.occasion.unwrap_or("None"),
+            initiator_name: self.initiator_name,
+            security_credential: &credentials,
+            command_id: self.command_id.unwrap_or(CommandId::BusinessPayment),
+            amount: self.amount.unwrap_or(10),
+            party_a: self.party_a.unwrap_or("None"),
+            party_b: self.party_b.unwrap_or("None"),
+            remarks: self.remarks.unwrap_or("None"),
+            queue_time_out_url: self.queue_timeout_url.unwrap_or("None"),
+            result_url: self.result_url.unwrap_or("None"),
+            occasion: self.occasion.unwrap_or("None"),
         };
 
         let response = Client::new()

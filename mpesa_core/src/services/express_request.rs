@@ -8,45 +8,42 @@ use serde_json::Value;
 
 #[derive(Debug, Serialize)]
 struct MpesaExpressRequestPayload<'a> {
-    BusinessShortCode: &'a str,
-    Password: &'a str,
-    Timestamp: &'a str,
-    TransactionType: CommandId,
-    Amount: u32,
-    PartyA: &'a str,
-    PartyB: &'a str,
-    PhoneNumber: &'a str,
-    CallBackURL: &'a str,
-    AccountReference: &'a str,
-    TransactionDesc: &'a str,
+    #[serde(rename(serialize = "BusinessShortCode"))]
+    business_short_code: &'a str,
+    #[serde(rename(serialize = "Password"))]
+    password: &'a str,
+    #[serde(rename(serialize = "Timestamp"))]
+    timestamp: &'a str,
+    #[serde(rename(serialize = "TransactionType"))]
+    transaction_type: CommandId,
+    #[serde(rename(serialize = "Amount"))]
+    amount: u32,
+    #[serde(rename(serialize = "PartyA"))]
+    party_a: &'a str,
+    #[serde(rename(serialize = "PartyB"))]
+    party_b: &'a str,
+    #[serde(rename(serialize = "PhoneNumber"))]
+    phone_number: &'a str,
+    #[serde(rename(serialize = "CallBackURL"))]
+    call_back_url: &'a str,
+    #[serde(rename(serialize = "AccountReference"))]
+    account_reference: &'a str,
+    #[serde(rename(serialize = "TransactionDesc"))]
+    transaction_desc: &'a str,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct MpesaExpressRequestResponse {
-    CheckoutRequestID: String,
-    CustomerMessage: String,
-    MerchantRequestID: String,
-    ResponseCode: String,
-    ResponseDescription: String,
-}
-
-#[allow(dead_code)]
-impl<'a> MpesaExpressRequestResponse {
-    pub fn checkout_request_id(&'a self) -> &'a str {
-        &self.CheckoutRequestID
-    }
-
-    pub fn customer_message(&'a self) -> &'a str {
-        &self.CustomerMessage
-    }
-
-    pub fn merchant_request_id(&'a self) -> &'a str {
-        &self.MerchantRequestID
-    }
-
-    pub fn response_code(&'a self) -> &'a str {
-        &self.ResponseDescription
-    }
+    #[serde(rename(deserialize = "CheckoutRequestID"))]
+    pub checkout_request_id: String,
+    #[serde(rename(deserialize = "CustomerMessage"))]
+    pub customer_message: String,
+    #[serde(rename(deserialize = "MerchantRequestID"))]
+    pub merchant_request_id: String,
+    #[serde(rename(deserialize = "ResponseCode"))]
+    pub response_code: String,
+    #[serde(rename(deserialize = "ResponseDescription"))]
+    pub response_description: String,
 }
 
 pub struct MpesaExpressRequestBuilder<'a> {
@@ -202,19 +199,19 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
         let (password, timestamp) = self.generate_password_and_timestamp();
 
         let payload = MpesaExpressRequestPayload {
-            BusinessShortCode: self.business_short_code,
-            Password: &password,
-            Timestamp: &timestamp,
-            Amount: self.amount.unwrap_or(10),
-            PartyA: self.party_a.unwrap_or(self.business_short_code),
-            PartyB: self.party_b.unwrap_or(self.phone_number.unwrap_or("None")),
-            PhoneNumber: self.phone_number.unwrap_or("None"),
-            CallBackURL: self.callback_url.unwrap_or("None"),
-            AccountReference: self.account_ref.unwrap_or("None"),
-            TransactionType: self
+            business_short_code: self.business_short_code,
+            password: &password,
+            timestamp: &timestamp,
+            amount: self.amount.unwrap_or(10),
+            party_a: self.party_a.unwrap_or(self.business_short_code),
+            party_b: self.party_b.unwrap_or(self.phone_number.unwrap_or("None")),
+            phone_number: self.phone_number.unwrap_or("None"),
+            call_back_url: self.callback_url.unwrap_or("None"),
+            account_reference: self.account_ref.unwrap_or("None"),
+            transaction_type: self
                 .transaction_type
                 .unwrap_or(CommandId::CustomerPayBillOnline),
-            TransactionDesc: self.transaction_desc.unwrap_or("None"),
+            transaction_desc: self.transaction_desc.unwrap_or("None"),
         };
 
         let response = Client::new()
