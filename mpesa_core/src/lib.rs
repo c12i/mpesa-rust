@@ -7,14 +7,14 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mpesa = "0.4.0"
+//! mpesa = "0.4.1"
 //! ```
 //! Optionally, you can disable default-features, which is basically the entire suite of MPESA APIs to conditionally select from either `["b2b", "b2c" ,"account_balance", "c2b_register", "c2b_simulate", "express_request"]` services.
 //! Example:
 //!
 //! ```toml
 //! [dependencies]
-//! mpesa = { version = "0.4.0", default_features = false, features = ["b2b", "express_request"] }
+//! mpesa = { version = "0.4.1", default_features = false, features = ["b2b", "express_request"] }
 //! ```
 //!
 //! In your lib or binary crate:

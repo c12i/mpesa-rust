@@ -1,6 +1,6 @@
 [package]
 name = "mpesa"
-version = "0.4.0"
+version = "0.4.1"
 authors = ["Collins Muriuki <murerwacollins@gmail.com>"]
 edition = "2018"
 description = "A wrapper around the M-PESA API in Rust."
@@ -19,7 +19,7 @@ failure_derive = "0.1.5"
 chrono = "0.4"
 
 [dependencies.mpesa_derive]
-version = "0.2.1"
+version = "0.3.0"
 path = "../mpesa_derive"
 
 [dependencies.reqwest]
