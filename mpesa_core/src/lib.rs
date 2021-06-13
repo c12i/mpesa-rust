@@ -258,7 +258,7 @@ mod mpesa_security;
 pub mod services;
 
 pub use client::{Mpesa, MpesaResult};
-use constants::{CommandId, IdentifierTypes, MpesaResponseCode, ResponseType};
+pub use constants::CommandId;
 pub use environment::Environment;
 pub use errors::MpesaError;
 use mpesa_security::MpesaSecurity;
