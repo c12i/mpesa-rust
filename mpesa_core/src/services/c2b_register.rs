@@ -8,32 +8,24 @@ use serde_json::Value;
 #[derive(Debug, Serialize)]
 /// Payload to register the 3rd party’s confirmation and validation URLs to M-Pesa
 struct C2bRegisterPayload<'a> {
-    ValidationURL: &'a str,
-    ConfirmationURL: &'a str,
-    ResponseType: ResponseType,
-    ShortCode: &'a str,
+    #[serde(rename(serialize = "ValidationURL"))]
+    validation_url: &'a str,
+    #[serde(rename(serialize = "ConfirmationURL"))]
+    confirmation_url: &'a str,
+    #[serde(rename(serialize = "ResponseType"))]
+    response_type: ResponseType,
+    #[serde(rename(serialize = "ShortCode"))]
+    short_code: &'a str,
 }
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct C2bRegisterResponse {
-    ConversationID: String,
-    OriginatorCoversationID: String,
-    ResponseDescription: String,
-}
-
-#[allow(dead_code)]
-impl<'a> C2bRegisterResponse {
-    pub fn conversation_id(&'a self) -> &'a str {
-        &self.ConversationID
-    }
-
-    pub fn originator_conversation_id(&'a self) -> &'a str {
-        &self.OriginatorCoversationID
-    }
-
-    pub fn response_description(&'a self) -> &'a str {
-        &self.ResponseDescription
-    }
+    #[serde(rename(deserialize = "ConversationID"))]
+    pub conversation_id: String,
+    #[serde(rename(deserialize = "OriginatorCoversationID"))]
+    pub originator_coversation_id: String,
+    #[serde(rename(deserialize = "ResponseDescription"))]
+    pub response_description: String,
 }
 
 #[derive(Debug)]
@@ -114,10 +106,10 @@ impl<'a> C2bRegisterBuilder<'a> {
         );
 
         let payload = C2bRegisterPayload {
-            ValidationURL: self.validation_url.unwrap_or("None"),
-            ConfirmationURL: self.confirmation_url.unwrap_or("None"),
-            ResponseType: self.response_type.unwrap_or(ResponseType::Complete),
-            ShortCode: self.short_code.unwrap_or("None"),
+            validation_url: self.validation_url.unwrap_or("None"),
+            confirmation_url: self.confirmation_url.unwrap_or("None"),
+            response_type: self.response_type.unwrap_or(ResponseType::Complete),
+            short_code: self.short_code.unwrap_or("None"),
         };
 
         let response = Client::new()

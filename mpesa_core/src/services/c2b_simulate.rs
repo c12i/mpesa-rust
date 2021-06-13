@@ -9,33 +9,26 @@ use serde_json::Value;
 /// Payload to make payment requests from C2B.
 /// See more: https://developer.safaricom.co.ke/docs#c2b-api
 struct C2bSimulatePayload<'a> {
-    CommandID: CommandId,
-    Amount: u32,
-    Msisdn: &'a str,
-    BillRefNumber: &'a str,
-    ShortCode: &'a str,
+    #[serde(rename(serialize = "CommandID"))]
+    command_id: CommandId,
+    #[serde(rename(serialize = "Amount"))]
+    amount: u32,
+    #[serde(rename(serialize = "Msisdn"))]
+    msisdn: &'a str,
+    #[serde(rename(serialize = "BillRefNumber"))]
+    bill_ref_number: &'a str,
+    #[serde(rename(serialize = "ShortCode"))]
+    short_code: &'a str,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct C2bSimulateResponse {
-    ConversationID: String,
-    OriginatorCoversationID: String,
-    ResponseDescription: String,
-}
-
-#[allow(dead_code)]
-impl<'a> C2bSimulateResponse {
-    pub fn conversation_id(&'a self) -> &'a str {
-        &self.ConversationID
-    }
-
-    pub fn originator_conversation_id(&'a self) -> &'a str {
-        &self.OriginatorCoversationID
-    }
-
-    pub fn response_description(&'a self) -> &'a str {
-        &self.ResponseDescription
-    }
+    #[serde(rename(deserialize = "ConversationID"))]
+    pub conversation_id: String,
+    #[serde(rename(deserialize = "OriginatorCoversationID"))]
+    pub originator_coversation_id: String,
+    #[serde(rename(deserialize = "ResponseDescription"))]
+    pub response_description: String,
 }
 
 #[derive(Debug)]
@@ -122,11 +115,11 @@ impl<'a> C2bSimulateBuilder<'a> {
         );
 
         let payload = C2bSimulatePayload {
-            CommandID: self.command_id.unwrap_or(CommandId::CustomerPayBillOnline),
-            Amount: self.amount.unwrap_or(10),
-            Msisdn: self.msisdn.unwrap_or("None"),
-            BillRefNumber: self.bill_ref_number.unwrap_or("None"),
-            ShortCode: self.short_code.unwrap_or("None"),
+            command_id: self.command_id.unwrap_or(CommandId::CustomerPayBillOnline),
+            amount: self.amount.unwrap_or(10),
+            msisdn: self.msisdn.unwrap_or("None"),
+            bill_ref_number: self.bill_ref_number.unwrap_or("None"),
+            short_code: self.short_code.unwrap_or("None"),
         };
 
         let response = Client::new()

@@ -7,14 +7,14 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mpesa = "0.3.7"
+//! mpesa = "0.4.0"
 //! ```
 //! Optionally, you can disable default-features, which is basically the entire suite of MPESA APIs to conditionally select from either `["b2b", "b2c" ,"account_balance", "c2b_register", "c2b_simulate", "express_request"]` services.
 //! Example:
 //!
 //! ```toml
 //! [dependencies]
-//! mpesa = { version = "0.3.7", default_features = false, features = ["b2b", "express_request"] }
+//! mpesa = { version = "0.4.0", default_features = false, features = ["b2b", "express_request"] }
 //! ```
 //!
 //! In your lib or binary crate:
@@ -143,7 +143,7 @@
 //! ```
 //!
 //! * C2B Register
-//! ```ignore
+//! ```rust
 //! use mpesa::{Mpesa, MpesaResult, C2bRegisterResponse};
 //! use serde_json::Value;
 //! use std::env;
@@ -167,7 +167,7 @@
 //! ```
 //!
 //! * C2B Simulate
-//! ```no_run
+//! ```rust
 //! use mpesa::{Mpesa, MpesaResult, C2bSimulateResponse};
 //! use std::env;
 //! use dotenv::dotenv;
@@ -215,7 +215,7 @@
 //!
 //! * Mpesa Express Request / STK push/ Lipa na M-PESA online
 //!
-//! ```no_run
+//! ```rust
 //! use mpesa::{Mpesa, MpesaResult, MpesaExpressRequestResponse};
 //! use std::env;
 //! use dotenv::dotenv;
@@ -258,10 +258,10 @@ mod mpesa_security;
 pub mod services;
 
 pub use client::{Mpesa, MpesaResult};
-pub use constants::{CommandId, IdentifierTypes, MpesaResponseCode, ResponseType};
+use constants::{CommandId, IdentifierTypes, MpesaResponseCode, ResponseType};
 pub use environment::Environment;
 pub use errors::MpesaError;
-pub use mpesa_security::MpesaSecurity;
+use mpesa_security::MpesaSecurity;
 pub use services::{
     AccountBalanceResponse, B2bResponse, B2cResponse, C2bRegisterResponse, C2bSimulateResponse,
     MpesaExpressRequestResponse,
