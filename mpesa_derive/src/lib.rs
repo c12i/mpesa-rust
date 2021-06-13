@@ -19,11 +19,11 @@ fn impl_mpesa_security(ast: &syn::DeriveInput) -> TokenStream {
         use openssl::rsa::Padding;
         use base64::encode;
         use std::error::Error;
-        use mpesa::MpesaError;
+        use crate::MpesaError;
 
         impl MpesaSecurity for #name {
             fn gen_security_credentials(&self) -> Result<String, MpesaError> {
-                let pem = self.environment.get_certificate().as_bytes();
+                let pem = self.environment().get_certificate().as_bytes();
                 let cert = X509::from_pem(pem)?;
                 // getting the public and rsa keys
                 let pub_key = cert.public_key()?;
