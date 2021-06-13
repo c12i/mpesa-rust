@@ -1,2 +1,2 @@
 [workspace]
-members = ["mpesa_derive", "mpesa_core"]
+members = ["mpesa_derive", "mpesa_core", "node_bindings"]
