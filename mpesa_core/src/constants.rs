@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use serde_repr::{Deserialize_repr, Serialize_repr};
 use std::fmt::{Display, Formatter, Result as FmtResult};
 
 /// Mpesa command ids
@@ -28,7 +29,8 @@ impl Display for CommandId {
 /// Identifier types - both sender and receiver - identify an M-Pesa transaction’s sending and receiving party as
 /// either a shortcode, a till number or a MSISDN (phone number).
 /// There are three identifier types that can be used with M-Pesa APIs.
-#[derive(Debug, Serialize, Copy, Clone)]
+#[derive(Debug, Serialize_repr, Deserialize_repr, Copy, Clone)]
+#[repr(u16)]
 pub enum IdentifierTypes {
     MSISDN = 1,
     TillNumber = 2,
@@ -37,12 +39,13 @@ pub enum IdentifierTypes {
 
 impl Display for IdentifierTypes {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        write!(f, "{}", *self as u16)
+        write!(f, "{:?}", *self as u16)
     }
 }
 
 /// M-pesa result and response codes
-#[derive(Debug, Copy, Clone, Deserialize)]
+#[derive(Debug, Copy, Clone, Deserialize_repr)]
+#[repr(u16)]
 #[allow(unused)]
 pub enum MpesaResponseCode {
     Success = 0,
@@ -66,7 +69,7 @@ pub enum MpesaResponseCode {
 
 impl Display for MpesaResponseCode {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        write!(f, "{}", *self as u16)
+        write!(f, "{:?}", *self as u16)
     }
 }
 
