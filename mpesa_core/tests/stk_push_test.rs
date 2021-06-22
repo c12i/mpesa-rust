@@ -15,8 +15,6 @@ fn stk_push_test() {
     let response = client
         .express_request("174379")
         .phone_number("254708374149")
-        .party_a("254708374149")
-        .party_b("174379")
         .amount(500)
         .callback_url("https://test.example.com/api")
         .send();

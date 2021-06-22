@@ -25,7 +25,7 @@ An unofficial Rust wrapper around the [Safaricom API](https://developer.safarico
 
 ```toml
 [dependencies]
-mpesa = "0.4.1"
+mpesa = "0.4.2"
 ```
 
 Optionally, you can disable default-features, which is basically the entire suite of MPESA APIs to conditionally select from either `["b2b", "b2c" ,"account_balance", "c2b_register", "c2b_simulate", "express_request"]` services.
@@ -33,7 +33,7 @@ Example:
 
 ```toml
 [dependencies]
-mpesa = { version = "0.4.1", default_features = false, features = ["b2b", "express_request"] }
+mpesa = { version = "0.4.2", default_features = false, features = ["b2b", "express_request"] }
 ```
 
 In your lib or binary crate:
@@ -179,8 +179,6 @@ assert!(response.is_ok())
 let response = client
     .express_request("174379")
     .phone_number("254708374149")
-    .party_a("254708374149")
-    .party_b("174379")
     .amount(500)
     .callback_url("https://test.example.com/api")
     .send();

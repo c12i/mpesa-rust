@@ -1,6 +1,6 @@
 [package]
 name = "mpesa"
-version = "0.4.1"
+version = "0.4.2"
 authors = ["Collins Muriuki <murerwacollins@gmail.com>"]
 edition = "2018"
 description = "A wrapper around the M-PESA API in Rust."
@@ -11,6 +11,7 @@ license = "MIT"
 
 [dependencies]
 serde_json = "1.0"
+serde_repr = "0.1"
 dotenv = "0.15.0"
 openssl = "0.10.30"
 base64 = "0.13.0"

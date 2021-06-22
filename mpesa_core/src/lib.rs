@@ -7,14 +7,14 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mpesa = "0.4.1"
+//! mpesa = "0.4.2"
 //! ```
 //! Optionally, you can disable default-features, which is basically the entire suite of MPESA APIs to conditionally select from either `["b2b", "b2c" ,"account_balance", "c2b_register", "c2b_simulate", "express_request"]` services.
 //! Example:
 //!
 //! ```toml
 //! [dependencies]
-//! mpesa = { version = "0.4.1", default_features = false, features = ["b2b", "express_request"] }
+//! mpesa = { version = "0.4.2", default_features = false, features = ["b2b", "express_request"] }
 //! ```
 //!
 //! In your lib or binary crate:
@@ -231,8 +231,6 @@
 //! let response: MpesaResult<MpesaExpressRequestResponse> = client
 //!     .express_request("174379")
 //!     .phone_number("254708374149")
-//!     .party_a("254708374149")
-//!     .party_b("174379")
 //!     .amount(500)
 //!     .callback_url("https://testdomain.com/ok")
 //!     .send();
@@ -258,8 +256,8 @@ mod mpesa_security;
 pub mod services;
 
 pub use client::{Mpesa, MpesaResult};
-pub use constants::CommandId;
-pub use environment::Environment;
+pub use constants::{CommandId, IdentifierTypes, ResponseType};
+pub use environment::Environment::{self, Production, Sandbox};
 pub use errors::MpesaError;
 use mpesa_security::MpesaSecurity;
 pub use services::{
