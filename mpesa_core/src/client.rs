@@ -75,7 +75,7 @@ impl<'a> Mpesa {
     /// Checks if the client can be authenticated
     pub fn is_connected(&self) -> bool {
         let token = self.auth().ok();
-        if let Some(_) = token {
+        if token.is_some() {
             return true;
         }
         false
@@ -136,7 +136,7 @@ impl<'a> Mpesa {
     /// ```
     #[cfg(feature = "b2c")]
     pub fn b2c(&'a self, initiator_name: &'a str) -> B2cBuilder<'a> {
-        B2cBuilder::new(&self, initiator_name)
+        B2cBuilder::new(self, initiator_name)
     }
 
     /// **B2B Builder**
@@ -164,7 +164,7 @@ impl<'a> Mpesa {
     /// ```
     #[cfg(feature = "b2b")]
     pub fn b2b(&'a self, initiator_name: &'a str) -> B2bBuilder<'a> {
-        B2bBuilder::new(&self, initiator_name)
+        B2bBuilder::new(self, initiator_name)
     }
 
     /// **C2B Register builder**
@@ -185,7 +185,7 @@ impl<'a> Mpesa {
     /// ```
     #[cfg(feature = "c2b_register")]
     pub fn c2b_register(&'a self) -> C2bRegisterBuilder<'a> {
-        C2bRegisterBuilder::new(&self)
+        C2bRegisterBuilder::new(self)
     }
 
     /// **C2B Simulate Builder**
@@ -206,7 +206,7 @@ impl<'a> Mpesa {
     /// ```
     #[cfg(feature = "c2b_simulate")]
     pub fn c2b_simulate(&'a self) -> C2bSimulateBuilder<'a> {
-        C2bSimulateBuilder::new(&self)
+        C2bSimulateBuilder::new(self)
     }
 
     /// **Account Balance Builder**
@@ -230,7 +230,7 @@ impl<'a> Mpesa {
     /// ```
     #[cfg(feature = "account_balance")]
     pub fn account_balance(&'a self, initiator_name: &'a str) -> AccountBalanceBuilder<'a> {
-        AccountBalanceBuilder::new(&self, initiator_name)
+        AccountBalanceBuilder::new(self, initiator_name)
     }
 
     /// **Mpesa Express Request/ STK push Builder**
@@ -258,6 +258,6 @@ impl<'a> Mpesa {
         &'a self,
         business_short_code: &'a str,
     ) -> MpesaExpressRequestBuilder<'a> {
-        MpesaExpressRequestBuilder::new(&self, business_short_code)
+        MpesaExpressRequestBuilder::new(self, business_short_code)
     }
 }

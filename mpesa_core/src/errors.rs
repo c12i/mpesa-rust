@@ -1,7 +1,4 @@
 use failure_derive::*;
-use openssl;
-use reqwest;
-use serde_json;
 use std::env::VarError;
 
 #[derive(Debug, Fail)]
