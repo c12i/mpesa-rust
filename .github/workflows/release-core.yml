@@ -3,7 +3,7 @@ name: publish to crates.io
 on:
   push:
     tags:
-      - '0.*'
+      - 'core-0.*'
 
 env:
   CARGO_TERM_COLOR: always
