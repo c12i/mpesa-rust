@@ -9,6 +9,9 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    env:
+      CLIENT_KEY: ${{ secrets.CLIENT_KEY }}
+      CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -53,6 +56,9 @@ jobs:
   coverage:
     name: Code coverage
     runs-on: ubuntu-latest
+    env:
+      CLIENT_KEY: ${{ secrets.CLIENT_KEY }}
+      CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
