@@ -100,8 +100,10 @@ impl<'a> Mpesa {
             .basic_auth(&self.client_key, Some(&self.client_secret))
             .send()?;
         if resp.status().is_success() {
+            // TODO: Needs custom return type: currently not casting the response to a custom type
+            //       hence why we need strip out double quotes `"` from the deserialized value
+            //       example: "value" -> value
             let value: Value = resp.json()?;
-            // "value" -> value
             return Ok(value["access_token"].to_string().replace("\"", ""));
         }
         Err(MpesaError::Message(
