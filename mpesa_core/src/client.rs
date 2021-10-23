@@ -75,10 +75,7 @@ impl<'a> Mpesa {
     /// Checks if the client can be authenticated
     pub fn is_connected(&self) -> bool {
         let token = self.auth().ok();
-        if token.is_some() {
-            return true;
-        }
-        false
+        token.is_some()
     }
 
     /// **Safaricom Oauth**
