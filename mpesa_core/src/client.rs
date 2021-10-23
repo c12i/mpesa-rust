@@ -1,8 +1,8 @@
 use super::environment::Environment;
 use super::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bSimulateBuilder,
+    MpesaExpressRequestBuilder,
 };
-use crate::services::MpesaExpressRequestBuilder;
 use crate::MpesaSecurity;
 use mpesa_derive::*;
 use reqwest::blocking::Client;
@@ -19,6 +19,7 @@ pub struct Mpesa {
     client_secret: String,
     initiator_password: RefCell<Option<String>>,
     environment: Environment,
+    pub(crate) http_client: Client,
 }
 
 impl<'a> Mpesa {
@@ -33,11 +34,16 @@ impl<'a> Mpesa {
     /// );
     /// ```
     pub fn new(client_key: String, client_secret: String, environment: Environment) -> Self {
+        let http_client = Client::builder()
+            .connect_timeout(std::time::Duration::from_millis(10000))
+            .build()
+            .expect("Error building http client");
         Self {
             client_key,
             client_secret,
             initiator_password: RefCell::new(None),
             environment,
+            http_client,
         }
     }
 
@@ -74,7 +80,7 @@ impl<'a> Mpesa {
 
     /// Checks if the client can be authenticated
     pub fn is_connected(&self) -> bool {
-        self.auth().ok().is_some()
+        self.auth().is_ok()
     }
 
     /// **Safaricom Oauth**
@@ -94,7 +100,8 @@ impl<'a> Mpesa {
             "{}/oauth/v1/generate?grant_type=client_credentials",
             self.environment.base_url()
         );
-        let resp = Client::new()
+        let resp = self
+            .http_client
             .get(&url)
             .basic_auth(&self.client_key, Some(&self.client_secret))
             .send()?;

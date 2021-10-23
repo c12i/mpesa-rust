@@ -1,7 +1,6 @@
 use crate::client::{Mpesa, MpesaResult};
 use crate::constants::CommandId;
 use crate::errors::MpesaError;
-use reqwest::blocking::Client;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
@@ -122,11 +121,14 @@ impl<'a> C2bSimulateBuilder<'a> {
             short_code: self.short_code.unwrap_or("None"),
         };
 
-        let response = Client::new()
+        let response = self
+            .client
+            .http_client
             .post(&url)
             .bearer_auth(self.client.auth()?)
             .json(&payload)
-            .send()?;
+            .send()?
+            .error_for_status()?;
 
         if response.status().is_success() {
             let value: C2bSimulateResponse = response.json()?;
