@@ -1,7 +1,6 @@
 use crate::client::MpesaResult;
 use crate::constants::{CommandId, IdentifierTypes};
 use crate::{Mpesa, MpesaError, MpesaSecurity};
-use reqwest::blocking::Client;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
@@ -164,11 +163,14 @@ impl<'a> AccountBalanceBuilder<'a> {
             security_credential: &credentials,
         };
 
-        let response = Client::new()
+        let response = self
+            .client
+            .http_client
             .post(&url)
             .bearer_auth(self.client.auth()?)
             .json(&payload)
-            .send()?;
+            .send()?
+            .error_for_status()?;
 
         if response.status().is_success() {
             let value: AccountBalanceResponse = response.json()?;
