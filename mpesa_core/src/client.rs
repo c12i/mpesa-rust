@@ -37,6 +37,7 @@ impl<'a> Mpesa {
         let http_client = Client::builder()
             .connect_timeout(std::time::Duration::from_millis(10000))
             .build()
+            // TODO: Potentialy return a `Result` enum from Mpesa::new?
             .expect("Error building http client");
         Self {
             client_key,
