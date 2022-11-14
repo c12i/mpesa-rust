@@ -1,0 +1,27 @@
+fail_fast: true
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: check-toml
+
+  - repo: local
+    hooks:
+      - id: run-cargo-fmt
+        name: Cargo fmt
+        entry: /bin/bash -c "cargo fmt --all -- --check"
+        language: script
+        files: \.x$
+        always_run: true
+      - id: run-cargo-clippy
+        name: Cargo clippy
+        entry: /bin/bash -c "cargo clippy -- -D warnings"
+        language: script
+        files: \.x$
+        always_run: true
+      - id: run-cargo-test
+        name: Cargo test
+        entry: /bin/bash -c "cargo test --no-fail-fast"
+        language: script
+        files: \.x$
+        always_run: true
