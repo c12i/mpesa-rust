@@ -215,7 +215,7 @@
 //!
 //! * Mpesa Express Request / STK push/ Lipa na M-PESA online
 //!
-//! ```rust
+//! ```ignore
 //! use mpesa::{Mpesa, MpesaResult, MpesaExpressRequestResponse};
 //! use std::env;
 //! use dotenv::dotenv;
@@ -252,14 +252,12 @@ mod client;
 mod constants;
 pub mod environment;
 mod errors;
-mod mpesa_security;
 pub mod services;
 
 pub use client::{Mpesa, MpesaResult};
 pub use constants::{CommandId, IdentifierTypes, ResponseType};
 pub use environment::Environment::{self, Production, Sandbox};
 pub use errors::MpesaError;
-use mpesa_security::MpesaSecurity;
 pub use services::{
     AccountBalanceResponse, B2bResponse, B2cResponse, C2bRegisterResponse, C2bSimulateResponse,
     MpesaExpressRequestResponse,

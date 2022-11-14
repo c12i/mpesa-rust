@@ -1,5 +1,5 @@
 use crate::client::MpesaResult;
-use crate::{CommandId, Mpesa, MpesaError, MpesaSecurity};
+use crate::{CommandId, Mpesa, MpesaError};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 

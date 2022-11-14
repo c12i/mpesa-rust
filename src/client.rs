@@ -5,6 +5,8 @@ use super::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bSimulateBuilder,
     MpesaExpressRequestBuilder,
 };
+use openssl::rsa::Padding;
+use openssl::x509::X509;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::cell::RefCell;
@@ -268,5 +270,25 @@ impl<'a> Mpesa {
         business_short_code: &'a str,
     ) -> MpesaExpressRequestBuilder<'a> {
         MpesaExpressRequestBuilder::new(self, business_short_code)
+    }
+}
+
+impl Mpesa {
+    pub fn gen_security_credentials(&self) -> Result<String, MpesaError> {
+        let pem = self.environment().get_certificate().as_bytes();
+        let cert = X509::from_pem(pem)?;
+        // getting the public and rsa keys
+        let pub_key = cert.public_key()?;
+        let rsa_key = pub_key.rsa()?;
+        // configuring the buffer
+        let buf_len = pub_key.size();
+        let mut buffer = vec![0; buf_len];
+
+        rsa_key.public_encrypt(
+            self.initiator_password().as_bytes(),
+            &mut buffer,
+            Padding::PKCS1,
+        )?;
+        Ok(base64::encode(buffer))
     }
 }
