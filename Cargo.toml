@@ -12,26 +12,28 @@ license = "MIT"
 [dependencies]
 serde_json = "1.0"
 serde_repr = "0.1"
-dotenv = "0.15.0"
-openssl = {version = "0.10.30", optional = true}
-base64 = "0.13.0"
-failure = "0.1.5"
-failure_derive = "0.1.5"
+openssl = {version = "0.10", optional = true}
+base64 = {version = "0.13", optional = true}
+failure = "0.1"
+failure_derive = "0.1"
 chrono = {version = "0.4", optional = true}
 
 [dependencies.reqwest]
-version = "0.11.3"
+version = "0.11"
 features = ["blocking", "json"]
 
 [dependencies.serde]
-version = "1.0.114"
+version = "1.0"
 features = ["derive"]
+
+[dev-dependencies]
+dotenv = "0.15"
 
 [features]
 default = ["b2b", "b2c" ,"account_balance", "c2b_register", "c2b_simulate", "express_request"]
-b2b = ["dep:openssl"]
-b2c = ["dep:openssl"]
-account_balance = ["dep:openssl"]
+b2b = ["dep:openssl", "dep:base64"]
+b2c = ["dep:openssl", "dep:base64"]
+account_balance = ["dep:openssl", "dep:base64"]
 c2b_register = []
 c2b_simulate = []
-express_request = ["dep:chrono"]
+express_request = ["dep:chrono", "dep:base64"]
