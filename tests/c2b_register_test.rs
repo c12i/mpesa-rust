@@ -4,6 +4,7 @@ use std::env;
 
 #[test]
 #[ignore = "depreciated"]
+#[allow(deprecated)]
 fn c2b_register_test() {
     dotenv::dotenv().ok();
 
