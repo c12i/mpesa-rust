@@ -13,7 +13,7 @@ license = "MIT"
 serde_json = "1.0"
 serde_repr = "0.1"
 dotenv = "0.15.0"
-openssl = "0.10.30"
+openssl = {version = "0.10.30", optional = true}
 base64 = "0.13.0"
 failure = "0.1.5"
 failure_derive = "0.1.5"
@@ -29,8 +29,8 @@ features = ["derive"]
 
 [features]
 default = ["b2b", "b2c" ,"account_balance", "c2b_register", "c2b_simulate", "express_request"]
-b2b = []
-b2c = []
+b2b = ["dep:openssl"]
+b2c = ["dep:openssl"]
 account_balance = []
 c2b_register = []
 c2b_simulate = []
