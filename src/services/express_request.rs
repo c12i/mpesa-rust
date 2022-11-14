@@ -193,7 +193,7 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
     /// # Lipa na M-Pesa Online Payment / Mpesa Express/ Stk push
     ///
     /// Initiates a M-Pesa transaction on behalf of a customer using STK Push
-    /// 
+    ///
     /// A sucessfult request returns a `MpesaExpressRequestResponse` type
     ///
     /// # Errors
