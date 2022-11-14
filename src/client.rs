@@ -1,10 +1,14 @@
+use crate::MpesaError;
+
 use super::environment::Environment;
 use super::services::{
-    AccountBalanceBuilder, B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bSimulateBuilder,
+    AccountBalanceBuilder, 
+    B2bBuilder, 
+    B2cBuilder, 
+    C2bRegisterBuilder, 
+    C2bSimulateBuilder,
     MpesaExpressRequestBuilder,
 };
-use crate::MpesaSecurity;
-use mpesa_derive::*;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::cell::RefCell;
@@ -13,7 +17,7 @@ use std::cell::RefCell;
 pub type MpesaResult<T> = Result<T, MpesaError>;
 
 /// Mpesa client that will facilitate communication with the Safaricom API
-#[derive(Debug, MpesaSecurity)]
+#[derive(Debug)]
 pub struct Mpesa {
     client_key: String,
     client_secret: String,
