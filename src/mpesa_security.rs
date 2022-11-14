@@ -1,10 +1,8 @@
 use crate::client::MpesaResult;
-use openssl::x509::X509;
+use crate::{Mpesa, MpesaError};
 use openssl::rsa::Padding;
-use base64::encode;
-use crate::{MpesaError, Mpesa};
+use openssl::x509::X509;
 
-/// Trait responsible for implementation of security configs for Mpesa
 pub trait MpesaSecurity {
     /// Generates security credentials
     /// M-Pesa Core authenticates a transaction by decrypting the security credentials.
@@ -32,6 +30,6 @@ impl MpesaSecurity for Mpesa {
             &mut buffer,
             Padding::PKCS1,
         )?;
-        Ok(encode(buffer))
+        Ok(base64::encode(buffer))
     }
 }

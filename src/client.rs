@@ -2,11 +2,7 @@ use crate::MpesaError;
 
 use super::environment::Environment;
 use super::services::{
-    AccountBalanceBuilder, 
-    B2bBuilder, 
-    B2cBuilder, 
-    C2bRegisterBuilder, 
-    C2bSimulateBuilder,
+    AccountBalanceBuilder, B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bSimulateBuilder,
     MpesaExpressRequestBuilder,
 };
 use reqwest::blocking::Client;
