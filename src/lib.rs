@@ -142,8 +142,8 @@
 //! assert!(response.is_ok())
 //! ```
 //!
-//! * C2B Register
-//! ```rust
+//! * C2B Register (depreciated)
+//! ```ignore
 //! use mpesa::{Mpesa, MpesaResult, C2bRegisterResponse};
 //! use serde_json::Value;
 //! use std::env;

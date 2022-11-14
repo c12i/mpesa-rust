@@ -3,6 +3,7 @@ use mpesa::Mpesa;
 use std::env;
 
 #[test]
+#[ignore = "depreciated"]
 fn c2b_register_test() {
     dotenv::dotenv().ok();
 
