@@ -142,7 +142,7 @@
 //! assert!(response.is_ok())
 //! ```
 //!
-//! * C2B Register (depreciated)
+//! * C2B Register
 //! ```ignore
 //! use mpesa::{Mpesa, MpesaResult, C2bRegisterResponse};
 //! use serde_json::Value;

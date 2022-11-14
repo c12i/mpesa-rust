@@ -3,8 +3,7 @@ use mpesa::Mpesa;
 use std::env;
 
 #[test]
-#[ignore = "depreciated"]
-#[allow(deprecated)]
+#[ignore = "c2b_register always fails on sandbox with status 503"]
 fn c2b_register_test() {
     dotenv::dotenv().ok();
 
@@ -20,6 +19,8 @@ fn c2b_register_test() {
         .confirmation_url("https://testdomain.com/true")
         .validation_url("https://testdomain.com/valid")
         .send();
+
+    println!("{response:?}");
 
     assert!(response.is_ok())
 }

@@ -76,7 +76,7 @@ impl Display for MpesaResponseCode {
 #[derive(Debug, Serialize, Deserialize)]
 /// C2B Register Response types
 pub enum ResponseType {
-    Complete,
+    Completed,
     Cancelled,
 }
 

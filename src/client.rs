@@ -195,7 +195,6 @@ impl<'a> Mpesa {
     ///    .send();
     /// ```
     #[cfg(feature = "c2b_register")]
-    #[deprecated]
     pub fn c2b_register(&'a self) -> C2bRegisterBuilder<'a> {
         C2bRegisterBuilder::new(self)
     }
