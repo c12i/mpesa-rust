@@ -103,14 +103,14 @@ impl<'a> C2bSimulateBuilder<'a> {
         self
     }
 
-    /// **C2B Simulate API**
+    /// # C2B Simulate API
     ///
     /// Make payment requests from Client to Business
     ///
     /// This enables you to receive the payment requests in real time.
     /// See more [here](https://developer.safaricom.co.ke/c2b/apis/post/simulate)
     ///
-    /// A successful request returns a `serde_json::Value` type
+    /// A successful request returns a `C2bSimulateResponse` type
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure

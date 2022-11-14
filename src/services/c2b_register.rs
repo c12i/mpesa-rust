@@ -94,7 +94,7 @@ impl<'a> C2bRegisterBuilder<'a> {
     ///
     /// The response expected is the success code the 3rd party
     ///
-    /// A successful request returns a `serde_json::Value` type
+    /// A successful request returns a `C2bRegisterResponse` type
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure

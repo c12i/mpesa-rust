@@ -170,7 +170,7 @@ impl<'a> B2cBuilder<'a> {
         self
     }
 
-    /// **B2C API**
+    /// # B2C API
     ///
     /// Sends b2c payment request.
     ///
@@ -179,7 +179,7 @@ impl<'a> B2cBuilder<'a> {
     /// valid and verified B2C M-Pesa Short code.
     /// See more [here](https://developer.safaricom.co.ke/docs?shell#b2c-api)
     ///
-    /// A successful request returns a `serde_json::Value` type
+    /// A successful request returns a `B2cResponse` type
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure.

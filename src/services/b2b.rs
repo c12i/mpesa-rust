@@ -193,7 +193,7 @@ impl<'a> B2bBuilder<'a> {
         self
     }
 
-    /// **B2B API**
+    /// # B2B API
     ///
     /// Sends b2b payment request.
     ///
@@ -202,7 +202,7 @@ impl<'a> B2bBuilder<'a> {
     /// business initiating the transaction and the both businesses involved in the transaction
     /// See more [here](https://developer.safaricom.co.ke/docs?shell#b2b-api)
     ///
-    /// A successful request returns a `serde_json::Value` type
+    /// A successful request returns a `B2bResponse` type
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
