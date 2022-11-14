@@ -275,7 +275,7 @@ impl<'a> Mpesa {
 }
 
 impl Mpesa {
-    pub fn gen_security_credentials(&self) -> Result<String, MpesaError> {
+    pub(crate) fn gen_security_credentials(&self) -> Result<String, MpesaError> {
         let pem = self.environment().get_certificate().as_bytes();
         let cert = X509::from_pem(pem)?;
         // getting the public and rsa keys
