@@ -116,6 +116,7 @@ impl<'a> C2bSimulateBuilder<'a> {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
+    #[allow(clippy::unnecessary_lazy_evaluations)]
     pub fn send(self) -> MpesaResult<C2bSimulateResponse> {
         let url = format!(
             "{}/mpesa/c2b/v1/simulate",

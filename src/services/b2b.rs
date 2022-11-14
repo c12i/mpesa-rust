@@ -208,6 +208,7 @@ impl<'a> B2bBuilder<'a> {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
+    #[allow(clippy::unnecessary_lazy_evaluations)]
     pub fn send(self) -> MpesaResult<B2bResponse> {
         let url = format!(
             "{}/mpesa/b2b/v1/paymentrequest",

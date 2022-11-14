@@ -147,6 +147,7 @@ impl<'a> AccountBalanceBuilder<'a> {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
+    #[allow(clippy::unnecessary_lazy_evaluations)]
     pub fn send(self) -> MpesaResult<AccountBalanceResponse> {
         let url = format!(
             "{}/mpesa/accountbalance/v1/query",

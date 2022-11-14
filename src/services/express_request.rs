@@ -199,6 +199,7 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
     /// # Errors
     /// Returns a `MpesaError` on failure
     #[allow(clippy::or_fun_call)]
+    #[allow(clippy::unnecessary_lazy_evaluations)]
     pub fn send(self) -> MpesaResult<MpesaExpressRequestResponse> {
         let url = format!(
             "{}/mpesa/stkpush/v1/processrequest",

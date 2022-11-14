@@ -100,6 +100,7 @@ impl<'a> Mpesa {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
+    #[allow(clippy::single_char_pattern)]
     pub(crate) fn auth(&self) -> MpesaResult<String> {
         let url = format!(
             "{}/oauth/v1/generate?grant_type=client_credentials",
@@ -115,7 +116,7 @@ impl<'a> Mpesa {
             //       hence why we need strip out double quotes `"` from the deserialized value
             //       example: "value" -> value
             let value: Value = resp.json()?;
-            return Ok(value["access_token"].to_string().replace("\"", ""));
+            return Ok(value["access_token"].to_string().replace('\"', ""));
         }
         Err(MpesaError::Message(
             "Could not authenticate to Safaricom, please check your credentials",

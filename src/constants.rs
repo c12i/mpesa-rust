@@ -22,7 +22,7 @@ pub enum CommandId {
 
 impl Display for CommandId {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        write!(f, "{}", self)
+        write!(f, "{:?}", self)
     }
 }
 
@@ -82,6 +82,6 @@ pub enum ResponseType {
 
 impl Display for ResponseType {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        write!(f, "{}", self)
+        write!(f, "{:?}", self)
     }
 }
