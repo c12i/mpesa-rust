@@ -105,10 +105,10 @@ impl<'a> C2bRegisterBuilder<'a> {
         );
 
         let payload = C2bRegisterPayload {
-            validation_url: self.validation_url.unwrap_or("None"),
-            confirmation_url: self.confirmation_url.unwrap_or("None"),
-            response_type: self.response_type.unwrap_or(ResponseType::Complete),
-            short_code: self.short_code.unwrap_or("None"),
+            validation_url: self.validation_url.unwrap_or_else(|| "None"),
+            confirmation_url: self.confirmation_url.unwrap_or_else(|| "None"),
+            response_type: self.response_type.unwrap_or_else(|| ResponseType::Complete),
+            short_code: self.short_code.unwrap_or_else(|| "None"),
         };
 
         let response = self

@@ -115,10 +115,10 @@ impl<'a> C2bSimulateBuilder<'a> {
 
         let payload = C2bSimulatePayload {
             command_id: self.command_id.unwrap_or(CommandId::CustomerPayBillOnline),
-            amount: self.amount.unwrap_or(10),
-            msisdn: self.msisdn.unwrap_or("None"),
-            bill_ref_number: self.bill_ref_number.unwrap_or("None"),
-            short_code: self.short_code.unwrap_or("None"),
+            amount: self.amount.unwrap_or_else(|| 10),
+            msisdn: self.msisdn.unwrap_or_else(|| "None"),
+            bill_ref_number: self.bill_ref_number.unwrap_or_else(|| "None"),
+            short_code: self.short_code.unwrap_or_else(|| "None"),
         };
 
         let response = self

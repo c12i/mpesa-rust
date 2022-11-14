@@ -150,16 +150,16 @@ impl<'a> AccountBalanceBuilder<'a> {
         let credentials = self.client.gen_security_credentials()?;
 
         let payload = AccountBalancePayload {
-            command_id: self.command_id.unwrap_or(CommandId::AccountBalance),
-            party_a: self.party_a.unwrap_or("None"),
+            command_id: self.command_id.unwrap_or_else(|| CommandId::AccountBalance),
+            party_a: self.party_a.unwrap_or_else(|| "None"),
             identifier_type: &self
                 .identifier_type
-                .unwrap_or(IdentifierTypes::ShortCode)
+                .unwrap_or_else(|| IdentifierTypes::ShortCode)
                 .to_string(),
-            remarks: self.remarks.unwrap_or("None"),
+            remarks: self.remarks.unwrap_or_else(|| "None"),
             initiator: self.initiator_name,
-            queue_time_out_url: self.queue_timeout_url.unwrap_or("None"),
-            result_url: self.result_url.unwrap_or("None"),
+            queue_time_out_url: self.queue_timeout_url.unwrap_or_else(|| "None"),
+            result_url: self.result_url.unwrap_or_else(|| "None"),
             security_credential: &credentials,
         };
 

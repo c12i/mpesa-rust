@@ -186,14 +186,16 @@ impl<'a> B2cBuilder<'a> {
         let payload = B2cPayload {
             initiator_name: self.initiator_name,
             security_credential: &credentials,
-            command_id: self.command_id.unwrap_or(CommandId::BusinessPayment),
-            amount: self.amount.unwrap_or(10),
-            party_a: self.party_a.unwrap_or("None"),
-            party_b: self.party_b.unwrap_or("None"),
-            remarks: self.remarks.unwrap_or("None"),
-            queue_time_out_url: self.queue_timeout_url.unwrap_or("None"),
-            result_url: self.result_url.unwrap_or("None"),
-            occasion: self.occasion.unwrap_or("None"),
+            command_id: self
+                .command_id
+                .unwrap_or_else(|| CommandId::BusinessPayment),
+            amount: self.amount.unwrap_or_else(|| 10),
+            party_a: self.party_a.unwrap_or_else(|| "None"),
+            party_b: self.party_b.unwrap_or_else(|| "None"),
+            remarks: self.remarks.unwrap_or_else(|| "None"),
+            queue_time_out_url: self.queue_timeout_url.unwrap_or_else(|| "None"),
+            result_url: self.result_url.unwrap_or_else(|| "None"),
+            occasion: self.occasion.unwrap_or_else(|| "None"),
         };
 
         let response = self

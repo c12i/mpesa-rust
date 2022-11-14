@@ -212,22 +212,22 @@ impl<'a> B2bBuilder<'a> {
             security_credential: &credentials,
             command_id: self
                 .command_id
-                .unwrap_or(CommandId::BusinessToBusinessTransfer),
-            amount: self.amount.unwrap_or(10),
-            party_a: self.party_a.unwrap_or(""),
+                .unwrap_or_else(|| CommandId::BusinessToBusinessTransfer),
+            amount: self.amount.unwrap_or_else(|| 10),
+            party_a: self.party_a.unwrap_or_else(|| ""),
             sender_identifier_type: &self
                 .sender_id
-                .unwrap_or(IdentifierTypes::ShortCode)
+                .unwrap_or_else(|| IdentifierTypes::ShortCode)
                 .to_string(),
-            party_b: self.party_b.unwrap_or(""),
+            party_b: self.party_b.unwrap_or_else(|| ""),
             reciever_identifier_type: &self
                 .receiver_id
-                .unwrap_or(IdentifierTypes::ShortCode)
+                .unwrap_or_else(|| IdentifierTypes::ShortCode)
                 .to_string(),
-            remarks: self.remarks.unwrap_or("None"),
-            queue_time_out_url: self.queue_timeout_url.unwrap_or(""),
-            result_url: self.result_url.unwrap_or(""),
-            account_reference: self.account_ref.unwrap_or(""),
+            remarks: self.remarks.unwrap_or_else(|| "None"),
+            queue_time_out_url: self.queue_timeout_url.unwrap_or_else(|| ""),
+            result_url: self.result_url.unwrap_or_else(|| ""),
+            account_reference: self.account_ref.unwrap_or_else(|| ""),
         };
 
         let response = self

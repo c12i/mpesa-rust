@@ -5,6 +5,10 @@ use chrono::prelude::Local;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
+/// [test credentials](https://developer.safaricom.co.ke/test_credentials)
+static DEFAULT_PASSKEY: &'static str =
+    "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
+
 #[derive(Debug, Serialize)]
 struct MpesaExpressRequestPayload<'a> {
     #[serde(rename(serialize = "BusinessShortCode"))]
@@ -86,7 +90,7 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
         if let Some(key) = self.pass_key {
             return key;
         }
-        "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
+        DEFAULT_PASSKEY
     }
 
     /// Utility method to generate base64 encoded password as per Safaricom's [specifications](https://developer.safaricom.co.ke/docs#lipa-na-m-pesa-online-payment)
@@ -202,16 +206,18 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
             business_short_code: self.business_short_code,
             password: &password,
             timestamp: &timestamp,
-            amount: self.amount.unwrap_or(10),
-            party_a: self.party_a.unwrap_or(self.phone_number.unwrap_or("None")),
-            party_b: self.party_b.unwrap_or(self.business_short_code),
-            phone_number: self.phone_number.unwrap_or("None"),
-            call_back_url: self.callback_url.unwrap_or("None"),
-            account_reference: self.account_ref.unwrap_or("None"),
+            amount: self.amount.unwrap_or_else(|| 10),
+            party_a: self
+                .party_a
+                .unwrap_or_else(|| self.phone_number.unwrap_or_else(|| "None")),
+            party_b: self.party_b.unwrap_or_else(|| self.business_short_code),
+            phone_number: self.phone_number.unwrap_or_else(|| "None"),
+            call_back_url: self.callback_url.unwrap_or_else(|| "None"),
+            account_reference: self.account_ref.unwrap_or_else(|| "None"),
             transaction_type: self
                 .transaction_type
-                .unwrap_or(CommandId::CustomerPayBillOnline),
-            transaction_desc: self.transaction_desc.unwrap_or("None"),
+                .unwrap_or_else(|| CommandId::CustomerPayBillOnline),
+            transaction_desc: self.transaction_desc.unwrap_or_else(|| "None"),
         };
 
         let response = self
