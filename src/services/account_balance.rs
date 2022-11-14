@@ -13,16 +13,16 @@ struct AccountBalancePayload<'a> {
     security_credential: &'a str,
     #[serde(rename(serialize = "CommandID"))]
     command_id: CommandId,
-    #[serde(rename(serialize = "PartyA"))]
-    party_a: &'a str,
+    #[serde(rename(serialize = "PartyA"), skip_serializing_if = "Option::is_none")]
+    party_a: Option<&'a str>,
     #[serde(rename(serialize = "IdentifierType"))]
     identifier_type: &'a str,
     #[serde(rename(serialize = "Remarks"))]
     remarks: &'a str,
-    #[serde(rename(serialize = "QueueTimeOutURL"))]
-    queue_time_out_url: &'a str,
-    #[serde(rename(serialize = "ResultURL"))]
-    result_url: &'a str,
+    #[serde(rename(serialize = "QueueTimeOutURL"), skip_serializing_if = "Option::is_none")]
+    queue_time_out_url: Option<&'a str>,
+    #[serde(rename(serialize = "ResultURL"), skip_serializing_if = "Option::is_none")]
+    result_url: Option<&'a str>,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -151,15 +151,15 @@ impl<'a> AccountBalanceBuilder<'a> {
 
         let payload = AccountBalancePayload {
             command_id: self.command_id.unwrap_or_else(|| CommandId::AccountBalance),
-            party_a: self.party_a.unwrap_or_else(|| "None"),
+            party_a: self.party_a,
             identifier_type: &self
                 .identifier_type
                 .unwrap_or_else(|| IdentifierTypes::ShortCode)
                 .to_string(),
             remarks: self.remarks.unwrap_or_else(|| "None"),
             initiator: self.initiator_name,
-            queue_time_out_url: self.queue_timeout_url.unwrap_or_else(|| "None"),
-            result_url: self.result_url.unwrap_or_else(|| "None"),
+            queue_time_out_url: self.queue_timeout_url,
+            result_url: self.result_url,
             security_credential: &credentials,
         };
 
@@ -169,8 +169,7 @@ impl<'a> AccountBalanceBuilder<'a> {
             .post(&url)
             .bearer_auth(self.client.auth()?)
             .json(&payload)
-            .send()?
-            .error_for_status()?;
+            .send()?;
 
         if response.status().is_success() {
             let value: AccountBalanceResponse = response.json()?;

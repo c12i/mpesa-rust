@@ -14,18 +14,18 @@ struct B2cPayload<'a> {
     command_id: CommandId,
     #[serde(rename(serialize = "Amount"))]
     amount: u32,
-    #[serde(rename(serialize = "PartyA"))]
-    party_a: &'a str,
-    #[serde(rename(serialize = "PartyB"))]
-    party_b: &'a str,
+    #[serde(rename(serialize = "PartyA"), skip_serializing_if = "Option::is_none")]
+    party_a: Option<&'a str>,
+    #[serde(rename(serialize = "PartyB"), skip_serializing_if = "Option::is_none")]
+    party_b: Option<&'a str>,
     #[serde(rename(serialize = "Remarks"))]
     remarks: &'a str,
-    #[serde(rename(serialize = "QueueTimeOutURL"))]
-    queue_time_out_url: &'a str,
-    #[serde(rename(serialize = "ResultURL"))]
-    result_url: &'a str,
-    #[serde(rename(serialize = "Occasion"))]
-    occasion: &'a str,
+    #[serde(rename(serialize = "QueueTimeOutURL"), skip_serializing_if = "Option::is_none")]
+    queue_time_out_url: Option<&'a str>,
+    #[serde(rename(serialize = "ResultURL"), skip_serializing_if = "Option::is_none")]
+    result_url: Option<&'a str>,
+    #[serde(rename(serialize = "Occasion"), skip_serializing_if = "Option::is_none")]
+    occasion: Option<&'a str>,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -189,13 +189,13 @@ impl<'a> B2cBuilder<'a> {
             command_id: self
                 .command_id
                 .unwrap_or_else(|| CommandId::BusinessPayment),
-            amount: self.amount.unwrap_or_else(|| 10),
-            party_a: self.party_a.unwrap_or_else(|| "None"),
-            party_b: self.party_b.unwrap_or_else(|| "None"),
+            amount: self.amount.unwrap_or_default(),
+            party_a: self.party_a,
+            party_b: self.party_b,
             remarks: self.remarks.unwrap_or_else(|| "None"),
-            queue_time_out_url: self.queue_timeout_url.unwrap_or_else(|| "None"),
-            result_url: self.result_url.unwrap_or_else(|| "None"),
-            occasion: self.occasion.unwrap_or_else(|| "None"),
+            queue_time_out_url: self.queue_timeout_url,
+            result_url: self.result_url,
+            occasion: self.occasion,
         };
 
         let response = self

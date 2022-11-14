@@ -9,6 +9,8 @@ use reqwest::blocking::Client;
 use serde_json::Value;
 use std::cell::RefCell;
 
+static DEFAULT_INITIATOR_PASSWORD: &'static str = "Safcom496!";
+
 /// `Result` enum type alias
 pub type MpesaResult<T> = Result<T, MpesaError>;
 
@@ -59,7 +61,7 @@ impl<'a> Mpesa {
         if let Some(p) = &*self.initiator_password.borrow() {
             return p.to_owned();
         }
-        "Safcom496!".to_owned()
+        DEFAULT_INITIATOR_PASSWORD.to_owned()
     }
 
     /// Optional in development but required for production, you will need to call this method and set your production initiator password.
@@ -190,6 +192,7 @@ impl<'a> Mpesa {
     ///    .send();
     /// ```
     #[cfg(feature = "c2b_register")]
+    #[deprecated]
     pub fn c2b_register(&'a self) -> C2bRegisterBuilder<'a> {
         C2bRegisterBuilder::new(self)
     }

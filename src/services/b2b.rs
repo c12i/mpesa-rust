@@ -15,22 +15,22 @@ struct B2bPayload<'a> {
     command_id: CommandId,
     #[serde(rename(serialize = "Amount"))]
     amount: u32,
-    #[serde(rename(serialize = "PartyA"))]
-    party_a: &'a str,
+    #[serde(rename(serialize = "PartyA"), skip_serializing_if = "Option::is_none")]
+    party_a: Option<&'a str>,
     #[serde(rename(serialize = "SenderIdentifierType"))]
     sender_identifier_type: &'a str,
-    #[serde(rename(serialize = "PartyB"))]
-    party_b: &'a str,
+    #[serde(rename(serialize = "PartyB"), skip_serializing_if = "Option::is_none")]
+    party_b: Option<&'a str>,
     #[serde(rename(serialize = "RecieverIdentifierType"))]
     reciever_identifier_type: &'a str,
     #[serde(rename(serialize = "Remarks"))]
     remarks: &'a str,
-    #[serde(rename(serialize = "QueueTimeOutURL"))]
-    queue_time_out_url: &'a str,
-    #[serde(rename(serialize = "ResultURL"))]
-    result_url: &'a str,
-    #[serde(rename(serialize = "AccountReference"))]
-    account_reference: &'a str,
+    #[serde(rename(serialize = "QueueTimeOutURL"), skip_serializing_if = "Option::is_none")]
+    queue_time_out_url: Option<&'a str>,
+    #[serde(rename(serialize = "ResultURL"), skip_serializing_if = "Option::is_none")]
+    result_url: Option<&'a str>,
+    #[serde(rename(serialize = "AccountReference"), skip_serializing_if = "Option::is_none")]
+    account_reference: Option<&'a str>,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -213,21 +213,22 @@ impl<'a> B2bBuilder<'a> {
             command_id: self
                 .command_id
                 .unwrap_or_else(|| CommandId::BusinessToBusinessTransfer),
-            amount: self.amount.unwrap_or_else(|| 10),
-            party_a: self.party_a.unwrap_or_else(|| ""),
+            // TODO: Can this be improved?
+            amount: self.amount.unwrap_or_default(),
+            party_a: self.party_a,
             sender_identifier_type: &self
                 .sender_id
                 .unwrap_or_else(|| IdentifierTypes::ShortCode)
                 .to_string(),
-            party_b: self.party_b.unwrap_or_else(|| ""),
+            party_b: self.party_b,
             reciever_identifier_type: &self
                 .receiver_id
                 .unwrap_or_else(|| IdentifierTypes::ShortCode)
                 .to_string(),
             remarks: self.remarks.unwrap_or_else(|| "None"),
-            queue_time_out_url: self.queue_timeout_url.unwrap_or_else(|| ""),
-            result_url: self.result_url.unwrap_or_else(|| ""),
-            account_reference: self.account_ref.unwrap_or_else(|| ""),
+            queue_time_out_url: self.queue_timeout_url,
+            result_url: self.result_url,
+            account_reference: self.account_ref,
         };
 
         let response = self
@@ -236,8 +237,7 @@ impl<'a> B2bBuilder<'a> {
             .post(&url)
             .bearer_auth(self.client.auth()?)
             .json(&payload)
-            .send()?
-            .error_for_status()?;
+            .send()?;
 
         if response.status().is_success() {
             let value: B2bResponse = response.json()?;

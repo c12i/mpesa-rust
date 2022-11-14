@@ -21,14 +21,14 @@ struct MpesaExpressRequestPayload<'a> {
     transaction_type: CommandId,
     #[serde(rename(serialize = "Amount"))]
     amount: u32,
-    #[serde(rename(serialize = "PartyA"))]
-    party_a: &'a str,
-    #[serde(rename(serialize = "PartyB"))]
-    party_b: &'a str,
-    #[serde(rename(serialize = "PhoneNumber"))]
-    phone_number: &'a str,
-    #[serde(rename(serialize = "CallBackURL"))]
-    call_back_url: &'a str,
+    #[serde(rename(serialize = "PartyA"), skip_serializing_if = "Option::is_none")]
+    party_a: Option<&'a str>,
+    #[serde(rename(serialize = "PartyB"), skip_serializing_if = "Option::is_none")]
+    party_b: Option<&'a str>,
+    #[serde(rename(serialize = "PhoneNumber"), skip_serializing_if = "Option::is_none")]
+    phone_number: Option<&'a str>,
+    #[serde(rename(serialize = "CallBackURL"), skip_serializing_if = "Option::is_none")]
+    call_back_url: Option<&'a str>,
     #[serde(rename(serialize = "AccountReference"))]
     account_reference: &'a str,
     #[serde(rename(serialize = "TransactionDesc"))]
@@ -206,13 +206,11 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
             business_short_code: self.business_short_code,
             password: &password,
             timestamp: &timestamp,
-            amount: self.amount.unwrap_or_else(|| 10),
-            party_a: self
-                .party_a
-                .unwrap_or_else(|| self.phone_number.unwrap_or_else(|| "None")),
-            party_b: self.party_b.unwrap_or_else(|| self.business_short_code),
-            phone_number: self.phone_number.unwrap_or_else(|| "None"),
-            call_back_url: self.callback_url.unwrap_or_else(|| "None"),
+            amount: self.amount.unwrap_or_default(),
+            party_a: if self.party_a.is_some() {self.party_a} else {self.phone_number},
+            party_b: if self.party_b.is_some() {self.party_b} else {Some(self.business_short_code)},
+            phone_number: self.phone_number,
+            call_back_url: self.callback_url,
             account_reference: self.account_ref.unwrap_or_else(|| "None"),
             transaction_type: self
                 .transaction_type
@@ -226,8 +224,7 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
             .post(&url)
             .bearer_auth(self.client.auth()?)
             .json(&payload)
-            .send()?
-            .error_for_status()?;
+            .send()?;
 
         if response.status().is_success() {
             let value: MpesaExpressRequestResponse = response.json()?;

@@ -12,17 +12,17 @@ struct C2bSimulatePayload<'a> {
     command_id: CommandId,
     #[serde(rename(serialize = "Amount"))]
     amount: u32,
-    #[serde(rename(serialize = "Msisdn"))]
-    msisdn: &'a str,
-    #[serde(rename(serialize = "BillRefNumber"))]
-    bill_ref_number: &'a str,
-    #[serde(rename(serialize = "ShortCode"))]
-    short_code: &'a str,
+    #[serde(rename(serialize = "Msisdn"), skip_serializing_if = "Option::is_none")]
+    msisdn: Option<&'a str>,
+    #[serde(rename(serialize = "BillRefNumber"), skip_serializing_if = "Option::is_none")]
+    bill_ref_number: Option<&'a str>,
+    #[serde(rename(serialize = "ShortCode"), skip_serializing_if = "Option::is_none")]
+    short_code: Option<&'a str>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct C2bSimulateResponse {
-    #[serde(rename(deserialize = "ConversationID"), skip_serializing_if = "None")]
+    #[serde(rename(deserialize = "ConversationID"), skip_serializing_if = "Option::is_none")]
     pub conversation_id: Option<String>,
     #[serde(rename(deserialize = "OriginatorCoversationID"))]
     pub originator_coversation_id: String,
@@ -116,9 +116,9 @@ impl<'a> C2bSimulateBuilder<'a> {
         let payload = C2bSimulatePayload {
             command_id: self.command_id.unwrap_or(CommandId::CustomerPayBillOnline),
             amount: self.amount.unwrap_or_else(|| 10),
-            msisdn: self.msisdn.unwrap_or_else(|| "None"),
-            bill_ref_number: self.bill_ref_number.unwrap_or_else(|| "None"),
-            short_code: self.short_code.unwrap_or_else(|| "None"),
+            msisdn: self.msisdn,
+            bill_ref_number: self.bill_ref_number,
+            short_code: self.short_code,
         };
 
         let response = self
