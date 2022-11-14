@@ -7,9 +7,6 @@
   <a href="https://docs.rs/mpesa" target="_blank">
     <img alt="Documentation" src="https://docs.rs/mpesa/badge.svg" />
   </a>
-  <a href="https://travis-ci.com/collinsmuriuki/mpesa-rust" target="_blank">
-      <img alt="mpesa travis-ci" src="https://travis-ci.com/collinsmuriuki/mpesa-rust.svg?branch=master" />
-   </a>
   <a href="LICENSE" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
   </a>
@@ -198,5 +195,5 @@ More will be added progressively, pull requests welcome
 
 Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/collinsmuriuki/mpesa-rust/issues). You can also take a look at the [contributing guide](CONTRIBUTING.md).
 
-Copyright © 2021 [Collins Muriuki](https://github.com/collinsmuriuki).<br />
+Copyright © 2022 [Collins Muriuki](https://github.com/collinsmuriuki).<br />
 This project is [MIT](LICENSE) licensed.
