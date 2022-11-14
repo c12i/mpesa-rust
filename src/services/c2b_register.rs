@@ -118,8 +118,7 @@ impl<'a> C2bRegisterBuilder<'a> {
             .post(&url)
             .bearer_auth(self.client.auth()?)
             .json(&payload)
-            .send()?
-            .error_for_status()?;
+            .send()?;
 
         if response.status().is_success() {
             let value: C2bRegisterResponse = response.json()?;

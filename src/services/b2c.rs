@@ -214,8 +214,7 @@ impl<'a> B2cBuilder<'a> {
             .post(&url)
             .bearer_auth(self.client.auth()?)
             .json(&payload)
-            .send()?
-            .error_for_status()?;
+            .send()?;
 
         if response.status().is_success() {
             let value: B2cResponse = response.json()?;
