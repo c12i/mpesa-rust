@@ -71,10 +71,8 @@ impl<'a> C2bSimulateBuilder<'a> {
         self
     }
 
-    /// Adds the amount being transacted. This is a required field
-    ///
-    /// # Errors
-    /// If invalid amount, less than 10?
+    /// Adds an `amount` to the request
+    /// This is a required field
     pub fn amount(mut self, amount: u32) -> C2bSimulateBuilder<'a> {
         self.amount = Some(amount);
         self

@@ -125,10 +125,8 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
         self
     }
 
-    /// Amount to be transacted
-    ///
-    /// # Errors
-    /// If `amount` is invalid
+    /// Adds an `amount` to the request
+    /// This is a required field
     pub fn amount(mut self, amount: u32) -> MpesaExpressRequestBuilder<'a> {
         self.amount = Some(amount);
         self
