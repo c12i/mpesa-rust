@@ -6,8 +6,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 /// [test credentials](https://developer.safaricom.co.ke/test_credentials)
-static DEFAULT_PASSKEY: &'static str =
-    "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
+static DEFAULT_PASSKEY: &str = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
 
 #[derive(Debug, Serialize)]
 struct MpesaExpressRequestPayload<'a> {
@@ -25,9 +24,15 @@ struct MpesaExpressRequestPayload<'a> {
     party_a: Option<&'a str>,
     #[serde(rename(serialize = "PartyB"), skip_serializing_if = "Option::is_none")]
     party_b: Option<&'a str>,
-    #[serde(rename(serialize = "PhoneNumber"), skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename(serialize = "PhoneNumber"),
+        skip_serializing_if = "Option::is_none"
+    )]
     phone_number: Option<&'a str>,
-    #[serde(rename(serialize = "CallBackURL"), skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename(serialize = "CallBackURL"),
+        skip_serializing_if = "Option::is_none"
+    )]
     call_back_url: Option<&'a str>,
     #[serde(rename(serialize = "AccountReference"))]
     account_reference: &'a str,
@@ -207,8 +212,16 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
             password: &password,
             timestamp: &timestamp,
             amount: self.amount.unwrap_or_default(),
-            party_a: if self.party_a.is_some() {self.party_a} else {self.phone_number},
-            party_b: if self.party_b.is_some() {self.party_b} else {Some(self.business_short_code)},
+            party_a: if self.party_a.is_some() {
+                self.party_a
+            } else {
+                self.phone_number
+            },
+            party_b: if self.party_b.is_some() {
+                self.party_b
+            } else {
+                Some(self.business_short_code)
+            },
             phone_number: self.phone_number,
             call_back_url: self.callback_url,
             account_reference: self.account_ref.unwrap_or_else(|| "None"),

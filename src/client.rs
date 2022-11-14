@@ -9,7 +9,7 @@ use reqwest::blocking::Client;
 use serde_json::Value;
 use std::cell::RefCell;
 
-static DEFAULT_INITIATOR_PASSWORD: &'static str = "Safcom496!";
+static DEFAULT_INITIATOR_PASSWORD: &str = "Safcom496!";
 
 /// `Result` enum type alias
 pub type MpesaResult<T> = Result<T, MpesaError>;

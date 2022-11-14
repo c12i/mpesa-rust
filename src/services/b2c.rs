@@ -20,11 +20,20 @@ struct B2cPayload<'a> {
     party_b: Option<&'a str>,
     #[serde(rename(serialize = "Remarks"))]
     remarks: &'a str,
-    #[serde(rename(serialize = "QueueTimeOutURL"), skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename(serialize = "QueueTimeOutURL"),
+        skip_serializing_if = "Option::is_none"
+    )]
     queue_time_out_url: Option<&'a str>,
-    #[serde(rename(serialize = "ResultURL"), skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename(serialize = "ResultURL"),
+        skip_serializing_if = "Option::is_none"
+    )]
     result_url: Option<&'a str>,
-    #[serde(rename(serialize = "Occasion"), skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename(serialize = "Occasion"),
+        skip_serializing_if = "Option::is_none"
+    )]
     occasion: Option<&'a str>,
 }
 

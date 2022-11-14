@@ -19,9 +19,15 @@ struct AccountBalancePayload<'a> {
     identifier_type: &'a str,
     #[serde(rename(serialize = "Remarks"))]
     remarks: &'a str,
-    #[serde(rename(serialize = "QueueTimeOutURL"), skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename(serialize = "QueueTimeOutURL"),
+        skip_serializing_if = "Option::is_none"
+    )]
     queue_time_out_url: Option<&'a str>,
-    #[serde(rename(serialize = "ResultURL"), skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename(serialize = "ResultURL"),
+        skip_serializing_if = "Option::is_none"
+    )]
     result_url: Option<&'a str>,
 }
 

@@ -14,15 +14,24 @@ struct C2bSimulatePayload<'a> {
     amount: u32,
     #[serde(rename(serialize = "Msisdn"), skip_serializing_if = "Option::is_none")]
     msisdn: Option<&'a str>,
-    #[serde(rename(serialize = "BillRefNumber"), skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename(serialize = "BillRefNumber"),
+        skip_serializing_if = "Option::is_none"
+    )]
     bill_ref_number: Option<&'a str>,
-    #[serde(rename(serialize = "ShortCode"), skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename(serialize = "ShortCode"),
+        skip_serializing_if = "Option::is_none"
+    )]
     short_code: Option<&'a str>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct C2bSimulateResponse {
-    #[serde(rename(deserialize = "ConversationID"), skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename(deserialize = "ConversationID"),
+        skip_serializing_if = "Option::is_none"
+    )]
     pub conversation_id: Option<String>,
     #[serde(rename(deserialize = "OriginatorCoversationID"))]
     pub originator_coversation_id: String,
