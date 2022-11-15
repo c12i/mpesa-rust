@@ -43,6 +43,7 @@ impl Display for IdentifierTypes {
     }
 }
 
+/// TODO: Enable deserializing of json numbers/ strings to `MpesaResponseCode`
 /// M-pesa result and response codes
 #[derive(Debug, Copy, Clone, Deserialize_repr)]
 #[repr(u16)]
