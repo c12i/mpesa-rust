@@ -18,7 +18,9 @@ use std::{convert::TryFrom, str::FromStr};
 /// and the base url
 /// Required to construct a new `Mpesa` struct
 pub enum Environment {
+    /// Production environment
     Production,
+    /// Sandbox environment: for testing and development purposes
     Sandbox,
 }
 
@@ -59,7 +61,7 @@ impl TryFrom<String> for Environment {
 }
 
 impl Environment {
-    /// Matches to intended base_url depending on Environment variant
+    /// Matches to base_url based on `Environment` variant
     pub(crate) fn base_url(&self) -> &str {
         match self {
             Environment::Production => "https://api.safaricom.co.ke",
@@ -67,8 +69,8 @@ impl Environment {
         }
     }
 
-    /// Match to X509 public key certificate based on environment
-    pub fn get_certificate(&self) -> &str {
+    /// Match to X509 public key certificate based on `Environment`
+    pub(crate) fn get_certificate(&self) -> &str {
         match self {
             Environment::Production => {
                 r#"-----BEGIN CERTIFICATE-----
