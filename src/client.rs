@@ -11,6 +11,7 @@ use reqwest::blocking::Client;
 use serde_json::Value;
 use std::cell::RefCell;
 
+/// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
 static DEFAULT_INITIATOR_PASSWORD: &str = "Safcom496!";
 
 /// `Result` enum type alias

@@ -5,7 +5,7 @@ use chrono::prelude::Local;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-/// [test credentials](https://developer.safaricom.co.ke/test_credentials)
+/// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
 static DEFAULT_PASSKEY: &str = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
 
 #[derive(Debug, Serialize)]
