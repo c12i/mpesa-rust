@@ -24,7 +24,7 @@ pub enum Environment {
     Sandbox,
 }
 
-macro_rules! derive_environment {
+macro_rules! environment_from_string {
     ($v:expr) => {
         match $v {
             "production" | "Production" | "PRODUCTION" => Ok(Self::Production),
@@ -40,7 +40,7 @@ impl FromStr for Environment {
     type Err = MpesaError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        derive_environment!(s)
+        environment_from_string!(s)
     }
 }
 
@@ -48,7 +48,7 @@ impl TryFrom<&str> for Environment {
     type Error = MpesaError;
 
     fn try_from(v: &str) -> Result<Self, Self::Error> {
-        derive_environment!(v)
+        environment_from_string!(v)
     }
 }
 
@@ -56,7 +56,7 @@ impl TryFrom<String> for Environment {
     type Error = MpesaError;
 
     fn try_from(v: String) -> Result<Self, Self::Error> {
-        derive_environment!(v.as_str())
+        environment_from_string!(v.as_str())
     }
 }
 
