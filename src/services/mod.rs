@@ -11,9 +11,6 @@
 //! 4. [C2B Register](https://developer.safaricom.co.ke/docs?shell#c2b-api)
 //! 5. [C2B Simulate](https://developer.safaricom.co.ke/docs#account-balance-api)
 //! 6. [Mpesa Express/ STK Push](https://developer.safaricom.co.ke/docs#lipa-na-m-pesa-online-payment)
-//!
-//! Also worth noting I am using `reqwest::blocking::Client` to make http requests. Research ongoing
-//! on how to make this crate async.
 
 mod account_balance;
 mod b2b;
