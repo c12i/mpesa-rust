@@ -97,7 +97,7 @@ mod tests {
             )
         });
         accepted_sandbox_values.into_iter().for_each(|v| {
-            let environment: Environment = v.parse().unwrap();
+            let environment: Environment = v.try_into().unwrap();
             assert_eq!(environment.base_url(), "https://sandbox.safaricom.co.ke");
             assert_eq!(
                 environment.get_certificate(),
