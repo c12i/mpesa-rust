@@ -16,7 +16,7 @@
 //! - `c2b_register`
 //! - `c2b_simulate`
 //! - `express_request`
-//! 
+//!
 //! Example:
 //!
 //! ```toml
@@ -277,7 +277,7 @@
 //! }
 //! ```
 //! More will be added progressively, pull requests welcome
-//! 
+//!
 //!## Author
 //!
 //! **Collins Muriuki**
