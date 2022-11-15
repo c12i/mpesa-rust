@@ -61,7 +61,7 @@ let client = Mpesa::new(
       Environment::Sandbox,
 );
 
-assert!(client.is_connected())
+assert!(client.is_connected().await)
 ```
 
 Since the `Environment` enum implements `FromStr` and `TryFrom`, you can pass the name of the environment as a `&str` and call the `parse()` or `try_into()`
@@ -76,7 +76,7 @@ let client = Mpesa::new(
       env::var("CLIENT_SECRET")?,
       "sandbox".parse()?, // "production"
 );
-assert!(client.is_connected())
+assert!(client.is_connected().await)
 ```
 
 If you intend to use in production, you will need to call a the `set_initiator_password` method from `Mpesa` after initially
@@ -94,7 +94,7 @@ let client = Mpesa::new(
 
 client.set_initiator_password("new_password");
 
-assert!(client.is_connected())
+assert!(client.is_connected().await)
 ```
 
 ### Services
@@ -111,7 +111,8 @@ let response = client
     .result_url("https://testdomain.com/ok")
     .timeout_url("https://testdomain.com/err")
     .amount(1000)
-    .send();
+    .send()
+    .await;
 assert!(response.is_ok())
 ```
 
@@ -126,7 +127,8 @@ let response = client
     .timeout_url("https://testdomain.com/err")
     .account_ref("254708374149")
     .amount(1000)
-    .send();
+    .send()
+    .await;
 assert!(response.is_ok())
 ```
 
@@ -138,7 +140,8 @@ let response = client
     .short_code("600496")
     .confirmation_url("https://testdomain.com/true")
     .validation_url("https://testdomain.com/valid")
-    .send();
+    .send()
+    .await;
 assert!(response.is_ok())
 ```
 
@@ -151,7 +154,8 @@ let response = client
     .short_code("600496")
     .msisdn("254700000000")
     .amount(1000)
-    .send();
+    .send()
+    .await;
 assert!(response.is_ok())
 ```
 
@@ -163,7 +167,8 @@ let response = client
     .result_url("https://testdomain.com/ok")
     .timeout_url("https://testdomain.com/err")
     .party_a("600496")
-    .send();
+    .send()
+    .await;
 assert!(response.is_ok())
 ```
 
@@ -175,7 +180,8 @@ let response = client
     .phone_number("254708374149")
     .amount(500)
     .callback_url("https://test.example.com/api")
-    .send();
+    .send()
+    .await;
 assert!(response.is_ok())
 ```
 

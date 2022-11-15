@@ -184,7 +184,7 @@ impl<'a> B2cBuilder<'a> {
     /// # Errors
     /// Returns a `MpesaError` on failure.
     #[allow(clippy::unnecessary_lazy_evaluations)]
-    pub fn send(self) -> MpesaResult<B2cResponse> {
+    pub async fn send(self) -> MpesaResult<B2cResponse> {
         let url = format!(
             "{}/mpesa/b2c/v1/paymentrequest",
             self.client.environment().base_url()
@@ -210,16 +210,17 @@ impl<'a> B2cBuilder<'a> {
             .client
             .http_client
             .post(&url)
-            .bearer_auth(self.client.auth()?)
+            .bearer_auth(self.client.auth().await?)
             .json(&payload)
-            .send()?;
+            .send()
+            .await?;
 
         if response.status().is_success() {
-            let value: B2cResponse = response.json()?;
+            let value: B2cResponse = response.json().await?;
             return Ok(value);
         }
 
-        let value: Value = response.json()?;
+        let value: Value = response.json().await?;
         Err(MpesaError::B2cError(value))
     }
 }

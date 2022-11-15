@@ -200,7 +200,7 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
     /// Returns a `MpesaError` on failure
     #[allow(clippy::or_fun_call)]
     #[allow(clippy::unnecessary_lazy_evaluations)]
-    pub fn send(self) -> MpesaResult<MpesaExpressRequestResponse> {
+    pub async fn send(self) -> MpesaResult<MpesaExpressRequestResponse> {
         let url = format!(
             "{}/mpesa/stkpush/v1/processrequest",
             self.client.environment().base_url()
@@ -236,16 +236,17 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
             .client
             .http_client
             .post(&url)
-            .bearer_auth(self.client.auth()?)
+            .bearer_auth(self.client.auth().await?)
             .json(&payload)
-            .send()?;
+            .send()
+            .await?;
 
         if response.status().is_success() {
-            let value: MpesaExpressRequestResponse = response.json()?;
+            let value: MpesaExpressRequestResponse = response.json().await?;
             return Ok(value);
         }
 
-        let value: Value = response.json()?;
+        let value: Value = response.json().await?;
         Err(MpesaError::MpesaExpressRequestError(value))
     }
 }

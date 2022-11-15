@@ -2,8 +2,8 @@ use dotenv;
 use mpesa::{Mpesa, Sandbox};
 use std::env;
 
-#[test]
-fn account_balance_test() {
+#[tokio::test]
+async fn account_balance_test() {
     dotenv::dotenv().ok();
 
     let client = Mpesa::new(
@@ -17,7 +17,8 @@ fn account_balance_test() {
         .result_url("https://testdomain.com/ok")
         .timeout_url("https://testdomain.com/err")
         .party_a("600496")
-        .send();
+        .send()
+        .await;
 
     assert!(response.is_ok())
 }

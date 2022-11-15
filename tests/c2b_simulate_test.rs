@@ -2,8 +2,8 @@ use dotenv;
 use mpesa::{Environment, Mpesa};
 use std::env;
 
-#[test]
-fn c2b_simulate_test() {
+#[tokio::test]
+async fn c2b_simulate_test() {
     dotenv::dotenv().ok();
 
     let client = Mpesa::new(
@@ -17,7 +17,8 @@ fn c2b_simulate_test() {
         .short_code("600496")
         .msisdn("254700000000")
         .amount(1000)
-        .send();
+        .send()
+        .await;
 
     assert!(response.is_ok())
 }

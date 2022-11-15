@@ -2,8 +2,8 @@ use dotenv;
 use mpesa::{Environment, Mpesa};
 use std::env;
 
-#[test]
-fn b2c_test() {
+#[tokio::test]
+async fn b2c_test() {
     dotenv::dotenv().ok();
 
     let client = Mpesa::new(
@@ -19,7 +19,8 @@ fn b2c_test() {
         .result_url("https://testdomain.com/ok")
         .timeout_url("https://testdomain.com/err")
         .amount(1000)
-        .send();
+        .send()
+        .await;
 
     assert!(response.is_ok())
 }

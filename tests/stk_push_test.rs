@@ -2,8 +2,8 @@ use dotenv;
 use mpesa::Mpesa;
 use std::env;
 
-#[test]
-fn stk_push_test() {
+#[tokio::test]
+async fn stk_push_test() {
     dotenv::dotenv().ok();
 
     let client = Mpesa::new(
@@ -17,7 +17,8 @@ fn stk_push_test() {
         .phone_number("254708374149")
         .amount(500)
         .callback_url("https://test.example.com/api")
-        .send();
+        .send()
+        .await;
 
     assert!(response.is_ok())
 }

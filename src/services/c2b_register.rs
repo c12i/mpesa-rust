@@ -99,7 +99,7 @@ impl<'a> C2bRegisterBuilder<'a> {
     /// # Errors
     /// Returns a `MpesaError` on failure
     #[allow(clippy::unnecessary_lazy_evaluations)]
-    pub fn send(self) -> MpesaResult<C2bRegisterResponse> {
+    pub async fn send(self) -> MpesaResult<C2bRegisterResponse> {
         let url = format!(
             "{}/mpesa/c2b/v1/registerurl",
             self.client.environment().base_url()
@@ -118,16 +118,17 @@ impl<'a> C2bRegisterBuilder<'a> {
             .client
             .http_client
             .post(&url)
-            .bearer_auth(self.client.auth()?)
+            .bearer_auth(self.client.auth().await?)
             .json(&payload)
-            .send()?;
+            .send()
+            .await?;
 
         if response.status().is_success() {
-            let value: C2bRegisterResponse = response.json()?;
+            let value: C2bRegisterResponse = response.json().await?;
             return Ok(value);
         }
 
-        let value: Value = response.json()?;
+        let value: Value = response.json().await?;
         Err(MpesaError::C2bRegisterError(value))
     }
 }

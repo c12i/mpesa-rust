@@ -28,6 +28,7 @@ features = ["derive"]
 
 [dev-dependencies]
 dotenv = "0.15"
+tokio = {version = "1", features = ["rt", "macros"]}
 
 [features]
 default = ["b2b", "b2c" ,"account_balance", "c2b_register", "c2b_simulate", "express_request"]

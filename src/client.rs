@@ -7,7 +7,7 @@ use super::services::{
 };
 use openssl::rsa::Padding;
 use openssl::x509::X509;
-use reqwest::blocking::Client;
+use reqwest::Client;
 use serde_json::Value;
 use std::cell::RefCell;
 
@@ -40,7 +40,7 @@ impl<'a> Mpesa {
     /// ```
     pub fn new(client_key: String, client_secret: String, environment: Environment) -> Self {
         let http_client = Client::builder()
-            .connect_timeout(std::time::Duration::from_millis(10000))
+            .connect_timeout(std::time::Duration::from_millis(10_000))
             .build()
             // TODO: Potentialy return a `Result` enum from Mpesa::new?
             .expect("Error building http client");
@@ -85,8 +85,8 @@ impl<'a> Mpesa {
     }
 
     /// Checks if the client can be authenticated
-    pub fn is_connected(&self) -> bool {
-        self.auth().is_ok()
+    pub async fn is_connected(&self) -> bool {
+        self.auth().await.is_ok()
     }
 
     /// **Safaricom Oauth**
@@ -102,7 +102,7 @@ impl<'a> Mpesa {
     /// # Errors
     /// Returns a `MpesaError` on failure
     #[allow(clippy::single_char_pattern)]
-    pub(crate) fn auth(&self) -> MpesaResult<String> {
+    pub(crate) async fn auth(&self) -> MpesaResult<String> {
         let url = format!(
             "{}/oauth/v1/generate?grant_type=client_credentials",
             self.environment.base_url()
@@ -111,12 +111,13 @@ impl<'a> Mpesa {
             .http_client
             .get(&url)
             .basic_auth(&self.client_key, Some(&self.client_secret))
-            .send()?;
+            .send()
+            .await?;
         if resp.status().is_success() {
             // TODO: Needs custom return type: currently not casting the response to a custom type
             //       hence why we need strip out double quotes `"` from the deserialized value
             //       example: "value" -> value
-            let value: Value = resp.json()?;
+            let value: Value = resp.json().await?;
             return Ok(value["access_token"].to_string().replace('\"', ""));
         }
         Err(MpesaError::Message(
