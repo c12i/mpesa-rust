@@ -9,7 +9,14 @@
 //! [dependencies]
 //! mpesa = "0.4.2"
 //! ```
-//! Optionally, you can disable default-features, which is basically the entire suite of MPESA APIs to conditionally select from either `["b2b", "b2c" ,"account_balance", "c2b_register", "c2b_simulate", "express_request"]` services.
+//! Optionally, you can disable default-features, which is basically the entire suite of MPESA APIs to conditionally select from either:
+//! - `b2b`
+//! - `b2c`
+//! - `account_balance`
+//! - `c2b_register`
+//! - `c2b_simulate`
+//! - `express_request`
+//! 
 //! Example:
 //!
 //! ```toml
@@ -155,7 +162,7 @@
 //!         .amount(1000)
 //!         .send()
 //!         .await;
-//! assert!(response.is_ok())
+//!     assert!(response.is_ok())
 //! }
 //! ```
 //!
@@ -270,6 +277,7 @@
 //! }
 //! ```
 //! More will be added progressively, pull requests welcome
+//! 
 //!## Author
 //!
 //! **Collins Muriuki**

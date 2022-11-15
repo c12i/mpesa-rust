@@ -22,7 +22,14 @@ An unofficial Rust wrapper around the [Safaricom API](https://developer.safarico
 mpesa = "0.4.2"
 ```
 
-Optionally, you can disable default-features, which is basically the entire suite of MPESA APIs to conditionally select from either `["b2b", "b2c" ,"account_balance", "c2b_register", "c2b_simulate", "express_request"]` services.
+Optionally, you can disable default-features, which is basically the entire suite of MPESA APIs to conditionally select from either:
+- `b2b`
+- `b2c`
+- `account_balance`
+- `c2b_register`
+- `c2b_simulate`
+- `express_request`
+
 Example:
 
 ```toml
