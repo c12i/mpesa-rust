@@ -22,46 +22,53 @@ pub enum Environment {
     Sandbox,
 }
 
+macro_rules! derive_environment {
+    ($v:expr) => {
+        match $v {
+            "production" | "Production" | "PRODUCTION" => Ok(Self::Production),
+            "sandbox" | "Sandbox" | "SANDBOX" => Ok(Self::Sandbox),
+            _ => Err(MpesaError::Message(
+                "Could not parse the provided environment name",
+            )),
+        }
+    };
+}
+
 impl FromStr for Environment {
     type Err = MpesaError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "production" | "Production" | "PRODUCTION" => Ok(Self::Production),
-            "sandbox" | "Sandbox" | "SANDBOX" => Ok(Self::Sandbox),
-            _ => Err(MpesaError::Message(
-                "Could not parse the provided environment name",
-            )),
-        }
+        derive_environment!(s)
     }
 }
 
-impl TryFrom<&'static str> for Environment {
+impl TryFrom<&str> for Environment {
     type Error = MpesaError;
 
-    fn try_from(v: &'static str) -> Result<Self, Self::Error> {
-        match v {
-            "production" | "Production" | "PRODUCTION" => Ok(Self::Production),
-            "sandbox" | "Sandbox" | "SANDBOX" => Ok(Self::Sandbox),
-            _ => Err(MpesaError::Message(
-                "Could not parse the provided environment name",
-            )),
-        }
+    fn try_from(v: &str) -> Result<Self, Self::Error> {
+        derive_environment!(v)
+    }
+}
+
+impl TryFrom<String> for Environment {
+    type Error = MpesaError;
+
+    fn try_from(v: String) -> Result<Self, Self::Error> {
+        derive_environment!(v.as_str())
     }
 }
 
 impl Environment {
     /// Matches to intended base_url depending on Environment variant
-    pub(crate) fn base_url(&self) -> &'static str {
+    pub(crate) fn base_url(&self) -> &str {
         match self {
             Environment::Production => "https://api.safaricom.co.ke",
             Environment::Sandbox => "https://sandbox.safaricom.co.ke",
         }
     }
 
-    /// Match to X509 public key certificate based on
-    /// environment variant
-    pub fn get_certificate(&self) -> &'static str {
+    /// Match to X509 public key certificate based on environment
+    pub fn get_certificate(&self) -> &str {
         match self {
             Environment::Production => {
                 r#"-----BEGIN CERTIFICATE-----
