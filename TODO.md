@@ -5,3 +5,5 @@
 - [x] Clean up `Cargo.toml`: Correctly use Cargo features and declare optional and dev dependencies
 - [ ] Convert library to async and update tests
 - [ ] Migrate to `thiserror` and remove `failure`
+- [ ] Refine tests: test more edge cases
+- [ ] Address security issues in cargo security audit
