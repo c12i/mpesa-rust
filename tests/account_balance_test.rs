@@ -1,5 +1,5 @@
 use dotenv;
-use mpesa::{Environment, Mpesa};
+use mpesa::{Mpesa, Sandbox};
 use std::env;
 
 #[test]
@@ -9,7 +9,7 @@ fn account_balance_test() {
     let client = Mpesa::new(
         env::var("CLIENT_KEY").unwrap(),
         env::var("CLIENT_SECRET").unwrap(),
-        Environment::Sandbox,
+        Sandbox,
     );
 
     let response = client

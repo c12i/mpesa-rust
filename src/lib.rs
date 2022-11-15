@@ -1,4 +1,4 @@
-//!## About
+//!## mpesa-rust
 //!
 //! An unofficial Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs?shell#introduction) for accessing M-Pesa services.
 //!
