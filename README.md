@@ -4,9 +4,6 @@
    <a href="https://crates.io/crates/mpesa" target="_blank">
      <img alt="Version" src="https://img.shields.io/crates/v/mpesa" />
    </a>
-  <a href="https://docs.rs/mpesa" target="_blank">
-    <img alt="Documentation" src="https://docs.rs/mpesa/badge.svg" />
-  </a>
   <a href="LICENSE" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
   </a>
