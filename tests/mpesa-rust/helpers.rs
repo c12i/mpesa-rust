@@ -58,12 +58,7 @@ macro_rules! get_mpesa_client {
         use mpesa::{Environment, Mpesa};
         use std::str::FromStr;
         dotenv::dotenv().ok();
-        let client = Mpesa::new(
-            $client_key,
-            $client_secret,
-            Environment::from_str($environment).unwrap(),
-        );
-
+        let client = Mpesa::new($client_key, $client_secret, $environment);
         client
     }};
 }
@@ -92,7 +87,7 @@ mod tests {
         let client = get_mpesa_client!(
             std::env::var("CLIENT_KEY").unwrap(),
             std::env::var("CLIENT_SECRET").unwrap(),
-            "production"
+            Environment::from_str("production").unwrap()
         );
         assert!(!client.is_connected().await);
     }
