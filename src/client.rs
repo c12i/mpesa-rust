@@ -313,3 +313,22 @@ impl<'a, Env: ApiEnvironment> Mpesa<Env> {
         Ok(base64::encode(buffer))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::Sandbox;
+
+    use super::*;
+
+    #[test]
+    fn test_setting_initator_password() {
+        let client = Mpesa::new(
+            "client_key".to_string(),
+            "client_secret".to_string(),
+            Sandbox,
+        );
+        assert_eq!(client.initiator_password(), DEFAULT_INITIATOR_PASSWORD);
+        client.set_initiator_password("foo_bar");
+        assert_eq!(client.initiator_password(), "foo_bar".to_string());
+    }
+}
