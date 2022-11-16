@@ -106,7 +106,7 @@
 //! The following services are currently available from the `Mpesa` client as methods that return builders:
 //! * B2C
 //! ```rust,no_run
-//! use mpesa::{Mpesa, Environment, MpesaResult, B2cResponse};
+//! use mpesa::{Mpesa, Environment};
 //! use std::env;
 //! use dotenv::dotenv;
 //!
@@ -120,7 +120,7 @@
 //!         Environment::Sandbox
 //!     );
 //!
-//!     let response: MpesaResult<B2cResponse> = client
+//!     let response  = client
 //!         .b2c("testapi496")
 //!         .party_a("600496")
 //!         .party_b("254708374149")
@@ -135,7 +135,7 @@
 //!
 //! * B2B
 //! ```rust,no_run
-//! use mpesa::{Mpesa, Environment, MpesaResult, B2bResponse};
+//! use mpesa::{Mpesa, Environment};
 //! use std::env;
 //! use dotenv::dotenv;
 //!
@@ -149,7 +149,7 @@
 //!         Environment::Sandbox
 //!     );
 //!
-//!     let response: MpesaResult<B2bResponse> = client
+//!     let response = client
 //!         .b2b("testapi496")
 //!         .party_a("600496")
 //!         .party_b("600000")
@@ -165,7 +165,7 @@
 //!
 //! * C2B Register
 //! ```rust,no_run
-//! use mpesa::{Mpesa, Environment, MpesaResult, C2bRegisterResponse};
+//! use mpesa::{Mpesa, Environment};
 //! use serde_json::Value;
 //! use std::env;
 //! use dotenv::dotenv;
@@ -180,7 +180,7 @@
 //!         Environment::Sandbox
 //!     );
 //!
-//!     let response: MpesaResult<C2bRegisterResponse> = client
+//!     let response = client
 //!         .c2b_register()
 //!         .short_code("600496")
 //!         .confirmation_url("https://testdomain.com/true")
@@ -193,7 +193,7 @@
 //!
 //! * C2B Simulate
 //! ```rust,no_run
-//! use mpesa::{Mpesa, Environment, MpesaResult, C2bSimulateResponse};
+//! use mpesa::{Mpesa, Environment};
 //! use std::env;
 //! use dotenv::dotenv;
 //!
@@ -207,7 +207,7 @@
 //!         Environment::Sandbox
 //!     );
 //!
-//!     let response: MpesaResult<C2bSimulateResponse> = client
+//!     let response = client
 //!         .c2b_simulate()
 //!         .short_code("600496")
 //!         .msisdn("254700000000")
@@ -221,7 +221,7 @@
 //! * Account Balance
 //!
 //! ```rust,no_run
-//! use mpesa::{Mpesa, MpesaResult, Environment, AccountBalanceResponse};
+//! use mpesa::{Mpesa, Environment};
 //! use std::env;
 //! use dotenv::dotenv;
 //!
@@ -235,7 +235,7 @@
 //!         Environment::Sandbox
 //!     );
 //!
-//!     let response: MpesaResult<AccountBalanceResponse> = client
+//!     let response = client
 //!         .account_balance("testapi496")
 //!         .result_url("https://testdomain.com/ok")
 //!         .timeout_url("https://testdomain.com/err")
@@ -249,7 +249,7 @@
 //! * Mpesa Express Request / STK push/ Lipa na M-PESA online
 //!
 //! ```ignore
-//! use mpesa::{Mpesa, MpesaResult, Environment, MpesaExpressRequestResponse};
+//! use mpesa::{Mpesa, Environment};
 //! use std::env;
 //! use dotenv::dotenv;
 //!
@@ -263,7 +263,7 @@
 //!         Environment::Sandbox
 //!     );
 //!
-//!     let response: MpesaResult<MpesaExpressRequestResponse> = client
+//!     let response = client
 //!         .express_request("174379")
 //!         .phone_number("254708374149")
 //!         .amount(500)
@@ -296,7 +296,3 @@ pub use constants::{CommandId, IdentifierTypes, ResponseType};
 pub use environment::ApiEnvironment;
 pub use environment::Environment::{self, Production, Sandbox};
 pub use errors::MpesaError;
-pub use services::{
-    AccountBalanceResponse, B2bResponse, B2cResponse, C2bRegisterResponse, C2bSimulateResponse,
-    MpesaExpressRequestResponse,
-};
