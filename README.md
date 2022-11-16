@@ -52,10 +52,6 @@ You will first need to create an instance of the `Mpesa` instance (the client). 
 environment. It's worth noting that these credentials are only valid in the sandbox environment. To go live and get production keys
 read the docs [here](https://developer.safaricom.co.ke/docs?javascript#going-live).
 
-_NOTE_:
-
--   Only calling `unwrap` for demonstration purposes. Errors are handled appropriately in the lib via the `MpesaError` enum.
-
 These are the following ways you can instantiate `Mpesa`:
 
 ```rust
@@ -71,8 +67,8 @@ let client = Mpesa::new(
 assert!(client.is_connected().await)
 ```
 
-Since the `Environment` enum implements `FromStr` and `TryFrom`, you can pass the name of the environment as a `&str` and call the `parse()` or `try_into()`
-method to create an `Environment` type from the string slice (Pascal case and Uppercase string slices also valid):
+Since the `Environment` enum implements `FromStr` and `TryFrom` for `String` and `&str` types, you can call `Environment::from_str` or `Environment::try_from` to create an `Environment` type. This is ideal if the environment values are
+stored in a `.env` or any other configuration file:
 
 ```rust
 use mpesa::{Mpesa, Environment};
@@ -93,6 +89,42 @@ let client1 = Mpesa::new(
 );
 assert!(client0.is_connected().await)
 assert!(client1.is_connected().await)
+```
+
+The `Mpesa` struct's `environment` parameter is generic over any type that implements the `ApiEnvironment` trait. This trait
+expects the following methods to be implemented for a given type:
+
+```rust
+pub trait ApiEnvironment {
+    fn base_url(&self) -> &str;
+    fn get_certificate(&self) -> &str;
+}
+```
+
+This trait allows you to create your own type to pass to the `environment` parameter. With this in place, you are able to mock http requests (for testing purposes) from the MPESA api by returning a mock server uri from the `base_url` method as well as using your own certificates, required to sign select requests to the MPESA api, by providing your own `get_certificate` implementation.
+
+See the example below:
+
+```rust
+pub struct TestEnvironment;
+
+impl ApiEnvironment for TestEnvironment {
+    fn base_url(&self) -> &str {
+        // your base url here
+        "https://your_mock_url.com"
+    }
+
+    fn get_certificate(&self) -> &str {
+        // your certificate here
+        r#"..."#
+    }
+}
+
+let client = Mpesa::new(
+    env::var("CLIENT_KEY")?,
+    env::var("CLIENT_SECRET")?,
+    TestEnvironment // ✔ valid
+);
 ```
 
 If you intend to use in production, you will need to call a the `set_initiator_password` method from `Mpesa` after initially

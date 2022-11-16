@@ -39,10 +39,6 @@
 //!
 //! These are the following ways you can instantiate `Mpesa`:
 //!
-//! _NOTE_:
-//! * Only calling `unwrap` for demonstration purposes. Errors are handled appropriately in the lib via the `MpesaError` enum.
-//! * Use of `dotenv` is optional.
-//!
 //! ```rust,no_run
 //! use mpesa::{Mpesa, Environment};
 //! use std::env;
@@ -61,8 +57,8 @@
 //! }
 //! ```
 //!
-//! Since the `Environment` enum implements `FromStr` and `TryFrom`, you can pass the name of the environment as a `&str` and call the `parse()` or `try_into()`
-//! method to create an `Environment` type from the string slice (Pascal case or Uppercase string slices also valid):
+//! Since the `Environment` enum implements `FromStr` and `TryFrom` for `String` and `&str` types, you can call `Environment::from_str` or `Environment::try_from` to create an `Environment` type. This is ideal if the environment values are
+//! stored in a `.env` or any other configuration file
 //!
 //! ```rust,no_run
 //! use mpesa::{Mpesa, Environment};
