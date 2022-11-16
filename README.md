@@ -53,8 +53,8 @@ These are the following ways you can instantiate `Mpesa`:
 use mpesa::{Mpesa, Environment};
 
 let client = Mpesa::new(
-      env!("CLIENT_KEY")?,
-      env!("CLIENT_SECRET")?,
+      env!("CLIENT_KEY"),
+      env!("CLIENT_SECRET"),
       Environment::Sandbox,
 );
 
@@ -70,14 +70,14 @@ use std::str::FromStr;
 use std::convert::TryFrom;
 
 let client0 = Mpesa::new(
-      env!("CLIENT_KEY")?,
-      env!("CLIENT_SECRET")?,
+      env!("CLIENT_KEY"),
+      env!("CLIENT_SECRET"),
       Environment::from_str("sandbox")? // "Sandbox" and "SANDBOX" also valid
 );
 
 let client1 = Mpesa::new(
-      env!("CLIENT_KEY")?,
-      env!("CLIENT_SECRET")?,
+      env!("CLIENT_KEY"),
+      env!("CLIENT_SECRET"),
       Environment::try_from("production")? // "Production" and "PRODUCTION" also valid
 );
 assert!(client0.is_connected().await)
@@ -122,6 +122,8 @@ let client: Mpesa<MyCustomEnvironment> = Mpesa::new(
     env!("CLIENT_SECRET"),
     MyCustomEnvironment // ✔ valid
 );
+
+//...
 ```
 
 If you intend to use in production, you will need to call a the `set_initiator_password` method from `Mpesa` after initially
@@ -131,8 +133,8 @@ creating the client. Here you provide your initiator password, which overrides t
 use mpesa::Mpesa;
 
 let client = Mpesa::new(
-      env!("CLIENT_KEY")?,
-      env!("CLIENT_SECRET")?,
+      env!("CLIENT_KEY"),
+      env!("CLIENT_SECRET"),
       Environment::Sandbox,
 );
 

@@ -80,7 +80,7 @@ impl<'a, Env: ApiEnvironment> Mpesa<Env> {
     /// let client: Mpesa = Mpesa::new(
     ///     env::var("CLIENT_KEY").unwrap(),
     ///     env::var("CLIENT_SECRET").unwrap(),
-    ///     "sandbox".parse().unwrap(),
+    ///     Environment::Sandbox,
     /// );
     ///
     /// client.set_initiator_password("your_initiator_password");
