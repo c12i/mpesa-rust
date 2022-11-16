@@ -11,17 +11,17 @@ repos:
         name: Cargo fmt
         entry: /bin/bash -c "cargo fmt --all -- --check"
         language: script
-        files: \.x$
+        files: ^.*\.rs$
         always_run: true
       - id: run-cargo-clippy
         name: Cargo clippy
         entry: /bin/bash -c "cargo clippy -- -D warnings"
         language: script
-        files: \.x$
+        files: ^.*\.rs$
         always_run: true
       - id: run-cargo-test
         name: Cargo test
         entry: /bin/bash -c "cargo test --no-fail-fast"
         language: script
-        files: \.x$
+        files: ^.*\.rs$
         always_run: true
