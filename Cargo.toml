@@ -41,10 +41,10 @@ default = [
 	"express_request",
 	"transaction_reversal"
 ]
-b2b = ["dep:openssl", "dep:base64", "transaction_reversal"]
-b2c = ["dep:openssl", "dep:base64", "transaction_reversal"]
+b2b = ["dep:openssl", "dep:base64"]
+b2c = ["dep:openssl", "dep:base64"]
 account_balance = ["dep:openssl", "dep:base64"]
 c2b_register = []
-c2b_simulate = ["transaction_reversal"]
+c2b_simulate = []
 express_request = ["dep:chrono", "dep:base64"]
 transaction_reversal = ["dep:openssl", "dep:base64"]
