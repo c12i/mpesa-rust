@@ -1,16 +1,8 @@
-use dotenv;
-use mpesa::{Environment, Mpesa};
-use std::env;
+use crate::get_mpesa_client;
 
 #[tokio::test]
 async fn c2b_simulate_test() {
-    dotenv::dotenv().ok();
-
-    let client = Mpesa::new(
-        env::var("CLIENT_KEY").unwrap(),
-        env::var("CLIENT_SECRET").unwrap(),
-        Environment::Sandbox,
-    );
+    let client = get_mpesa_client!();
 
     let response = client
         .c2b_simulate()

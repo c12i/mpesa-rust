@@ -1,16 +1,8 @@
-use dotenv;
-use mpesa::{Mpesa, Sandbox};
-use std::env;
+use crate::get_mpesa_client;
 
 #[tokio::test]
 async fn account_balance_test() {
-    dotenv::dotenv().ok();
-
-    let client = Mpesa::new(
-        env::var("CLIENT_KEY").unwrap(),
-        env::var("CLIENT_SECRET").unwrap(),
-        Sandbox,
-    );
+    let client = get_mpesa_client!();
 
     let response = client
         .account_balance("testapi496")

@@ -31,10 +31,19 @@ dotenv = "0.15"
 tokio = {version = "1", features = ["rt", "macros"]}
 
 [features]
-default = ["b2b", "b2c" ,"account_balance", "c2b_register", "c2b_simulate", "express_request"]
-b2b = ["dep:openssl", "dep:base64"]
-b2c = ["dep:openssl", "dep:base64"]
+default = [
+	"account_balance",
+	"b2b", 
+	"b2c",
+	"c2b_register",
+	"c2b_simulate",
+	"express_request",
+	"transaction_reversal"
+]
+b2b = ["dep:openssl", "dep:base64", "transaction_reversal"]
+b2c = ["dep:openssl", "dep:base64", "transaction_reversal"]
 account_balance = ["dep:openssl", "dep:base64"]
 c2b_register = []
-c2b_simulate = []
+c2b_simulate = ["transaction_reversal"]
 express_request = ["dep:chrono", "dep:base64"]
+transaction_reversal = ["dep:openssl", "dep:base64"]

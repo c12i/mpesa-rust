@@ -1,3 +1,4 @@
+use crate::services::TransactionReversalBuilder;
 use crate::MpesaError;
 
 use super::environment::Environment;
@@ -272,6 +273,15 @@ impl<'a> Mpesa {
         business_short_code: &'a str,
     ) -> MpesaExpressRequestBuilder<'a> {
         MpesaExpressRequestBuilder::new(self, business_short_code)
+    }
+
+    ///**Transaction Reversal Builder**
+    /// Reverses a B2B, B2C or C2B M-Pesa transaction.
+    ///
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
+    #[cfg(feature = "transaction_reversal")]
+    pub fn transaction_reversal(&'a self) -> TransactionReversalBuilder {
+        todo!()
     }
 }
 
