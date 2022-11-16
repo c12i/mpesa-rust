@@ -14,6 +14,7 @@ use std::cell::RefCell;
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
 static DEFAULT_INITIATOR_PASSWORD: &str = "Safcom496!";
+static CARGO_PACKAGE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 /// `Result` enum type alias
 pub type MpesaResult<T> = Result<T, MpesaError>;
@@ -36,14 +37,16 @@ impl<'a, Env: ApiEnvironment> Mpesa<Env> {
     /// let client: Mpesa = Mpesa::new(
     ///     env::var("CLIENT_KEY").unwrap(),
     ///     env::var("CLIENT_SECRET").unwrap(),
-    ///     "sandbox".parse().unwrap(),
+    ///     Environment::Sandbox,
     /// );
     /// ```
     pub fn new(client_key: String, client_secret: String, environment: Env) -> Self {
         let http_client = Client::builder()
             .connect_timeout(std::time::Duration::from_millis(10_000))
-            .build()
+            .user_agent(format!("mpesa-rust@{}", CARGO_PACKAGE_VERSION))
             // TODO: Potentialy return a `Result` enum from Mpesa::new?
+            //       Making assumption that creation of http client cannot fail
+            .build()
             .expect("Error building http client");
         Self {
             client_key,
