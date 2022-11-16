@@ -1,16 +1,8 @@
-use dotenv;
-use mpesa::Mpesa;
-use std::env;
+use crate::get_mpesa_client;
 
-#[test]
-fn b2b_test() {
-    dotenv::dotenv().ok();
-
-    let client = Mpesa::new(
-        env::var("CLIENT_KEY").unwrap(),
-        env::var("CLIENT_SECRET").unwrap(),
-        "sandbox".parse().unwrap(),
-    );
+#[tokio::test]
+async fn b2b_test() {
+    let client = get_mpesa_client!();
 
     let response = client
         .b2b("testapi496")
@@ -20,7 +12,8 @@ fn b2b_test() {
         .timeout_url("https://testdomain.com/err")
         .account_ref("254708374149")
         .amount(1000)
-        .send();
+        .send()
+        .await;
 
     assert!(response.is_ok())
 }

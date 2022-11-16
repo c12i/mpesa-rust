@@ -12,4 +12,5 @@ jobs:
       - uses: actions-rs/audit-check@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          args: --ignore RUSTSEC-2020-0159 RUSTSEC-2020-0071
         continue-on-error: true

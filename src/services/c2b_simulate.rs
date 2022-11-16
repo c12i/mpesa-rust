@@ -1,5 +1,6 @@
 use crate::client::{Mpesa, MpesaResult};
 use crate::constants::CommandId;
+use crate::environment::ApiEnvironment;
 use crate::errors::MpesaError;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -12,17 +13,26 @@ struct C2bSimulatePayload<'a> {
     command_id: CommandId,
     #[serde(rename(serialize = "Amount"))]
     amount: u32,
-    #[serde(rename(serialize = "Msisdn"))]
-    msisdn: &'a str,
-    #[serde(rename(serialize = "BillRefNumber"))]
-    bill_ref_number: &'a str,
-    #[serde(rename(serialize = "ShortCode"))]
-    short_code: &'a str,
+    #[serde(rename(serialize = "Msisdn"), skip_serializing_if = "Option::is_none")]
+    msisdn: Option<&'a str>,
+    #[serde(
+        rename(serialize = "BillRefNumber"),
+        skip_serializing_if = "Option::is_none"
+    )]
+    bill_ref_number: Option<&'a str>,
+    #[serde(
+        rename(serialize = "ShortCode"),
+        skip_serializing_if = "Option::is_none"
+    )]
+    short_code: Option<&'a str>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct C2bSimulateResponse {
-    #[serde(rename(deserialize = "ConversationID"), skip_serializing_if = "None")]
+    #[serde(
+        rename(deserialize = "ConversationID"),
+        skip_serializing_if = "Option::is_none"
+    )]
     pub conversation_id: Option<String>,
     #[serde(rename(deserialize = "OriginatorCoversationID"))]
     pub originator_coversation_id: String,
@@ -31,8 +41,8 @@ pub struct C2bSimulateResponse {
 }
 
 #[derive(Debug)]
-pub struct C2bSimulateBuilder<'a> {
-    client: &'a Mpesa,
+pub struct C2bSimulateBuilder<'a, Env: ApiEnvironment> {
+    client: &'a Mpesa<Env>,
     command_id: Option<CommandId>,
     amount: Option<u32>,
     msisdn: Option<&'a str>,
@@ -40,9 +50,9 @@ pub struct C2bSimulateBuilder<'a> {
     short_code: Option<&'a str>,
 }
 
-impl<'a> C2bSimulateBuilder<'a> {
+impl<'a, Env: ApiEnvironment> C2bSimulateBuilder<'a, Env> {
     /// Creates a new C2B Simulate builder
-    pub fn new(client: &'a Mpesa) -> C2bSimulateBuilder<'a> {
+    pub fn new(client: &'a Mpesa<Env>) -> C2bSimulateBuilder<'a, Env> {
         C2bSimulateBuilder {
             client,
             command_id: None,
@@ -57,16 +67,14 @@ impl<'a> C2bSimulateBuilder<'a> {
     ///
     /// # Errors
     /// If `CommandId` is not valid
-    pub fn command_id(mut self, command_id: CommandId) -> C2bSimulateBuilder<'a> {
+    pub fn command_id(mut self, command_id: CommandId) -> C2bSimulateBuilder<'a, Env> {
         self.command_id = Some(command_id);
         self
     }
 
-    /// Adds the amount being transacted. This is a required field
-    ///
-    /// # Errors
-    /// If invalid amount, less than 10?
-    pub fn amount(mut self, amount: u32) -> C2bSimulateBuilder<'a> {
+    /// Adds an `amount` to the request
+    /// This is a required field
+    pub fn amount(mut self, amount: u32) -> C2bSimulateBuilder<'a, Env> {
         self.amount = Some(amount);
         self
     }
@@ -76,7 +84,7 @@ impl<'a> C2bSimulateBuilder<'a> {
     ///
     /// # Errors
     /// If `MSISDN` is invalid
-    pub fn msisdn(mut self, msisdn: &'a str) -> C2bSimulateBuilder<'a> {
+    pub fn msisdn(mut self, msisdn: &'a str) -> C2bSimulateBuilder<'a, Env> {
         self.msisdn = Some(msisdn);
         self
     }
@@ -85,57 +93,60 @@ impl<'a> C2bSimulateBuilder<'a> {
     ///
     /// # Errors
     /// If Till or PayBill number is invalid
-    pub fn short_code(mut self, short_code: &'a str) -> C2bSimulateBuilder<'a> {
+    pub fn short_code(mut self, short_code: &'a str) -> C2bSimulateBuilder<'a, Env> {
         self.short_code = Some(short_code);
         self
     }
 
     /// Adds Bull reference number. This field is optional and will by default be `"None"`.
-    pub fn bill_ref_number(mut self, bill_ref_number: &'a str) -> C2bSimulateBuilder<'a> {
+    pub fn bill_ref_number(mut self, bill_ref_number: &'a str) -> C2bSimulateBuilder<'a, Env> {
         self.bill_ref_number = Some(bill_ref_number);
         self
     }
 
-    /// **C2B Simulate API**
+    /// # C2B Simulate API
     ///
     /// Make payment requests from Client to Business
     ///
     /// This enables you to receive the payment requests in real time.
     /// See more [here](https://developer.safaricom.co.ke/c2b/apis/post/simulate)
     ///
-    /// A successful request returns a `serde_json::Value` type
+    /// A successful request returns a `C2bSimulateResponse` type
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
-    pub fn send(self) -> MpesaResult<C2bSimulateResponse> {
+    #[allow(clippy::unnecessary_lazy_evaluations)]
+    pub async fn send(self) -> MpesaResult<C2bSimulateResponse> {
         let url = format!(
             "{}/mpesa/c2b/v1/simulate",
             self.client.environment().base_url()
         );
 
         let payload = C2bSimulatePayload {
-            command_id: self.command_id.unwrap_or(CommandId::CustomerPayBillOnline),
-            amount: self.amount.unwrap_or(10),
-            msisdn: self.msisdn.unwrap_or("None"),
-            bill_ref_number: self.bill_ref_number.unwrap_or("None"),
-            short_code: self.short_code.unwrap_or("None"),
+            command_id: self
+                .command_id
+                .unwrap_or_else(|| CommandId::CustomerPayBillOnline),
+            amount: self.amount.unwrap_or_else(|| 10),
+            msisdn: self.msisdn,
+            bill_ref_number: self.bill_ref_number,
+            short_code: self.short_code,
         };
 
         let response = self
             .client
             .http_client
             .post(&url)
-            .bearer_auth(self.client.auth()?)
+            .bearer_auth(self.client.auth().await?)
             .json(&payload)
-            .send()?
-            .error_for_status()?;
+            .send()
+            .await?;
 
         if response.status().is_success() {
-            let value: C2bSimulateResponse = response.json()?;
+            let value: C2bSimulateResponse = response.json().await?;
             return Ok(value);
         }
 
-        let value: Value = response.json()?;
+        let value: Value = response.json().await?;
         Err(MpesaError::C2bSimulateError(value))
     }
 }

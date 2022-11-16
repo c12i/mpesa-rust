@@ -1,7 +1,7 @@
 use crate::client::{Mpesa, MpesaResult};
 use crate::constants::{CommandId, IdentifierTypes};
+use crate::environment::ApiEnvironment;
 use crate::errors::MpesaError;
-use crate::MpesaSecurity;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
@@ -15,22 +15,31 @@ struct B2bPayload<'a> {
     command_id: CommandId,
     #[serde(rename(serialize = "Amount"))]
     amount: u32,
-    #[serde(rename(serialize = "PartyA"))]
-    party_a: &'a str,
+    #[serde(rename(serialize = "PartyA"), skip_serializing_if = "Option::is_none")]
+    party_a: Option<&'a str>,
     #[serde(rename(serialize = "SenderIdentifierType"))]
     sender_identifier_type: &'a str,
-    #[serde(rename(serialize = "PartyB"))]
-    party_b: &'a str,
+    #[serde(rename(serialize = "PartyB"), skip_serializing_if = "Option::is_none")]
+    party_b: Option<&'a str>,
     #[serde(rename(serialize = "RecieverIdentifierType"))]
     reciever_identifier_type: &'a str,
     #[serde(rename(serialize = "Remarks"))]
     remarks: &'a str,
-    #[serde(rename(serialize = "QueueTimeOutURL"))]
-    queue_time_out_url: &'a str,
-    #[serde(rename(serialize = "ResultURL"))]
-    result_url: &'a str,
-    #[serde(rename(serialize = "AccountReference"))]
-    account_reference: &'a str,
+    #[serde(
+        rename(serialize = "QueueTimeOutURL"),
+        skip_serializing_if = "Option::is_none"
+    )]
+    queue_time_out_url: Option<&'a str>,
+    #[serde(
+        rename(serialize = "ResultURL"),
+        skip_serializing_if = "Option::is_none"
+    )]
+    result_url: Option<&'a str>,
+    #[serde(
+        rename(serialize = "AccountReference"),
+        skip_serializing_if = "Option::is_none"
+    )]
+    account_reference: Option<&'a str>,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -47,9 +56,9 @@ pub struct B2bResponse {
 
 #[derive(Debug)]
 /// B2B transaction builder struct
-pub struct B2bBuilder<'a> {
+pub struct B2bBuilder<'a, Env: ApiEnvironment> {
     initiator_name: &'a str,
-    client: &'a Mpesa,
+    client: &'a Mpesa<Env>,
     command_id: Option<CommandId>,
     amount: Option<u32>,
     party_a: Option<&'a str>,
@@ -62,10 +71,10 @@ pub struct B2bBuilder<'a> {
     account_ref: Option<&'a str>,
 }
 
-impl<'a> B2bBuilder<'a> {
+impl<'a, Env: ApiEnvironment> B2bBuilder<'a, Env> {
     /// Creates a new B2B builder
     /// Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
-    pub fn new(client: &'a Mpesa, initiator_name: &'a str) -> B2bBuilder<'a> {
+    pub fn new(client: &'a Mpesa<Env>, initiator_name: &'a str) -> B2bBuilder<'a, Env> {
         B2bBuilder {
             client,
             initiator_name,
@@ -86,7 +95,7 @@ impl<'a> B2bBuilder<'a> {
     ///
     /// # Errors
     /// If invalid `CommandId` is provided
-    pub fn command_id(mut self, command_id: CommandId) -> B2bBuilder<'a> {
+    pub fn command_id(mut self, command_id: CommandId) -> B2bBuilder<'a, Env> {
         self.command_id = Some(command_id);
         self
     }
@@ -96,7 +105,7 @@ impl<'a> B2bBuilder<'a> {
     ///
     /// # Errors
     /// If `Party A` is invalid or not provided
-    pub fn party_a(mut self, party_a: &'a str) -> B2bBuilder<'a> {
+    pub fn party_a(mut self, party_a: &'a str) -> B2bBuilder<'a, Env> {
         self.party_a = Some(party_a);
         self
     }
@@ -106,7 +115,7 @@ impl<'a> B2bBuilder<'a> {
     ///
     /// # Errors
     /// If `Party B` is invalid or not provided
-    pub fn party_b(mut self, party_b: &'a str) -> B2bBuilder<'a> {
+    pub fn party_b(mut self, party_b: &'a str) -> B2bBuilder<'a, Env> {
         self.party_b = Some(party_b);
         self
     }
@@ -117,7 +126,7 @@ impl<'a> B2bBuilder<'a> {
     /// # Errors
     /// If either `Party A` or `Party B` is invalid or not provided
     #[deprecated]
-    pub fn parties(mut self, party_a: &'a str, party_b: &'a str) -> B2bBuilder<'a> {
+    pub fn parties(mut self, party_a: &'a str, party_b: &'a str) -> B2bBuilder<'a, Env> {
         self.party_a = Some(party_a);
         self.party_b = Some(party_b);
         self
@@ -127,7 +136,7 @@ impl<'a> B2bBuilder<'a> {
     ///
     /// # Error
     /// If `QueueTimeoutUrl` is invalid or not provided
-    pub fn timeout_url(mut self, timeout_url: &'a str) -> B2bBuilder<'a> {
+    pub fn timeout_url(mut self, timeout_url: &'a str) -> B2bBuilder<'a, Env> {
         self.queue_timeout_url = Some(timeout_url);
         self
     }
@@ -136,7 +145,7 @@ impl<'a> B2bBuilder<'a> {
     ///
     /// # Error
     /// If `ResultUrl` is invalid or not provided
-    pub fn result_url(mut self, result_url: &'a str) -> B2bBuilder<'a> {
+    pub fn result_url(mut self, result_url: &'a str) -> B2bBuilder<'a, Env> {
         self.result_url = Some(result_url);
         self
     }
@@ -146,7 +155,7 @@ impl<'a> B2bBuilder<'a> {
     /// # Error
     /// If either `QueueTimeoutUrl` and `ResultUrl` is invalid or not provided
     #[deprecated]
-    pub fn urls(mut self, timeout_url: &'a str, result_url: &'a str) -> B2bBuilder<'a> {
+    pub fn urls(mut self, timeout_url: &'a str, result_url: &'a str) -> B2bBuilder<'a, Env> {
         // TODO: validate urls
         self.queue_timeout_url = Some(timeout_url);
         self.result_url = Some(result_url);
@@ -154,40 +163,38 @@ impl<'a> B2bBuilder<'a> {
     }
 
     /// Adds `sender_id`. Will default to `IdentifierTypes::ShortCode` if not explicitly provided
-    pub fn sender_id(mut self, sender_id: IdentifierTypes) -> B2bBuilder<'a> {
+    pub fn sender_id(mut self, sender_id: IdentifierTypes) -> B2bBuilder<'a, Env> {
         self.sender_id = Some(sender_id);
         self
     }
 
     /// Adds `receiver_id`. Will default to `IdentifierTypes::ShortCode` if not explicitly provided
-    pub fn receiver_id(mut self, receiver_id: IdentifierTypes) -> B2bBuilder<'a> {
+    pub fn receiver_id(mut self, receiver_id: IdentifierTypes) -> B2bBuilder<'a, Env> {
         self.receiver_id = Some(receiver_id);
         self
     }
 
     /// Adds `account_ref`. This field is required
-    pub fn account_ref(mut self, account_ref: &'a str) -> B2bBuilder<'a> {
+    pub fn account_ref(mut self, account_ref: &'a str) -> B2bBuilder<'a, Env> {
         // TODO: add validation
         self.account_ref = Some(account_ref);
         self
     }
 
+    /// Adds an `amount` to the request
     /// This is a required field
-    ///
-    /// # Errors
-    /// If the amount is less than 10?
-    pub fn amount(mut self, amount: u32) -> B2bBuilder<'a> {
+    pub fn amount(mut self, amount: u32) -> B2bBuilder<'a, Env> {
         self.amount = Some(amount);
         self
     }
 
     /// Adds `remarks`. This field is optional, will default to "None" if not explicitly passed
-    pub fn remarks(mut self, remarks: &'a str) -> B2bBuilder<'a> {
+    pub fn remarks(mut self, remarks: &'a str) -> B2bBuilder<'a, Env> {
         self.remarks = Some(remarks);
         self
     }
 
-    /// **B2B API**
+    /// # B2B API
     ///
     /// Sends b2b payment request.
     ///
@@ -196,11 +203,12 @@ impl<'a> B2bBuilder<'a> {
     /// business initiating the transaction and the both businesses involved in the transaction
     /// See more [here](https://developer.safaricom.co.ke/docs?shell#b2b-api)
     ///
-    /// A successful request returns a `serde_json::Value` type
+    /// A successful request returns a `B2bResponse` type
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
-    pub fn send(self) -> MpesaResult<B2bResponse> {
+    #[allow(clippy::unnecessary_lazy_evaluations)]
+    pub async fn send(self) -> MpesaResult<B2bResponse> {
         let url = format!(
             "{}/mpesa/b2b/v1/paymentrequest",
             self.client.environment().base_url()
@@ -212,39 +220,40 @@ impl<'a> B2bBuilder<'a> {
             security_credential: &credentials,
             command_id: self
                 .command_id
-                .unwrap_or(CommandId::BusinessToBusinessTransfer),
-            amount: self.amount.unwrap_or(10),
-            party_a: self.party_a.unwrap_or(""),
+                .unwrap_or_else(|| CommandId::BusinessToBusinessTransfer),
+            // TODO: Can this be improved?
+            amount: self.amount.unwrap_or_default(),
+            party_a: self.party_a,
             sender_identifier_type: &self
                 .sender_id
-                .unwrap_or(IdentifierTypes::ShortCode)
+                .unwrap_or_else(|| IdentifierTypes::ShortCode)
                 .to_string(),
-            party_b: self.party_b.unwrap_or(""),
+            party_b: self.party_b,
             reciever_identifier_type: &self
                 .receiver_id
-                .unwrap_or(IdentifierTypes::ShortCode)
+                .unwrap_or_else(|| IdentifierTypes::ShortCode)
                 .to_string(),
-            remarks: self.remarks.unwrap_or("None"),
-            queue_time_out_url: self.queue_timeout_url.unwrap_or(""),
-            result_url: self.result_url.unwrap_or(""),
-            account_reference: self.account_ref.unwrap_or(""),
+            remarks: self.remarks.unwrap_or_else(|| "None"),
+            queue_time_out_url: self.queue_timeout_url,
+            result_url: self.result_url,
+            account_reference: self.account_ref,
         };
 
         let response = self
             .client
             .http_client
             .post(&url)
-            .bearer_auth(self.client.auth()?)
+            .bearer_auth(self.client.auth().await?)
             .json(&payload)
-            .send()?
-            .error_for_status()?;
+            .send()
+            .await?;
 
         if response.status().is_success() {
-            let value: B2bResponse = response.json()?;
+            let value: B2bResponse = response.json().await?;
             return Ok(value);
         }
 
-        let value: Value = response.json()?;
+        let value: Value = response.json().await?;
         Err(MpesaError::B2bError(value))
     }
 }

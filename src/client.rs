@@ -1,43 +1,53 @@
-use super::environment::Environment;
+use crate::environment::ApiEnvironment;
+use crate::services::TransactionReversalBuilder;
+use crate::MpesaError;
+
 use super::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bSimulateBuilder,
     MpesaExpressRequestBuilder,
 };
-use crate::MpesaSecurity;
-use mpesa_derive::*;
-use reqwest::blocking::Client;
+use openssl::rsa::Padding;
+use openssl::x509::X509;
+use reqwest::Client;
 use serde_json::Value;
 use std::cell::RefCell;
+
+/// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
+static DEFAULT_INITIATOR_PASSWORD: &str = "Safcom496!";
+/// Get current package version from metadata
+static CARGO_PACKAGE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 /// `Result` enum type alias
 pub type MpesaResult<T> = Result<T, MpesaError>;
 
 /// Mpesa client that will facilitate communication with the Safaricom API
-#[derive(Debug, MpesaSecurity)]
-pub struct Mpesa {
+#[derive(Debug)]
+pub struct Mpesa<Env: ApiEnvironment> {
     client_key: String,
     client_secret: String,
     initiator_password: RefCell<Option<String>>,
-    environment: Environment,
+    environment: Env,
     pub(crate) http_client: Client,
 }
 
-impl<'a> Mpesa {
+impl<'a, Env: ApiEnvironment> Mpesa<Env> {
     /// Constructs a new `Mpesa` instance.
     ///
     /// # Example
     /// ```ignore
     /// let client: Mpesa = Mpesa::new(
-    ///     env::var("CLIENT_KEY").unwrap(),
-    ///     env::var("CLIENT_SECRET").unwrap(),
-    ///     "sandbox".parse().unwrap(),
+    ///     env!("CLIENT_KEY").unwrap(),
+    ///     env!("CLIENT_SECRET").unwrap(),
+    ///     Environment::Sandbox,
     /// );
     /// ```
-    pub fn new(client_key: String, client_secret: String, environment: Environment) -> Self {
+    pub fn new(client_key: String, client_secret: String, environment: Env) -> Self {
         let http_client = Client::builder()
-            .connect_timeout(std::time::Duration::from_millis(10000))
-            .build()
+            .connect_timeout(std::time::Duration::from_millis(10_000))
+            .user_agent(format!("mpesa-rust@{}", CARGO_PACKAGE_VERSION))
             // TODO: Potentialy return a `Result` enum from Mpesa::new?
+            //       Making assumption that creation of http client cannot fail
+            .build()
             .expect("Error building http client");
         Self {
             client_key,
@@ -49,7 +59,7 @@ impl<'a> Mpesa {
     }
 
     /// Gets the current `Environment`
-    pub(crate) fn environment(&'a self) -> &Environment {
+    pub(crate) fn environment(&'a self) -> &Env {
         &self.environment
     }
 
@@ -59,7 +69,7 @@ impl<'a> Mpesa {
         if let Some(p) = &*self.initiator_password.borrow() {
             return p.to_owned();
         }
-        "Safcom496!".to_owned()
+        DEFAULT_INITIATOR_PASSWORD.to_owned()
     }
 
     /// Optional in development but required for production, you will need to call this method and set your production initiator password.
@@ -80,8 +90,8 @@ impl<'a> Mpesa {
     }
 
     /// Checks if the client can be authenticated
-    pub fn is_connected(&self) -> bool {
-        self.auth().is_ok()
+    pub async fn is_connected(&self) -> bool {
+        self.auth().await.is_ok()
     }
 
     /// **Safaricom Oauth**
@@ -96,7 +106,8 @@ impl<'a> Mpesa {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
-    pub(crate) fn auth(&self) -> MpesaResult<String> {
+    #[allow(clippy::single_char_pattern)]
+    pub(crate) async fn auth(&self) -> MpesaResult<String> {
         let url = format!(
             "{}/oauth/v1/generate?grant_type=client_credentials",
             self.environment.base_url()
@@ -105,13 +116,14 @@ impl<'a> Mpesa {
             .http_client
             .get(&url)
             .basic_auth(&self.client_key, Some(&self.client_secret))
-            .send()?;
+            .send()
+            .await?;
         if resp.status().is_success() {
             // TODO: Needs custom return type: currently not casting the response to a custom type
             //       hence why we need strip out double quotes `"` from the deserialized value
             //       example: "value" -> value
-            let value: Value = resp.json()?;
-            return Ok(value["access_token"].to_string().replace("\"", ""));
+            let value: Value = resp.json().await?;
+            return Ok(value["access_token"].to_string().replace('\"', ""));
         }
         Err(MpesaError::Message(
             "Could not authenticate to Safaricom, please check your credentials",
@@ -141,7 +153,7 @@ impl<'a> Mpesa {
     ///     .send();
     /// ```
     #[cfg(feature = "b2c")]
-    pub fn b2c(&'a self, initiator_name: &'a str) -> B2cBuilder<'a> {
+    pub fn b2c(&'a self, initiator_name: &'a str) -> B2cBuilder<'a, Env> {
         B2cBuilder::new(self, initiator_name)
     }
 
@@ -169,7 +181,7 @@ impl<'a> Mpesa {
     ///    .send();
     /// ```
     #[cfg(feature = "b2b")]
-    pub fn b2b(&'a self, initiator_name: &'a str) -> B2bBuilder<'a> {
+    pub fn b2b(&'a self, initiator_name: &'a str) -> B2bBuilder<'a, Env> {
         B2bBuilder::new(self, initiator_name)
     }
 
@@ -190,7 +202,7 @@ impl<'a> Mpesa {
     ///    .send();
     /// ```
     #[cfg(feature = "c2b_register")]
-    pub fn c2b_register(&'a self) -> C2bRegisterBuilder<'a> {
+    pub fn c2b_register(&'a self) -> C2bRegisterBuilder<'a, Env> {
         C2bRegisterBuilder::new(self)
     }
 
@@ -211,7 +223,7 @@ impl<'a> Mpesa {
     ///    .send();
     /// ```
     #[cfg(feature = "c2b_simulate")]
-    pub fn c2b_simulate(&'a self) -> C2bSimulateBuilder<'a> {
+    pub fn c2b_simulate(&'a self) -> C2bSimulateBuilder<'a, Env> {
         C2bSimulateBuilder::new(self)
     }
 
@@ -235,7 +247,7 @@ impl<'a> Mpesa {
     ///    .send();
     /// ```
     #[cfg(feature = "account_balance")]
-    pub fn account_balance(&'a self, initiator_name: &'a str) -> AccountBalanceBuilder<'a> {
+    pub fn account_balance(&'a self, initiator_name: &'a str) -> AccountBalanceBuilder<'a, Env> {
         AccountBalanceBuilder::new(self, initiator_name)
     }
 
@@ -263,7 +275,83 @@ impl<'a> Mpesa {
     pub fn express_request(
         &'a self,
         business_short_code: &'a str,
-    ) -> MpesaExpressRequestBuilder<'a> {
+    ) -> MpesaExpressRequestBuilder<'a, Env> {
         MpesaExpressRequestBuilder::new(self, business_short_code)
+    }
+
+    ///**Transaction Reversal Builder**
+    /// Reverses a B2B, B2C or C2B M-Pesa transaction.
+    ///
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
+    #[cfg(feature = "transaction_reversal")]
+    pub fn transaction_reversal(&'a self) -> TransactionReversalBuilder {
+        todo!()
+    }
+
+    /// Generates security credentials
+    /// M-Pesa Core authenticates a transaction by decrypting the security credentials.
+    /// Security credentials are generated by encrypting the base64 encoded initiator password with M-Pesa’s public key, a X509 certificate.
+    /// Returns base64 encoded string.
+    ///
+    /// # Errors
+    /// Returns `EncryptionError` variant of `MpesaError`
+    pub(crate) fn gen_security_credentials(&self) -> MpesaResult<String> {
+        let pem = self.environment().get_certificate().as_bytes();
+        let cert = X509::from_pem(pem)?;
+        // getting the public and rsa keys
+        let pub_key = cert.public_key()?;
+        let rsa_key = pub_key.rsa()?;
+        // configuring the buffer
+        let buf_len = pub_key.size();
+        let mut buffer = vec![0; buf_len];
+
+        rsa_key.public_encrypt(
+            self.initiator_password().as_bytes(),
+            &mut buffer,
+            Padding::PKCS1,
+        )?;
+        Ok(base64::encode(buffer))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::Sandbox;
+
+    use super::*;
+
+    #[test]
+    fn test_setting_initator_password() {
+        let client = Mpesa::new(
+            "client_key".to_string(),
+            "client_secret".to_string(),
+            Sandbox,
+        );
+        assert_eq!(client.initiator_password(), DEFAULT_INITIATOR_PASSWORD);
+        client.set_initiator_password("foo_bar");
+        assert_eq!(client.initiator_password(), "foo_bar".to_string());
+    }
+
+    struct TestEnvironment;
+
+    impl ApiEnvironment for TestEnvironment {
+        fn base_url(&self) -> &str {
+            "https://example.com"
+        }
+
+        fn get_certificate(&self) -> &str {
+            "certificate"
+        }
+    }
+
+    #[test]
+    fn test_custom_environment() {
+        let client = Mpesa::new(
+            "client_key".to_string(),
+            "client_secret".to_string(),
+            TestEnvironment,
+        );
+        assert_eq!(client.environment().base_url(), "https://example.com");
+        assert_eq!(client.environment().get_certificate(), "certificate");
     }
 }

@@ -4,12 +4,6 @@
    <a href="https://crates.io/crates/mpesa" target="_blank">
      <img alt="Version" src="https://img.shields.io/crates/v/mpesa" />
    </a>
-  <a href="https://docs.rs/mpesa" target="_blank">
-    <img alt="Documentation" src="https://docs.rs/mpesa/badge.svg" />
-  </a>
-  <a href="https://travis-ci.com/collinsmuriuki/mpesa-rust" target="_blank">
-      <img alt="mpesa travis-ci" src="https://travis-ci.com/collinsmuriuki/mpesa-rust.svg?branch=master" />
-   </a>
   <a href="LICENSE" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
   </a>
@@ -28,7 +22,14 @@ An unofficial Rust wrapper around the [Safaricom API](https://developer.safarico
 mpesa = "0.4.2"
 ```
 
-Optionally, you can disable default-features, which is basically the entire suite of MPESA APIs to conditionally select from either `["b2b", "b2c" ,"account_balance", "c2b_register", "c2b_simulate", "express_request"]` services.
+Optionally, you can disable default-features, which is basically the entire suite of MPESA APIs to conditionally select from either:
+- `b2b`
+- `b2c`
+- `account_balance`
+- `c2b_register`
+- `c2b_simulate`
+- `express_request`
+
 Example:
 
 ```toml
@@ -51,38 +52,81 @@ You will first need to create an instance of the `Mpesa` instance (the client). 
 environment. It's worth noting that these credentials are only valid in the sandbox environment. To go live and get production keys
 read the docs [here](https://developer.safaricom.co.ke/docs?javascript#going-live).
 
-_NOTE_:
-
--   Only calling `unwrap` for demonstration purposes. Errors are handled appropriately in the lib via the `MpesaError` enum.
-
 These are the following ways you can instantiate `Mpesa`:
 
 ```rust
 use mpesa::{Mpesa, Environment};
-use std::env;
 
 let client = Mpesa::new(
-      env::var("CLIENT_KEY")?,
-      env::var("CLIENT_SECRET")?,
+      env!("CLIENT_KEY")?,
+      env!("CLIENT_SECRET")?,
       Environment::Sandbox,
 );
 
-assert!(client.is_connected())
+assert!(client.is_connected().await)
 ```
 
-Since the `Environment` enum implements `FromStr` and `TryFrom`, you can pass the name of the environment as a `&str` and call the `parse()` or `try_into()`
-method to create an `Environment` type from the string slice (Pascal case and Uppercase string slices also valid):
+Since the `Environment` enum implements `FromStr` and `TryFrom` for `String` and `&str` types, you can call `Environment::from_str` or `Environment::try_from` to create an `Environment` type. This is ideal if the environment values are
+stored in a `.env` or any other configuration file:
 
 ```rust
-use mpesa::Mpesa;
-use std::env;
+use mpesa::{Mpesa, Environment};
+use std::str::FromStr;
+use std::convert::TryFrom;
 
-let client = Mpesa::new(
-      env::var("CLIENT_KEY")?,
-      env::var("CLIENT_SECRET")?,
-      "sandbox".parse()?, // "production"
+let client0 = Mpesa::new(
+      env!("CLIENT_KEY")?,
+      env!("CLIENT_SECRET")?,
+      Environment::from_str("sandbox")? // "Sandbox" and "SANDBOX" also valid
 );
-assert!(client.is_connected())
+
+let client1 = Mpesa::new(
+      env!("CLIENT_KEY")?,
+      env!("CLIENT_SECRET")?,
+      Environment::try_from("production")? // "Production" and "PRODUCTION" also valid
+);
+assert!(client0.is_connected().await)
+assert!(client1.is_connected().await)
+```
+
+The `Mpesa` struct's `environment` parameter is generic over any type that implements the `ApiEnvironment` trait. This trait
+expects the following methods to be implemented for a given type:
+
+```rust
+pub trait ApiEnvironment {
+    fn base_url(&self) -> &str;
+    fn get_certificate(&self) -> &str;
+}
+```
+
+This trait allows you to create your own type to pass to the `environment` parameter. With this in place, you are able to mock http requests (for testing purposes) from the MPESA api by returning a mock server uri from the `base_url` method as well as using your own certificates, required to sign select requests to the MPESA api, by providing your own `get_certificate` implementation.
+
+See the example below (and [here](./src/environment.rs) so see how the trait is implemented for the `Environment` enum):
+
+```rust
+use mpesa::{Mpesa, ApiEnvironment};
+use std::str::FromStr;
+use std::convert::TryFrom;
+
+pub struct MyCustomEnvironment;
+
+impl ApiEnvironment for MyCustomEnvironment {
+    fn base_url(&self) -> &str {
+        // your base url here
+        "https://your_base_url.com"
+    }
+
+    fn get_certificate(&self) -> &str {
+        // your certificate here
+        r#"..."#
+    }
+}
+
+let client: Mpesa<MyCustomEnvironment> = Mpesa::new(
+    env!("CLIENT_KEY"),
+    env!("CLIENT_SECRET"),
+    MyCustomEnvironment // ✔ valid
+);
 ```
 
 If you intend to use in production, you will need to call a the `set_initiator_password` method from `Mpesa` after initially
@@ -90,17 +134,16 @@ creating the client. Here you provide your initiator password, which overrides t
 
 ```rust
 use mpesa::Mpesa;
-use std::env;
 
 let client = Mpesa::new(
-      env::var("CLIENT_KEY")?,
-      env::var("CLIENT_SECRET")?,
-      "production".parse()?,
+      env!("CLIENT_KEY")?,
+      env!("CLIENT_SECRET")?,
+      Environment::Sandbox,
 );
 
 client.set_initiator_password("new_password");
 
-assert!(client.is_connected())
+assert!(client.is_connected().await)
 ```
 
 ### Services
@@ -117,7 +160,8 @@ let response = client
     .result_url("https://testdomain.com/ok")
     .timeout_url("https://testdomain.com/err")
     .amount(1000)
-    .send();
+    .send()
+    .await;
 assert!(response.is_ok())
 ```
 
@@ -132,7 +176,8 @@ let response = client
     .timeout_url("https://testdomain.com/err")
     .account_ref("254708374149")
     .amount(1000)
-    .send();
+    .send()
+    .await;
 assert!(response.is_ok())
 ```
 
@@ -144,7 +189,8 @@ let response = client
     .short_code("600496")
     .confirmation_url("https://testdomain.com/true")
     .validation_url("https://testdomain.com/valid")
-    .send();
+    .send()
+    .await;
 assert!(response.is_ok())
 ```
 
@@ -157,7 +203,8 @@ let response = client
     .short_code("600496")
     .msisdn("254700000000")
     .amount(1000)
-    .send();
+    .send()
+    .await;
 assert!(response.is_ok())
 ```
 
@@ -169,7 +216,8 @@ let response = client
     .result_url("https://testdomain.com/ok")
     .timeout_url("https://testdomain.com/err")
     .party_a("600496")
-    .send();
+    .send()
+    .await;
 assert!(response.is_ok())
 ```
 
@@ -181,7 +229,8 @@ let response = client
     .phone_number("254708374149")
     .amount(500)
     .callback_url("https://test.example.com/api")
-    .send();
+    .send()
+    .await;
 assert!(response.is_ok())
 ```
 
@@ -198,5 +247,5 @@ More will be added progressively, pull requests welcome
 
 Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/collinsmuriuki/mpesa-rust/issues). You can also take a look at the [contributing guide](CONTRIBUTING.md).
 
-Copyright © 2021 [Collins Muriuki](https://github.com/collinsmuriuki).<br />
+Copyright © 2022 [Collins Muriuki](https://github.com/collinsmuriuki).<br />
 This project is [MIT](LICENSE) licensed.

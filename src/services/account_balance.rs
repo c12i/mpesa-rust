@@ -1,6 +1,7 @@
 use crate::client::MpesaResult;
 use crate::constants::{CommandId, IdentifierTypes};
-use crate::{Mpesa, MpesaError, MpesaSecurity};
+use crate::environment::ApiEnvironment;
+use crate::{Mpesa, MpesaError};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
@@ -13,16 +14,22 @@ struct AccountBalancePayload<'a> {
     security_credential: &'a str,
     #[serde(rename(serialize = "CommandID"))]
     command_id: CommandId,
-    #[serde(rename(serialize = "PartyA"))]
-    party_a: &'a str,
+    #[serde(rename(serialize = "PartyA"), skip_serializing_if = "Option::is_none")]
+    party_a: Option<&'a str>,
     #[serde(rename(serialize = "IdentifierType"))]
     identifier_type: &'a str,
     #[serde(rename(serialize = "Remarks"))]
     remarks: &'a str,
-    #[serde(rename(serialize = "QueueTimeOutURL"))]
-    queue_time_out_url: &'a str,
-    #[serde(rename(serialize = "ResultURL"))]
-    result_url: &'a str,
+    #[serde(
+        rename(serialize = "QueueTimeOutURL"),
+        skip_serializing_if = "Option::is_none"
+    )]
+    queue_time_out_url: Option<&'a str>,
+    #[serde(
+        rename(serialize = "ResultURL"),
+        skip_serializing_if = "Option::is_none"
+    )]
+    result_url: Option<&'a str>,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -37,9 +44,9 @@ pub struct AccountBalanceResponse {
     pub response_description: String,
 }
 #[derive(Debug)]
-pub struct AccountBalanceBuilder<'a> {
+pub struct AccountBalanceBuilder<'a, Env: ApiEnvironment> {
     initiator_name: &'a str,
-    client: &'a Mpesa,
+    client: &'a Mpesa<Env>,
     command_id: Option<CommandId>,
     party_a: Option<&'a str>,
     identifier_type: Option<IdentifierTypes>,
@@ -48,10 +55,10 @@ pub struct AccountBalanceBuilder<'a> {
     result_url: Option<&'a str>,
 }
 
-impl<'a> AccountBalanceBuilder<'a> {
+impl<'a, Env: ApiEnvironment> AccountBalanceBuilder<'a, Env> {
     /// Creates a new `AccountBalanceBuilder`.
     /// Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
-    pub fn new(client: &'a Mpesa, initiator_name: &'a str) -> AccountBalanceBuilder<'a> {
+    pub fn new(client: &'a Mpesa<Env>, initiator_name: &'a str) -> AccountBalanceBuilder<'a, Env> {
         AccountBalanceBuilder {
             initiator_name,
             client,
@@ -69,7 +76,7 @@ impl<'a> AccountBalanceBuilder<'a> {
     ///
     /// # Errors
     /// If `CommandId` is invalid
-    pub fn command_id(mut self, command_id: CommandId) -> AccountBalanceBuilder<'a> {
+    pub fn command_id(mut self, command_id: CommandId) -> AccountBalanceBuilder<'a, Env> {
         self.command_id = Some(command_id);
         self
     }
@@ -79,7 +86,7 @@ impl<'a> AccountBalanceBuilder<'a> {
     ///
     /// # Errors
     /// If `Party A` is not provided or invalid
-    pub fn party_a(mut self, party_a: &'a str) -> AccountBalanceBuilder<'a> {
+    pub fn party_a(mut self, party_a: &'a str) -> AccountBalanceBuilder<'a, Env> {
         self.party_a = Some(party_a);
         self
     }
@@ -92,14 +99,14 @@ impl<'a> AccountBalanceBuilder<'a> {
     pub fn identifier_type(
         mut self,
         identifier_type: IdentifierTypes,
-    ) -> AccountBalanceBuilder<'a> {
+    ) -> AccountBalanceBuilder<'a, Env> {
         self.identifier_type = Some(identifier_type);
         self
     }
 
     /// Adds `Remarks`, a comment sent along transaction.
     /// Optional field that defaults to `"None"` if no value is provided
-    pub fn remarks(mut self, remarks: &'a str) -> AccountBalanceBuilder<'a> {
+    pub fn remarks(mut self, remarks: &'a str) -> AccountBalanceBuilder<'a, Env> {
         self.remarks = Some(remarks);
         self
     }
@@ -108,7 +115,7 @@ impl<'a> AccountBalanceBuilder<'a> {
     ///
     /// # Error
     /// If `QueueTimeoutUrl` is invalid or not provided
-    pub fn timeout_url(mut self, timeout_url: &'a str) -> AccountBalanceBuilder<'a> {
+    pub fn timeout_url(mut self, timeout_url: &'a str) -> AccountBalanceBuilder<'a, Env> {
         self.queue_timeout_url = Some(timeout_url);
         self
     }
@@ -117,7 +124,7 @@ impl<'a> AccountBalanceBuilder<'a> {
     ///
     /// # Error
     /// If `ResultUrl` is invalid or not provided
-    pub fn result_url(mut self, result_url: &'a str) -> AccountBalanceBuilder<'a> {
+    pub fn result_url(mut self, result_url: &'a str) -> AccountBalanceBuilder<'a, Env> {
         self.result_url = Some(result_url);
         self
     }
@@ -127,21 +134,26 @@ impl<'a> AccountBalanceBuilder<'a> {
     /// # Error
     /// If either `QueueTimeoutUrl` and `ResultUrl` is invalid or not provided
     #[deprecated]
-    pub fn urls(mut self, timeout_url: &'a str, result_url: &'a str) -> AccountBalanceBuilder<'a> {
+    pub fn urls(
+        mut self,
+        timeout_url: &'a str,
+        result_url: &'a str,
+    ) -> AccountBalanceBuilder<'a, Env> {
         self.queue_timeout_url = Some(timeout_url);
         self.result_url = Some(result_url);
         self
     }
 
-    /// **AccountBalance API**
+    /// # AccountBalance API
     ///
     /// Enquire the balance on an M-Pesa BuyGoods (Till Number).
-    /// A successful request returns a `serde_json::Value` type.
+    /// A successful request returns a `C2bRegisterResponse` type.
     /// See more [here](https://developer.safaricom.co.ke/docs#account-balance-api)
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
-    pub fn send(self) -> MpesaResult<AccountBalanceResponse> {
+    #[allow(clippy::unnecessary_lazy_evaluations)]
+    pub async fn send(self) -> MpesaResult<AccountBalanceResponse> {
         let url = format!(
             "{}/mpesa/accountbalance/v1/query",
             self.client.environment().base_url()
@@ -150,16 +162,16 @@ impl<'a> AccountBalanceBuilder<'a> {
         let credentials = self.client.gen_security_credentials()?;
 
         let payload = AccountBalancePayload {
-            command_id: self.command_id.unwrap_or(CommandId::AccountBalance),
-            party_a: self.party_a.unwrap_or("None"),
+            command_id: self.command_id.unwrap_or_else(|| CommandId::AccountBalance),
+            party_a: self.party_a,
             identifier_type: &self
                 .identifier_type
-                .unwrap_or(IdentifierTypes::ShortCode)
+                .unwrap_or_else(|| IdentifierTypes::ShortCode)
                 .to_string(),
-            remarks: self.remarks.unwrap_or("None"),
+            remarks: self.remarks.unwrap_or_else(|| "None"),
             initiator: self.initiator_name,
-            queue_time_out_url: self.queue_timeout_url.unwrap_or("None"),
-            result_url: self.result_url.unwrap_or("None"),
+            queue_time_out_url: self.queue_timeout_url,
+            result_url: self.result_url,
             security_credential: &credentials,
         };
 
@@ -167,17 +179,17 @@ impl<'a> AccountBalanceBuilder<'a> {
             .client
             .http_client
             .post(&url)
-            .bearer_auth(self.client.auth()?)
+            .bearer_auth(self.client.auth().await?)
             .json(&payload)
-            .send()?
-            .error_for_status()?;
+            .send()
+            .await?;
 
         if response.status().is_success() {
-            let value: AccountBalanceResponse = response.json()?;
+            let value: AccountBalanceResponse = response.json().await?;
             return Ok(value);
         }
 
-        let value: Value = response.json()?;
+        let value: Value = response.json().await?;
         Err(MpesaError::AccountBalanceError(value))
     }
 }

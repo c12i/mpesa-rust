@@ -22,7 +22,7 @@ pub enum CommandId {
 
 impl Display for CommandId {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        write!(f, "{}", self)
+        write!(f, "{:?}", self)
     }
 }
 
@@ -43,6 +43,7 @@ impl Display for IdentifierTypes {
     }
 }
 
+/// TODO: Enable deserializing of json numbers/ strings to `MpesaResponseCode`
 /// M-pesa result and response codes
 #[derive(Debug, Copy, Clone, Deserialize_repr)]
 #[repr(u16)]
@@ -76,12 +77,12 @@ impl Display for MpesaResponseCode {
 #[derive(Debug, Serialize, Deserialize)]
 /// C2B Register Response types
 pub enum ResponseType {
-    Complete,
+    Completed,
     Cancelled,
 }
 
 impl Display for ResponseType {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        write!(f, "{}", self)
+        write!(f, "{:?}", self)
     }
 }
