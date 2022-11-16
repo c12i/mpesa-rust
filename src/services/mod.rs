@@ -20,10 +20,17 @@ mod c2b_simulate;
 mod express_request;
 mod transaction_reversal;
 
+#[cfg(feature = "account_balance")]
 pub use account_balance::{AccountBalanceBuilder, AccountBalanceResponse};
+#[cfg(feature = "b2b")]
 pub use b2b::{B2bBuilder, B2bResponse};
+#[cfg(feature = "b2c")]
 pub use b2c::{B2cBuilder, B2cResponse};
+#[cfg(feature = "c2b_register")]
 pub use c2b_register::{C2bRegisterBuilder, C2bRegisterResponse};
+#[cfg(feature = "c2b_simulate")]
 pub use c2b_simulate::{C2bSimulateBuilder, C2bSimulateResponse};
+#[cfg(feature = "express_request")]
 pub use express_request::{MpesaExpressRequestBuilder, MpesaExpressRequestResponse};
+#[cfg(feature = "transaction_reversal")]
 pub use transaction_reversal::{TransactionReversalBuilder, TransactionReversalResponse};
