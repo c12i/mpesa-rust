@@ -1,15 +1,29 @@
-use mpesa::{ApiEnvironment, Mpesa};
+use mpesa::ApiEnvironment;
+use wiremock::MockServer;
 
-pub struct TestEnvironment;
+pub struct TestEnvironment {
+    pub server: MockServer,
+    pub server_url: String,
+}
+
+impl TestEnvironment {
+    #[allow(unused)]
+    pub async fn new() -> Self {
+        let mock_server = MockServer::start().await;
+        TestEnvironment {
+            server_url: mock_server.uri(),
+            server: mock_server,
+        }
+    }
+}
 
 // TODO: Implement mock server for testing
 impl ApiEnvironment for TestEnvironment {
-    fn base_url(&self) -> &'static str {
-        let _client = Mpesa::new("foo".to_string(), "bar".to_string(), TestEnvironment);
-        "https://mock_server_url.com"
+    fn base_url(&self) -> &str {
+        &self.server_url
     }
 
-    fn get_certificate(&self) -> &'static str {
+    fn get_certificate(&self) -> &str {
         include_str!("../../src/certificates/sandbox")
     }
 }
