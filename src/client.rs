@@ -14,6 +14,7 @@ use std::cell::RefCell;
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
 static DEFAULT_INITIATOR_PASSWORD: &str = "Safcom496!";
+/// Get current package version from metadata
 static CARGO_PACKAGE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 /// `Result` enum type alias
@@ -35,8 +36,8 @@ impl<'a, Env: ApiEnvironment> Mpesa<Env> {
     /// # Example
     /// ```ignore
     /// let client: Mpesa = Mpesa::new(
-    ///     env::var("CLIENT_KEY").unwrap(),
-    ///     env::var("CLIENT_SECRET").unwrap(),
+    ///     env!("CLIENT_KEY").unwrap(),
+    ///     env!("CLIENT_SECRET").unwrap(),
     ///     Environment::Sandbox,
     /// );
     /// ```

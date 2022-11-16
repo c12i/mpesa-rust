@@ -56,11 +56,10 @@ These are the following ways you can instantiate `Mpesa`:
 
 ```rust
 use mpesa::{Mpesa, Environment};
-use std::env;
 
 let client = Mpesa::new(
-      env::var("CLIENT_KEY")?,
-      env::var("CLIENT_SECRET")?,
+      env!("CLIENT_KEY")?,
+      env!("CLIENT_SECRET")?,
       Environment::Sandbox,
 );
 
@@ -74,18 +73,17 @@ stored in a `.env` or any other configuration file:
 use mpesa::{Mpesa, Environment};
 use std::str::FromStr;
 use std::convert::TryFrom;
-use std::env;
 
 let client0 = Mpesa::new(
-      env::var("CLIENT_KEY")?,
-      env::var("CLIENT_SECRET")?,
-      Environment::from_str("sandbox").unwrap() // "Sandbox" and "SANDBOX" also valid
+      env!("CLIENT_KEY")?,
+      env!("CLIENT_SECRET")?,
+      Environment::from_str("sandbox")? // "Sandbox" and "SANDBOX" also valid
 );
 
 let client1 = Mpesa::new(
-      env::var("CLIENT_KEY")?,
-      env::var("CLIENT_SECRET")?,
-      Environment::try_from("production").unwrap() // "Production" and "PRODUCTION" also valid
+      env!("CLIENT_KEY")?,
+      env!("CLIENT_SECRET")?,
+      Environment::try_from("production")? // "Production" and "PRODUCTION" also valid
 );
 assert!(client0.is_connected().await)
 assert!(client1.is_connected().await)
@@ -109,7 +107,6 @@ See the example below (and [here](./src/environment.rs) so see how the trait is 
 use mpesa::{Mpesa, ApiEnvironment};
 use std::str::FromStr;
 use std::convert::TryFrom;
-use std::env;
 
 pub struct MyCustomEnvironment;
 
@@ -126,8 +123,8 @@ impl ApiEnvironment for MyCustomEnvironment {
 }
 
 let client: Mpesa<MyCustomEnvironment> = Mpesa::new(
-    env::var("CLIENT_KEY")?,
-    env::var("CLIENT_SECRET")?,
+    env!("CLIENT_KEY"),
+    env!("CLIENT_SECRET"),
     MyCustomEnvironment // ✔ valid
 );
 ```
@@ -137,11 +134,10 @@ creating the client. Here you provide your initiator password, which overrides t
 
 ```rust
 use mpesa::Mpesa;
-use std::env;
 
 let client = Mpesa::new(
-      env::var("CLIENT_KEY")?,
-      env::var("CLIENT_SECRET")?,
+      env!("CLIENT_KEY")?,
+      env!("CLIENT_SECRET")?,
       Environment::Sandbox,
 );
 
