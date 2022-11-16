@@ -1,13 +1,8 @@
 # mpesa-rust
 
-<p>
-   <a href="https://crates.io/crates/mpesa" target="_blank">
-     <img alt="Version" src="https://img.shields.io/crates/v/mpesa" />
-   </a>
-  <a href="LICENSE" target="_blank">
-    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
-  </a>
-</p>
+[![Rust](https://github.com/collinsmuriuki/mpesa-rust/actions/workflows/general.yml/badge.svg)](https://github.com/collinsmuriuki/mpesa-rust/actions/workflows/general.yml)
+[![](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![](https://img.shields.io/crates/v/mpesa)](https://crates.io/crates/mpesa)
 
 ## About
 
