@@ -331,4 +331,27 @@ mod tests {
         client.set_initiator_password("foo_bar");
         assert_eq!(client.initiator_password(), "foo_bar".to_string());
     }
+
+    struct TestEnvironment;
+
+    impl ApiEnvironment for TestEnvironment {
+        fn base_url(&self) -> &str {
+            "https://example.com"
+        }
+
+        fn get_certificate(&self) -> &str {
+            "certificate"
+        }
+    }
+
+    #[test]
+    fn test_custom_environment() {
+        let client = Mpesa::new(
+            "client_key".to_string(),
+            "client_secret".to_string(),
+            TestEnvironment,
+        );
+        assert_eq!(client.environment().base_url(), "https://example.com");
+        assert_eq!(client.environment().get_certificate(), "certificate");
+    }
 }
