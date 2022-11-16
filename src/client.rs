@@ -85,8 +85,8 @@ impl<'a, Env: ApiEnvironment> Mpesa<Env> {
     ///
     /// client.set_initiator_password("your_initiator_password");
     /// ```
-    pub fn set_initiator_password(&self, initiator_password: &str) {
-        *self.initiator_password.borrow_mut() = Some(initiator_password.to_string());
+    pub fn set_initiator_password<S: Into<String>>(&self, initiator_password: S) {
+        *self.initiator_password.borrow_mut() = Some(initiator_password.into());
     }
 
     /// Checks if the client can be authenticated
