@@ -103,15 +103,20 @@ pub trait ApiEnvironment {
 
 This trait allows you to create your own type to pass to the `environment` parameter. With this in place, you are able to mock http requests (for testing purposes) from the MPESA api by returning a mock server uri from the `base_url` method as well as using your own certificates, required to sign select requests to the MPESA api, by providing your own `get_certificate` implementation.
 
-See the example below:
+See the example below (and [here](./src/environment.rs) so see how the trait is implemented for the `Environment` enum):
 
 ```rust
-pub struct TestEnvironment;
+use mpesa::{Mpesa, ApiEnvironment};
+use std::str::FromStr;
+use std::convert::TryFrom;
+use std::env;
 
-impl ApiEnvironment for TestEnvironment {
+pub struct MyCustomEnvironment;
+
+impl ApiEnvironment for MyCustomEnvironment {
     fn base_url(&self) -> &str {
         // your base url here
-        "https://your_mock_url.com"
+        "https://your_base_url.com"
     }
 
     fn get_certificate(&self) -> &str {
@@ -120,10 +125,10 @@ impl ApiEnvironment for TestEnvironment {
     }
 }
 
-let client = Mpesa::new(
+let client: Mpesa<MyCustomEnvironment> = Mpesa::new(
     env::var("CLIENT_KEY")?,
     env::var("CLIENT_SECRET")?,
-    TestEnvironment // ✔ valid
+    MyCustomEnvironment // ✔ valid
 );
 ```
 
