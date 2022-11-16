@@ -52,7 +52,7 @@
 //! async fn main() {
 //!     dotenv().ok();
 //!
-//!     let client: Mpesa = Mpesa::new(
+//!     let client = Mpesa::new(
 //!         env::var("CLIENT_KEY").unwrap(),
 //!         env::var("CLIENT_SECRET").unwrap(),
 //!         Environment::Sandbox,
@@ -65,18 +65,19 @@
 //! method to create an `Environment` type from the string slice (Pascal case or Uppercase string slices also valid):
 //!
 //! ```rust,no_run
-//! use mpesa::Mpesa;
+//! use mpesa::{Mpesa, Environment};
 //! use std::env;
 //! use dotenv::dotenv;
+//! use std::str::FromStr;
 //!
 //! #[tokio::main]
 //! async fn main() {
 //!     dotenv().ok();
 //!
-//!     let client: Mpesa = Mpesa::new(
+//!     let client = Mpesa::new(
 //!         env::var("CLIENT_KEY").unwrap(),
 //!         env::var("CLIENT_SECRET").unwrap(),
-//!         "sandbox".parse().unwrap(), // "production"
+//!         Environment::from_str("sandbox").unwrap()
 //!     );
 //!     assert!(client.is_connected().await)
 //! }
@@ -85,7 +86,7 @@
 //! creating the client. Here you provide your initiator password, which overrides the default password used in sandbox `"Safcom496!"`:
 //!
 //! ```rust,no_run
-//! use mpesa::Mpesa;
+//! use mpesa::{Mpesa, Environment};
 //! use std::env;
 //! use dotenv::dotenv;
 //!
@@ -93,10 +94,10 @@
 //! async fn main() {
 //!     dotenv().ok();
 //!
-//!     let client: Mpesa = Mpesa::new(
+//!     let client = Mpesa::new(
 //!         env::var("CLIENT_KEY").unwrap(),
 //!         env::var("CLIENT_SECRET").unwrap(),
-//!         "sandbox".parse().unwrap(), // "production"
+//!         Environment::Sandbox
 //!     );
 //!
 //!     client.set_initiator_password("new_password");
@@ -109,7 +110,7 @@
 //! The following services are currently available from the `Mpesa` client as methods that return builders:
 //! * B2C
 //! ```rust,no_run
-//! use mpesa::{Mpesa, MpesaResult, B2cResponse};
+//! use mpesa::{Mpesa, Environment, MpesaResult, B2cResponse};
 //! use std::env;
 //! use dotenv::dotenv;
 //!
@@ -117,10 +118,10 @@
 //! async fn main() {
 //!     dotenv().ok();
 //!
-//!     let client: Mpesa = Mpesa::new(
+//!     let client = Mpesa::new(
 //!         env::var("CLIENT_KEY").unwrap(),
 //!         env::var("CLIENT_SECRET").unwrap(),
-//!         "sandbox".parse().unwrap(), // "production"
+//!         Environment::Sandbox
 //!     );
 //!
 //!     let response: MpesaResult<B2cResponse> = client
@@ -138,7 +139,7 @@
 //!
 //! * B2B
 //! ```rust,no_run
-//! use mpesa::{Mpesa, MpesaResult, B2bResponse};
+//! use mpesa::{Mpesa, Environment, MpesaResult, B2bResponse};
 //! use std::env;
 //! use dotenv::dotenv;
 //!
@@ -146,10 +147,10 @@
 //! async fn main() {
 //!     dotenv().ok();
 //!
-//!     let client: Mpesa = Mpesa::new(
+//!     let client = Mpesa::new(
 //!         env::var("CLIENT_KEY").unwrap(),
 //!         env::var("CLIENT_SECRET").unwrap(),
-//!         "sandbox".parse().unwrap(),
+//!         Environment::Sandbox
 //!     );
 //!
 //!     let response: MpesaResult<B2bResponse> = client
@@ -168,7 +169,7 @@
 //!
 //! * C2B Register
 //! ```rust,no_run
-//! use mpesa::{Mpesa, MpesaResult, C2bRegisterResponse};
+//! use mpesa::{Mpesa, Environment, MpesaResult, C2bRegisterResponse};
 //! use serde_json::Value;
 //! use std::env;
 //! use dotenv::dotenv;
@@ -177,10 +178,10 @@
 //! async fn main() {
 //!     dotenv().ok();
 //!
-//!     let client: Mpesa = Mpesa::new(
+//!     let client = Mpesa::new(
 //!         env::var("CLIENT_KEY").unwrap(),
 //!         env::var("CLIENT_SECRET").unwrap(),
-//!         "sandbox".parse().unwrap(), // "production"
+//!         Environment::Sandbox
 //!     );
 //!
 //!     let response: MpesaResult<C2bRegisterResponse> = client
@@ -196,7 +197,7 @@
 //!
 //! * C2B Simulate
 //! ```rust,no_run
-//! use mpesa::{Mpesa, MpesaResult, C2bSimulateResponse};
+//! use mpesa::{Mpesa, Environment, MpesaResult, C2bSimulateResponse};
 //! use std::env;
 //! use dotenv::dotenv;
 //!
@@ -204,10 +205,10 @@
 //! async fn main() {
 //!     dotenv().ok();
 //!
-//!     let client: Mpesa = Mpesa::new(
+//!     let client = Mpesa::new(
 //!         env::var("CLIENT_KEY").unwrap(),
 //!         env::var("CLIENT_SECRET").unwrap(),
-//!         "sandbox".parse().unwrap(),
+//!         Environment::Sandbox
 //!     );
 //!
 //!     let response: MpesaResult<C2bSimulateResponse> = client
@@ -224,7 +225,7 @@
 //! * Account Balance
 //!
 //! ```rust,no_run
-//! use mpesa::{Mpesa, MpesaResult, AccountBalanceResponse};
+//! use mpesa::{Mpesa, MpesaResult, Environment, AccountBalanceResponse};
 //! use std::env;
 //! use dotenv::dotenv;
 //!
@@ -232,10 +233,10 @@
 //! async fn main() {
 //!     dotenv().ok();
 //!
-//!     let client: Mpesa = Mpesa::new(
+//!     let client = Mpesa::new(
 //!         env::var("CLIENT_KEY").unwrap(),
 //!         env::var("CLIENT_SECRET").unwrap(),
-//!         "sandbox".parse().unwrap(),
+//!         Environment::Sandbox
 //!     );
 //!
 //!     let response: MpesaResult<AccountBalanceResponse> = client
@@ -252,7 +253,7 @@
 //! * Mpesa Express Request / STK push/ Lipa na M-PESA online
 //!
 //! ```ignore
-//! use mpesa::{Mpesa, MpesaResult, MpesaExpressRequestResponse};
+//! use mpesa::{Mpesa, MpesaResult, Environment, MpesaExpressRequestResponse};
 //! use std::env;
 //! use dotenv::dotenv;
 //!
@@ -260,10 +261,10 @@
 //! async fn main() {
 //!     dotenv().ok();
 //!
-//!     let client: Mpesa = Mpesa::new(
+//!     let client = Mpesa::new(
 //!         env::var("CLIENT_KEY").unwrap(),
 //!         env::var("CLIENT_SECRET").unwrap(),
-//!         "sandbox".parse().unwrap(),
+//!         Environment::Sandbox
 //!     );
 //!
 //!     let response: MpesaResult<MpesaExpressRequestResponse> = client
@@ -296,6 +297,7 @@ pub mod services;
 
 pub use client::{Mpesa, MpesaResult};
 pub use constants::{CommandId, IdentifierTypes, ResponseType};
+pub use environment::ApiEnvironment;
 pub use environment::Environment::{self, Production, Sandbox};
 pub use errors::MpesaError;
 pub use services::{

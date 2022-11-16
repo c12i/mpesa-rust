@@ -1,5 +1,6 @@
 use crate::client::{Mpesa, MpesaResult};
 use crate::constants::CommandId;
+use crate::environment::ApiEnvironment;
 use crate::errors::MpesaError;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -40,8 +41,8 @@ pub struct C2bSimulateResponse {
 }
 
 #[derive(Debug)]
-pub struct C2bSimulateBuilder<'a> {
-    client: &'a Mpesa,
+pub struct C2bSimulateBuilder<'a, Env: ApiEnvironment> {
+    client: &'a Mpesa<Env>,
     command_id: Option<CommandId>,
     amount: Option<u32>,
     msisdn: Option<&'a str>,
@@ -49,9 +50,9 @@ pub struct C2bSimulateBuilder<'a> {
     short_code: Option<&'a str>,
 }
 
-impl<'a> C2bSimulateBuilder<'a> {
+impl<'a, Env: ApiEnvironment> C2bSimulateBuilder<'a, Env> {
     /// Creates a new C2B Simulate builder
-    pub fn new(client: &'a Mpesa) -> C2bSimulateBuilder<'a> {
+    pub fn new(client: &'a Mpesa<Env>) -> C2bSimulateBuilder<'a, Env> {
         C2bSimulateBuilder {
             client,
             command_id: None,
@@ -66,14 +67,14 @@ impl<'a> C2bSimulateBuilder<'a> {
     ///
     /// # Errors
     /// If `CommandId` is not valid
-    pub fn command_id(mut self, command_id: CommandId) -> C2bSimulateBuilder<'a> {
+    pub fn command_id(mut self, command_id: CommandId) -> C2bSimulateBuilder<'a, Env> {
         self.command_id = Some(command_id);
         self
     }
 
     /// Adds an `amount` to the request
     /// This is a required field
-    pub fn amount(mut self, amount: u32) -> C2bSimulateBuilder<'a> {
+    pub fn amount(mut self, amount: u32) -> C2bSimulateBuilder<'a, Env> {
         self.amount = Some(amount);
         self
     }
@@ -83,7 +84,7 @@ impl<'a> C2bSimulateBuilder<'a> {
     ///
     /// # Errors
     /// If `MSISDN` is invalid
-    pub fn msisdn(mut self, msisdn: &'a str) -> C2bSimulateBuilder<'a> {
+    pub fn msisdn(mut self, msisdn: &'a str) -> C2bSimulateBuilder<'a, Env> {
         self.msisdn = Some(msisdn);
         self
     }
@@ -92,13 +93,13 @@ impl<'a> C2bSimulateBuilder<'a> {
     ///
     /// # Errors
     /// If Till or PayBill number is invalid
-    pub fn short_code(mut self, short_code: &'a str) -> C2bSimulateBuilder<'a> {
+    pub fn short_code(mut self, short_code: &'a str) -> C2bSimulateBuilder<'a, Env> {
         self.short_code = Some(short_code);
         self
     }
 
     /// Adds Bull reference number. This field is optional and will by default be `"None"`.
-    pub fn bill_ref_number(mut self, bill_ref_number: &'a str) -> C2bSimulateBuilder<'a> {
+    pub fn bill_ref_number(mut self, bill_ref_number: &'a str) -> C2bSimulateBuilder<'a, Env> {
         self.bill_ref_number = Some(bill_ref_number);
         self
     }

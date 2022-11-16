@@ -1,16 +1,8 @@
-use dotenv;
-use mpesa::Mpesa;
-use std::env;
+use crate::get_mpesa_client;
 
 #[tokio::test]
 async fn stk_push_test() {
-    dotenv::dotenv().ok();
-
-    let client = Mpesa::new(
-        env::var("CLIENT_KEY").unwrap(),
-        env::var("CLIENT_SECRET").unwrap(),
-        "sandbox".parse().unwrap(),
-    );
+    let client = get_mpesa_client!();
 
     let response = client
         .express_request("174379")

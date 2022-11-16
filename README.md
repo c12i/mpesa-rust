@@ -75,15 +75,24 @@ Since the `Environment` enum implements `FromStr` and `TryFrom`, you can pass th
 method to create an `Environment` type from the string slice (Pascal case and Uppercase string slices also valid):
 
 ```rust
-use mpesa::Mpesa;
+use mpesa::{Mpesa, Environment};
+use std::str::FromStr;
+use std::convert::TryFrom;
 use std::env;
 
-let client = Mpesa::new(
+let client0 = Mpesa::new(
       env::var("CLIENT_KEY")?,
       env::var("CLIENT_SECRET")?,
-      "sandbox".parse()?, // "production"
+      Environment::from_str("sandbox").unwrap()
 );
-assert!(client.is_connected().await)
+
+let client1 = Mpesa::new(
+      env::var("CLIENT_KEY")?,
+      env::var("CLIENT_SECRET")?,
+      Environment::try_from("sandbox").unwrap()
+);
+assert!(client0.is_connected().await)
+assert!(client1.is_connected().await)
 ```
 
 If you intend to use in production, you will need to call a the `set_initiator_password` method from `Mpesa` after initially
@@ -96,7 +105,7 @@ use std::env;
 let client = Mpesa::new(
       env::var("CLIENT_KEY")?,
       env::var("CLIENT_SECRET")?,
-      "production".parse()?,
+      Environment::Sandbox,
 );
 
 client.set_initiator_password("new_password");

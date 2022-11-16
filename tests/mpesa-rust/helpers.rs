@@ -1,22 +1,49 @@
+use mpesa::{ApiEnvironment, Mpesa};
+
+pub struct TestEnvironment;
+
+// TODO: Implement mock server for testing
+impl ApiEnvironment for TestEnvironment {
+    fn base_url(&self) -> &'static str {
+        let _client = Mpesa::new("foo".to_string(), "bar".to_string(), TestEnvironment);
+        "https://mock_server_url.com"
+    }
+
+    fn get_certificate(&self) -> &'static str {
+        include_str!("../../src/certificates/sandbox")
+    }
+}
+
 #[macro_export]
 macro_rules! get_mpesa_client {
     () => {{
+        use std::str::FromStr;
         dotenv::dotenv().ok();
         mpesa::Mpesa::new(
             std::env::var("CLIENT_KEY").unwrap(),
             std::env::var("CLIENT_SECRET").unwrap(),
-            "sandbox".parse().unwrap(),
+            mpesa::Environment::from_str("sandbox").unwrap(),
         )
     }};
 
     ($client_key:expr, $client_secret:expr) => {{
+        use std::str::FromStr;
         dotenv::dotenv().ok();
-        mpesa::Mpesa::new($client_key, $client_secret, "sandbox".parse().unwrap())
+        mpesa::Mpesa::new(
+            $client_key,
+            $client_secret,
+            mpesa::Environment::from_str("sandbox").unwrap(),
+        )
     }};
 
     ($client_key:expr, $client_secret:expr, $environment:expr) => {{
+        use std::str::FromStr;
         dotenv::dotenv().ok();
-        mpesa::Mpesa::new($client_key, $client_secret, $environment)
+        mpesa::Mpesa::new(
+            $client_key,
+            $client_secret,
+            mpesa::Environment::from_str($environment).unwrap(),
+        )
     }};
 }
 
@@ -44,7 +71,7 @@ mod tests {
         let client = get_mpesa_client!(
             std::env::var("CLIENT_KEY").unwrap(),
             std::env::var("CLIENT_SECRET").unwrap(),
-            "production".parse().unwrap()
+            "production"
         );
         assert!(!client.is_connected().await);
     }

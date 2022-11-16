@@ -1,5 +1,6 @@
 use crate::client::{Mpesa, MpesaResult};
 use crate::constants::ResponseType;
+use crate::environment::ApiEnvironment;
 use crate::errors::MpesaError;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -29,17 +30,17 @@ pub struct C2bRegisterResponse {
 
 #[derive(Debug)]
 /// C2B Register builder
-pub struct C2bRegisterBuilder<'a> {
-    client: &'a Mpesa,
+pub struct C2bRegisterBuilder<'a, Env: ApiEnvironment> {
+    client: &'a Mpesa<Env>,
     validation_url: Option<&'a str>,
     confirmation_url: Option<&'a str>,
     response_type: Option<ResponseType>,
     short_code: Option<&'a str>,
 }
 
-impl<'a> C2bRegisterBuilder<'a> {
+impl<'a, Env: ApiEnvironment> C2bRegisterBuilder<'a, Env> {
     /// Creates a new C2B Builder
-    pub fn new(client: &'a Mpesa) -> C2bRegisterBuilder<'a> {
+    pub fn new(client: &'a Mpesa<Env>) -> C2bRegisterBuilder<'a, Env> {
         C2bRegisterBuilder {
             client,
             validation_url: None,
@@ -53,7 +54,7 @@ impl<'a> C2bRegisterBuilder<'a> {
     ///
     /// # Error
     /// If `ValidationURL` is invalid or not provided
-    pub fn validation_url(mut self, validation_url: &'a str) -> C2bRegisterBuilder<'a> {
+    pub fn validation_url(mut self, validation_url: &'a str) -> C2bRegisterBuilder<'a, Env> {
         self.validation_url = Some(validation_url);
         self
     }
@@ -62,13 +63,13 @@ impl<'a> C2bRegisterBuilder<'a> {
     ///
     /// # Error
     /// If `ConfirmationUrl` is invalid or not provided
-    pub fn confirmation_url(mut self, confirmation_url: &'a str) -> C2bRegisterBuilder<'a> {
+    pub fn confirmation_url(mut self, confirmation_url: &'a str) -> C2bRegisterBuilder<'a, Env> {
         self.confirmation_url = Some(confirmation_url);
         self
     }
 
     /// Adds `ResponseType` for timeout. Will default to `ResponseType::Complete` if not explicitly provided
-    pub fn response_type(mut self, response_type: ResponseType) -> C2bRegisterBuilder<'a> {
+    pub fn response_type(mut self, response_type: ResponseType) -> C2bRegisterBuilder<'a, Env> {
         self.response_type = Some(response_type);
         self
     }
@@ -77,7 +78,7 @@ impl<'a> C2bRegisterBuilder<'a> {
     ///
     /// # Error
     /// If `ShortCode` is invalid
-    pub fn short_code(mut self, short_code: &'a str) -> C2bRegisterBuilder<'a> {
+    pub fn short_code(mut self, short_code: &'a str) -> C2bRegisterBuilder<'a, Env> {
         self.short_code = Some(short_code);
         self
     }

@@ -1,5 +1,6 @@
 use crate::client::{Mpesa, MpesaResult};
 use crate::constants::CommandId;
+use crate::environment::ApiEnvironment;
 use crate::errors::MpesaError;
 use chrono::prelude::Local;
 use serde::{Deserialize, Serialize};
@@ -54,9 +55,9 @@ pub struct MpesaExpressRequestResponse {
     pub response_description: String,
 }
 
-pub struct MpesaExpressRequestBuilder<'a> {
+pub struct MpesaExpressRequestBuilder<'a, Env: ApiEnvironment> {
     business_short_code: &'a str,
-    client: &'a Mpesa,
+    client: &'a Mpesa<Env>,
     transaction_type: Option<CommandId>,
     amount: Option<u32>,
     party_a: Option<&'a str>,
@@ -68,8 +69,11 @@ pub struct MpesaExpressRequestBuilder<'a> {
     pass_key: Option<&'a str>,
 }
 
-impl<'a> MpesaExpressRequestBuilder<'a> {
-    pub fn new(client: &'a Mpesa, business_short_code: &'a str) -> MpesaExpressRequestBuilder<'a> {
+impl<'a, Env: ApiEnvironment> MpesaExpressRequestBuilder<'a, Env> {
+    pub fn new(
+        client: &'a Mpesa<Env>,
+        business_short_code: &'a str,
+    ) -> MpesaExpressRequestBuilder<'a, Env> {
         MpesaExpressRequestBuilder {
             client,
             business_short_code,
@@ -120,14 +124,14 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
     ///
     /// # Errors
     /// If thee `pass_key` is invalid
-    pub fn pass_key(mut self, pass_key: &'a str) -> MpesaExpressRequestBuilder<'a> {
+    pub fn pass_key(mut self, pass_key: &'a str) -> MpesaExpressRequestBuilder<'a, Env> {
         self.pass_key = Some(pass_key);
         self
     }
 
     /// Adds an `amount` to the request
     /// This is a required field
-    pub fn amount(mut self, amount: u32) -> MpesaExpressRequestBuilder<'a> {
+    pub fn amount(mut self, amount: u32) -> MpesaExpressRequestBuilder<'a, Env> {
         self.amount = Some(amount);
         self
     }
@@ -136,7 +140,7 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
     ///
     /// # Errors
     /// If `phone_number` is invalid
-    pub fn phone_number(mut self, phone_number: &'a str) -> MpesaExpressRequestBuilder<'a> {
+    pub fn phone_number(mut self, phone_number: &'a str) -> MpesaExpressRequestBuilder<'a, Env> {
         self.phone_number = Some(phone_number);
         self
     }
@@ -145,7 +149,7 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
     ///
     /// # Errors
     /// If the `callback_url` is invalid
-    pub fn callback_url(mut self, callback_url: &'a str) -> MpesaExpressRequestBuilder<'a> {
+    pub fn callback_url(mut self, callback_url: &'a str) -> MpesaExpressRequestBuilder<'a, Env> {
         self.callback_url = Some(callback_url);
         self
     }
@@ -154,7 +158,7 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
     ///
     /// # Errors
     /// If `party_a` is invalid
-    pub fn party_a(mut self, party_a: &'a str) -> MpesaExpressRequestBuilder<'a> {
+    pub fn party_a(mut self, party_a: &'a str) -> MpesaExpressRequestBuilder<'a, Env> {
         self.party_a = Some(party_a);
         self
     }
@@ -163,13 +167,13 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
     ///
     /// # Errors
     /// If `party_b` is invalid
-    pub fn party_b(mut self, party_b: &'a str) -> MpesaExpressRequestBuilder<'a> {
+    pub fn party_b(mut self, party_b: &'a str) -> MpesaExpressRequestBuilder<'a, Env> {
         self.party_b = Some(party_b);
         self
     }
 
     /// Optional - Used with M-Pesa PayBills.
-    pub fn account_ref(mut self, account_ref: &'a str) -> MpesaExpressRequestBuilder<'a> {
+    pub fn account_ref(mut self, account_ref: &'a str) -> MpesaExpressRequestBuilder<'a, Env> {
         self.account_ref = Some(account_ref);
         self
     }
@@ -178,14 +182,17 @@ impl<'a> MpesaExpressRequestBuilder<'a> {
     ///
     /// # Errors
     /// If the `CommandId` is invalid
-    pub fn transaction_type(mut self, command_id: CommandId) -> MpesaExpressRequestBuilder<'a> {
+    pub fn transaction_type(
+        mut self,
+        command_id: CommandId,
+    ) -> MpesaExpressRequestBuilder<'a, Env> {
         self.transaction_type = Some(command_id);
         self
     }
 
     /// A description of the transaction.
     /// Optional - defaults to "None"
-    pub fn transaction_desc(mut self, description: &'a str) -> MpesaExpressRequestBuilder<'a> {
+    pub fn transaction_desc(mut self, description: &'a str) -> MpesaExpressRequestBuilder<'a, Env> {
         self.transaction_desc = Some(description);
         self
     }

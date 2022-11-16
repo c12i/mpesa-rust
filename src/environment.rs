@@ -24,6 +24,13 @@ pub enum Environment {
     Sandbox,
 }
 
+/// Expected behavior of an `Mpesa` client environment
+/// This abstraction exists to make it possible to mock the MPESA api server for tests
+pub trait ApiEnvironment {
+    fn base_url(&self) -> &'static str;
+    fn get_certificate(&self) -> &'static str;
+}
+
 macro_rules! environment_from_string {
     ($v:expr) => {
         match $v {
@@ -60,9 +67,9 @@ impl TryFrom<String> for Environment {
     }
 }
 
-impl Environment {
+impl ApiEnvironment for Environment {
     /// Matches to base_url based on `Environment` variant
-    pub(crate) fn base_url(&self) -> &str {
+    fn base_url(&self) -> &'static str {
         match self {
             Environment::Production => "https://api.safaricom.co.ke",
             Environment::Sandbox => "https://sandbox.safaricom.co.ke",
@@ -70,7 +77,7 @@ impl Environment {
     }
 
     /// Match to X509 public key certificate based on `Environment`
-    pub(crate) fn get_certificate(&self) -> &str {
+    fn get_certificate(&self) -> &'static str {
         match self {
             Environment::Production => include_str!("./certificates/production"),
             Environment::Sandbox => include_str!("./certificates/sandbox"),
