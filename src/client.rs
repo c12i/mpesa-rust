@@ -36,12 +36,12 @@ impl<'a, Env: ApiEnvironment> Mpesa<Env> {
     /// # Example
     /// ```ignore
     /// let client: Mpesa = Mpesa::new(
-    ///     env!("CLIENT_KEY").unwrap(),
-    ///     env!("CLIENT_SECRET").unwrap(),
+    ///     env!("CLIENT_KEY"),
+    ///     env!("CLIENT_SECRET"),
     ///     Environment::Sandbox,
     /// );
     /// ```
-    pub fn new(client_key: String, client_secret: String, environment: Env) -> Self {
+    pub fn new<S: Into<String>>(client_key: S, client_secret: S, environment: Env) -> Self {
         let http_client = Client::builder()
             .connect_timeout(std::time::Duration::from_millis(10_000))
             .user_agent(format!("mpesa-rust@{}", CARGO_PACKAGE_VERSION))
@@ -50,8 +50,8 @@ impl<'a, Env: ApiEnvironment> Mpesa<Env> {
             .build()
             .expect("Error building http client");
         Self {
-            client_key,
-            client_secret,
+            client_key: client_key.into(),
+            client_secret: client_secret.into(),
             initiator_password: RefCell::new(None),
             environment,
             http_client,
@@ -322,11 +322,7 @@ mod tests {
 
     #[test]
     fn test_setting_initator_password() {
-        let client = Mpesa::new(
-            "client_key".to_string(),
-            "client_secret".to_string(),
-            Sandbox,
-        );
+        let client = Mpesa::new("client_key", "client_secret", Sandbox);
         assert_eq!(client.initiator_password(), DEFAULT_INITIATOR_PASSWORD);
         client.set_initiator_password("foo_bar");
         assert_eq!(client.initiator_password(), "foo_bar".to_string());
@@ -346,11 +342,7 @@ mod tests {
 
     #[test]
     fn test_custom_environment() {
-        let client = Mpesa::new(
-            "client_key".to_string(),
-            "client_secret".to_string(),
-            TestEnvironment,
-        );
+        let client = Mpesa::new("client_key", "client_secret", TestEnvironment);
         assert_eq!(client.environment().base_url(), "https://example.com");
         assert_eq!(client.environment().get_certificate(), "certificate");
     }
