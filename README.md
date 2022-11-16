@@ -83,13 +83,13 @@ use std::env;
 let client0 = Mpesa::new(
       env::var("CLIENT_KEY")?,
       env::var("CLIENT_SECRET")?,
-      Environment::from_str("sandbox").unwrap()
+      Environment::from_str("sandbox").unwrap() // "Sandbox" and "SANDBOX" also valid
 );
 
 let client1 = Mpesa::new(
       env::var("CLIENT_KEY")?,
       env::var("CLIENT_SECRET")?,
-      Environment::try_from("sandbox").unwrap()
+      Environment::try_from("production").unwrap() // "Production" and "PRODUCTION" also valid
 );
 assert!(client0.is_connected().await)
 assert!(client1.is_connected().await)
