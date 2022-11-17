@@ -338,6 +338,7 @@ mod tests {
         }
 
         fn get_certificate(&self) -> &str {
+            // not a valid pem
             "certificate"
         }
     }
@@ -347,5 +348,12 @@ mod tests {
         let client = Mpesa::new("client_key", "client_secret", TestEnvironment);
         assert_eq!(client.environment().base_url(), "https://example.com");
         assert_eq!(client.environment().get_certificate(), "certificate");
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_gen_security_credentials_fails_with_invalid_pem() {
+        let client = Mpesa::new("client_key", "client_secret", TestEnvironment);
+        let _ = client.gen_security_credentials().unwrap();
     }
 }
