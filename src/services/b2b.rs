@@ -5,40 +5,40 @@ use crate::errors::MpesaError;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize)]
-struct B2bPayload<'a> {
+struct B2bPayload<'mpesa> {
     #[serde(rename(serialize = "Initiator"))]
-    initiator: &'a str,
+    initiator: &'mpesa str,
     #[serde(rename(serialize = "SecurityCredential"))]
-    security_credential: &'a str,
+    security_credential: &'mpesa str,
     #[serde(rename(serialize = "CommandID"))]
     command_id: CommandId,
     #[serde(rename(serialize = "Amount"))]
     amount: f64,
     #[serde(rename(serialize = "PartyA"), skip_serializing_if = "Option::is_none")]
-    party_a: Option<&'a str>,
+    party_a: Option<&'mpesa str>,
     #[serde(rename(serialize = "SenderIdentifierType"))]
-    sender_identifier_type: &'a str,
+    sender_identifier_type: &'mpesa str,
     #[serde(rename(serialize = "PartyB"), skip_serializing_if = "Option::is_none")]
-    party_b: Option<&'a str>,
+    party_b: Option<&'mpesa str>,
     #[serde(rename(serialize = "RecieverIdentifierType"))]
-    reciever_identifier_type: &'a str,
+    reciever_identifier_type: &'mpesa str,
     #[serde(rename(serialize = "Remarks"))]
-    remarks: &'a str,
+    remarks: &'mpesa str,
     #[serde(
         rename(serialize = "QueueTimeOutURL"),
         skip_serializing_if = "Option::is_none"
     )]
-    queue_time_out_url: Option<&'a str>,
+    queue_time_out_url: Option<&'mpesa str>,
     #[serde(
         rename(serialize = "ResultURL"),
         skip_serializing_if = "Option::is_none"
     )]
-    result_url: Option<&'a str>,
+    result_url: Option<&'mpesa str>,
     #[serde(
         rename(serialize = "AccountReference"),
         skip_serializing_if = "Option::is_none"
     )]
-    account_reference: Option<&'a str>,
+    account_reference: Option<&'mpesa str>,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -55,25 +55,25 @@ pub struct B2bResponse {
 
 #[derive(Debug)]
 /// B2B transaction builder struct
-pub struct B2bBuilder<'a, Env: ApiEnvironment> {
-    initiator_name: &'a str,
-    client: &'a Mpesa<Env>,
+pub struct B2bBuilder<'mpesa, Env: ApiEnvironment> {
+    initiator_name: &'mpesa str,
+    client: &'mpesa Mpesa<Env>,
     command_id: Option<CommandId>,
     amount: Option<f64>,
-    party_a: Option<&'a str>,
+    party_a: Option<&'mpesa str>,
     sender_id: Option<IdentifierTypes>,
-    party_b: Option<&'a str>,
+    party_b: Option<&'mpesa str>,
     receiver_id: Option<IdentifierTypes>,
-    remarks: Option<&'a str>,
-    queue_timeout_url: Option<&'a str>,
-    result_url: Option<&'a str>,
-    account_ref: Option<&'a str>,
+    remarks: Option<&'mpesa str>,
+    queue_timeout_url: Option<&'mpesa str>,
+    result_url: Option<&'mpesa str>,
+    account_ref: Option<&'mpesa str>,
 }
 
-impl<'a, Env: ApiEnvironment> B2bBuilder<'a, Env> {
+impl<'mpesa, Env: ApiEnvironment> B2bBuilder<'mpesa, Env> {
     /// Creates a new B2B builder
     /// Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
-    pub fn new(client: &'a Mpesa<Env>, initiator_name: &'a str) -> B2bBuilder<'a, Env> {
+    pub fn new(client: &'mpesa Mpesa<Env>, initiator_name: &'mpesa str) -> B2bBuilder<'mpesa, Env> {
         B2bBuilder {
             client,
             initiator_name,
@@ -94,7 +94,7 @@ impl<'a, Env: ApiEnvironment> B2bBuilder<'a, Env> {
     ///
     /// # Errors
     /// If invalid `CommandId` is provided
-    pub fn command_id(mut self, command_id: CommandId) -> B2bBuilder<'a, Env> {
+    pub fn command_id(mut self, command_id: CommandId) -> B2bBuilder<'mpesa, Env> {
         self.command_id = Some(command_id);
         self
     }
@@ -104,7 +104,7 @@ impl<'a, Env: ApiEnvironment> B2bBuilder<'a, Env> {
     ///
     /// # Errors
     /// If `Party A` is invalid or not provided
-    pub fn party_a(mut self, party_a: &'a str) -> B2bBuilder<'a, Env> {
+    pub fn party_a(mut self, party_a: &'mpesa str) -> B2bBuilder<'mpesa, Env> {
         self.party_a = Some(party_a);
         self
     }
@@ -114,7 +114,7 @@ impl<'a, Env: ApiEnvironment> B2bBuilder<'a, Env> {
     ///
     /// # Errors
     /// If `Party B` is invalid or not provided
-    pub fn party_b(mut self, party_b: &'a str) -> B2bBuilder<'a, Env> {
+    pub fn party_b(mut self, party_b: &'mpesa str) -> B2bBuilder<'mpesa, Env> {
         self.party_b = Some(party_b);
         self
     }
@@ -125,7 +125,11 @@ impl<'a, Env: ApiEnvironment> B2bBuilder<'a, Env> {
     /// # Errors
     /// If either `Party A` or `Party B` is invalid or not provided
     #[deprecated]
-    pub fn parties(mut self, party_a: &'a str, party_b: &'a str) -> B2bBuilder<'a, Env> {
+    pub fn parties(
+        mut self,
+        party_a: &'mpesa str,
+        party_b: &'mpesa str,
+    ) -> B2bBuilder<'mpesa, Env> {
         self.party_a = Some(party_a);
         self.party_b = Some(party_b);
         self
@@ -135,7 +139,7 @@ impl<'a, Env: ApiEnvironment> B2bBuilder<'a, Env> {
     ///
     /// # Error
     /// If `QueueTimeoutUrl` is invalid or not provided
-    pub fn timeout_url(mut self, timeout_url: &'a str) -> B2bBuilder<'a, Env> {
+    pub fn timeout_url(mut self, timeout_url: &'mpesa str) -> B2bBuilder<'mpesa, Env> {
         self.queue_timeout_url = Some(timeout_url);
         self
     }
@@ -144,7 +148,7 @@ impl<'a, Env: ApiEnvironment> B2bBuilder<'a, Env> {
     ///
     /// # Error
     /// If `ResultUrl` is invalid or not provided
-    pub fn result_url(mut self, result_url: &'a str) -> B2bBuilder<'a, Env> {
+    pub fn result_url(mut self, result_url: &'mpesa str) -> B2bBuilder<'mpesa, Env> {
         self.result_url = Some(result_url);
         self
     }
@@ -154,7 +158,11 @@ impl<'a, Env: ApiEnvironment> B2bBuilder<'a, Env> {
     /// # Error
     /// If either `QueueTimeoutUrl` and `ResultUrl` is invalid or not provided
     #[deprecated]
-    pub fn urls(mut self, timeout_url: &'a str, result_url: &'a str) -> B2bBuilder<'a, Env> {
+    pub fn urls(
+        mut self,
+        timeout_url: &'mpesa str,
+        result_url: &'mpesa str,
+    ) -> B2bBuilder<'mpesa, Env> {
         // TODO: validate urls
         self.queue_timeout_url = Some(timeout_url);
         self.result_url = Some(result_url);
@@ -162,19 +170,19 @@ impl<'a, Env: ApiEnvironment> B2bBuilder<'a, Env> {
     }
 
     /// Adds `sender_id`. Will default to `IdentifierTypes::ShortCode` if not explicitly provided
-    pub fn sender_id(mut self, sender_id: IdentifierTypes) -> B2bBuilder<'a, Env> {
+    pub fn sender_id(mut self, sender_id: IdentifierTypes) -> B2bBuilder<'mpesa, Env> {
         self.sender_id = Some(sender_id);
         self
     }
 
     /// Adds `receiver_id`. Will default to `IdentifierTypes::ShortCode` if not explicitly provided
-    pub fn receiver_id(mut self, receiver_id: IdentifierTypes) -> B2bBuilder<'a, Env> {
+    pub fn receiver_id(mut self, receiver_id: IdentifierTypes) -> B2bBuilder<'mpesa, Env> {
         self.receiver_id = Some(receiver_id);
         self
     }
 
     /// Adds `account_ref`. This field is required
-    pub fn account_ref(mut self, account_ref: &'a str) -> B2bBuilder<'a, Env> {
+    pub fn account_ref(mut self, account_ref: &'mpesa str) -> B2bBuilder<'mpesa, Env> {
         // TODO: add validation
         self.account_ref = Some(account_ref);
         self
@@ -182,13 +190,13 @@ impl<'a, Env: ApiEnvironment> B2bBuilder<'a, Env> {
 
     /// Adds an `amount` to the request
     /// This is a required field
-    pub fn amount<Number: Into<f64>>(mut self, amount: Number) -> B2bBuilder<'a, Env> {
+    pub fn amount<Number: Into<f64>>(mut self, amount: Number) -> B2bBuilder<'mpesa, Env> {
         self.amount = Some(amount.into());
         self
     }
 
     /// Adds `remarks`. This field is optional, will default to "None" if not explicitly passed
-    pub fn remarks(mut self, remarks: &'a str) -> B2bBuilder<'a, Env> {
+    pub fn remarks(mut self, remarks: &'mpesa str) -> B2bBuilder<'mpesa, Env> {
         self.remarks = Some(remarks);
         self
     }

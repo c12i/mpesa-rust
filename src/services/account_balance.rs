@@ -6,29 +6,29 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize)]
 /// Account Balance payload
-struct AccountBalancePayload<'a> {
+struct AccountBalancePayload<'mpesa> {
     #[serde(rename(serialize = "Initiator"))]
-    initiator: &'a str,
+    initiator: &'mpesa str,
     #[serde(rename(serialize = "SecurityCredential"))]
-    security_credential: &'a str,
+    security_credential: &'mpesa str,
     #[serde(rename(serialize = "CommandID"))]
     command_id: CommandId,
     #[serde(rename(serialize = "PartyA"), skip_serializing_if = "Option::is_none")]
-    party_a: Option<&'a str>,
+    party_a: Option<&'mpesa str>,
     #[serde(rename(serialize = "IdentifierType"))]
-    identifier_type: &'a str,
+    identifier_type: &'mpesa str,
     #[serde(rename(serialize = "Remarks"))]
-    remarks: &'a str,
+    remarks: &'mpesa str,
     #[serde(
         rename(serialize = "QueueTimeOutURL"),
         skip_serializing_if = "Option::is_none"
     )]
-    queue_time_out_url: Option<&'a str>,
+    queue_time_out_url: Option<&'mpesa str>,
     #[serde(
         rename(serialize = "ResultURL"),
         skip_serializing_if = "Option::is_none"
     )]
-    result_url: Option<&'a str>,
+    result_url: Option<&'mpesa str>,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -43,21 +43,24 @@ pub struct AccountBalanceResponse {
     pub response_description: String,
 }
 #[derive(Debug)]
-pub struct AccountBalanceBuilder<'a, Env: ApiEnvironment> {
-    initiator_name: &'a str,
-    client: &'a Mpesa<Env>,
+pub struct AccountBalanceBuilder<'mpesa, Env: ApiEnvironment> {
+    initiator_name: &'mpesa str,
+    client: &'mpesa Mpesa<Env>,
     command_id: Option<CommandId>,
-    party_a: Option<&'a str>,
+    party_a: Option<&'mpesa str>,
     identifier_type: Option<IdentifierTypes>,
-    remarks: Option<&'a str>,
-    queue_timeout_url: Option<&'a str>,
-    result_url: Option<&'a str>,
+    remarks: Option<&'mpesa str>,
+    queue_timeout_url: Option<&'mpesa str>,
+    result_url: Option<&'mpesa str>,
 }
 
-impl<'a, Env: ApiEnvironment> AccountBalanceBuilder<'a, Env> {
+impl<'mpesa, Env: ApiEnvironment> AccountBalanceBuilder<'mpesa, Env> {
     /// Creates a new `AccountBalanceBuilder`.
     /// Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
-    pub fn new(client: &'a Mpesa<Env>, initiator_name: &'a str) -> AccountBalanceBuilder<'a, Env> {
+    pub fn new(
+        client: &'mpesa Mpesa<Env>,
+        initiator_name: &'mpesa str,
+    ) -> AccountBalanceBuilder<'mpesa, Env> {
         AccountBalanceBuilder {
             initiator_name,
             client,
@@ -75,7 +78,7 @@ impl<'a, Env: ApiEnvironment> AccountBalanceBuilder<'a, Env> {
     ///
     /// # Errors
     /// If `CommandId` is invalid
-    pub fn command_id(mut self, command_id: CommandId) -> AccountBalanceBuilder<'a, Env> {
+    pub fn command_id(mut self, command_id: CommandId) -> AccountBalanceBuilder<'mpesa, Env> {
         self.command_id = Some(command_id);
         self
     }
@@ -85,7 +88,7 @@ impl<'a, Env: ApiEnvironment> AccountBalanceBuilder<'a, Env> {
     ///
     /// # Errors
     /// If `Party A` is not provided or invalid
-    pub fn party_a(mut self, party_a: &'a str) -> AccountBalanceBuilder<'a, Env> {
+    pub fn party_a(mut self, party_a: &'mpesa str) -> AccountBalanceBuilder<'mpesa, Env> {
         self.party_a = Some(party_a);
         self
     }
@@ -98,14 +101,14 @@ impl<'a, Env: ApiEnvironment> AccountBalanceBuilder<'a, Env> {
     pub fn identifier_type(
         mut self,
         identifier_type: IdentifierTypes,
-    ) -> AccountBalanceBuilder<'a, Env> {
+    ) -> AccountBalanceBuilder<'mpesa, Env> {
         self.identifier_type = Some(identifier_type);
         self
     }
 
     /// Adds `Remarks`, a comment sent along transaction.
     /// Optional field that defaults to `"None"` if no value is provided
-    pub fn remarks(mut self, remarks: &'a str) -> AccountBalanceBuilder<'a, Env> {
+    pub fn remarks(mut self, remarks: &'mpesa str) -> AccountBalanceBuilder<'mpesa, Env> {
         self.remarks = Some(remarks);
         self
     }
@@ -114,7 +117,7 @@ impl<'a, Env: ApiEnvironment> AccountBalanceBuilder<'a, Env> {
     ///
     /// # Error
     /// If `QueueTimeoutUrl` is invalid or not provided
-    pub fn timeout_url(mut self, timeout_url: &'a str) -> AccountBalanceBuilder<'a, Env> {
+    pub fn timeout_url(mut self, timeout_url: &'mpesa str) -> AccountBalanceBuilder<'mpesa, Env> {
         self.queue_timeout_url = Some(timeout_url);
         self
     }
@@ -123,7 +126,7 @@ impl<'a, Env: ApiEnvironment> AccountBalanceBuilder<'a, Env> {
     ///
     /// # Error
     /// If `ResultUrl` is invalid or not provided
-    pub fn result_url(mut self, result_url: &'a str) -> AccountBalanceBuilder<'a, Env> {
+    pub fn result_url(mut self, result_url: &'mpesa str) -> AccountBalanceBuilder<'mpesa, Env> {
         self.result_url = Some(result_url);
         self
     }
@@ -135,9 +138,9 @@ impl<'a, Env: ApiEnvironment> AccountBalanceBuilder<'a, Env> {
     #[deprecated]
     pub fn urls(
         mut self,
-        timeout_url: &'a str,
-        result_url: &'a str,
-    ) -> AccountBalanceBuilder<'a, Env> {
+        timeout_url: &'mpesa str,
+        result_url: &'mpesa str,
+    ) -> AccountBalanceBuilder<'mpesa, Env> {
         self.queue_timeout_url = Some(timeout_url);
         self.result_url = Some(result_url);
         self

@@ -30,7 +30,7 @@ pub struct Mpesa<Env: ApiEnvironment> {
     pub(crate) http_client: HttpClient,
 }
 
-impl<'a, Env: ApiEnvironment> Mpesa<Env> {
+impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// Constructs a new `Mpesa` instance.
     ///
     /// # Example
@@ -59,13 +59,13 @@ impl<'a, Env: ApiEnvironment> Mpesa<Env> {
     }
 
     /// Gets the current `Environment`
-    pub(crate) fn environment(&'a self) -> &Env {
+    pub(crate) fn environment(&'mpesa self) -> &Env {
         &self.environment
     }
 
     /// Gets the initiator password as a byte slice
     /// If `None`, the default password is b"Safcom496!"
-    pub(crate) fn initiator_password(&'a self) -> String {
+    pub(crate) fn initiator_password(&'mpesa self) -> String {
         if let Some(p) = &*self.initiator_password.borrow() {
             return p.to_owned();
         }
@@ -155,7 +155,7 @@ impl<'a, Env: ApiEnvironment> Mpesa<Env> {
     ///     .send();
     /// ```
     #[cfg(feature = "b2c")]
-    pub fn b2c(&'a self, initiator_name: &'a str) -> B2cBuilder<'a, Env> {
+    pub fn b2c(&'mpesa self, initiator_name: &'mpesa str) -> B2cBuilder<'mpesa, Env> {
         B2cBuilder::new(self, initiator_name)
     }
 
@@ -183,7 +183,7 @@ impl<'a, Env: ApiEnvironment> Mpesa<Env> {
     ///    .send();
     /// ```
     #[cfg(feature = "b2b")]
-    pub fn b2b(&'a self, initiator_name: &'a str) -> B2bBuilder<'a, Env> {
+    pub fn b2b(&'mpesa self, initiator_name: &'mpesa str) -> B2bBuilder<'mpesa, Env> {
         B2bBuilder::new(self, initiator_name)
     }
 
@@ -204,7 +204,7 @@ impl<'a, Env: ApiEnvironment> Mpesa<Env> {
     ///    .send();
     /// ```
     #[cfg(feature = "c2b_register")]
-    pub fn c2b_register(&'a self) -> C2bRegisterBuilder<'a, Env> {
+    pub fn c2b_register(&'mpesa self) -> C2bRegisterBuilder<'mpesa, Env> {
         C2bRegisterBuilder::new(self)
     }
 
@@ -225,7 +225,7 @@ impl<'a, Env: ApiEnvironment> Mpesa<Env> {
     ///    .send();
     /// ```
     #[cfg(feature = "c2b_simulate")]
-    pub fn c2b_simulate(&'a self) -> C2bSimulateBuilder<'a, Env> {
+    pub fn c2b_simulate(&'mpesa self) -> C2bSimulateBuilder<'mpesa, Env> {
         C2bSimulateBuilder::new(self)
     }
 
@@ -249,7 +249,10 @@ impl<'a, Env: ApiEnvironment> Mpesa<Env> {
     ///    .send();
     /// ```
     #[cfg(feature = "account_balance")]
-    pub fn account_balance(&'a self, initiator_name: &'a str) -> AccountBalanceBuilder<'a, Env> {
+    pub fn account_balance(
+        &'mpesa self,
+        initiator_name: &'mpesa str,
+    ) -> AccountBalanceBuilder<'mpesa, Env> {
         AccountBalanceBuilder::new(self, initiator_name)
     }
 
@@ -275,9 +278,9 @@ impl<'a, Env: ApiEnvironment> Mpesa<Env> {
     /// ```
     #[cfg(feature = "express_request")]
     pub fn express_request(
-        &'a self,
-        business_short_code: &'a str,
-    ) -> MpesaExpressRequestBuilder<'a, Env> {
+        &'mpesa self,
+        business_short_code: &'mpesa str,
+    ) -> MpesaExpressRequestBuilder<'mpesa, Env> {
         MpesaExpressRequestBuilder::new(self, business_short_code)
     }
 
@@ -286,7 +289,7 @@ impl<'a, Env: ApiEnvironment> Mpesa<Env> {
     ///
     /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
     #[cfg(feature = "transaction_reversal")]
-    pub fn transaction_reversal(&'a self) -> TransactionReversalBuilder {
+    pub fn transaction_reversal(&'mpesa self) -> TransactionReversalBuilder {
         todo!()
     }
 

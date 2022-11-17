@@ -6,15 +6,15 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize)]
 /// Payload to register the 3rd party’s confirmation and validation URLs to M-Pesa
-struct C2bRegisterPayload<'a> {
+struct C2bRegisterPayload<'mpesa> {
     #[serde(rename(serialize = "ValidationURL"))]
-    validation_url: &'a str,
+    validation_url: &'mpesa str,
     #[serde(rename(serialize = "ConfirmationURL"))]
-    confirmation_url: &'a str,
+    confirmation_url: &'mpesa str,
     #[serde(rename(serialize = "ResponseType"))]
     response_type: ResponseType,
     #[serde(rename(serialize = "ShortCode"))]
-    short_code: &'a str,
+    short_code: &'mpesa str,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -29,17 +29,17 @@ pub struct C2bRegisterResponse {
 
 #[derive(Debug)]
 /// C2B Register builder
-pub struct C2bRegisterBuilder<'a, Env: ApiEnvironment> {
-    client: &'a Mpesa<Env>,
-    validation_url: Option<&'a str>,
-    confirmation_url: Option<&'a str>,
+pub struct C2bRegisterBuilder<'mpesa, Env: ApiEnvironment> {
+    client: &'mpesa Mpesa<Env>,
+    validation_url: Option<&'mpesa str>,
+    confirmation_url: Option<&'mpesa str>,
     response_type: Option<ResponseType>,
-    short_code: Option<&'a str>,
+    short_code: Option<&'mpesa str>,
 }
 
-impl<'a, Env: ApiEnvironment> C2bRegisterBuilder<'a, Env> {
+impl<'mpesa, Env: ApiEnvironment> C2bRegisterBuilder<'mpesa, Env> {
     /// Creates a new C2B Builder
-    pub fn new(client: &'a Mpesa<Env>) -> C2bRegisterBuilder<'a, Env> {
+    pub fn new(client: &'mpesa Mpesa<Env>) -> C2bRegisterBuilder<'mpesa, Env> {
         C2bRegisterBuilder {
             client,
             validation_url: None,
@@ -53,7 +53,10 @@ impl<'a, Env: ApiEnvironment> C2bRegisterBuilder<'a, Env> {
     ///
     /// # Error
     /// If `ValidationURL` is invalid or not provided
-    pub fn validation_url(mut self, validation_url: &'a str) -> C2bRegisterBuilder<'a, Env> {
+    pub fn validation_url(
+        mut self,
+        validation_url: &'mpesa str,
+    ) -> C2bRegisterBuilder<'mpesa, Env> {
         self.validation_url = Some(validation_url);
         self
     }
@@ -62,13 +65,16 @@ impl<'a, Env: ApiEnvironment> C2bRegisterBuilder<'a, Env> {
     ///
     /// # Error
     /// If `ConfirmationUrl` is invalid or not provided
-    pub fn confirmation_url(mut self, confirmation_url: &'a str) -> C2bRegisterBuilder<'a, Env> {
+    pub fn confirmation_url(
+        mut self,
+        confirmation_url: &'mpesa str,
+    ) -> C2bRegisterBuilder<'mpesa, Env> {
         self.confirmation_url = Some(confirmation_url);
         self
     }
 
     /// Adds `ResponseType` for timeout. Will default to `ResponseType::Complete` if not explicitly provided
-    pub fn response_type(mut self, response_type: ResponseType) -> C2bRegisterBuilder<'a, Env> {
+    pub fn response_type(mut self, response_type: ResponseType) -> C2bRegisterBuilder<'mpesa, Env> {
         self.response_type = Some(response_type);
         self
     }
@@ -77,7 +83,7 @@ impl<'a, Env: ApiEnvironment> C2bRegisterBuilder<'a, Env> {
     ///
     /// # Error
     /// If `ShortCode` is invalid
-    pub fn short_code(mut self, short_code: &'a str) -> C2bRegisterBuilder<'a, Env> {
+    pub fn short_code(mut self, short_code: &'mpesa str) -> C2bRegisterBuilder<'mpesa, Env> {
         self.short_code = Some(short_code);
         self
     }

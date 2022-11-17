@@ -3,27 +3,27 @@ use serde::Serialize;
 use crate::CommandId;
 
 #[derive(Debug, Serialize)]
-pub struct TransactionReversalPayload<'a> {
+pub struct TransactionReversalPayload<'mpesa> {
     #[serde(rename(serialize = "Initiator"))]
-    initiator: &'a str,
+    initiator: &'mpesa str,
     #[serde(rename(serialize = "SecurityCredential"))]
-    security_credentials: &'a str,
+    security_credentials: &'mpesa str,
     #[serde(rename(serialize = "CommandID"))]
     command_id: CommandId,
     #[serde(rename(serialize = "TransactionID"))]
-    transaction_id: &'a str,
+    transaction_id: &'mpesa str,
     #[serde(rename(serialize = "ReceiverParty"))]
-    receiver_party: &'a str,
+    receiver_party: &'mpesa str,
     #[serde(rename(serialize = "ReceiverIdentifierType"))]
-    receiver_identifier_type: &'a str,
+    receiver_identifier_type: &'mpesa str,
     #[serde(rename(serialize = "ResultURL"))]
-    result_url: &'a str,
+    result_url: &'mpesa str,
     #[serde(rename(serialize = "QueueTimeOutURL"))]
-    queue_timeout_url: &'a str,
+    queue_timeout_url: &'mpesa str,
     #[serde(rename(serialize = "Remarks"))]
-    remarks: &'a str,
+    remarks: &'mpesa str,
     #[serde(rename(serialize = "Occasion"))]
-    ocassion: &'a str,
+    ocassion: &'mpesa str,
 }
 
 pub struct TransactionReversalBuilder;

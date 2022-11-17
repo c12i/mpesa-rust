@@ -7,23 +7,23 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Serialize)]
 /// Payload to make payment requests from C2B.
 /// See more: https://developer.safaricom.co.ke/docs#c2b-api
-struct C2bSimulatePayload<'a> {
+struct C2bSimulatePayload<'mpesa> {
     #[serde(rename(serialize = "CommandID"))]
     command_id: CommandId,
     #[serde(rename(serialize = "Amount"))]
     amount: f64,
     #[serde(rename(serialize = "Msisdn"), skip_serializing_if = "Option::is_none")]
-    msisdn: Option<&'a str>,
+    msisdn: Option<&'mpesa str>,
     #[serde(
         rename(serialize = "BillRefNumber"),
         skip_serializing_if = "Option::is_none"
     )]
-    bill_ref_number: Option<&'a str>,
+    bill_ref_number: Option<&'mpesa str>,
     #[serde(
         rename(serialize = "ShortCode"),
         skip_serializing_if = "Option::is_none"
     )]
-    short_code: Option<&'a str>,
+    short_code: Option<&'mpesa str>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -40,18 +40,18 @@ pub struct C2bSimulateResponse {
 }
 
 #[derive(Debug)]
-pub struct C2bSimulateBuilder<'a, Env: ApiEnvironment> {
-    client: &'a Mpesa<Env>,
+pub struct C2bSimulateBuilder<'mpesa, Env: ApiEnvironment> {
+    client: &'mpesa Mpesa<Env>,
     command_id: Option<CommandId>,
     amount: Option<f64>,
-    msisdn: Option<&'a str>,
-    bill_ref_number: Option<&'a str>,
-    short_code: Option<&'a str>,
+    msisdn: Option<&'mpesa str>,
+    bill_ref_number: Option<&'mpesa str>,
+    short_code: Option<&'mpesa str>,
 }
 
-impl<'a, Env: ApiEnvironment> C2bSimulateBuilder<'a, Env> {
+impl<'mpesa, Env: ApiEnvironment> C2bSimulateBuilder<'mpesa, Env> {
     /// Creates a new C2B Simulate builder
-    pub fn new(client: &'a Mpesa<Env>) -> C2bSimulateBuilder<'a, Env> {
+    pub fn new(client: &'mpesa Mpesa<Env>) -> C2bSimulateBuilder<'mpesa, Env> {
         C2bSimulateBuilder {
             client,
             command_id: None,
@@ -66,14 +66,14 @@ impl<'a, Env: ApiEnvironment> C2bSimulateBuilder<'a, Env> {
     ///
     /// # Errors
     /// If `CommandId` is not valid
-    pub fn command_id(mut self, command_id: CommandId) -> C2bSimulateBuilder<'a, Env> {
+    pub fn command_id(mut self, command_id: CommandId) -> C2bSimulateBuilder<'mpesa, Env> {
         self.command_id = Some(command_id);
         self
     }
 
     /// Adds an `amount` to the request
     /// This is a required field
-    pub fn amount<Number: Into<f64>>(mut self, amount: Number) -> C2bSimulateBuilder<'a, Env> {
+    pub fn amount<Number: Into<f64>>(mut self, amount: Number) -> C2bSimulateBuilder<'mpesa, Env> {
         self.amount = Some(amount.into());
         self
     }
@@ -83,7 +83,7 @@ impl<'a, Env: ApiEnvironment> C2bSimulateBuilder<'a, Env> {
     ///
     /// # Errors
     /// If `MSISDN` is invalid
-    pub fn msisdn(mut self, msisdn: &'a str) -> C2bSimulateBuilder<'a, Env> {
+    pub fn msisdn(mut self, msisdn: &'mpesa str) -> C2bSimulateBuilder<'mpesa, Env> {
         self.msisdn = Some(msisdn);
         self
     }
@@ -92,13 +92,16 @@ impl<'a, Env: ApiEnvironment> C2bSimulateBuilder<'a, Env> {
     ///
     /// # Errors
     /// If Till or PayBill number is invalid
-    pub fn short_code(mut self, short_code: &'a str) -> C2bSimulateBuilder<'a, Env> {
+    pub fn short_code(mut self, short_code: &'mpesa str) -> C2bSimulateBuilder<'mpesa, Env> {
         self.short_code = Some(short_code);
         self
     }
 
     /// Adds Bull reference number. This field is optional and will by default be `"None"`.
-    pub fn bill_ref_number(mut self, bill_ref_number: &'a str) -> C2bSimulateBuilder<'a, Env> {
+    pub fn bill_ref_number(
+        mut self,
+        bill_ref_number: &'mpesa str,
+    ) -> C2bSimulateBuilder<'mpesa, Env> {
         self.bill_ref_number = Some(bill_ref_number);
         self
     }

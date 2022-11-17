@@ -9,35 +9,35 @@ use serde::{Deserialize, Serialize};
 static DEFAULT_PASSKEY: &str = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
 
 #[derive(Debug, Serialize)]
-struct MpesaExpressRequestPayload<'a> {
+struct MpesaExpressRequestPayload<'mpesa> {
     #[serde(rename(serialize = "BusinessShortCode"))]
-    business_short_code: &'a str,
+    business_short_code: &'mpesa str,
     #[serde(rename(serialize = "Password"))]
-    password: &'a str,
+    password: &'mpesa str,
     #[serde(rename(serialize = "Timestamp"))]
-    timestamp: &'a str,
+    timestamp: &'mpesa str,
     #[serde(rename(serialize = "TransactionType"))]
     transaction_type: CommandId,
     #[serde(rename(serialize = "Amount"))]
     amount: f64,
     #[serde(rename(serialize = "PartyA"), skip_serializing_if = "Option::is_none")]
-    party_a: Option<&'a str>,
+    party_a: Option<&'mpesa str>,
     #[serde(rename(serialize = "PartyB"), skip_serializing_if = "Option::is_none")]
-    party_b: Option<&'a str>,
+    party_b: Option<&'mpesa str>,
     #[serde(
         rename(serialize = "PhoneNumber"),
         skip_serializing_if = "Option::is_none"
     )]
-    phone_number: Option<&'a str>,
+    phone_number: Option<&'mpesa str>,
     #[serde(
         rename(serialize = "CallBackURL"),
         skip_serializing_if = "Option::is_none"
     )]
-    call_back_url: Option<&'a str>,
+    call_back_url: Option<&'mpesa str>,
     #[serde(rename(serialize = "AccountReference"))]
-    account_reference: &'a str,
+    account_reference: &'mpesa str,
     #[serde(rename(serialize = "TransactionDesc"))]
-    transaction_desc: &'a str,
+    transaction_desc: &'mpesa str,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -54,25 +54,25 @@ pub struct MpesaExpressRequestResponse {
     pub response_description: String,
 }
 
-pub struct MpesaExpressRequestBuilder<'a, Env: ApiEnvironment> {
-    business_short_code: &'a str,
-    client: &'a Mpesa<Env>,
+pub struct MpesaExpressRequestBuilder<'mpesa, Env: ApiEnvironment> {
+    business_short_code: &'mpesa str,
+    client: &'mpesa Mpesa<Env>,
     transaction_type: Option<CommandId>,
     amount: Option<f64>,
-    party_a: Option<&'a str>,
-    party_b: Option<&'a str>,
-    phone_number: Option<&'a str>,
-    callback_url: Option<&'a str>,
-    account_ref: Option<&'a str>,
-    transaction_desc: Option<&'a str>,
-    pass_key: Option<&'a str>,
+    party_a: Option<&'mpesa str>,
+    party_b: Option<&'mpesa str>,
+    phone_number: Option<&'mpesa str>,
+    callback_url: Option<&'mpesa str>,
+    account_ref: Option<&'mpesa str>,
+    transaction_desc: Option<&'mpesa str>,
+    pass_key: Option<&'mpesa str>,
 }
 
-impl<'a, Env: ApiEnvironment> MpesaExpressRequestBuilder<'a, Env> {
+impl<'mpesa, Env: ApiEnvironment> MpesaExpressRequestBuilder<'mpesa, Env> {
     pub fn new(
-        client: &'a Mpesa<Env>,
-        business_short_code: &'a str,
-    ) -> MpesaExpressRequestBuilder<'a, Env> {
+        client: &'mpesa Mpesa<Env>,
+        business_short_code: &'mpesa str,
+    ) -> MpesaExpressRequestBuilder<'mpesa, Env> {
         MpesaExpressRequestBuilder {
             client,
             business_short_code,
@@ -89,12 +89,12 @@ impl<'a, Env: ApiEnvironment> MpesaExpressRequestBuilder<'a, Env> {
     }
 
     /// Public method get the `business_short_code`
-    pub fn business_short_code(&'a self) -> &'a str {
+    pub fn business_short_code(&'mpesa self) -> &'mpesa str {
         self.business_short_code
     }
 
     /// Retrieves the production passkey if present or defaults to the key provided in Safaricom's [test credentials](https://developer.safaricom.co.ke/test_credentials)
-    fn get_pass_key(&'a self) -> &'a str {
+    fn get_pass_key(&'mpesa self) -> &'mpesa str {
         if let Some(key) = self.pass_key {
             return key;
         }
@@ -123,7 +123,7 @@ impl<'a, Env: ApiEnvironment> MpesaExpressRequestBuilder<'a, Env> {
     ///
     /// # Errors
     /// If thee `pass_key` is invalid
-    pub fn pass_key(mut self, pass_key: &'a str) -> MpesaExpressRequestBuilder<'a, Env> {
+    pub fn pass_key(mut self, pass_key: &'mpesa str) -> MpesaExpressRequestBuilder<'mpesa, Env> {
         self.pass_key = Some(pass_key);
         self
     }
@@ -133,7 +133,7 @@ impl<'a, Env: ApiEnvironment> MpesaExpressRequestBuilder<'a, Env> {
     pub fn amount<Number: Into<f64>>(
         mut self,
         amount: Number,
-    ) -> MpesaExpressRequestBuilder<'a, Env> {
+    ) -> MpesaExpressRequestBuilder<'mpesa, Env> {
         self.amount = Some(amount.into());
         self
     }
@@ -142,7 +142,10 @@ impl<'a, Env: ApiEnvironment> MpesaExpressRequestBuilder<'a, Env> {
     ///
     /// # Errors
     /// If `phone_number` is invalid
-    pub fn phone_number(mut self, phone_number: &'a str) -> MpesaExpressRequestBuilder<'a, Env> {
+    pub fn phone_number(
+        mut self,
+        phone_number: &'mpesa str,
+    ) -> MpesaExpressRequestBuilder<'mpesa, Env> {
         self.phone_number = Some(phone_number);
         self
     }
@@ -151,7 +154,10 @@ impl<'a, Env: ApiEnvironment> MpesaExpressRequestBuilder<'a, Env> {
     ///
     /// # Errors
     /// If the `callback_url` is invalid
-    pub fn callback_url(mut self, callback_url: &'a str) -> MpesaExpressRequestBuilder<'a, Env> {
+    pub fn callback_url(
+        mut self,
+        callback_url: &'mpesa str,
+    ) -> MpesaExpressRequestBuilder<'mpesa, Env> {
         self.callback_url = Some(callback_url);
         self
     }
@@ -160,7 +166,7 @@ impl<'a, Env: ApiEnvironment> MpesaExpressRequestBuilder<'a, Env> {
     ///
     /// # Errors
     /// If `party_a` is invalid
-    pub fn party_a(mut self, party_a: &'a str) -> MpesaExpressRequestBuilder<'a, Env> {
+    pub fn party_a(mut self, party_a: &'mpesa str) -> MpesaExpressRequestBuilder<'mpesa, Env> {
         self.party_a = Some(party_a);
         self
     }
@@ -169,13 +175,16 @@ impl<'a, Env: ApiEnvironment> MpesaExpressRequestBuilder<'a, Env> {
     ///
     /// # Errors
     /// If `party_b` is invalid
-    pub fn party_b(mut self, party_b: &'a str) -> MpesaExpressRequestBuilder<'a, Env> {
+    pub fn party_b(mut self, party_b: &'mpesa str) -> MpesaExpressRequestBuilder<'mpesa, Env> {
         self.party_b = Some(party_b);
         self
     }
 
     /// Optional - Used with M-Pesa PayBills.
-    pub fn account_ref(mut self, account_ref: &'a str) -> MpesaExpressRequestBuilder<'a, Env> {
+    pub fn account_ref(
+        mut self,
+        account_ref: &'mpesa str,
+    ) -> MpesaExpressRequestBuilder<'mpesa, Env> {
         self.account_ref = Some(account_ref);
         self
     }
@@ -187,14 +196,17 @@ impl<'a, Env: ApiEnvironment> MpesaExpressRequestBuilder<'a, Env> {
     pub fn transaction_type(
         mut self,
         command_id: CommandId,
-    ) -> MpesaExpressRequestBuilder<'a, Env> {
+    ) -> MpesaExpressRequestBuilder<'mpesa, Env> {
         self.transaction_type = Some(command_id);
         self
     }
 
     /// A description of the transaction.
     /// Optional - defaults to "None"
-    pub fn transaction_desc(mut self, description: &'a str) -> MpesaExpressRequestBuilder<'a, Env> {
+    pub fn transaction_desc(
+        mut self,
+        description: &'mpesa str,
+    ) -> MpesaExpressRequestBuilder<'mpesa, Env> {
         self.transaction_desc = Some(description);
         self
     }
