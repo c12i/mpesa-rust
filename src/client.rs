@@ -66,10 +66,10 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// Gets the initiator password as a byte slice
     /// If `None`, the default password is b"Safcom496!"
     pub(crate) fn initiator_password(&'mpesa self) -> String {
-        if let Some(p) = &*self.initiator_password.borrow() {
-            return p.to_owned();
-        }
-        DEFAULT_INITIATOR_PASSWORD.to_owned()
+        let Some(p) = &*self.initiator_password.borrow() else {
+            return DEFAULT_INITIATOR_PASSWORD.to_owned()
+        };
+        p.to_owned()
     }
 
     /// Optional in development but required for production, you will need to call this method and set your production initiator password.
