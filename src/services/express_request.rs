@@ -20,7 +20,7 @@ struct MpesaExpressRequestPayload<'a> {
     #[serde(rename(serialize = "TransactionType"))]
     transaction_type: CommandId,
     #[serde(rename(serialize = "Amount"))]
-    amount: u32,
+    amount: f64,
     #[serde(rename(serialize = "PartyA"), skip_serializing_if = "Option::is_none")]
     party_a: Option<&'a str>,
     #[serde(rename(serialize = "PartyB"), skip_serializing_if = "Option::is_none")]
@@ -59,7 +59,7 @@ pub struct MpesaExpressRequestBuilder<'a, Env: ApiEnvironment> {
     business_short_code: &'a str,
     client: &'a Mpesa<Env>,
     transaction_type: Option<CommandId>,
-    amount: Option<u32>,
+    amount: Option<f64>,
     party_a: Option<&'a str>,
     party_b: Option<&'a str>,
     phone_number: Option<&'a str>,
@@ -131,8 +131,11 @@ impl<'a, Env: ApiEnvironment> MpesaExpressRequestBuilder<'a, Env> {
 
     /// Adds an `amount` to the request
     /// This is a required field
-    pub fn amount(mut self, amount: u32) -> MpesaExpressRequestBuilder<'a, Env> {
-        self.amount = Some(amount);
+    pub fn amount<Number: Into<f64>>(
+        mut self,
+        amount: Number,
+    ) -> MpesaExpressRequestBuilder<'a, Env> {
+        self.amount = Some(amount.into());
         self
     }
 

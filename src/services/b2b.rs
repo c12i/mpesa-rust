@@ -14,7 +14,7 @@ struct B2bPayload<'a> {
     #[serde(rename(serialize = "CommandID"))]
     command_id: CommandId,
     #[serde(rename(serialize = "Amount"))]
-    amount: u32,
+    amount: f64,
     #[serde(rename(serialize = "PartyA"), skip_serializing_if = "Option::is_none")]
     party_a: Option<&'a str>,
     #[serde(rename(serialize = "SenderIdentifierType"))]
@@ -60,7 +60,7 @@ pub struct B2bBuilder<'a, Env: ApiEnvironment> {
     initiator_name: &'a str,
     client: &'a Mpesa<Env>,
     command_id: Option<CommandId>,
-    amount: Option<u32>,
+    amount: Option<f64>,
     party_a: Option<&'a str>,
     sender_id: Option<IdentifierTypes>,
     party_b: Option<&'a str>,
@@ -183,8 +183,8 @@ impl<'a, Env: ApiEnvironment> B2bBuilder<'a, Env> {
 
     /// Adds an `amount` to the request
     /// This is a required field
-    pub fn amount(mut self, amount: u32) -> B2bBuilder<'a, Env> {
-        self.amount = Some(amount);
+    pub fn amount<Number: Into<f64>>(mut self, amount: Number) -> B2bBuilder<'a, Env> {
+        self.amount = Some(amount.into());
         self
     }
 

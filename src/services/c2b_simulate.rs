@@ -12,7 +12,7 @@ struct C2bSimulatePayload<'a> {
     #[serde(rename(serialize = "CommandID"))]
     command_id: CommandId,
     #[serde(rename(serialize = "Amount"))]
-    amount: u32,
+    amount: f64,
     #[serde(rename(serialize = "Msisdn"), skip_serializing_if = "Option::is_none")]
     msisdn: Option<&'a str>,
     #[serde(
@@ -44,7 +44,7 @@ pub struct C2bSimulateResponse {
 pub struct C2bSimulateBuilder<'a, Env: ApiEnvironment> {
     client: &'a Mpesa<Env>,
     command_id: Option<CommandId>,
-    amount: Option<u32>,
+    amount: Option<f64>,
     msisdn: Option<&'a str>,
     bill_ref_number: Option<&'a str>,
     short_code: Option<&'a str>,
@@ -74,8 +74,8 @@ impl<'a, Env: ApiEnvironment> C2bSimulateBuilder<'a, Env> {
 
     /// Adds an `amount` to the request
     /// This is a required field
-    pub fn amount(mut self, amount: u32) -> C2bSimulateBuilder<'a, Env> {
-        self.amount = Some(amount);
+    pub fn amount<Number: Into<f64>>(mut self, amount: Number) -> C2bSimulateBuilder<'a, Env> {
+        self.amount = Some(amount.into());
         self
     }
 
@@ -126,7 +126,7 @@ impl<'a, Env: ApiEnvironment> C2bSimulateBuilder<'a, Env> {
             command_id: self
                 .command_id
                 .unwrap_or_else(|| CommandId::CustomerPayBillOnline),
-            amount: self.amount.unwrap_or_else(|| 10),
+            amount: self.amount.unwrap_or_default(),
             msisdn: self.msisdn,
             bill_ref_number: self.bill_ref_number,
             short_code: self.short_code,
