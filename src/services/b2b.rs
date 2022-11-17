@@ -3,7 +3,6 @@ use crate::constants::{CommandId, IdentifierTypes};
 use crate::environment::ApiEnvironment;
 use crate::errors::MpesaError;
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
 
 #[derive(Debug, Serialize)]
 struct B2bPayload<'a> {
@@ -249,11 +248,11 @@ impl<'a, Env: ApiEnvironment> B2bBuilder<'a, Env> {
             .await?;
 
         if response.status().is_success() {
-            let value: B2bResponse = response.json().await?;
+            let value = response.json::<_>().await?;
             return Ok(value);
         }
 
-        let value: Value = response.json().await?;
+        let value = response.json().await?;
         Err(MpesaError::B2bError(value))
     }
 }

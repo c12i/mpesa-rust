@@ -8,7 +8,7 @@ use super::services::{
 };
 use openssl::rsa::Padding;
 use openssl::x509::X509;
-use reqwest::Client;
+use reqwest::Client as HttpClient;
 use serde_json::Value;
 use std::cell::RefCell;
 
@@ -27,7 +27,7 @@ pub struct Mpesa<Env: ApiEnvironment> {
     client_secret: String,
     initiator_password: RefCell<Option<String>>,
     environment: Env,
-    pub(crate) http_client: Client,
+    pub(crate) http_client: HttpClient,
 }
 
 impl<'a, Env: ApiEnvironment> Mpesa<Env> {
@@ -42,7 +42,7 @@ impl<'a, Env: ApiEnvironment> Mpesa<Env> {
     /// );
     /// ```
     pub fn new<S: Into<String>>(client_key: S, client_secret: S, environment: Env) -> Self {
-        let http_client = Client::builder()
+        let http_client = HttpClient::builder()
             .connect_timeout(std::time::Duration::from_millis(10_000))
             .user_agent(format!("mpesa-rust@{}", CARGO_PACKAGE_VERSION))
             // TODO: Potentialy return a `Result` enum from Mpesa::new?
@@ -112,22 +112,24 @@ impl<'a, Env: ApiEnvironment> Mpesa<Env> {
             "{}/oauth/v1/generate?grant_type=client_credentials",
             self.environment.base_url()
         );
-        let resp = self
+        let response = self
             .http_client
             .get(&url)
             .basic_auth(&self.client_key, Some(&self.client_secret))
             .send()
             .await?;
-        if resp.status().is_success() {
-            // TODO: Needs custom return type: currently not casting the response to a custom type
-            //       hence why we need strip out double quotes `"` from the deserialized value
-            //       example: "value" -> value
-            let value: Value = resp.json().await?;
-            return Ok(value["access_token"].to_string().replace('\"', ""));
+        if response.status().is_success() {
+            let value = response.json::<Value>().await?;
+            let access_token = value
+                .get("access_token")
+                .ok_or_else(|| MpesaError::AuthenticationError(value.clone()))?;
+            let access_token = access_token
+                .as_str()
+                .ok_or_else(|| MpesaError::AuthenticationError(value.clone()))?;
+            return Ok(access_token.to_string());
         }
-        Err(MpesaError::Message(
-            "Could not authenticate to Safaricom, please check your credentials",
-        ))
+        let value = response.json::<Value>().await?;
+        Err(MpesaError::AuthenticationError(value))
     }
 
     /// **B2C Builder**

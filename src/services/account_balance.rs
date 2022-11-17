@@ -3,7 +3,6 @@ use crate::constants::{CommandId, IdentifierTypes};
 use crate::environment::ApiEnvironment;
 use crate::{Mpesa, MpesaError};
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
 
 #[derive(Debug, Serialize)]
 /// Account Balance payload
@@ -185,11 +184,11 @@ impl<'a, Env: ApiEnvironment> AccountBalanceBuilder<'a, Env> {
             .await?;
 
         if response.status().is_success() {
-            let value: AccountBalanceResponse = response.json().await?;
+            let value = response.json::<_>().await?;
             return Ok(value);
         }
 
-        let value: Value = response.json().await?;
+        let value = response.json().await?;
         Err(MpesaError::AccountBalanceError(value))
     }
 }

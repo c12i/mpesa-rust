@@ -3,7 +3,6 @@ use crate::constants::CommandId;
 use crate::environment::ApiEnvironment;
 use crate::errors::MpesaError;
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
 
 #[derive(Debug, Serialize)]
 /// Payload to make payment requests from C2B.
@@ -142,11 +141,11 @@ impl<'a, Env: ApiEnvironment> C2bSimulateBuilder<'a, Env> {
             .await?;
 
         if response.status().is_success() {
-            let value: C2bSimulateResponse = response.json().await?;
+            let value = response.json::<_>().await?;
             return Ok(value);
         }
 
-        let value: Value = response.json().await?;
+        let value = response.json().await?;
         Err(MpesaError::C2bSimulateError(value))
     }
 }

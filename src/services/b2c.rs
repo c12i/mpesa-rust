@@ -2,7 +2,6 @@ use crate::client::MpesaResult;
 use crate::environment::ApiEnvironment;
 use crate::{CommandId, Mpesa, MpesaError};
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
 
 #[derive(Debug, Serialize)]
 /// Payload to allow for b2c transactions:
@@ -217,11 +216,11 @@ impl<'a, Env: ApiEnvironment> B2cBuilder<'a, Env> {
             .await?;
 
         if response.status().is_success() {
-            let value: B2cResponse = response.json().await?;
+            let value = response.json::<_>().await?;
             return Ok(value);
         }
 
-        let value: Value = response.json().await?;
+        let value = response.json().await?;
         Err(MpesaError::B2cError(value))
     }
 }
