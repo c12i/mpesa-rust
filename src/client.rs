@@ -1,11 +1,9 @@
 use crate::environment::ApiEnvironment;
-use crate::services::TransactionReversalBuilder;
-use crate::MpesaError;
-
-use super::services::{
+use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bSimulateBuilder,
-    MpesaExpressRequestBuilder,
+    MpesaExpressRequestBuilder, TransactionReversalBuilder,
 };
+use crate::MpesaError;
 use openssl::rsa::Padding;
 use openssl::x509::X509;
 use reqwest::Client as HttpClient;
