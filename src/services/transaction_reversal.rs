@@ -3,6 +3,7 @@ use serde::Serialize;
 
 use crate::ApiEnvironment;
 use crate::CommandId;
+use crate::IdentifierTypes;
 use crate::Mpesa;
 use crate::MpesaError;
 use crate::MpesaResult;
@@ -20,7 +21,7 @@ pub struct TransactionReversalPayload<'mpesa> {
     #[serde(rename(serialize = "ReceiverParty"))]
     receiver_party: &'mpesa str,
     #[serde(rename(serialize = "ReceiverIdentifierType"))]
-    receiver_identifier_type: Option<&'mpesa str>,
+    receiver_identifier_type: Option<IdentifierTypes>,
     #[serde(rename(serialize = "ResultURL"))]
     result_url: Option<&'mpesa str>,
     #[serde(rename(serialize = "QueueTimeOutURL"))]
@@ -50,7 +51,7 @@ pub struct TransactionReversalBuilder<'mpesa, Env: ApiEnvironment> {
     command_id: Option<CommandId>,
     transaction_id: Option<&'mpesa str>,
     receiver_party: Option<&'mpesa str>,
-    receiver_identifier_type: Option<&'mpesa str>,
+    receiver_identifier_type: Option<IdentifierTypes>,
     result_url: Option<&'mpesa str>,
     timeout_url: Option<&'mpesa str>,
     remarks: Option<&'mpesa str>,
@@ -107,7 +108,7 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
     /// Type of organization receiving the transaction
     ///
     /// This is required field
-    pub fn receiver_identifier_type(mut self, receiver_identifier_type: &'mpesa str) -> Self {
+    pub fn receiver_identifier_type(mut self, receiver_identifier_type: IdentifierTypes) -> Self {
         self.receiver_identifier_type = Some(receiver_identifier_type);
         self
     }
@@ -138,7 +139,7 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
         self
     }
 
-    /// Occasion of the transaction
+    /// Adds any additional information to be associated with the transaction.
     /// This is an optional Parameter
     pub fn occasion(mut self, occasion: &'mpesa str) -> Self {
         self.occasion = Some(occasion);
@@ -186,16 +187,18 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
             command_id: self.command_id.unwrap_or(CommandId::TransactionReversal),
             transaction_id: self
                 .transaction_id
-                .expect("transaction_id is required field"),
+                .ok_or(MpesaError::Message("transaction_id is required field"))?,
             receiver_party: self
                 .receiver_party
-                .expect("receiver_party is required field"),
+                .ok_or(MpesaError::Message("receiver_party is required field"))?,
             receiver_identifier_type: self.receiver_identifier_type,
             result_url: self.result_url,
             timeout_url: self.timeout_url,
             remarks: self.remarks,
             occasion: self.occasion,
-            amount: self.amount.expect("amount is required parameter"),
+            amount: self
+                .amount
+                .ok_or(MpesaError::Message("amount is required field"))?,
         };
 
         let response = self

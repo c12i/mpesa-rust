@@ -1,3 +1,5 @@
+use mpesa::IdentifierTypes;
+
 use crate::get_mpesa_client;
 
 #[tokio::test]
@@ -9,12 +11,11 @@ async fn transaction_reversal_test() {
         .result_url("https://testdomain.com/ok")
         .timeout_url("https://testdomain.com/err")
         .transaction_id("OEI2AK4Q16")
-        .receiver_identifier_type("5")
+        .receiver_identifier_type(IdentifierTypes::ShortCode)
         .amount(1.0)
-        .receiver_party("600983")
+        .receiver_party("600610")
         .remarks("wrong recipient")
         .send()
         .await;
-
     assert!(response.is_ok())
 }
