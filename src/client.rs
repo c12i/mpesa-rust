@@ -289,11 +289,9 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     #[cfg(feature = "transaction_reversal")]
     pub fn transaction_reversal(
         &'mpesa self,
-        transaction_id: &'mpesa str,
-        amount: f64,
-        receiver_party: &'mpesa str,
+        initiator_name: &'mpesa str,
     ) -> TransactionReversalBuilder<'mpesa, Env> {
-        TransactionReversalBuilder::new(self, transaction_id, amount, receiver_party)
+        TransactionReversalBuilder::new(self, initiator_name)
     }
 
     /// Generates security credentials

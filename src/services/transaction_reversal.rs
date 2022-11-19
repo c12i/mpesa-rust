@@ -20,15 +20,15 @@ pub struct TransactionReversalPayload<'mpesa> {
     #[serde(rename(serialize = "ReceiverParty"))]
     receiver_party: &'mpesa str,
     #[serde(rename(serialize = "ReceiverIdentifierType"))]
-    receiver_identifier_type: &'mpesa str,
+    receiver_identifier_type: Option<&'mpesa str>,
     #[serde(rename(serialize = "ResultURL"))]
-    result_url: &'mpesa str,
+    result_url: Option<&'mpesa str>,
     #[serde(rename(serialize = "QueueTimeOutURL"))]
-    queue_timeout_url: &'mpesa str,
+    timeout_url: Option<&'mpesa str>,
     #[serde(rename(serialize = "Remarks"))]
-    remarks: &'mpesa str,
+    remarks: Option<&'mpesa str>,
     #[serde(rename(serialize = "Occasion"))]
-    occasion: &'mpesa str,
+    occasion: Option<&'mpesa str>,
     #[serde(rename(serialize = "Amount"))]
     amount: f64,
 }
@@ -43,17 +43,17 @@ pub struct TransactionReversalResponse {
     response_description: String,
 }
 
+/// Creates new `TransactionReversalBuilder`
 #[derive(Debug)]
 pub struct TransactionReversalBuilder<'mpesa, Env: ApiEnvironment> {
     client: &'mpesa Mpesa<Env>,
-    initiator: Option<&'mpesa str>,
-    security_credentials: Option<&'mpesa str>,
+    initiator: &'mpesa str,
     command_id: Option<CommandId>,
     transaction_id: Option<&'mpesa str>,
     receiver_party: Option<&'mpesa str>,
     receiver_identifier_type: Option<&'mpesa str>,
     result_url: Option<&'mpesa str>,
-    queue_timeout_url: Option<&'mpesa str>,
+    timeout_url: Option<&'mpesa str>,
     remarks: Option<&'mpesa str>,
     occasion: Option<&'mpesa str>,
     amount: Option<f64>,
@@ -62,84 +62,141 @@ pub struct TransactionReversalBuilder<'mpesa, Env: ApiEnvironment> {
 impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
     pub fn new(
         client: &'mpesa Mpesa<Env>,
-        transaction_id: &'mpesa str,
-        amount: f64,
-        receiver_party: &'mpesa str,
+        initiator: &'mpesa str,
     ) -> TransactionReversalBuilder<'mpesa, Env> {
         TransactionReversalBuilder {
             client,
-            initiator: None,
-            security_credentials: None,
+            initiator,
             command_id: None,
-            transaction_id: Some(transaction_id),
-            receiver_party: Some(receiver_party),
+            transaction_id: None,
+            receiver_party: None,
             receiver_identifier_type: None,
             result_url: None,
-            queue_timeout_url: None,
+            timeout_url: None,
             remarks: None,
             occasion: None,
-            amount: Some(amount),
+            amount: None,
         }
     }
 
+    /// Adds `CommandId`. Defaults to `CommandId::TransactionReversal` if no value explicitly passed
+    ///
+    /// # Errors
+    /// If `CommandId` is not valid
     pub fn command_id(mut self, command_id: CommandId) -> Self {
         self.command_id = Some(command_id);
         self
     }
 
+    /// Add the Mpesa Transaction ID of the transaction which you wish to reverse
+    ///
+    /// This is a required field.
     pub fn transaction_id(mut self, transaction_id: &'mpesa str) -> Self {
         self.transaction_id = Some(transaction_id);
         self
     }
 
+    /// Organization receiving the transaction
+    ///
+    /// This is required field
     pub fn receiver_party(mut self, receiver_party: &'mpesa str) -> Self {
         self.receiver_party = Some(receiver_party);
         self
     }
 
+    /// Type of organization receiving the transaction
+    ///
+    /// This is required field
     pub fn receiver_identifier_type(mut self, receiver_identifier_type: &'mpesa str) -> Self {
         self.receiver_identifier_type = Some(receiver_identifier_type);
         self
     }
 
+    // Adds `ResultUrl` This is a required field
+    ///
+    /// # Error
+    /// If `ResultUrl` is invalid or not provided
     pub fn result_url(mut self, result_url: &'mpesa str) -> Self {
         self.result_url = Some(result_url);
         self
     }
 
-    pub fn queue_timeout_url(mut self, queue_timeout_url: &'mpesa str) -> Self {
-        self.queue_timeout_url = Some(queue_timeout_url);
+    /// Adds `QueueTimeoutUrl` and `ResultUrl`. This is a required field
+    ///
+    /// # Error
+    /// If either `QueueTimeoutUrl` and `ResultUrl` is invalid or not provided
+    pub fn timeout_url(mut self, timeout_url: &'mpesa str) -> Self {
+        self.timeout_url = Some(timeout_url);
         self
     }
-
+    /// Comments that are sent along with the transaction.
+    ///
+    /// This is required field
     pub fn remarks(mut self, remarks: &'mpesa str) -> Self {
         self.remarks = Some(remarks);
         self
     }
-
+    /// Occasion of the transaction
+    /// This is an optional Parameter
     pub fn occasion(mut self, occasion: &'mpesa str) -> Self {
         self.occasion = Some(occasion);
         self
     }
 
+    /// Adds an `amount` to the request
+    ///
+    /// This is a required field
+    pub fn amount(mut self, amount: f64) -> Self {
+        self.amount = Some(amount);
+        self
+    }
+
+    /// # Transaction Reversal API
+    ///
+    /// Requests for transaction reversal
+    ///
+    /// This API enables reversal of a B2B, B2C or C2B M-Pesa transaction
+    /// Required  parameters:
+    ///
+    /// `transaction_id`: This is the Mpesa Transaction ID of the transaction which you wish to reverse
+    ///
+    /// `amount` : The amount transacted in the transaction to be reversed , down to the cent
+    ///
+    /// `receiver_party`: Your organization's short code.
+    ///
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
+    ///
+    /// A successful request returns a `TransactionReversalResponse` type
+    ///
+    /// # Errors
+    /// Returns a `MpesaError` on failure.
     pub async fn send(&self) -> MpesaResult<TransactionReversalResponse> {
         let url = format!(
             "{}/reversal/v1/request",
             self.client.environment().base_url()
         );
 
+        let credentials = self.client.gen_security_credentials()?;
+
         let payload = TransactionReversalPayload {
-            initiator: self.initiator.unwrap(),
-            security_credentials: self.security_credentials.unwrap(),
-            command_id: self.command_id.clone().unwrap(),
-            transaction_id: self.transaction_id.unwrap(),
-            receiver_party: self.receiver_party.unwrap(),
-            receiver_identifier_type: self.receiver_identifier_type.unwrap(),
-            result_url: self.result_url.unwrap(),
-            queue_timeout_url: self.queue_timeout_url.unwrap(),
-            remarks: self.remarks.unwrap(),
-            occasion: self.occasion.unwrap(),
-            amount: self.amount.unwrap_or_default(),
+            initiator: self.initiator,
+            security_credentials: &credentials,
+            command_id: self
+                .command_id
+                .clone()
+                .unwrap_or(CommandId::TransactionReversal),
+            transaction_id: self
+                .transaction_id
+                .expect("transaction_id is required field"),
+            receiver_party: self
+                .receiver_party
+                .expect("receiver_party is required field"),
+            receiver_identifier_type: self.receiver_identifier_type,
+            result_url: self.result_url,
+            timeout_url: self.timeout_url,
+            remarks: self.remarks,
+            occasion: self.occasion,
+            amount: self.amount.expect("amount is required parameter"),
         };
 
         let response = self
@@ -153,7 +210,7 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
 
         if !response.status().is_success() {
             let value = response.json().await?;
-            return Err(MpesaError::MpesaExpressRequestError(value));
+            return Err(MpesaError::MpesaTransactionReversalError(value));
         };
 
         let response = response.json::<_>().await?;
