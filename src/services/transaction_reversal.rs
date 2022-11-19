@@ -129,6 +129,7 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
         self.timeout_url = Some(timeout_url);
         self
     }
+    
     /// Comments that are sent along with the transaction.
     ///
     /// This is required field
