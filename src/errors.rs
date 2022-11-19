@@ -17,6 +17,8 @@ pub enum MpesaError {
     AccountBalanceError(serde_json::Value),
     #[error("Mpesa Express request/ STK push failed: {0}")]
     MpesaExpressRequestError(serde_json::Value),
+    #[error("Mpesa Transaction reversal failed: {0}")]
+    MpesaTransactionReversalError(serde_json::Value),
     #[error("An error has occured while performing the http request")]
     NetworkError(#[from] reqwest::Error),
     #[error("An error has occured while serializig/ deserializing")]

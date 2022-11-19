@@ -287,8 +287,11 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///
     /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
     #[cfg(feature = "transaction_reversal")]
-    pub fn transaction_reversal(&'mpesa self) -> TransactionReversalBuilder {
-        todo!()
+    pub fn transaction_reversal(
+        &'mpesa self,
+        initiator_name: &'mpesa str,
+    ) -> TransactionReversalBuilder<'mpesa, Env> {
+        TransactionReversalBuilder::new(self, initiator_name)
     }
 
     /// Generates security credentials
