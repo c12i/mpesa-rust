@@ -43,7 +43,6 @@ pub struct TransactionReversalResponse {
     response_description: String,
 }
 
-/// Creates new `TransactionReversalBuilder`
 #[derive(Debug)]
 pub struct TransactionReversalBuilder<'mpesa, Env: ApiEnvironment> {
     client: &'mpesa Mpesa<Env>,
@@ -60,6 +59,7 @@ pub struct TransactionReversalBuilder<'mpesa, Env: ApiEnvironment> {
 }
 
 impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
+    /// Creates new `TransactionReversalBuilder`
     pub fn new(
         client: &'mpesa Mpesa<Env>,
         initiator: &'mpesa str,
@@ -129,7 +129,7 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
         self.timeout_url = Some(timeout_url);
         self
     }
-    
+
     /// Comments that are sent along with the transaction.
     ///
     /// This is required field
@@ -137,7 +137,7 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
         self.remarks = Some(remarks);
         self
     }
-    
+
     /// Occasion of the transaction
     /// This is an optional Parameter
     pub fn occasion(mut self, occasion: &'mpesa str) -> Self {
@@ -148,8 +148,8 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
     /// Adds an `amount` to the request
     ///
     /// This is a required field
-    pub fn amount(mut self, amount: f64) -> Self {
-        self.amount = Some(amount);
+    pub fn amount<Number: Into<f64>>(mut self, amount: Number) -> Self {
+        self.amount = Some(amount.into());
         self
     }
 
@@ -172,7 +172,7 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure.
-    pub async fn send(&self) -> MpesaResult<TransactionReversalResponse> {
+    pub async fn send(self) -> MpesaResult<TransactionReversalResponse> {
         let url = format!(
             "{}/reversal/v1/request",
             self.client.environment().base_url()
@@ -183,10 +183,7 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
         let payload = TransactionReversalPayload {
             initiator: self.initiator,
             security_credentials: &credentials,
-            command_id: self
-                .command_id
-                .clone()
-                .unwrap_or(CommandId::TransactionReversal),
+            command_id: self.command_id.unwrap_or(CommandId::TransactionReversal),
             transaction_id: self
                 .transaction_id
                 .expect("transaction_id is required field"),

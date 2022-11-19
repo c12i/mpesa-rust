@@ -3,7 +3,7 @@ use serde_repr::{Deserialize_repr, Serialize_repr};
 use std::fmt::{Display, Formatter, Result as FmtResult};
 
 /// Mpesa command ids
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum CommandId {
     TransactionReversal,
     SalaryPayment,
