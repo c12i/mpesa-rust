@@ -174,7 +174,7 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
     /// Returns a `MpesaError` on failure.
     pub async fn send(self) -> MpesaResult<TransactionReversalResponse> {
         let url = format!(
-            "{}/reversal/v1/request",
+            "{}/mpesa/reversal/v1/request",
             self.client.environment().base_url()
         );
 
