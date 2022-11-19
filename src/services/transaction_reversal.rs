@@ -136,6 +136,7 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
         self.remarks = Some(remarks);
         self
     }
+    
     /// Occasion of the transaction
     /// This is an optional Parameter
     pub fn occasion(mut self, occasion: &'mpesa str) -> Self {
