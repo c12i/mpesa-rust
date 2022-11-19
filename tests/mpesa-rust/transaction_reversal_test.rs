@@ -13,7 +13,7 @@ async fn transaction_reversal_test() {
         .transaction_id("OEI2AK4Q16")
         .receiver_identifier_type(IdentifierTypes::ShortCode)
         .amount(1.0)
-        .receiver_party("600610")
+        .receiver_party("600111")
         .remarks("wrong recipient")
         .send()
         .await;

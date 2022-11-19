@@ -20,7 +20,7 @@ pub struct TransactionReversalPayload<'mpesa> {
     transaction_id: &'mpesa str,
     #[serde(rename(serialize = "ReceiverParty"))]
     receiver_party: &'mpesa str,
-    #[serde(rename(serialize = "ReceiverIdentifierType"))]
+    #[serde(rename(serialize = "RecieverIdentifierType"))]
     receiver_identifier_type: Option<IdentifierTypes>,
     #[serde(rename(serialize = "ResultURL"))]
     result_url: Option<&'mpesa str>,
