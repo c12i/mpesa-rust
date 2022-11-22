@@ -14,7 +14,7 @@ An unofficial Rust wrapper around the [Safaricom API](https://developer.safarico
 
 ```toml
 [dependencies]
-mpesa = { git = "https://github.com/collinsmuriuki/mpesa-rust" }
+mpesa = "1.0.0-beta"
 ```
 
 Optionally, you can disable default-features, which is basically the entire suite of MPESA APIs to conditionally select from either:
@@ -30,7 +30,7 @@ Example:
 
 ```toml
 [dependencies]
-mpesa = { git = "https://github.com/collinsmuriuki/mpesa-rust", default_features = false, features = ["b2b", "express_request"] }
+mpesa = { version = "1.0.0-beta", default_features = false, features = ["b2b", "express_request"] }
 ```
 
 In your lib or binary crate:

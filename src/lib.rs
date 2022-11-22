@@ -7,7 +7,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mpesa = "0.4.2"
+//! mpesa = "1.0.0-beta"
 //! ```
 //! Optionally, you can disable default-features, which is basically the entire suite of MPESA APIs to conditionally select from either:
 //! - `b2b`
@@ -22,7 +22,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mpesa = { version = "0.4.2", default_features = false, features = ["b2b", "express_request"] }
+//! mpesa = { version = "1.0.0-beta", default_features = false, features = ["b2b", "express_request"] }
 //! ```
 //!
 //! In your lib or binary crate:
