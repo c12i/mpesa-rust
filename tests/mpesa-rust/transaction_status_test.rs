@@ -3,7 +3,7 @@ use mpesa::IdentifierTypes;
 use crate::get_mpesa_client;
 
 #[tokio::test]
-async fn transaction_reversal_test() {
+async fn transaction_status_test() {
     let client = get_mpesa_client!();
 
     let response = client
