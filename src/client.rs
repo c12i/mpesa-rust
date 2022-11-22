@@ -24,7 +24,7 @@ pub struct Mpesa<Env: ApiEnvironment> {
     client_key: String,
     client_secret: String,
     initiator_password: RefCell<Option<String>>,
-    environment: Env,
+    pub(crate) environment: Env,
     pub(crate) http_client: HttpClient,
 }
 
@@ -302,7 +302,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// # Errors
     /// Returns `EncryptionError` variant of `MpesaError`
     pub(crate) fn gen_security_credentials(&self) -> MpesaResult<String> {
-        let pem = self.environment().get_certificate().as_bytes();
+        let pem = self.environment.get_certificate().as_bytes();
         let cert = X509::from_pem(pem)?;
         // getting the public and rsa keys
         let pub_key = cert.public_key()?;
@@ -350,8 +350,8 @@ mod tests {
     #[test]
     fn test_custom_environment() {
         let client = Mpesa::new("client_key", "client_secret", TestEnvironment);
-        assert_eq!(client.environment().base_url(), "https://example.com");
-        assert_eq!(client.environment().get_certificate(), "certificate");
+        assert_eq!(client.environment.base_url(), "https://example.com");
+        assert_eq!(client.environment.get_certificate(), "certificate");
     }
 
     #[test]

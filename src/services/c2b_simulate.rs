@@ -121,7 +121,7 @@ impl<'mpesa, Env: ApiEnvironment> C2bSimulateBuilder<'mpesa, Env> {
     pub async fn send(self) -> MpesaResult<C2bSimulateResponse> {
         let url = format!(
             "{}/mpesa/c2b/v1/simulate",
-            self.client.environment().base_url()
+            self.client.environment.base_url()
         );
 
         let payload = C2bSimulatePayload {
