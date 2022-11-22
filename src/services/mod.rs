@@ -11,6 +11,7 @@
 //! 4. [C2B Register](https://developer.safaricom.co.ke/docs?shell#c2b-api)
 //! 5. [C2B Simulate](https://developer.safaricom.co.ke/docs#account-balance-api)
 //! 6. [Mpesa Express/ STK Push](https://developer.safaricom.co.ke/docs#lipa-na-m-pesa-online-payment)
+//! 7. [Transaction Reversal](https://developer.safaricom.co.ke/docs#reversal)
 
 mod account_balance;
 mod b2b;
