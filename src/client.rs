@@ -56,11 +56,6 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         }
     }
 
-    /// Gets the current `Environment`
-    pub(crate) fn environment(&'mpesa self) -> &Env {
-        &self.environment
-    }
-
     /// Gets the initiator password
     /// If `None`, the default password is `"Safcom496!"`
     pub(crate) fn initiator_password(&'mpesa self) -> String {
