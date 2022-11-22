@@ -1,7 +1,7 @@
 use crate::environment::ApiEnvironment;
 use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bSimulateBuilder,
-    MpesaExpressRequestBuilder, TransactionReversalBuilder,
+    MpesaExpressRequestBuilder, TransactionReversalBuilder, TransactionStatusBuilder,
 };
 use crate::MpesaError;
 use openssl::rsa::Padding;
@@ -292,6 +292,15 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         initiator_name: &'mpesa str,
     ) -> TransactionReversalBuilder<'mpesa, Env> {
         TransactionReversalBuilder::new(self, initiator_name)
+    }
+
+    // TODO::Add docs
+    #[cfg(feature = "transaction_status")]
+    pub fn transaction_status(
+        &'mpesa self,
+        initiator_name: &'mpesa str,
+    ) -> TransactionStatusBuilder<'mpesa, Env> {
+        TransactionStatusBuilder::new(self, initiator_name)
     }
 
     /// Generates security credentials
