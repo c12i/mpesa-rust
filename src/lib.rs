@@ -16,6 +16,7 @@
 //! - `c2b_register`
 //! - `c2b_simulate`
 //! - `express_request`
+//! - `transaction_reversal`
 //!
 //! Example:
 //!
@@ -248,7 +249,7 @@
 //!
 //! * Mpesa Express Request / STK push/ Lipa na M-PESA online
 //!
-//! ```ignore
+//! ```rust,no_run
 //! use mpesa::{Mpesa, Environment};
 //! use std::env;
 //! use dotenv::dotenv;
@@ -273,6 +274,38 @@
 //!     assert!(response.is_ok())
 //! }
 //! ```
+//!
+//! * Transaction Reversal
+//!
+//! ```rust,no_run
+//! use mpesa::{Mpesa, Environment, IdentifierTypes};
+//! use std::env;
+//! use dotenv::dotenv;
+//!
+//! #[tokio::main]
+//! async fn main() {
+//!     dotenv().ok();
+//!
+//!     let client = Mpesa::new(
+//!         env::var("CLIENT_KEY").unwrap(),
+//!         env::var("CLIENT_SECRET").unwrap(),
+//!         Environment::Sandbox
+//!     );
+//!
+//!     let response = client
+//!         .transaction_reversal("testapi496")
+//!         .result_url("https://testdomain.com/ok")
+//!         .timeout_url("https://testdomain.com/err")
+//!         .transaction_id("OEI2AK4Q16")
+//!         .receiver_identifier_type(IdentifierTypes::ShortCode)
+//!         .amount(100.0)
+//!         .receiver_party("600111")
+//!         .send()
+//!         .await;
+//!     assert!(response.is_ok());
+//!}
+//! ```
+//!
 //! More will be added progressively, pull requests welcome
 //!
 //!## Author

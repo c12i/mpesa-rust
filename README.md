@@ -24,6 +24,7 @@ Optionally, you can disable default-features, which is basically the entire suit
 - `c2b_register`
 - `c2b_simulate`
 - `express_request`
+- `transaction_reversal`
 
 Example:
 
@@ -226,6 +227,22 @@ let response = client
     .phone_number("254708374149")
     .amount(500)
     .callback_url("https://test.example.com/api")
+    .send()
+    .await;
+assert!(response.is_ok())
+```
+
+- Transaction Reversal:
+
+```rust
+let response = client
+    .transaction_reversal("testapi496")
+    .result_url("https://testdomain.com/ok")
+    .timeout_url("https://testdomain.com/err")
+    .transaction_id("OEI2AK4Q16")
+    .receiver_identifier_type(IdentifierTypes::ShortCode)
+    .amount(100.0)
+    .receiver_party("600111")
     .send()
     .await;
 assert!(response.is_ok())
