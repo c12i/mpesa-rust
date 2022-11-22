@@ -195,7 +195,7 @@ impl<'mpesa, Env: ApiEnvironment> B2cBuilder<'mpesa, Env> {
     pub async fn send(self) -> MpesaResult<B2cResponse> {
         let url = format!(
             "{}/mpesa/b2c/v1/paymentrequest",
-            self.client.environment().base_url()
+            self.client.environment.base_url()
         );
         let credentials = self.client.gen_security_credentials()?;
 

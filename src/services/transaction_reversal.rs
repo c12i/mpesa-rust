@@ -176,7 +176,7 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
     pub async fn send(self) -> MpesaResult<TransactionReversalResponse> {
         let url = format!(
             "{}/mpesa/reversal/v1/request",
-            self.client.environment().base_url()
+            self.client.environment.base_url()
         );
 
         let credentials = self.client.gen_security_credentials()?;

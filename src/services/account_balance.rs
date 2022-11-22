@@ -158,7 +158,7 @@ impl<'mpesa, Env: ApiEnvironment> AccountBalanceBuilder<'mpesa, Env> {
     pub async fn send(self) -> MpesaResult<AccountBalanceResponse> {
         let url = format!(
             "{}/mpesa/accountbalance/v1/query",
-            self.client.environment().base_url()
+            self.client.environment.base_url()
         );
 
         let credentials = self.client.gen_security_credentials()?;
