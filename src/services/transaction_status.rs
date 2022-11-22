@@ -35,11 +35,11 @@ pub struct TransactionStatusPayload<'mpesa> {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TransactionStatusResponse {
     #[serde(rename(deserialize = "ConversationID"))]
-    conversation_id: String,
+    pub conversation_id: String,
     #[serde(rename(deserialize = "OriginatorConversationID"))]
-    originator_conversation_id: String,
+    pub originator_conversation_id: String,
     #[serde(rename(deserialize = "ResponseDescription"))]
-    response_description: String,
+    pub response_description: String,
 }
 
 #[derive(Debug)]
