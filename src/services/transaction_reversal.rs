@@ -37,11 +37,11 @@ pub struct TransactionReversalPayload<'mpesa> {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TransactionReversalResponse {
     #[serde(rename(deserialize = "ConversationID"))]
-    conversation_id: String,
+    pub conversation_id: String,
     #[serde(rename(deserialize = "OriginatorConversationID"))]
-    originator_conversation_id: String,
+    pub originator_conversation_id: String,
     #[serde(rename(deserialize = "ResponseDescription"))]
-    response_description: String,
+    pub response_description: String,
 }
 
 #[derive(Debug)]
@@ -176,7 +176,7 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
     pub async fn send(self) -> MpesaResult<TransactionReversalResponse> {
         let url = format!(
             "{}/mpesa/reversal/v1/request",
-            self.client.environment().base_url()
+            self.client.environment.base_url()
         );
 
         let credentials = self.client.gen_security_credentials()?;

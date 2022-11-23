@@ -224,7 +224,7 @@ impl<'mpesa, Env: ApiEnvironment> MpesaExpressRequestBuilder<'mpesa, Env> {
     pub async fn send(self) -> MpesaResult<MpesaExpressRequestResponse> {
         let url = format!(
             "{}/mpesa/stkpush/v1/processrequest",
-            self.client.environment().base_url()
+            self.client.environment.base_url()
         );
 
         let (password, timestamp) = self.generate_password_and_timestamp();
