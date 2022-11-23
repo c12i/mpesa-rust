@@ -293,8 +293,22 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ) -> TransactionReversalBuilder<'mpesa, Env> {
         TransactionReversalBuilder::new(self, initiator_name)
     }
-
-    // TODO::Add docs
+    ///**Transaction Status Builder**
+    /// Queries the status of a B2B, B2C or C2B M-Pesa transaction.
+    ///
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
+    /// # Example
+    /// ```ignore
+    /// let response = client
+    ///   .transaction_status("testapi496")
+    ///   .party_a("600496")
+    ///   .identifier_type(mpesa::IdentifierTypes::ShortCode) // optional, defaults to `IdentifierTypes::ShortCode`
+    ///   .remarks("Your Remarks") // optional, defaults to "None"
+    ///   .result_url("https://testdomain.com/err")
+    ///   .timeout_url("https://testdomain.com/ok")
+    ///   .send()
+    ///   .await;
+    /// ```
     #[cfg(feature = "transaction_status")]
     pub fn transaction_status(
         &'mpesa self,

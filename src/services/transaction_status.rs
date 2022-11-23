@@ -76,7 +76,7 @@ impl<'mpesa, Env: ApiEnvironment> TransactionStatusBuilder<'mpesa, Env> {
         }
     }
 
-    /// Adds `CommandId`. Defaults to `CommandId::TransactionReversal` if no value explicitly passed
+    /// Adds `CommandId`. Defaults to `CommandId::TransactionStatus` if no value explicitly passed
     ///
     /// # Errors
     /// If `CommandId` is not valid
@@ -142,6 +142,22 @@ impl<'mpesa, Env: ApiEnvironment> TransactionStatusBuilder<'mpesa, Env> {
         self
     }
 
+    /// # Transaction Status API
+    ///
+    /// Requests for the status of a transaction
+    ///
+    /// This API enables the status of a B2B, B2C or C2B M-Pesa transaction
+    /// Required  parameters:
+    ///
+    /// `transaction_id`: This is the Mpesa Transaction ID of the transaction which you wish to reverse
+    ///
+    ///
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
+    ///
+    /// A successful request returns a `TransactionStatusResponse` type
+    ///
+    /// # Errors
+    /// Returns a `MpesaError` on failure.
     pub async fn send(self) -> MpesaResult<TransactionStatusResponse> {
         let url = format!(
             "{}/mpesa/transactionstatus/v1/query",
