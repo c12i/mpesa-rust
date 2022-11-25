@@ -18,6 +18,7 @@ mpesa = { git = "https://github.com/collinsmuriuki/mpesa-rust" }
 ```
 
 Optionally, you can disable default-features, which is basically the entire suite of MPESA APIs to conditionally select from either:
+
 - `b2b`
 - `b2c`
 - `account_balance`
@@ -148,7 +149,7 @@ assert!(client.is_connected().await)
 
 The following services are currently available from the `Mpesa` client as methods that return builders:
 
--   B2C
+- B2C
 
 ```rust
 let response = client
@@ -163,7 +164,7 @@ let response = client
 assert!(response.is_ok())
 ```
 
--   B2B
+- B2B
 
 ```rust
 let response = client
@@ -179,7 +180,7 @@ let response = client
 assert!(response.is_ok())
 ```
 
--   C2B Register
+- C2B Register
 
 ```rust
 let response = client
@@ -192,7 +193,7 @@ let response = client
 assert!(response.is_ok())
 ```
 
--   C2B Simulate
+- C2B Simulate
 
 ```rust
 
@@ -206,7 +207,7 @@ let response = client
 assert!(response.is_ok())
 ```
 
--   Account Balance
+- Account Balance
 
 ```rust
 let response = client
@@ -219,7 +220,7 @@ let response = client
 assert!(response.is_ok())
 ```
 
--   Mpesa Express Request / STK push / Lipa na M-PESA online
+- Mpesa Express Request / STK push / Lipa na M-PESA online
 
 ```rust
 let response = client
@@ -248,14 +249,31 @@ let response = client
 assert!(response.is_ok())
 ```
 
+- Transaction Status
+
+```rust
+let response = client
+        .transaction_status("testapi496")
+        .result_url("https://testdomain.com/ok")
+        .timeout_url("https://testdomain.com/err")
+        .transaction_id("OEI2AK4Q16")
+        .identifier_type(IdentifierTypes::ShortCode)
+        .party_a("600111")
+        .remarks("status")
+        .occasion("work")
+        .send()
+        .await;
+assert!(response.is_ok())
+```
+
 More will be added progressively, pull requests welcome
 
 ## Author
 
 **Collins Muriuki**
 
--   Twitter: [@collinsmuriuki\_](https://twitter.com/collinsmuriuki_)
--   Not affiliated with Safaricom.
+- Twitter: [@collinsmuriuki\_](https://twitter.com/collinsmuriuki_)
+- Not affiliated with Safaricom.
 
 ## Contributing
 

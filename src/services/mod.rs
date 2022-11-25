@@ -20,6 +20,7 @@ mod c2b_register;
 mod c2b_simulate;
 mod express_request;
 mod transaction_reversal;
+mod transaction_status;
 
 #[cfg(feature = "account_balance")]
 pub use account_balance::{AccountBalanceBuilder, AccountBalanceResponse};
@@ -35,3 +36,5 @@ pub use c2b_simulate::{C2bSimulateBuilder, C2bSimulateResponse};
 pub use express_request::{MpesaExpressRequestBuilder, MpesaExpressRequestResponse};
 #[cfg(feature = "transaction_reversal")]
 pub use transaction_reversal::{TransactionReversalBuilder, TransactionReversalResponse};
+#[cfg(feature = "transaction_status")]
+pub use transaction_status::{TransactionStatusBuilder, TransactionStatusResponse};
