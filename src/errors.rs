@@ -21,11 +21,13 @@ pub enum MpesaError {
     MpesaTransactionReversalError(serde_json::Value),
     #[error("Mpesa Transaction status failed: {0}")]
     MpesaTransactionStatusError(serde_json::Value),
-    #[error("An error has occured while performing the http request")]
+    #[error("Mpesa Dynamic QRCode failed: {0}")]
+    MpesaDynamicQRError(serde_json::Value),
+    #[error("An error has occurred while performing the http request")]
     NetworkError(#[from] reqwest::Error),
-    #[error("An error has occured while serializig/ deserializing")]
+    #[error("An error has occurred while serializing/ deserializing")]
     ParseError(#[from] serde_json::Error),
-    #[error("An error has occured while retreiving an environmental variable")]
+    #[error("An error has occurred while retrieving an environmental variable")]
     EnvironmentalVariableError(#[from] VarError),
     #[error("An error has occurred while generating security credentials")]
     EncryptionError(#[from] openssl::error::ErrorStack),

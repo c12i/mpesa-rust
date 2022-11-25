@@ -20,14 +20,14 @@ serde_repr = "0.1"
 thiserror = "1.0.37"
 
 [dev-dependencies]
-dotenv = "0.15"
+dotenvy = "0.15"
 tokio = {version = "1", features = ["rt", "rt-multi-thread", "macros"]}
 wiremock = "0.5"
 
 [features]
 default = [
 	"account_balance",
-	"b2b", 
+	"b2b",
 	"b2c",
 	"c2b_register",
 	"c2b_simulate",
@@ -43,3 +43,4 @@ c2b_simulate = []
 express_request = ["dep:chrono", "dep:base64"]
 transaction_reversal = ["dep:openssl", "dep:base64"]
 transaction_status= ["dep:openssl", "dep:base64"]
+dynamic_qr = ["dep:openssl", "dep:base64"]

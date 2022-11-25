@@ -1,7 +1,8 @@
 use crate::environment::ApiEnvironment;
 use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bSimulateBuilder,
-    MpesaExpressRequestBuilder, TransactionReversalBuilder, TransactionStatusBuilder,
+    DynamicQRBuilder, MpesaExpressRequestBuilder, TransactionReversalBuilder,
+    TransactionStatusBuilder,
 };
 use crate::MpesaError;
 use openssl::rsa::Padding;
@@ -310,6 +311,11 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         initiator_name: &'mpesa str,
     ) -> TransactionStatusBuilder<'mpesa, Env> {
         TransactionStatusBuilder::new(self, initiator_name)
+    }
+
+    #[cfg(feature = "dynamic_qr")]
+    pub fn dynamic_qrcode(&'mpesa self) -> DynamicQRBuilder<'mpesa, Env> {
+        DynamicQRBuilder::new(self)
     }
 
     /// Generates security credentials

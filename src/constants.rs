@@ -86,3 +86,37 @@ impl Display for ResponseType {
         write!(f, "{:?}", self)
     }
 }
+
+#[derive(Debug, Clone, Copy, Deserialize, Serialize)]
+pub enum TransactionType {
+    /// Send Money(Mobile number).
+    SendMoney,
+    /// Withdraw Cash at Agent Till
+    Withdraw,
+    /// Pay Merchant (Buy Goods)
+    BG,
+    /// Paybill or Business number
+    PayBill,
+    /// Sent to Business. Business number CPI in MSISDN format.
+    SendBusiness,
+}
+
+impl Display for TransactionType {
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
+        write!(f, "{:?}", self)
+    }
+}
+
+impl From<&str> for TransactionType {
+    // TODO::SUPPORT ANY CASE
+    fn from(v: &str) -> Self {
+        match v {
+            "BG" => TransactionType::BG,
+            "WA" => TransactionType::Withdraw,
+            "PB" => TransactionType::PayBill,
+            "SM" => TransactionType::SendMoney,
+            "SB" => TransactionType::SendBusiness,
+            _ => unimplemented!(),
+        }
+    }
+}

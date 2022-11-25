@@ -325,7 +325,7 @@ mod errors;
 pub mod services;
 
 pub use client::{Mpesa, MpesaResult};
-pub use constants::{CommandId, IdentifierTypes, ResponseType};
+pub use constants::{CommandId, IdentifierTypes, ResponseType, TransactionType};
 pub use environment::ApiEnvironment;
 pub use environment::Environment::{self, Production, Sandbox};
 pub use errors::MpesaError;

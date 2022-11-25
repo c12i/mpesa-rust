@@ -18,6 +18,7 @@ mod b2b;
 mod b2c;
 mod c2b_register;
 mod c2b_simulate;
+mod dynamic_qr;
 mod express_request;
 mod transaction_reversal;
 mod transaction_status;
@@ -32,6 +33,8 @@ pub use b2c::{B2cBuilder, B2cResponse};
 pub use c2b_register::{C2bRegisterBuilder, C2bRegisterResponse};
 #[cfg(feature = "c2b_simulate")]
 pub use c2b_simulate::{C2bSimulateBuilder, C2bSimulateResponse};
+#[cfg(feature = "dynamic_qr")]
+pub use dynamic_qr::{DynamicQRBuilder, DynamicQRResponse};
 #[cfg(feature = "express_request")]
 pub use express_request::{MpesaExpressRequestBuilder, MpesaExpressRequestResponse};
 #[cfg(feature = "transaction_reversal")]

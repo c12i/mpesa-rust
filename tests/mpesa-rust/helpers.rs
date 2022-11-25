@@ -33,7 +33,7 @@ macro_rules! get_mpesa_client {
     () => {{
         use mpesa::{Environment, Mpesa};
         use std::str::FromStr;
-        dotenv::dotenv().ok();
+        dotenvy::dotenv().ok();
         let client = Mpesa::new(
             std::env::var("CLIENT_KEY").unwrap(),
             std::env::var("CLIENT_SECRET").unwrap(),
@@ -45,7 +45,7 @@ macro_rules! get_mpesa_client {
     ($client_key:expr, $client_secret:expr) => {{
         use mpesa::{Environment, Mpesa};
         use std::str::FromStr;
-        dotenv::dotenv().ok();
+        dotenvy::dotenv().ok();
         let client = Mpesa::new(
             $client_key,
             $client_secret,
@@ -57,7 +57,7 @@ macro_rules! get_mpesa_client {
     ($client_key:expr, $client_secret:expr, $environment:expr) => {{
         use mpesa::{Environment, Mpesa};
         use std::str::FromStr;
-        dotenv::dotenv().ok();
+        dotenvy::dotenv().ok();
         let client = Mpesa::new($client_key, $client_secret, $environment);
         client
     }};
