@@ -34,8 +34,8 @@ pub trait ApiEnvironment {
 macro_rules! environment_from_string {
     ($v:expr) => {
         match $v {
-            "production" | "Production" | "PRODUCTION" => Ok(Self::Production),
-            "sandbox" | "Sandbox" | "SANDBOX" => Ok(Self::Sandbox),
+            "production" => Ok(Self::Production),
+            "sandbox" => Ok(Self::Sandbox),
             _ => Err(MpesaError::Message(
                 "Could not parse the provided environment name",
             )),
@@ -47,7 +47,7 @@ impl FromStr for Environment {
     type Err = MpesaError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        environment_from_string!(s)
+        environment_from_string!(s.to_lowercase().as_str())
     }
 }
 
@@ -55,7 +55,7 @@ impl TryFrom<&str> for Environment {
     type Error = MpesaError;
 
     fn try_from(v: &str) -> Result<Self, Self::Error> {
-        environment_from_string!(v)
+        environment_from_string!(v.to_lowercase().as_str())
     }
 }
 
@@ -63,7 +63,7 @@ impl TryFrom<String> for Environment {
     type Error = MpesaError;
 
     fn try_from(v: String) -> Result<Self, Self::Error> {
-        environment_from_string!(v.as_str())
+        environment_from_string!(v.to_lowercase().as_str())
     }
 }
 
@@ -93,8 +93,9 @@ mod tests {
 
     #[test]
     fn test_valid_string_is_parsed_as_environment() {
-        let accepted_production_values = vec!["production", "Production", "PRODUCTION"];
-        let accepted_sandbox_values = vec!["sandbox", "Sandbox", "SANDBOX"];
+        let accepted_production_values =
+            vec!["production", "Production", "PRODUCTION", "prODUctIoN"];
+        let accepted_sandbox_values = vec!["sandbox", "Sandbox", "SANDBOX", "sanDBoX"];
         accepted_production_values.into_iter().for_each(|v| {
             let environment: Environment = v.parse().unwrap();
             assert_eq!(environment.base_url(), "https://api.safaricom.co.ke");
