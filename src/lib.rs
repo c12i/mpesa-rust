@@ -43,7 +43,7 @@
 //! ```rust,no_run
 //! use mpesa::{Mpesa, Environment};
 //! use std::env;
-//! use dotenv::dotenv;
+//! use dotenvy::dotenv;
 //!
 //! #[tokio::main]
 //! async fn main() {
@@ -64,7 +64,7 @@
 //! ```rust,no_run
 //! use mpesa::{Mpesa, Environment};
 //! use std::env;
-//! use dotenv::dotenv;
+//! use dotenvy::dotenv;
 //! use std::str::FromStr;
 //!
 //! #[tokio::main]
@@ -85,7 +85,7 @@
 //! ```rust,no_run
 //! use mpesa::{Mpesa, Environment};
 //! use std::env;
-//! use dotenv::dotenv;
+//! use dotenvy::dotenv;
 //!
 //! #[tokio::main]
 //! async fn main() {
@@ -109,7 +109,7 @@
 //! ```rust,no_run
 //! use mpesa::{Mpesa, Environment};
 //! use std::env;
-//! use dotenv::dotenv;
+//! use dotenvy::dotenv;
 //!
 //! #[tokio::main]
 //! async fn main() {
@@ -138,7 +138,7 @@
 //! ```rust,no_run
 //! use mpesa::{Mpesa, Environment};
 //! use std::env;
-//! use dotenv::dotenv;
+//! use dotenvy::dotenv;
 //!
 //! #[tokio::main]
 //! async fn main() {
@@ -169,7 +169,7 @@
 //! use mpesa::{Mpesa, Environment};
 //! use serde_json::Value;
 //! use std::env;
-//! use dotenv::dotenv;
+//! use dotenvy::dotenv;
 //!
 //! #[tokio::main]
 //! async fn main() {
@@ -196,7 +196,7 @@
 //! ```rust,no_run
 //! use mpesa::{Mpesa, Environment};
 //! use std::env;
-//! use dotenv::dotenv;
+//! use dotenvy::dotenv;
 //!
 //! #[tokio::main]
 //! async fn main() {
@@ -224,7 +224,7 @@
 //! ```rust,no_run
 //! use mpesa::{Mpesa, Environment};
 //! use std::env;
-//! use dotenv::dotenv;
+//! use dotenvy::dotenv;
 //!
 //! #[tokio::main]
 //! async fn main() {
@@ -252,7 +252,7 @@
 //! ```rust,no_run
 //! use mpesa::{Mpesa, Environment};
 //! use std::env;
-//! use dotenv::dotenv;
+//! use dotenvy::dotenv;
 //!
 //! #[tokio::main]
 //! async fn main() {
@@ -280,7 +280,7 @@
 //! ```rust,no_run
 //! use mpesa::{Mpesa, Environment, IdentifierTypes};
 //! use std::env;
-//! use dotenv::dotenv;
+//! use dotenvy::dotenv;
 //!
 //! #[tokio::main]
 //! async fn main() {
