@@ -1,5 +1,5 @@
 use crate::get_mpesa_client;
-use mpesa::TransactionType;
+
 #[tokio::test]
 async fn dynamic_qr_code_test() {
     let client = get_mpesa_client!();

@@ -89,7 +89,6 @@ impl<'mpesa, Env: ApiEnvironment> DynamicQRBuilder<'mpesa, Env> {
             credit_party_identifier: self.credit_party_identifier,
             amount: self.amount,
         };
-        eprintln!("Value {}", serde_json::to_string(&payload).unwrap());
         let response = self
             .client
             .http_client
