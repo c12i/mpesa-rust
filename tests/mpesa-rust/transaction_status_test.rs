@@ -7,7 +7,7 @@ use wiremock::{Mock, ResponseTemplate};
 use crate::get_mpesa_client;
 
 #[tokio::test]
-async fn transaction_status_test() {
+async fn transaction_status_success() {
     let (client, server) = get_mpesa_client!();
     let sample_response_body = json!({
         "OriginatorConversationID": "29464-48063588-1",

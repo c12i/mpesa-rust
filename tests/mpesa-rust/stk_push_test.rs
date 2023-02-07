@@ -5,7 +5,7 @@ use wiremock::matchers::{method, path};
 use wiremock::{Mock, ResponseTemplate};
 
 #[tokio::test]
-async fn stk_push_test_success() {
+async fn stk_push_success_success() {
     let (client, server) = get_mpesa_client!();
     let sample_response_body = json!({
         "MerchantRequestID": "16813-1590513-1",

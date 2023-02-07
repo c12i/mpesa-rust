@@ -4,7 +4,7 @@ use wiremock::matchers::{method, path};
 use wiremock::{Mock, ResponseTemplate};
 
 #[tokio::test]
-async fn c2b_register_test() {
+async fn c2b_register_success() {
     let (client, server) = get_mpesa_client!();
     let sample_response_body = json!({
         "OriginatorConverstionID": "29464-48063588-1",
