@@ -28,6 +28,10 @@ impl ApiEnvironment for TestEnvironment {
 #[macro_export]
 macro_rules! get_mpesa_client {
     () => {{
+        get_mpesa_client!(1)
+    }};
+
+    ($expected_requests: expr) => {{
         use crate::helpers::TestEnvironment;
         use mpesa::Mpesa;
         use wiremock::{MockServer, Mock, ResponseTemplate};
@@ -48,7 +52,7 @@ macro_rules! get_mpesa_client {
             .respond_with(ResponseTemplate::new(200).set_body_json(json!({
                 "access_token": "dummy_access_token"
             })))
-            .expect(1)
+            .expect($expected_requests)
             .mount(&server)
             .await;
         (client, server)
