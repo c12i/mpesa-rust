@@ -21,15 +21,15 @@ pub struct TransactionReversalPayload<'mpesa> {
     #[serde(rename(serialize = "ReceiverParty"))]
     receiver_party: &'mpesa str,
     #[serde(rename(serialize = "RecieverIdentifierType"))]
-    receiver_identifier_type: Option<IdentifierTypes>,
+    receiver_identifier_type: IdentifierTypes,
     #[serde(rename(serialize = "ResultURL"))]
-    result_url: Option<&'mpesa str>,
+    result_url: &'mpesa str,
     #[serde(rename(serialize = "QueueTimeOutURL"))]
-    timeout_url: Option<&'mpesa str>,
+    timeout_url: &'mpesa str,
     #[serde(rename(serialize = "Remarks"))]
-    remarks: Option<&'mpesa str>,
+    remarks: &'mpesa str,
     #[serde(rename(serialize = "Occasion"))]
-    occasion: Option<&'mpesa str>,
+    occasion: &'mpesa str,
     #[serde(rename(serialize = "Amount"))]
     amount: f64,
 }
@@ -107,7 +107,7 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
 
     /// Type of organization receiving the transaction
     ///
-    /// This is required field
+    /// This is an optional field, will default to `IdentifierTypes::ShortCode`
     pub fn receiver_identifier_type(mut self, receiver_identifier_type: IdentifierTypes) -> Self {
         self.receiver_identifier_type = Some(receiver_identifier_type);
         self
@@ -133,14 +133,15 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
 
     /// Comments that are sent along with the transaction.
     ///
-    /// This is required field
+    /// This is an optiona field; defaults to "None"
     pub fn remarks(mut self, remarks: &'mpesa str) -> Self {
         self.remarks = Some(remarks);
         self
     }
 
     /// Adds any additional information to be associated with the transaction.
-    /// This is an optional Parameter
+    ///
+    /// This is an optional Parameter, defaults to "None"
     pub fn occasion(mut self, occasion: &'mpesa str) -> Self {
         self.occasion = Some(occasion);
         self
@@ -187,18 +188,24 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
             command_id: self.command_id.unwrap_or(CommandId::TransactionReversal),
             transaction_id: self
                 .transaction_id
-                .ok_or(MpesaError::Message("transaction_id is required field"))?,
+                .ok_or(MpesaError::Message("transaction_id is required"))?,
             receiver_party: self
                 .receiver_party
-                .ok_or(MpesaError::Message("receiver_party is required field"))?,
-            receiver_identifier_type: self.receiver_identifier_type,
-            result_url: self.result_url,
-            timeout_url: self.timeout_url,
-            remarks: self.remarks,
-            occasion: self.occasion,
+                .ok_or(MpesaError::Message("receiver_party is required"))?,
+            receiver_identifier_type: self
+                .receiver_identifier_type
+                .unwrap_or(IdentifierTypes::ShortCode),
+            result_url: self
+                .result_url
+                .ok_or(MpesaError::Message("result_url is required"))?,
+            timeout_url: self
+                .timeout_url
+                .ok_or(MpesaError::Message("timeout_url is required"))?,
+            remarks: self.remarks.unwrap_or_else(|| stringify!(None)),
+            occasion: self.occasion.unwrap_or_else(|| stringify!(None)),
             amount: self
                 .amount
-                .ok_or(MpesaError::Message("amount is required field"))?,
+                .ok_or(MpesaError::Message("amount is required"))?,
         };
 
         let response = self

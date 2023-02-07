@@ -19,17 +19,17 @@ pub struct TransactionStatusPayload<'mpesa> {
     #[serde(rename(serialize = "TransactionID"))]
     transaction_id: &'mpesa str,
     #[serde(rename = "PartyA")]
-    party_a: Option<&'mpesa str>,
+    party_a: &'mpesa str,
     #[serde(rename(serialize = "IdentifierType"))]
-    identifier_type: Option<IdentifierTypes>,
+    identifier_type: IdentifierTypes,
     #[serde(rename(serialize = "ResultURL"))]
-    result_url: Option<&'mpesa str>,
+    result_url: &'mpesa str,
     #[serde(rename(serialize = "QueueTimeOutURL"))]
-    timeout_url: Option<&'mpesa str>,
+    timeout_url: &'mpesa str,
     #[serde(rename(serialize = "Remarks"))]
-    remarks: Option<&'mpesa str>,
+    remarks: &'mpesa str,
     #[serde(rename(serialize = "Occasion"))]
-    occasion: Option<&'mpesa str>,
+    occasion: &'mpesa str,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -103,7 +103,7 @@ impl<'mpesa, Env: ApiEnvironment> TransactionStatusBuilder<'mpesa, Env> {
 
     /// Type of organization receiving the transaction
     ///
-    /// This is required field
+    /// This is an optional field, defaults to `IdentifierTypes::ShortCode`
     pub fn identifier_type(mut self, identifier_type: IdentifierTypes) -> Self {
         self.identifier_type = Some(identifier_type);
         self
@@ -129,14 +129,15 @@ impl<'mpesa, Env: ApiEnvironment> TransactionStatusBuilder<'mpesa, Env> {
 
     /// Comments that are sent along with the transaction.
     ///
-    /// This is required field
+    /// This is an optional field, defaults to "None"
     pub fn remarks(mut self, remarks: &'mpesa str) -> Self {
         self.remarks = Some(remarks);
         self
     }
 
     /// Adds any additional information to be associated with the transaction.
-    /// This is an optional Parameter
+    ///
+    /// This is an optional Parameter, defaults to "None"
     pub fn occasion(mut self, occasion: &'mpesa str) -> Self {
         self.occasion = Some(occasion);
         self
@@ -173,12 +174,18 @@ impl<'mpesa, Env: ApiEnvironment> TransactionStatusBuilder<'mpesa, Env> {
             transaction_id: self
                 .transaction_id
                 .ok_or(MpesaError::Message("transaction_id is required field"))?,
-            party_a: self.party_a,
-            identifier_type: self.identifier_type,
-            result_url: self.result_url,
-            timeout_url: self.timeout_url,
-            remarks: self.remarks,
-            occasion: self.occasion,
+            party_a: self
+                .party_a
+                .ok_or(MpesaError::Message("party_a is required"))?,
+            identifier_type: self.identifier_type.unwrap_or(IdentifierTypes::ShortCode),
+            result_url: self
+                .result_url
+                .ok_or(MpesaError::Message("result_url is required"))?,
+            timeout_url: self
+                .timeout_url
+                .ok_or(MpesaError::Message("timeout_url is required"))?,
+            remarks: self.remarks.unwrap_or_else(|| stringify!(None)),
+            occasion: self.occasion.unwrap_or_else(|| stringify!(None)),
         };
 
         let response = self

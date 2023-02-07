@@ -14,12 +14,12 @@ struct B2bPayload<'mpesa> {
     command_id: CommandId,
     #[serde(rename(serialize = "Amount"))]
     amount: f64,
-    #[serde(rename(serialize = "PartyA"), skip_serializing_if = "Option::is_none")]
-    party_a: Option<&'mpesa str>,
+    #[serde(rename(serialize = "PartyA"))]
+    party_a: &'mpesa str,
     #[serde(rename(serialize = "SenderIdentifierType"))]
     sender_identifier_type: &'mpesa str,
-    #[serde(rename(serialize = "PartyB"), skip_serializing_if = "Option::is_none")]
-    party_b: Option<&'mpesa str>,
+    #[serde(rename(serialize = "PartyB"))]
+    party_b: &'mpesa str,
     #[serde(rename(serialize = "RecieverIdentifierType"))]
     reciever_identifier_type: &'mpesa str,
     #[serde(rename(serialize = "Remarks"))]
@@ -228,19 +228,24 @@ impl<'mpesa, Env: ApiEnvironment> B2bBuilder<'mpesa, Env> {
             command_id: self
                 .command_id
                 .unwrap_or_else(|| CommandId::BusinessToBusinessTransfer),
-            // TODO: Can this be improved?
-            amount: self.amount.unwrap_or_default(),
-            party_a: self.party_a,
+            amount: self
+                .amount
+                .ok_or(MpesaError::Message("amount is required"))?,
+            party_a: self
+                .party_a
+                .ok_or(MpesaError::Message("party_a is required"))?,
             sender_identifier_type: &self
                 .sender_id
                 .unwrap_or_else(|| IdentifierTypes::ShortCode)
                 .to_string(),
-            party_b: self.party_b,
+            party_b: self
+                .party_b
+                .ok_or(MpesaError::Message("party_b is required"))?,
             reciever_identifier_type: &self
                 .receiver_id
                 .unwrap_or_else(|| IdentifierTypes::ShortCode)
                 .to_string(),
-            remarks: self.remarks.unwrap_or_else(|| "None"),
+            remarks: self.remarks.unwrap_or_else(|| stringify!(None)),
             queue_time_out_url: self.queue_timeout_url,
             result_url: self.result_url,
             account_reference: self.account_ref,

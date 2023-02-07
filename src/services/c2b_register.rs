@@ -87,7 +87,7 @@ impl<'mpesa, Env: ApiEnvironment> C2bRegisterBuilder<'mpesa, Env> {
     /// Adds `ShortCode` for the organization. This is a required field.
     ///
     /// # Error
-    /// If `ShortCode` is invalid
+    /// If `ShortCode` is invalid or not provided
     pub fn short_code(mut self, short_code: &'mpesa str) -> C2bRegisterBuilder<'mpesa, Env> {
         self.short_code = Some(short_code);
         self
@@ -117,12 +117,18 @@ impl<'mpesa, Env: ApiEnvironment> C2bRegisterBuilder<'mpesa, Env> {
         );
 
         let payload = C2bRegisterPayload {
-            validation_url: self.validation_url.unwrap_or_else(|| "None"),
-            confirmation_url: self.confirmation_url.unwrap_or_else(|| "None"),
+            validation_url: self
+                .validation_url
+                .ok_or(MpesaError::Message("validation_url is required"))?,
+            confirmation_url: self
+                .confirmation_url
+                .ok_or(MpesaError::Message("confirmation_url is required"))?,
             response_type: self
                 .response_type
                 .unwrap_or_else(|| ResponseType::Completed),
-            short_code: self.short_code.unwrap_or_else(|| "None"),
+            short_code: self
+                .short_code
+                .ok_or(MpesaError::Message("short_code is required"))?,
         };
 
         let response = self

@@ -12,18 +12,12 @@ struct C2bSimulatePayload<'mpesa> {
     command_id: CommandId,
     #[serde(rename(serialize = "Amount"))]
     amount: f64,
-    #[serde(rename(serialize = "Msisdn"), skip_serializing_if = "Option::is_none")]
-    msisdn: Option<&'mpesa str>,
-    #[serde(
-        rename(serialize = "BillRefNumber"),
-        skip_serializing_if = "Option::is_none"
-    )]
-    bill_ref_number: Option<&'mpesa str>,
-    #[serde(
-        rename(serialize = "ShortCode"),
-        skip_serializing_if = "Option::is_none"
-    )]
-    short_code: Option<&'mpesa str>,
+    #[serde(rename(serialize = "Msisdn"))]
+    msisdn: &'mpesa str,
+    #[serde(rename(serialize = "BillRefNumber"))]
+    bill_ref_number: &'mpesa str,
+    #[serde(rename(serialize = "ShortCode"))]
+    short_code: &'mpesa str,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -74,7 +68,9 @@ impl<'mpesa, Env: ApiEnvironment> C2bSimulateBuilder<'mpesa, Env> {
     }
 
     /// Adds an `amount` to the request
-    /// This is a required field
+    ///
+    /// # Errors
+    /// If `Amount` is not provided
     pub fn amount<Number: Into<f64>>(mut self, amount: Number) -> C2bSimulateBuilder<'mpesa, Env> {
         self.amount = Some(amount.into());
         self
@@ -84,7 +80,7 @@ impl<'mpesa, Env: ApiEnvironment> C2bSimulateBuilder<'mpesa, Env> {
     /// This is a required field
     ///
     /// # Errors
-    /// If `MSISDN` is invalid
+    /// If `MSISDN` is invalid or not provided
     pub fn msisdn(mut self, msisdn: &'mpesa str) -> C2bSimulateBuilder<'mpesa, Env> {
         self.msisdn = Some(msisdn);
         self
@@ -93,13 +89,16 @@ impl<'mpesa, Env: ApiEnvironment> C2bSimulateBuilder<'mpesa, Env> {
     /// Adds `ShortCode`; the 6 digit MPESA Till Number or PayBill Number
     ///
     /// # Errors
-    /// If Till or PayBill number is invalid
+    /// If Till or PayBill number is invalid or not provided
     pub fn short_code(mut self, short_code: &'mpesa str) -> C2bSimulateBuilder<'mpesa, Env> {
         self.short_code = Some(short_code);
         self
     }
 
-    /// Adds Bull reference number. This field is optional and will by default be `"None"`.
+    /// Adds Bill reference number.
+    ///
+    /// # Errors
+    /// If `BillRefNumber` is invalid or not provided
     pub fn bill_ref_number(
         mut self,
         bill_ref_number: &'mpesa str,
@@ -130,10 +129,18 @@ impl<'mpesa, Env: ApiEnvironment> C2bSimulateBuilder<'mpesa, Env> {
             command_id: self
                 .command_id
                 .unwrap_or_else(|| CommandId::CustomerPayBillOnline),
-            amount: self.amount.unwrap_or_default(),
-            msisdn: self.msisdn,
-            bill_ref_number: self.bill_ref_number,
-            short_code: self.short_code,
+            amount: self
+                .amount
+                .ok_or(MpesaError::Message("amount is required"))?,
+            msisdn: self
+                .msisdn
+                .ok_or(MpesaError::Message("msisdn is required"))?,
+            bill_ref_number: self
+                .bill_ref_number
+                .ok_or(MpesaError::Message("bill_ref_number is required"))?,
+            short_code: self
+                .short_code
+                .ok_or(MpesaError::Message("short_code is required"))?,
         };
 
         let response = self

@@ -28,10 +28,10 @@ impl ApiEnvironment for TestEnvironment {
 #[macro_export]
 macro_rules! get_mpesa_client {
     () => {{
-        get_mpesa_client!(1)
+        get_mpesa_client!(expected_auth_requests = 1)
     }};
 
-    ($expected_requests: expr) => {{
+    (expected_auth_requests = $expected_requests: expr) => {{
         use crate::helpers::TestEnvironment;
         use mpesa::Mpesa;
         use wiremock::{MockServer, Mock, ResponseTemplate};

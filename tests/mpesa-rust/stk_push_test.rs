@@ -42,7 +42,7 @@ async fn stk_push_success_success() {
 
 #[tokio::test]
 async fn stk_push_fails_if_no_amount_is_provided() {
-    let (client, server) = get_mpesa_client!(0);
+    let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     let sample_response_body = json!({
         "MerchantRequestID": "16813-1590513-1",
         "CheckoutRequestID": "ws_CO_DMZ_12321_23423476",
@@ -61,16 +61,18 @@ async fn stk_push_fails_if_no_amount_is_provided() {
         .phone_number("254708374149")
         .callback_url("https://test.example.com/api")
         .send()
-        .await {
-            if let MpesaError::Message(msg) = e {
-                assert_eq!(msg, "amount is required")
-            };
-        }
+        .await
+    {
+        let MpesaError::Message(msg) = e  else { panic!("Expected MpesaError::Message, but found {}", e)};
+        assert_eq!(msg, "amount is required")
+    } else {
+        panic!("Expected error");
+    }
 }
 
 #[tokio::test]
 async fn stk_push_fails_if_no_callback_url_is_provided() {
-    let (client, server) = get_mpesa_client!(0);
+    let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     let sample_response_body = json!({
         "MerchantRequestID": "16813-1590513-1",
         "CheckoutRequestID": "ws_CO_DMZ_12321_23423476",
@@ -89,17 +91,18 @@ async fn stk_push_fails_if_no_callback_url_is_provided() {
         .phone_number("254708374149")
         .amount(500)
         .send()
-        .await {
-            if let MpesaError::Message(msg) = e {
-                assert_eq!(msg, "callback_url is required")
-            };
-        }
+        .await
+    {
+        let MpesaError::Message(msg) = e  else { panic!("Expected MpesaError::Message, but found {}", e)};
+        assert_eq!(msg, "callback_url is required")
+    } else {
+        panic!("Expected error");
+    }
 }
-
 
 #[tokio::test]
 async fn stk_push_fails_if_no_phone_number_is_provided() {
-    let (client, server) = get_mpesa_client!(0);
+    let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     let sample_response_body = json!({
         "MerchantRequestID": "16813-1590513-1",
         "CheckoutRequestID": "ws_CO_DMZ_12321_23423476",
@@ -118,10 +121,11 @@ async fn stk_push_fails_if_no_phone_number_is_provided() {
         .amount(500)
         .callback_url("https://test.example.com/api")
         .send()
-        .await {
-            if let MpesaError::Message(msg) = e {
-                assert_eq!(msg, "phone_number is required")
-            };
-        }
+        .await
+    {
+        let MpesaError::Message(msg) = e  else { panic!("Expected MpesaError::Message, but found {}", e)};
+        assert_eq!(msg, "phone_number is required")
+    } else {
+        panic!("Expected error");
+    }
 }
-
