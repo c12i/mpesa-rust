@@ -19,10 +19,15 @@ struct C2bRegisterPayload<'mpesa> {
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct C2bRegisterResponse {
-    #[serde(rename(deserialize = "ConversationID"), skip_serializing_if = "None")]
+    #[serde(
+        rename(deserialize = "ConversationID"),
+        skip_serializing_if = "Option::is_none"
+    )]
     pub conversation_id: Option<String>,
-    #[serde(rename(deserialize = "OriginatorCoversationID"))]
-    pub originator_coversation_id: String,
+    #[serde(rename(deserialize = "OriginatorConverstionID"))]
+    pub originator_conversation_id: String,
+    #[serde(rename(deserialize = "ResponseCode"))]
+    pub response_code: String,
     #[serde(rename(deserialize = "ResponseDescription"))]
     pub response_description: String,
 }
