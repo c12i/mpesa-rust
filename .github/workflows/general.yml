@@ -71,6 +71,6 @@ jobs:
           override: true
 
       - name: Run cargo-tarpaulin
-        uses: actions-rs/tarpaulin@master
+        uses: actions-rs/tarpaulin@v0.25.0
         with:
           args: '--ignore-tests --no-fail-fast'
