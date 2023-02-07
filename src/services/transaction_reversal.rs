@@ -201,8 +201,8 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
             timeout_url: self
                 .timeout_url
                 .ok_or(MpesaError::Message("timeout_url is required"))?,
-            remarks: self.remarks.unwrap_or_else(|| stringify!(None)),
-            occasion: self.occasion.unwrap_or_else(|| stringify!(None)),
+            remarks: self.remarks.unwrap_or(stringify!(None)),
+            occasion: self.occasion.unwrap_or(stringify!(None)),
             amount: self
                 .amount
                 .ok_or(MpesaError::Message("amount is required"))?,

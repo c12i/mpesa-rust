@@ -32,7 +32,7 @@ macro_rules! get_mpesa_client {
     }};
 
     (expected_auth_requests = $expected_requests: expr) => {{
-        use crate::helpers::TestEnvironment;
+        use $crate::helpers::TestEnvironment;
         use mpesa::Mpesa;
         use wiremock::{MockServer, Mock, ResponseTemplate};
         use serde_json::json;
