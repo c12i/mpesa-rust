@@ -333,7 +333,7 @@
 //!				.occasion("work")
 //!				.send()
 //!				.await;
-//! 		assert(response.is_ok());
+//! 		assert!(response.is_ok());
 //! }
 //! ```
 //!
