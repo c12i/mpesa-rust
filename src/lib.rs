@@ -305,35 +305,33 @@
 //!     assert!(response.is_ok());
 //!}
 //! ```
-//! 
+//!
 //! * Transaction Status
-//! 
+//!
 //! ```rust,no_run
 //! use mpesa::{Mpesa, Environment};
 //! use std::env;
 //! use dotenv::dotenv;
-//! 
+//!
 //! #[tokio::main]
 //! async fn main() {
-//! 		dotenv().ok();
-//! 
-//! 		let client = Mpesa::new(
+//!     dotenv().ok();
+//!
+//!     let client = Mpesa::new(
 //!         env::var("CLIENT_KEY").unwrap(),
 //!         env::var("CLIENT_SECRET").unwrap(),
 //!         Environment::Sandbox
 //!     );
-//! 
-//! 		let response = client
-//!				.transaction_status("testapi496")
-//!				.result_url("https://testdomain.com/ok")
-//!				.timeout_url("https://testdomain.com/err")
-//!				.transaction_id("OEI2AK4Q16")
-//!				.party_a("600111")
-//!				.remarks("status")
-//!				.occasion("work")
-//!				.send()
-//!				.await;
-//! 		assert!(response.is_ok());
+//!
+//!     let response = client
+//!         .transaction_status("testapi496")
+//!         .result_url("https://testdomain.com/ok")
+//!         .timeout_url("https://testdomain.com/err")
+//!         .transaction_id("OEI2AK4Q16")
+//!         .party_a("600111")
+//!         .send()
+//!         .await;
+//!     assert!(response.is_ok());
 //! }
 //! ```
 //!
