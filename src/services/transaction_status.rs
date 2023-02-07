@@ -173,7 +173,7 @@ impl<'mpesa, Env: ApiEnvironment> TransactionStatusBuilder<'mpesa, Env> {
             command_id: self.command_id.unwrap_or(CommandId::TransactionStatusQuery),
             transaction_id: self
                 .transaction_id
-                .ok_or(MpesaError::Message("transaction_id is required field"))?,
+                .ok_or(MpesaError::Message("transaction_id is required"))?,
             party_a: self
                 .party_a
                 .ok_or(MpesaError::Message("party_a is required"))?,
