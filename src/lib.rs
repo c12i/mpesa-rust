@@ -308,7 +308,7 @@
 //! 
 //! * Transaction Status
 //! 
-//! ```rust,norun
+//! ```rust,no_run
 //! use mpesa::{Mpesa, Environment};
 //! use std::env;
 //! use dotenv::dotenv;
