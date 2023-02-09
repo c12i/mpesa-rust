@@ -14,27 +14,18 @@ struct B2cPayload<'mpesa> {
     command_id: CommandId,
     #[serde(rename(serialize = "Amount"))]
     amount: f64,
-    #[serde(rename(serialize = "PartyA"), skip_serializing_if = "Option::is_none")]
-    party_a: Option<&'mpesa str>,
-    #[serde(rename(serialize = "PartyB"), skip_serializing_if = "Option::is_none")]
-    party_b: Option<&'mpesa str>,
+    #[serde(rename(serialize = "PartyA"))]
+    party_a: &'mpesa str,
+    #[serde(rename(serialize = "PartyB"))]
+    party_b: &'mpesa str,
     #[serde(rename(serialize = "Remarks"))]
     remarks: &'mpesa str,
-    #[serde(
-        rename(serialize = "QueueTimeOutURL"),
-        skip_serializing_if = "Option::is_none"
-    )]
-    queue_time_out_url: Option<&'mpesa str>,
-    #[serde(
-        rename(serialize = "ResultURL"),
-        skip_serializing_if = "Option::is_none"
-    )]
-    result_url: Option<&'mpesa str>,
-    #[serde(
-        rename(serialize = "Occasion"),
-        skip_serializing_if = "Option::is_none"
-    )]
-    occasion: Option<&'mpesa str>,
+    #[serde(rename(serialize = "QueueTimeOutURL"))]
+    queue_time_out_url: &'mpesa str,
+    #[serde(rename(serialize = "ResultURL"))]
+    result_url: &'mpesa str,
+    #[serde(rename(serialize = "Occasion"))]
+    occasion: &'mpesa str,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -205,13 +196,23 @@ impl<'mpesa, Env: ApiEnvironment> B2cBuilder<'mpesa, Env> {
             command_id: self
                 .command_id
                 .unwrap_or_else(|| CommandId::BusinessPayment),
-            amount: self.amount.unwrap_or_default(),
-            party_a: self.party_a,
-            party_b: self.party_b,
-            remarks: self.remarks.unwrap_or_else(|| "None"),
-            queue_time_out_url: self.queue_timeout_url,
-            result_url: self.result_url,
-            occasion: self.occasion,
+            amount: self
+                .amount
+                .ok_or(MpesaError::Message("amount is required"))?,
+            party_a: self
+                .party_a
+                .ok_or(MpesaError::Message("party_a is required"))?,
+            party_b: self
+                .party_b
+                .ok_or(MpesaError::Message("party_b is required"))?,
+            remarks: self.remarks.unwrap_or_else(|| stringify!(None)),
+            queue_time_out_url: self
+                .queue_timeout_url
+                .ok_or(MpesaError::Message("queue_timeout_url is required"))?,
+            result_url: self
+                .result_url
+                .ok_or(MpesaError::Message("result_url is required"))?,
+            occasion: self.occasion.unwrap_or_else(|| stringify!(None)),
         };
 
         let response = self

@@ -74,3 +74,4 @@ jobs:
         uses: actions-rs/tarpaulin@v0.1
         with:
           args: '--ignore-tests --no-fail-fast'
+          version: '0.22.0'

@@ -279,5 +279,5 @@ More will be added progressively, pull requests welcome
 
 Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/collinsmuriuki/mpesa-rust/issues). You can also take a look at the [contributing guide](CONTRIBUTING.md).
 
-Copyright © 2022 [Collins Muriuki](https://github.com/collinsmuriuki).<br />
+Copyright © 2023 [Collins Muriuki](https://github.com/collinsmuriuki).<br />
 This project is [MIT](LICENSE) licensed.

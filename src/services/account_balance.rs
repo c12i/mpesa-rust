@@ -13,22 +13,16 @@ struct AccountBalancePayload<'mpesa> {
     security_credential: &'mpesa str,
     #[serde(rename(serialize = "CommandID"))]
     command_id: CommandId,
-    #[serde(rename(serialize = "PartyA"), skip_serializing_if = "Option::is_none")]
-    party_a: Option<&'mpesa str>,
+    #[serde(rename(serialize = "PartyA"))]
+    party_a: &'mpesa str,
     #[serde(rename(serialize = "IdentifierType"))]
     identifier_type: &'mpesa str,
     #[serde(rename(serialize = "Remarks"))]
     remarks: &'mpesa str,
-    #[serde(
-        rename(serialize = "QueueTimeOutURL"),
-        skip_serializing_if = "Option::is_none"
-    )]
-    queue_time_out_url: Option<&'mpesa str>,
-    #[serde(
-        rename(serialize = "ResultURL"),
-        skip_serializing_if = "Option::is_none"
-    )]
-    result_url: Option<&'mpesa str>,
+    #[serde(rename(serialize = "QueueTimeOutURL"))]
+    queue_time_out_url: &'mpesa str,
+    #[serde(rename(serialize = "ResultURL"))]
+    result_url: &'mpesa str,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -165,15 +159,21 @@ impl<'mpesa, Env: ApiEnvironment> AccountBalanceBuilder<'mpesa, Env> {
 
         let payload = AccountBalancePayload {
             command_id: self.command_id.unwrap_or_else(|| CommandId::AccountBalance),
-            party_a: self.party_a,
+            party_a: self
+                .party_a
+                .ok_or(MpesaError::Message("party_a is required"))?,
             identifier_type: &self
                 .identifier_type
                 .unwrap_or_else(|| IdentifierTypes::ShortCode)
                 .to_string(),
-            remarks: self.remarks.unwrap_or_else(|| "None"),
+            remarks: self.remarks.unwrap_or_else(|| stringify!(None)),
             initiator: self.initiator_name,
-            queue_time_out_url: self.queue_timeout_url,
-            result_url: self.result_url,
+            queue_time_out_url: self
+                .queue_timeout_url
+                .ok_or(MpesaError::Message("queue_timeout_url is required"))?,
+            result_url: self
+                .result_url
+                .ok_or(MpesaError::Message("result_url is required"))?,
             security_credential: &credentials,
         };
 
