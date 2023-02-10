@@ -6,7 +6,6 @@ pub struct TestEnvironment {
 }
 
 impl TestEnvironment {
-    #[allow(unused)]
     pub async fn new(server: &MockServer) -> Self {
         TestEnvironment {
             server_url: server.uri(),
@@ -14,7 +13,6 @@ impl TestEnvironment {
     }
 }
 
-// TODO: Implement mock server for testing
 impl ApiEnvironment for TestEnvironment {
     fn base_url(&self) -> &str {
         &self.server_url

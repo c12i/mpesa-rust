@@ -288,6 +288,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ) -> TransactionReversalBuilder<'mpesa, Env> {
         TransactionReversalBuilder::new(self, initiator_name)
     }
+
     ///**Transaction Status Builder**
     /// Queries the status of a B2B, B2C or C2B M-Pesa transaction.
     ///
