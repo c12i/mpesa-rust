@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
+use std::convert::TryFrom;
 use std::fmt::{Display, Formatter, Result as FmtResult};
 
 /// Mpesa command ids
@@ -103,20 +104,21 @@ pub enum TransactionType {
 
 impl Display for TransactionType {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        write!(f, "{:?}", self)
+        write!(f, "{self:?}")
     }
 }
 
-impl From<&str> for TransactionType {
-    // TODO::SUPPORT ANY CASE
-    fn from(v: &str) -> Self {
-        match v {
-            "BG" => TransactionType::BG,
-            "WA" => TransactionType::Withdraw,
-            "PB" => TransactionType::PayBill,
-            "SM" => TransactionType::SendMoney,
-            "SB" => TransactionType::SendBusiness,
-            _ => unimplemented!(),
+impl TryFrom<&str> for TransactionType {
+    type Error = String;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        match value.to_lowercase().as_str() {
+            "bg" => Ok(TransactionType::BG),
+            "wa" => Ok(TransactionType::Withdraw),
+            "pb" => Ok(TransactionType::PayBill),
+            "sm" => Ok(TransactionType::SendMoney),
+            "sb" => Ok(TransactionType::SendBusiness),
+            _ => Err(format!("Invalid transaction type: {value}")),
         }
     }
 }

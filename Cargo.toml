@@ -33,7 +33,8 @@ default = [
 	"c2b_simulate",
 	"express_request",
 	"transaction_reversal",
-	"transaction_status"
+	"transaction_status",
+	"dynamic_qr",
 ]
 account_balance = ["dep:openssl", "dep:base64"]
 b2b = ["dep:openssl", "dep:base64"]

@@ -8,9 +8,9 @@ async fn dynamic_qr_code_test() {
         .dynamic_qrcode()
         .amount(2000)
         .credit_party_identifier("17408")
-        .merchant_name("Safaricom LTD")
+        .merchant_name("SafaricomLTD")
         .ref_no("rf38f04")
-        .trx_code("BG".into())
+        .trx_code(mpesa::TransactionType::BG)
         .send()
         .await;
     eprintln!("RES {response:?}");

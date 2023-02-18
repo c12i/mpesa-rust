@@ -29,6 +29,8 @@ pub struct DynamicQRResponse {
     pub qr_code: String,
     #[serde(rename(deserialize = "ResponseDescription"))]
     pub response_description: String,
+    #[serde(rename(deserialize = "RequestID"))]
+    pub request_id: String,
 }
 
 #[derive(Debug)]
@@ -89,14 +91,21 @@ impl<'mpesa, Env: ApiEnvironment> DynamicQRBuilder<'mpesa, Env> {
             credit_party_identifier: self.credit_party_identifier,
             amount: self.amount,
         };
+
+        let payload_json = serde_json::to_string(&payload)?;
+
+        eprintln!("PAYLOAD {:#?}", payload_json);
+
         let response = self
             .client
             .http_client
-            .post(&url)
+            .get(&url)
             .bearer_auth(self.client.auth().await?)
             .json(&payload)
             .send()
             .await?;
+
+        eprintln!("RESPONSE {:#?}", response);
 
         if !response.status().is_success() {
             let value = response.json::<_>().await?;
