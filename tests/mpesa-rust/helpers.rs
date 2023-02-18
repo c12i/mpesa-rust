@@ -2,22 +2,17 @@ use mpesa::ApiEnvironment;
 use wiremock::MockServer;
 
 pub struct TestEnvironment {
-    pub server: MockServer,
     pub server_url: String,
 }
 
 impl TestEnvironment {
-    #[allow(unused)]
-    pub async fn new() -> Self {
-        let mock_server = MockServer::start().await;
+    pub async fn new(server: &MockServer) -> Self {
         TestEnvironment {
-            server_url: mock_server.uri(),
-            server: mock_server,
+            server_url: server.uri(),
         }
     }
 }
 
-// TODO: Implement mock server for testing
 impl ApiEnvironment for TestEnvironment {
     fn base_url(&self) -> &str {
         &self.server_url
@@ -31,15 +26,34 @@ impl ApiEnvironment for TestEnvironment {
 #[macro_export]
 macro_rules! get_mpesa_client {
     () => {{
-        use mpesa::{Environment, Mpesa};
-        use std::str::FromStr;
+        get_mpesa_client!(expected_auth_requests = 1)
+    }};
+
+    (expected_auth_requests = $expected_requests: expr) => {{
+        use $crate::helpers::TestEnvironment;
+        use mpesa::Mpesa;
+        use wiremock::{MockServer, Mock, ResponseTemplate};
+        use serde_json::json;
+        use wiremock::matchers::{path, query_param, method};
+
         dotenvy::dotenv().ok();
+        let server = MockServer::start().await;
+        let test_environment = TestEnvironment::new(&server).await;
         let client = Mpesa::new(
             std::env::var("CLIENT_KEY").unwrap(),
             std::env::var("CLIENT_SECRET").unwrap(),
-            Environment::from_str("sandbox").unwrap(),
+            test_environment,
         );
-        client
+        Mock::given(method("GET"))
+            .and(path("/oauth/v1/generate"))
+            .and(query_param("grant_type", "client_credentials"))
+            .respond_with(ResponseTemplate::new(200).set_body_json(json!({
+                "access_token": "dummy_access_token"
+            })))
+            .expect($expected_requests)
+            .mount(&server)
+            .await;
+        (client, server)
     }};
 
     ($client_key:expr, $client_secret:expr) => {{
@@ -66,12 +80,6 @@ macro_rules! get_mpesa_client {
 #[cfg(test)]
 mod tests {
     use crate::get_mpesa_client;
-
-    #[tokio::test]
-    async fn test_client_is_created_successfuly_with_correct_credentials() {
-        let client = get_mpesa_client!();
-        assert!(client.is_connected().await);
-    }
 
     #[tokio::test]
     async fn test_client_will_not_authenticate_with_wrong_credentials() {

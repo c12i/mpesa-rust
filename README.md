@@ -26,6 +26,7 @@ Optionally, you can disable default-features, which is basically the entire suit
 - `c2b_simulate`
 - `express_request`
 - `transaction_reversal`
+- `transaction_status`
 
 Example:
 
@@ -253,16 +254,16 @@ assert!(response.is_ok())
 
 ```rust
 let response = client
-        .transaction_status("testapi496")
-        .result_url("https://testdomain.com/ok")
-        .timeout_url("https://testdomain.com/err")
-        .transaction_id("OEI2AK4Q16")
-        .identifier_type(IdentifierTypes::ShortCode)
-        .party_a("600111")
-        .remarks("status")
-        .occasion("work")
-        .send()
-        .await;
+    .transaction_status("testapi496")
+    .result_url("https://testdomain.com/ok")
+    .timeout_url("https://testdomain.com/err")
+    .transaction_id("OEI2AK4Q16")
+    .identifier_type(IdentifierTypes::ShortCode)
+    .party_a("600111")
+    .remarks("status")
+    .occasion("work")
+    .send()
+    .await;
 assert!(response.is_ok())
 ```
 
@@ -279,5 +280,5 @@ More will be added progressively, pull requests welcome
 
 Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/collinsmuriuki/mpesa-rust/issues). You can also take a look at the [contributing guide](CONTRIBUTING.md).
 
-Copyright © 2022 [Collins Muriuki](https://github.com/collinsmuriuki).<br />
+Copyright © 2023 [Collins Muriuki](https://github.com/collinsmuriuki).<br />
 This project is [MIT](LICENSE) licensed.

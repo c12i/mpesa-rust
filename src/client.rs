@@ -43,7 +43,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     pub fn new<S: Into<String>>(client_key: S, client_secret: S, environment: Env) -> Self {
         let http_client = HttpClient::builder()
             .connect_timeout(std::time::Duration::from_millis(10_000))
-            .user_agent(format!("mpesa-rust@{}", CARGO_PACKAGE_VERSION))
+            .user_agent(format!("mpesa-rust@{CARGO_PACKAGE_VERSION}"))
             // TODO: Potentialy return a `Result` enum from Mpesa::new?
             //       Making assumption that creation of http client cannot fail
             .build()
@@ -289,6 +289,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ) -> TransactionReversalBuilder<'mpesa, Env> {
         TransactionReversalBuilder::new(self, initiator_name)
     }
+
     ///**Transaction Status Builder**
     /// Queries the status of a B2B, B2C or C2B M-Pesa transaction.
     ///

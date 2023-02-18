@@ -24,16 +24,10 @@ struct MpesaExpressRequestPayload<'mpesa> {
     party_a: Option<&'mpesa str>,
     #[serde(rename(serialize = "PartyB"), skip_serializing_if = "Option::is_none")]
     party_b: Option<&'mpesa str>,
-    #[serde(
-        rename(serialize = "PhoneNumber"),
-        skip_serializing_if = "Option::is_none"
-    )]
-    phone_number: Option<&'mpesa str>,
-    #[serde(
-        rename(serialize = "CallBackURL"),
-        skip_serializing_if = "Option::is_none"
-    )]
-    call_back_url: Option<&'mpesa str>,
+    #[serde(rename(serialize = "PhoneNumber"))]
+    phone_number: &'mpesa str,
+    #[serde(rename(serialize = "CallBackURL"))]
+    call_back_url: &'mpesa str,
     #[serde(rename(serialize = "AccountReference"))]
     account_reference: &'mpesa str,
     #[serde(rename(serialize = "TransactionDesc"))]
@@ -233,7 +227,9 @@ impl<'mpesa, Env: ApiEnvironment> MpesaExpressRequestBuilder<'mpesa, Env> {
             business_short_code: self.business_short_code,
             password: &password,
             timestamp: &timestamp,
-            amount: self.amount.unwrap_or_default(),
+            amount: self
+                .amount
+                .ok_or(MpesaError::Message("amount is required"))?,
             party_a: if self.party_a.is_some() {
                 self.party_a
             } else {
@@ -244,13 +240,17 @@ impl<'mpesa, Env: ApiEnvironment> MpesaExpressRequestBuilder<'mpesa, Env> {
             } else {
                 Some(self.business_short_code)
             },
-            phone_number: self.phone_number,
-            call_back_url: self.callback_url,
-            account_reference: self.account_ref.unwrap_or_else(|| "None"),
+            phone_number: self
+                .phone_number
+                .ok_or(MpesaError::Message("phone_number is required"))?,
+            call_back_url: self
+                .callback_url
+                .ok_or(MpesaError::Message("callback_url is required"))?,
+            account_reference: self.account_ref.unwrap_or_else(|| stringify!(None)),
             transaction_type: self
                 .transaction_type
                 .unwrap_or_else(|| CommandId::CustomerPayBillOnline),
-            transaction_desc: self.transaction_desc.unwrap_or_else(|| "None"),
+            transaction_desc: self.transaction_desc.unwrap_or_else(|| stringify!(None)),
         };
 
         let response = self
