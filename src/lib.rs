@@ -22,7 +22,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mpesa = { version = "0.4.2", default_features = false, features = ["b2b", "express_request"] }
+//! mpesa = { version = "0.4.2", default-features = false, features = ["b2b", "express_request"] }
 //! ```
 //!
 //! In your lib or binary crate:
@@ -332,6 +332,36 @@
 //!         .send()
 //!         .await;
 //!     assert!(response.is_ok());
+//! }
+//! ```
+//!
+//! * Dynamic QR
+//! ```rust,no_run
+//! use mpesa::{Mpesa, Environment};
+//! use std::env;
+//! use dotenvy::dotenv;
+//!
+//! #[tokio::main]
+//! async fn main() {
+//!    dotenv().ok();
+//!
+//!   let client = Mpesa::new(
+//!      env::var("CLIENT_KEY").unwrap(),
+//!      env::var("CLIENT_SECRET").unwrap(),
+//!      Environment::Sandbox
+//!   );
+//!
+//!   let response = client
+//!       .dynamic_qrcode()
+//!       .amount(2000)
+//!       .credit_party_identifier("17408")
+//!       .merchant_name("SafaricomLTD")
+//!       .ref_no("rf38f04")
+//!       .trx_code(mpesa::TransactionType::BG)
+//!       .send()
+//!       .await;
+//!
+//!   assert!(response.is_ok());
 //! }
 //! ```
 //!
