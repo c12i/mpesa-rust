@@ -3,6 +3,7 @@ use crate::constants::CommandId;
 use crate::environment::ApiEnvironment;
 use crate::errors::MpesaError;
 use chrono::prelude::Local;
+use openssl::base64;
 use serde::{Deserialize, Serialize};
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
@@ -99,7 +100,7 @@ impl<'mpesa, Env: ApiEnvironment> MpesaExpressRequestBuilder<'mpesa, Env> {
     /// Returns the encoded password and a timestamp string
     fn generate_password_and_timestamp(&self) -> (String, String) {
         let timestamp = Local::now().format("%Y%m%d%H%M%S").to_string();
-        let encoded_password = base64::encode(
+        let encoded_password = base64::encode_block(
             format!(
                 "{}{}{}",
                 self.business_short_code(),
