@@ -267,6 +267,21 @@ let response = client
 assert!(response.is_ok())
 ```
 
+- Dynamic QR
+
+```rust
+    let response = client
+        .dynamic_qrcode()
+        .amount(2000)
+        .credit_party_identifier("17408")
+        .merchant_name("Safaricom LTD")
+        .ref_no("rf38f04")
+        .trx_code(TransactionType::BG)
+        .send()
+        .await;
+    assert!(response.is_ok())
+```
+
 More will be added progressively, pull requests welcome
 
 ## Author

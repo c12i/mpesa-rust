@@ -336,6 +336,7 @@
 //! ```
 //!
 //! * Dynamic QR
+//!
 //! ```rust,no_run
 //! use mpesa::{Mpesa, Environment};
 //! use std::env;
