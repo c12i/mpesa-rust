@@ -5,6 +5,7 @@ use crate::services::{
     TransactionStatusBuilder,
 };
 use crate::MpesaError;
+use openssl::base64;
 use openssl::rsa::Padding;
 use openssl::x509::X509;
 use reqwest::Client as HttpClient;
@@ -341,7 +342,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
             &mut buffer,
             Padding::PKCS1,
         )?;
-        Ok(base64::encode(buffer))
+        Ok(base64::encode_block(&buffer))
     }
 }
 

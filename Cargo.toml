@@ -10,8 +10,7 @@ readme = "./README.md"
 license = "MIT"
 
 [dependencies]
-base64 = {version = "0.13", optional = true}
-chrono = {version = "0.4", optional = true}
+chrono = {version = "0.4", optional = true, default-features = false, features = ["clock"] }
 openssl = {version = "0.10", optional = true}
 reqwest = {version = "0.11", features = ["json"]}
 serde = {version="1.0", features= ["derive"]}
@@ -37,12 +36,12 @@ default = [
 	"transaction_status",
 	"dynamic_qr",
 ]
-account_balance = ["dep:openssl", "dep:base64"]
-b2b = ["dep:openssl", "dep:base64"]
-b2c = ["dep:openssl", "dep:base64"]
+account_balance = ["dep:openssl"]
+b2b = ["dep:openssl"]
+b2c = ["dep:openssl"]
 c2b_register = []
 c2b_simulate = []
-express_request = ["dep:chrono", "dep:base64"]
-transaction_reversal = ["dep:openssl", "dep:base64"]
-transaction_status= ["dep:openssl", "dep:base64"]
-dynamic_qr = ["dep:openssl", "dep:base64"]
+express_request = ["dep:chrono"]
+transaction_reversal = ["dep:openssl"]
+transaction_status= ["dep:openssl"]
+dynamic_qr = ["dep:openssl"]
