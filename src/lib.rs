@@ -311,7 +311,7 @@
 //! ```rust,no_run
 //! use mpesa::{Mpesa, Environment};
 //! use std::env;
-//! use dotenv::dotenv;
+//! use dotenvy::dotenv;
 //!
 //! #[tokio::main]
 //! async fn main() {
