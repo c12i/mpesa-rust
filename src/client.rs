@@ -1,7 +1,8 @@
 use crate::environment::ApiEnvironment;
 use crate::services::{
-    AccountBalanceBuilder, B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bSimulateBuilder,
-    MpesaExpressRequestBuilder, TransactionReversalBuilder, TransactionStatusBuilder,
+    AccountBalanceBuilder, B2bBuilder, B2cBuilder, BillManagerOnboardBuilder, C2bRegisterBuilder,
+    C2bSimulateBuilder, MpesaExpressRequestBuilder, TransactionReversalBuilder,
+    TransactionStatusBuilder,
 };
 use crate::MpesaError;
 use openssl::base64;
@@ -312,6 +313,30 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         initiator_name: &'mpesa str,
     ) -> TransactionStatusBuilder<'mpesa, Env> {
         TransactionStatusBuilder::new(self, initiator_name)
+    }
+
+    /// **Bill Manager Onboard Builder**
+    ///
+    /// Creates a `BillManagerOnboardBuilder` which allows you to opt in as a biller to the bill manager features.
+    ///
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
+    ///
+    /// # Example
+    /// ```ignore
+    /// let response = client
+    ///     .bill_manager_onboard()
+    ///     .callback_url("https://testdomain.com/true")
+    ///     .email("email@test.com")
+    ///     .logo("https://file.domain/file.png")
+    ///     .official_contact("0712345678")
+    ///     .send_reminders(SendRemindersTypes::Enable)
+    ///     .short_code("600496")
+    ///     .send()
+    ///     .await
+    /// ```
+    #[cfg(feature = "bill_manager_onboard")]
+    pub fn bill_manager_onboard(&'mpesa self) -> BillManagerOnboardBuilder<'mpesa, Env> {
+        BillManagerOnboardBuilder::new(self)
     }
 
     /// Generates security credentials

@@ -12,10 +12,12 @@
 //! 5. [C2B Simulate](https://developer.safaricom.co.ke/docs#account-balance-api)
 //! 6. [Mpesa Express/ STK Push](https://developer.safaricom.co.ke/docs#lipa-na-m-pesa-online-payment)
 //! 7. [Transaction Reversal](https://developer.safaricom.co.ke/docs#reversal)
+//! 8. [Bill Manager](https://developer.safaricom.co.ke/Documentation)
 
 mod account_balance;
 mod b2b;
 mod b2c;
+mod bill_manager_onboard;
 mod c2b_register;
 mod c2b_simulate;
 mod express_request;
@@ -28,6 +30,8 @@ pub use account_balance::{AccountBalanceBuilder, AccountBalanceResponse};
 pub use b2b::{B2bBuilder, B2bResponse};
 #[cfg(feature = "b2c")]
 pub use b2c::{B2cBuilder, B2cResponse};
+#[cfg(feature = "bill_manager_onboard")]
+pub use bill_manager_onboard::{BillManagerOnboardBuilder, BillManagerOnboardResponse};
 #[cfg(feature = "c2b_register")]
 pub use c2b_register::{C2bRegisterBuilder, C2bRegisterResponse};
 #[cfg(feature = "c2b_simulate")]

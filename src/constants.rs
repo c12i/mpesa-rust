@@ -86,3 +86,16 @@ impl Display for ResponseType {
         write!(f, "{self:?}")
     }
 }
+
+#[derive(Debug, Deserialize_repr, Serialize_repr, Copy, Clone)]
+#[repr(u16)]
+pub enum SendRemindersTypes {
+    Disable = 0,
+    Enable = 1,
+}
+
+impl Display for SendRemindersTypes {
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
+        write!(f, "{:?}", *self as u16)
+    }
+}

@@ -164,6 +164,37 @@
 //! }
 //! ```
 //!
+//! * Bill Manager Onboard
+//! ```rust,no_run
+//! use mpesa::{Mpesa, Environment, SendRemindersTypes};
+//! use serde_json::Value;
+//! use std::env;
+//! use dotenv::dotenv;
+//!
+//! #[tokio::main]
+//! async fn main() {
+//!     dotenv().ok();
+//!
+//!     let client = Mpesa::new(
+//!         env::var("CLIENT_KEY").unwrap(),
+//!         env::var("CLIENT_SECRET").unwrap(),
+//!         Environment::Sandbox
+//!     );
+//!
+//!     let response = client
+//!         .bill_manager_onboard()
+//!         .callback_url("https://testdomain.com/true")
+//!         .email("email@test.com")
+//!         .logo("https://file.domain/file.png")
+//!         .official_contact("0712345678")
+//!         .send_reminders(SendRemindersTypes::Enable)
+//!         .short_code("600496")
+//!         .send()
+//!         .await;
+//!     assert!(response.is_ok())
+//! }
+//! ```
+//!
 //! * C2B Register
 //! ```rust,no_run
 //! use mpesa::{Mpesa, Environment};
@@ -354,7 +385,7 @@ mod errors;
 pub mod services;
 
 pub use client::{Mpesa, MpesaResult};
-pub use constants::{CommandId, IdentifierTypes, ResponseType};
+pub use constants::{CommandId, IdentifierTypes, ResponseType, SendRemindersTypes};
 pub use environment::ApiEnvironment;
 pub use environment::Environment::{self, Production, Sandbox};
 pub use errors::MpesaError;

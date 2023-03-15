@@ -15,6 +15,8 @@ pub enum MpesaError {
     C2bSimulateError(serde_json::Value),
     #[error("Account Balance request failed: {0}")]
     AccountBalanceError(serde_json::Value),
+    #[error("Bill manager onboarding failed: {0}")]
+    BillManagerOnboardError(serde_json::Value),
     #[error("Mpesa Express request/ STK push failed: {0}")]
     MpesaExpressRequestError(serde_json::Value),
     #[error("Mpesa Transaction reversal failed: {0}")]

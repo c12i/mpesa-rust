@@ -33,7 +33,8 @@ default = [
 	"c2b_simulate",
 	"express_request",
 	"transaction_reversal",
-	"transaction_status"
+	"transaction_status",
+	"bill_manager_onboard"
 ]
 account_balance = ["dep:openssl"]
 b2b = ["dep:openssl"]
@@ -43,3 +44,4 @@ c2b_simulate = []
 express_request = ["dep:chrono"]
 transaction_reversal = ["dep:openssl"]
 transaction_status= ["dep:openssl"]
+bill_manager_onboard = []
