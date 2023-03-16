@@ -7,8 +7,8 @@ use wiremock::{Mock, ResponseTemplate};
 fn sample_response() -> ResponseTemplate {
     let sample_response_body = json!({
         "app_key": "kfpB9X4o0H",
-        "resmsg": "Success",
-        "rescode": "200"
+        "rescode": "200",
+        "resmsg": "Success"
     });
     ResponseTemplate::new(200).set_body_json(sample_response_body)
 }

@@ -29,19 +29,21 @@ default = [
 	"account_balance",
 	"b2b",
 	"b2c",
+	"bill_manager_onboard",
+	"bill_manager_onboard_modify",
 	"c2b_register",
 	"c2b_simulate",
 	"express_request",
 	"transaction_reversal",
-	"transaction_status",
-	"bill_manager_onboard"
+	"transaction_status"
 ]
 account_balance = ["dep:openssl"]
 b2b = ["dep:openssl"]
 b2c = ["dep:openssl"]
+bill_manager_onboard = []
+bill_manager_onboard_modify = []
 c2b_register = []
 c2b_simulate = []
 express_request = ["dep:chrono"]
 transaction_reversal = ["dep:openssl"]
 transaction_status= ["dep:openssl"]
-bill_manager_onboard = []

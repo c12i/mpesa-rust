@@ -18,6 +18,7 @@ mod account_balance;
 mod b2b;
 mod b2c;
 mod bill_manager_onboard;
+mod bill_manager_onboard_modify;
 mod c2b_register;
 mod c2b_simulate;
 mod express_request;
@@ -32,6 +33,10 @@ pub use b2b::{B2bBuilder, B2bResponse};
 pub use b2c::{B2cBuilder, B2cResponse};
 #[cfg(feature = "bill_manager_onboard")]
 pub use bill_manager_onboard::{BillManagerOnboardBuilder, BillManagerOnboardResponse};
+#[cfg(feature = "bill_manager_onboard_modify")]
+pub use bill_manager_onboard_modify::{
+    BillManagerOnboardModifyBuilder, BillManagerOnboardModifyResponse,
+};
 #[cfg(feature = "c2b_register")]
 pub use c2b_register::{C2bRegisterBuilder, C2bRegisterResponse};
 #[cfg(feature = "c2b_simulate")]
