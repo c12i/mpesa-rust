@@ -9,6 +9,8 @@ mod bill_manager_onboard;
 #[cfg(test)]
 mod bill_manager_onboard_modify;
 #[cfg(test)]
+mod bill_manager_single_invoice_test;
+#[cfg(test)]
 mod c2b_register_test;
 #[cfg(test)]
 mod c2b_simulate_test;
