@@ -99,3 +99,15 @@ impl Display for SendRemindersTypes {
         write!(f, "{:?}", *self as u16)
     }
 }
+
+#[derive(Debug, Serialize)]
+pub struct InvoiceItem<'invoice> {
+    pub amount: f64,
+    pub item_name: &'invoice str,
+}
+
+impl<'invoice> Display for InvoiceItem<'invoice> {
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
+        write!(f, "{self:?}")
+    }
+}

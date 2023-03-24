@@ -10,7 +10,7 @@ readme = "./README.md"
 license = "MIT"
 
 [dependencies]
-chrono = {version = "0.4", optional = true, default-features = false, features = ["clock"] }
+chrono = {version = "0.4", optional = true, default-features = false, features = ["clock", "serde"] }
 openssl = {version = "0.10", optional = true}
 reqwest = {version = "0.11", features = ["json"]}
 serde = {version="1.0", features= ["derive"]}
@@ -31,6 +31,7 @@ default = [
 	"b2c",
 	"bill_manager_onboard",
 	"bill_manager_onboard_modify",
+	"bill_manager_single_invoice",
 	"c2b_register",
 	"c2b_simulate",
 	"express_request",
@@ -42,6 +43,7 @@ b2b = ["dep:openssl"]
 b2c = ["dep:openssl"]
 bill_manager_onboard = []
 bill_manager_onboard_modify = []
+bill_manager_single_invoice = []
 c2b_register = []
 c2b_simulate = []
 express_request = ["dep:chrono"]

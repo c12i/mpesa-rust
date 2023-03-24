@@ -1,8 +1,9 @@
 use crate::environment::ApiEnvironment;
 use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, BillManagerOnboardBuilder,
-    BillManagerOnboardModifyBuilder, C2bRegisterBuilder, C2bSimulateBuilder,
-    MpesaExpressRequestBuilder, TransactionReversalBuilder, TransactionStatusBuilder,
+    BillManagerOnboardModifyBuilder, BillManagerSingleInvoiceBuilder, C2bRegisterBuilder,
+    C2bSimulateBuilder, MpesaExpressRequestBuilder, TransactionReversalBuilder,
+    TransactionStatusBuilder,
 };
 use crate::MpesaError;
 use openssl::base64;
@@ -199,7 +200,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///     .send_reminders(SendRemindersTypes::Enable)
     ///     .short_code("600496")
     ///     .send()
-    ///     .await
+    ///     .await;
     /// ```
     #[cfg(feature = "bill_manager_onboard")]
     pub fn bill_manager_onboard(&'mpesa self) -> BillManagerOnboardBuilder<'mpesa, Env> {
@@ -223,13 +224,44 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///     .send_reminders(SendRemindersTypes::Enable)
     ///     .short_code("600496")
     ///     .send()
-    ///     .await
+    ///     .await;
     /// ```
     #[cfg(feature = "bill_manager_onboard_modify")]
     pub fn bill_manager_onboard_modify(
         &'mpesa self,
     ) -> BillManagerOnboardModifyBuilder<'mpesa, Env> {
         BillManagerOnboardModifyBuilder::new(self)
+    }
+
+    /// **Bill Manager Single Invoice Builder**
+    ///
+    /// Creates a `BillManagerSingleInvoiceBuilder` which allows you to create and send invoices to your customers.
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
+    ///
+    /// # Example
+    /// ```ignore
+    /// use chrono::prelude::Utc;
+    ///
+    /// let response = client
+    ///     .bill_manager_single_invoice()
+    ///     .amount(1000.0)
+    ///     .account_reference("John Doe")
+    ///     .billed_full_name("John Doe")
+    ///     .billed_period("August 2021")
+    ///     .billed_phone_number("0712345678")
+    ///     .due_date(&Utc::now())
+    ///     .external_reference("INV2345")
+    ///     .invoice_items(vec![
+    ///         InvoiceItem {amount: 1000, item_name: "An item"}
+    ///     ])
+    ///     .invoice_name("Invoice 001")
+    ///     .send()
+    ///     .await;
+    /// ```
+    pub fn bill_manager_single_invoice(
+        &'mpesa self,
+    ) -> BillManagerSingleInvoiceBuilder<'mpesa, Env> {
+        BillManagerSingleInvoiceBuilder::new(self)
     }
 
     /// **C2B Register builder**

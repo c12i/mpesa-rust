@@ -19,6 +19,7 @@ mod b2b;
 mod b2c;
 mod bill_manager_onboard;
 mod bill_manager_onboard_modify;
+mod bill_manager_single_invoice;
 mod c2b_register;
 mod c2b_simulate;
 mod express_request;
@@ -36,6 +37,10 @@ pub use bill_manager_onboard::{BillManagerOnboardBuilder, BillManagerOnboardResp
 #[cfg(feature = "bill_manager_onboard_modify")]
 pub use bill_manager_onboard_modify::{
     BillManagerOnboardModifyBuilder, BillManagerOnboardModifyResponse,
+};
+#[cfg(feature = "bill_manager_single_invoice")]
+pub use bill_manager_single_invoice::{
+    BillManagerSingleInvoiceBuilder, BillManagerSingleInvoiceResponse,
 };
 #[cfg(feature = "c2b_register")]
 pub use c2b_register::{C2bRegisterBuilder, C2bRegisterResponse};

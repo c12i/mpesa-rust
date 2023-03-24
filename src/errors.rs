@@ -19,6 +19,8 @@ pub enum MpesaError {
     BillManagerOnboardError(serde_json::Value),
     #[error("Bill manager onboarding modify failed: {0}")]
     BillManagerOnboardModifyError(serde_json::Value),
+    #[error("Bill manager single invoice failed: {0}")]
+    BillManagerSingleInvoiceError(serde_json::Value),
     #[error("Mpesa Express request/ STK push failed: {0}")]
     MpesaExpressRequestError(serde_json::Value),
     #[error("Mpesa Transaction reversal failed: {0}")]
