@@ -53,7 +53,7 @@ pub struct BillManagerOnboardModifyBuilder<'mpesa, Env: ApiEnvironment> {
 }
 
 impl<'mpesa, Env: ApiEnvironment> BillManagerOnboardModifyBuilder<'mpesa, Env> {
-    // Creates a new Bill Manager Onboard Modify builder
+    /// Creates a new Bill Manager Onboard Modify builder
     pub fn new(client: &'mpesa Mpesa<Env>) -> BillManagerOnboardModifyBuilder<'mpesa, Env> {
         BillManagerOnboardModifyBuilder {
             client,

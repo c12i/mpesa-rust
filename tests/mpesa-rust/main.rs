@@ -5,9 +5,9 @@ mod b2b_test;
 #[cfg(test)]
 mod b2c_test;
 #[cfg(test)]
-mod bill_manager_onboard;
+mod bill_manager_onboard_modify_test;
 #[cfg(test)]
-mod bill_manager_onboard_modify;
+mod bill_manager_onboard_test;
 #[cfg(test)]
 mod bill_manager_single_invoice_test;
 #[cfg(test)]
