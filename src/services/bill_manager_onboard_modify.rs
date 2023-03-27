@@ -124,7 +124,7 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerOnboardModifyBuilder<'mpesa, Env> {
     /// Returns an `MpesaError` on failure
     #[allow(clippy::unnecessary_lazy_evaluations)]
     pub async fn send(self) -> MpesaResult<BillManagerOnboardModifyResponse> {
-        let url: String = format!(
+        let url = format!(
             "{}/v1/billmanager-invoice/change-optin-details",
             self.client.environment.base_url()
         );

@@ -134,7 +134,7 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerSingleInvoiceBuilder<'mpesa, Env> {
     /// Returns an `MpesaError` on failure
     #[allow(clippy::unnecessary_lazy_evaluations)]
     pub async fn send(self) -> MpesaResult<BillManagerSingleInvoiceResponse> {
-        let url: String = format!(
+        let url = format!(
             "{}/v1/billmanager-invoice/single-invoicing",
             self.client.environment.base_url()
         );
