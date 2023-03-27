@@ -31,6 +31,7 @@ default = [
 	"b2c",
 	"bill_manager_onboard",
 	"bill_manager_onboard_modify",
+	"bill_manager_bulk_invoice",
 	"bill_manager_single_invoice",
 	"c2b_register",
 	"c2b_simulate",
@@ -43,6 +44,7 @@ b2b = ["dep:openssl"]
 b2c = ["dep:openssl"]
 bill_manager_onboard = []
 bill_manager_onboard_modify = []
+bill_manager_bulk_invoice = []
 bill_manager_single_invoice = []
 c2b_register = []
 c2b_simulate = []

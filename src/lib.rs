@@ -221,6 +221,46 @@
 //! }
 //! ```
 //!
+//! * Bill Manager Bulk Invoice
+//! ```rust,no_run
+//! use mpesa::{Mpesa, Environment, Invoice, InvoiceItem};
+//! use std::env;
+//! use chrono::prelude::Utc;
+//! use dotenv::dotenv;
+//!
+//! #[tokio::main]
+//! async fn main() {
+//!     dotenv().ok();
+//!
+//!     let client = Mpesa::new(
+//!         env::var("CLIENT_KEY").unwrap(),
+//!         env::var("CLIENT_SECRET").unwrap(),
+//!         Environment::Sandbox
+//!     );
+//!
+//!     let response = client
+//!         .bill_manager_bulk_invoice()
+//!         .add_invoice(
+//!             Invoice {
+//!                 amount: 1000.0,
+//!                 account_reference: "John Doe",
+//!                 billed_full_name: "John Doe",
+//!                 billed_period: "August 2021",
+//!                 billed_phone_number: "0712345678",
+//!                 due_date: Utc::now(),
+//!                 external_reference: "INV2345",
+//!                 invoice_items: Some(
+//!                     vec![InvoiceItem {amount: 1000.0, item_name: "An item"}]
+//!                 ),
+//!                 invoice_name: "Invoice 001"
+//!             }
+//!         )
+//!         .send()
+//!         .await;
+//!     assert!(response.is_ok())
+//! }
+//! ```
+//!
 //! * Bill Manager Single Invoice
 //! ```rust,no_run
 //! use mpesa::{Mpesa, Environment, InvoiceItem};

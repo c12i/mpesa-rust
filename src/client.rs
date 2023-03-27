@@ -1,8 +1,8 @@
 use crate::environment::ApiEnvironment;
 use crate::services::{
-    AccountBalanceBuilder, B2bBuilder, B2cBuilder, BillManagerOnboardBuilder,
-    BillManagerOnboardModifyBuilder, BillManagerSingleInvoiceBuilder, C2bRegisterBuilder,
-    C2bSimulateBuilder, MpesaExpressRequestBuilder, TransactionReversalBuilder,
+    AccountBalanceBuilder, B2bBuilder, B2cBuilder, BillManagerBulkInvoiceBuilder,
+    BillManagerOnboardBuilder, BillManagerOnboardModifyBuilder, BillManagerSingleInvoiceBuilder,
+    C2bRegisterBuilder, C2bSimulateBuilder, MpesaExpressRequestBuilder, TransactionReversalBuilder,
     TransactionStatusBuilder,
 };
 use crate::MpesaError;
@@ -233,6 +233,39 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         BillManagerOnboardModifyBuilder::new(self)
     }
 
+    /// **Bill Manager Bulk Invoice Builder**
+    ///
+    /// Creates a `BillManagerBulkInvoiceBuilder` which allows you to send invoices to your customers in bulk.
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
+    ///
+    /// # Example
+    /// ```ignore
+    /// use chrone::prelude::Utc;
+    ///
+    /// let response = client
+    ///     .bill_manager_bulk_invoice()
+    ///     .add_invoice(
+    ///         Invoice {
+    ///             amount: 1000.0,
+    ///             account_reference: "John Doe",
+    ///             billed_full_name: "John Doe",
+    ///             billed_period: "August 2021",
+    ///             billed_phone_number: "0712345678",
+    ///             due_date: Utc::now(),
+    ///             external_reference: "INV2345",
+    ///             invoice_items: Some(
+    ///                 vec![InvoiceItem {amount: 1000.0, item_name: "An item"}]
+    ///             ),
+    ///             invoice_name: "Invoice 001"
+    ///         }
+    ///     )
+    ///     .send()
+    ///     .await;
+    /// ```
+    pub fn bill_manager_bulk_invoice(&'mpesa self) -> BillManagerBulkInvoiceBuilder<'mpesa, Env> {
+        BillManagerBulkInvoiceBuilder::new(self)
+    }
+
     /// **Bill Manager Single Invoice Builder**
     ///
     /// Creates a `BillManagerSingleInvoiceBuilder` which allows you to create and send invoices to your customers.
@@ -252,7 +285,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///     .due_date(Utc::now())
     ///     .external_reference("INV2345")
     ///     .invoice_items(vec![
-    ///         InvoiceItem {amount: 1000, item_name: "An item"}
+    ///         InvoiceItem {amount: 1000.0, item_name: "An item"}
     ///     ])
     ///     .invoice_name("Invoice 001")
     ///     .send()

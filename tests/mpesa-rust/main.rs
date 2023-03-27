@@ -5,6 +5,8 @@ mod b2b_test;
 #[cfg(test)]
 mod b2c_test;
 #[cfg(test)]
+mod bill_manager_bulk_invoice_test;
+#[cfg(test)]
 mod bill_manager_onboard_modify_test;
 #[cfg(test)]
 mod bill_manager_onboard_test;
