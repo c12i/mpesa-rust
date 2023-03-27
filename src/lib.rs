@@ -245,7 +245,7 @@
 //!         .billed_full_name("John Doe")
 //!         .billed_period("August 2021")
 //!         .billed_phone_number("0712345678")
-//!         .due_date(&Utc::now())
+//!         .due_date(Utc::now())
 //!         .external_reference("INV2345")
 //!         .invoice_items(vec![
 //!             InvoiceItem {amount: 1000.0, item_name: "An item"}

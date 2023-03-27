@@ -121,7 +121,7 @@ pub struct Invoice<'i> {
     pub billed_full_name: &'i str,
     pub billed_period: &'i str,
     pub billed_phone_number: &'i str,
-    pub due_date: &'i DateTime<Utc>,
+    pub due_date: DateTime<Utc>,
     pub external_reference: &'i str,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub invoice_items: Option<Vec<InvoiceItem<'i>>>,

@@ -23,7 +23,7 @@ pub struct BillManagerSingleInvoiceBuilder<'mpesa, Env: ApiEnvironment> {
     billed_full_name: Option<&'mpesa str>,
     billed_period: Option<&'mpesa str>,
     billed_phone_number: Option<&'mpesa str>,
-    due_date: Option<&'mpesa DateTime<Utc>>,
+    due_date: Option<DateTime<Utc>>,
     external_reference: Option<&'mpesa str>,
     invoice_items: Option<Vec<InvoiceItem<'mpesa>>>,
     invoice_name: Option<&'mpesa str>,
@@ -91,7 +91,7 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerSingleInvoiceBuilder<'mpesa, Env> {
     /// Adds `due_date`
     pub fn due_date(
         mut self,
-        due_date: &'mpesa DateTime<Utc>,
+        due_date: DateTime<Utc>,
     ) -> BillManagerSingleInvoiceBuilder<'mpesa, Env> {
         self.due_date = Some(due_date);
         self
