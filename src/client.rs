@@ -20,7 +20,7 @@ static CARGO_PACKAGE_VERSION: &str = env!("CARGO_PKG_VERSION");
 pub type MpesaResult<T> = Result<T, MpesaError>;
 
 /// Mpesa client that will facilitate communication with the Safaricom API
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Mpesa<Env: ApiEnvironment> {
     client_key: String,
     client_secret: String,
