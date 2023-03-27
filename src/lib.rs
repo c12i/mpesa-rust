@@ -297,6 +297,39 @@
 //! }
 //! ```
 //!
+//! * Bill Manager Reconciliation
+//! ```rust,no_run
+//! use mpesa::{Mpesa, Environment, InvoiceItem};
+//! use std::env;
+//! use chrono::prelude::Utc;
+//! use dotenv::dotenv;
+//!
+//! #[tokio::main]
+//! async fn main() {
+//!     dotenv().ok();
+//!
+//!     let client = Mpesa::new(
+//!         env::var("CLIENT_KEY").unwrap(),
+//!         env::var("CLIENT_SECRET").unwrap(),
+//!         Environment::Sandbox
+//!     );
+//!
+//!     let response = client
+//!         .bill_manager_reconciliation()
+//!         .account_reference("John Doe")
+//!         .external_reference("INV2345")
+//!         .full_name("John Doe")
+//!         .invoice_name("Invoice 001")
+//!         .paid_amount(1000.0)
+//!         .payment_date(Utc::now())
+//!         .phone_number("0712345678")
+//!         .transaction_id("TRANSACTION_ID")
+//!         .send()
+//!         .await;
+//!     assert!(response.is_ok())
+//! }
+//! ```
+//!
 //! * C2B Register
 //! ```rust,no_run
 //! use mpesa::{Mpesa, Environment};

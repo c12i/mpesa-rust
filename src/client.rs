@@ -1,9 +1,9 @@
 use crate::environment::ApiEnvironment;
 use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, BillManagerBulkInvoiceBuilder,
-    BillManagerOnboardBuilder, BillManagerOnboardModifyBuilder, BillManagerSingleInvoiceBuilder,
-    C2bRegisterBuilder, C2bSimulateBuilder, MpesaExpressRequestBuilder, TransactionReversalBuilder,
-    TransactionStatusBuilder,
+    BillManagerOnboardBuilder, BillManagerOnboardModifyBuilder, BillManagerReconciliationBuilder,
+    BillManagerSingleInvoiceBuilder, C2bRegisterBuilder, C2bSimulateBuilder,
+    MpesaExpressRequestBuilder, TransactionReversalBuilder, TransactionStatusBuilder,
 };
 use crate::MpesaError;
 use openssl::base64;
@@ -295,6 +295,34 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         &'mpesa self,
     ) -> BillManagerSingleInvoiceBuilder<'mpesa, Env> {
         BillManagerSingleInvoiceBuilder::new(self)
+    }
+
+    /// **Bill Manager Reconciliation Builder**
+    ///
+    /// Creates a `BillManagerReconciliationBuilder` which enables your customers to receive e-receipts for payments made to your paybill account.
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
+    ///
+    /// # Example
+    /// ```ignore
+    /// use chrono::prelude::Utc;
+    ///
+    /// let response = client
+    ///     .bill_manager_reconciliation()
+    ///     .account_reference("John Doe")
+    ///     .external_reference("INV2345")
+    ///     .full_name("John Doe")
+    ///     .invoice_name("Invoice 001")
+    ///     .paid_amount(1000.0)
+    ///     .payment_date(Utc::now())
+    ///     .phone_number("0712345678")
+    ///     .transaction_id("TRANSACTION_ID")
+    ///     .send()
+    ///     .await;
+    /// ```
+    pub fn bill_manager_reconciliation(
+        &'mpesa self,
+    ) -> BillManagerReconciliationBuilder<'mpesa, Env> {
+        BillManagerReconciliationBuilder::new(self)
     }
 
     /// **C2B Register builder**
