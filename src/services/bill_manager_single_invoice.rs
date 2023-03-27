@@ -1,25 +1,9 @@
 use crate::client::{Mpesa, MpesaResult};
-use crate::constants::InvoiceItem;
+use crate::constants::{Invoice, InvoiceItem};
 use crate::environment::ApiEnvironment;
 use crate::errors::MpesaError;
 use chrono::prelude::{DateTime, Utc};
-use serde::{Deserialize, Serialize};
-
-#[derive(Debug, Serialize)]
-#[serde(rename_all = "camelCase")]
-// Payload to create a single invoice.
-struct BillManagerSingleInvoicePayload<'mpesa> {
-    amount: f64,
-    account_reference: &'mpesa str,
-    billed_full_name: &'mpesa str,
-    billed_period: &'mpesa str,
-    billed_phone_number: &'mpesa str,
-    due_date: &'mpesa DateTime<Utc>,
-    external_reference: &'mpesa str,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    invoice_items: Option<Vec<InvoiceItem<'mpesa>>>,
-    invoice_name: &'mpesa str,
-}
+use serde::Deserialize;
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct BillManagerSingleInvoiceResponse {
@@ -140,7 +124,7 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerSingleInvoiceBuilder<'mpesa, Env> {
         self
     }
 
-    /// Bill Manager Single invoice API
+    /// Bill Manager Single Invoice API
     ///
     /// Creates and sends invoices to your customers
     ///
@@ -155,7 +139,7 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerSingleInvoiceBuilder<'mpesa, Env> {
             self.client.environment.base_url()
         );
 
-        let payload = BillManagerSingleInvoicePayload {
+        let payload = Invoice {
             amount: self
                 .amount
                 .ok_or(MpesaError::Message("amount is required"))?,
