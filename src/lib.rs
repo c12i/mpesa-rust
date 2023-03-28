@@ -240,7 +240,7 @@
 //!
 //!     let response = client
 //!         .bill_manager_bulk_invoice()
-//!         .add_invoice(
+//!         .invoices(vec![
 //!             Invoice {
 //!                 amount: 1000.0,
 //!                 account_reference: "John Doe",
@@ -254,7 +254,7 @@
 //!                 ),
 //!                 invoice_name: "Invoice 001"
 //!             }
-//!         )
+//!         ])
 //!         .send()
 //!         .await;
 //!     assert!(response.is_ok())

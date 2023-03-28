@@ -17,7 +17,7 @@ pub struct BillManagerBulkInvoiceResponse {
 #[derive(Debug)]
 pub struct BillManagerBulkInvoiceBuilder<'mpesa, Env: ApiEnvironment> {
     client: &'mpesa Mpesa<Env>,
-    invoices: Vec<Invoice<'mpesa>>,
+    invoices: Option<Vec<Invoice<'mpesa>>>,
 }
 
 impl<'mpesa, Env: ApiEnvironment> BillManagerBulkInvoiceBuilder<'mpesa, Env> {
@@ -25,16 +25,16 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerBulkInvoiceBuilder<'mpesa, Env> {
     pub fn new(client: &'mpesa Mpesa<Env>) -> BillManagerBulkInvoiceBuilder<'mpesa, Env> {
         BillManagerBulkInvoiceBuilder {
             client,
-            invoices: vec![],
+            invoices: None,
         }
     }
 
-    /// Adds an invoice to the bulk of invoices to be sent
-    pub fn add_invoice(
+    /// Adds `invoices`
+    pub fn invoices(
         mut self,
-        invoice: Invoice<'mpesa>,
+        invoices: Vec<Invoice<'mpesa>>,
     ) -> BillManagerBulkInvoiceBuilder<'mpesa, Env> {
-        self.invoices.push(invoice);
+        self.invoices = Some(invoices);
         self
     }
 
@@ -51,12 +51,16 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerBulkInvoiceBuilder<'mpesa, Env> {
             self.client.environment.base_url()
         );
 
+        let payload = self
+            .invoices
+            .ok_or(MpesaError::Message("invoices is required"))?;
+
         let response = self
             .client
             .http_client
             .post(&url)
             .bearer_auth(self.client.auth().await?)
-            .json(&self.invoices)
+            .json(&payload)
             .send()
             .await?;
 

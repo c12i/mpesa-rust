@@ -1,6 +1,6 @@
 use crate::get_mpesa_client;
 use chrono::prelude::Utc;
-use mpesa::{Invoice, InvoiceItem};
+use mpesa::{Invoice, InvoiceItem, MpesaError};
 use serde_json::json;
 use wiremock::matchers::{method, path};
 use wiremock::{Mock, ResponseTemplate};
@@ -25,7 +25,7 @@ async fn bill_manager_bulk_invoice_success() {
         .await;
     let response = client
         .bill_manager_bulk_invoice()
-        .add_invoice(Invoice {
+        .invoices(vec![Invoice {
             amount: 1000.0,
             account_reference: "John Doe",
             billed_full_name: "John Doe",
@@ -38,11 +38,28 @@ async fn bill_manager_bulk_invoice_success() {
                 item_name: "An item",
             }]),
             invoice_name: "Invoice 001",
-        })
+        }])
         .send()
         .await
         .unwrap();
     assert_eq!(response.res_code, "200");
     assert_eq!(response.res_msg, "Success");
     assert_eq!(response.status_message, "Invoice sent successfully");
+}
+
+#[tokio::test]
+async fn bill_manager_bulk_invoice_fails_if_no_invoices_is_provided() {
+    let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
+    Mock::given(method("POST"))
+        .and(path("/v1/billmanager-invoice/bulk-invoicing"))
+        .respond_with(sample_response())
+        .expect(0)
+        .mount(&server)
+        .await;
+    if let Err(e) = client.bill_manager_bulk_invoice().send().await {
+        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message but found {}", e)};
+        assert_eq!(msg, "invoices is required");
+    } else {
+        panic!("Expected Error")
+    }
 }

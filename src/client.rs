@@ -245,7 +245,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///
     /// let response = client
     ///     .bill_manager_bulk_invoice()
-    ///     .add_invoice(
+    ///     .invoices(vec![
     ///         Invoice {
     ///             amount: 1000.0,
     ///             account_reference: "John Doe",
@@ -259,7 +259,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///             ),
     ///             invoice_name: "Invoice 001"
     ///         }
-    ///     )
+    ///     ])
     ///     .send()
     ///     .await;
     /// ```
