@@ -18,6 +18,7 @@ mod account_balance;
 mod b2b;
 mod b2c;
 mod bill_manager_bulk_invoice;
+mod bill_manager_cancel_invoice;
 mod bill_manager_onboard;
 mod bill_manager_onboard_modify;
 mod bill_manager_reconciliation;
@@ -37,6 +38,10 @@ pub use b2c::{B2cBuilder, B2cResponse};
 #[cfg(feature = "bill_manager_bulk_invoice")]
 pub use bill_manager_bulk_invoice::{
     BillManagerBulkInvoiceBuilder, BillManagerBulkInvoiceResponse,
+};
+#[cfg(feature = "bill_manager_cancel_invoice")]
+pub use bill_manager_cancel_invoice::{
+    BillManagerCancelInvoiceBuilder, BillManagerCancelInvoiceResponse,
 };
 #[cfg(feature = "bill_manager_onboard")]
 pub use bill_manager_onboard::{BillManagerOnboardBuilder, BillManagerOnboardResponse};

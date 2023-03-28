@@ -330,6 +330,31 @@
 //! }
 //! ```
 //!
+//! * Bill Manager Cancel Invoice
+//! ```rust,no_run
+//! use mpesa::{Mpesa, Environment};
+//! use std::env;
+//! use dotenv::dotenv;
+//!
+//! #[tokio::main]
+//! async fn main() {
+//!     dotenv().ok();
+//!
+//!     let client = Mpesa::new(
+//!         env::var("CLIENT_KEY").unwrap(),
+//!         env::var("CLIENT_SECRET").unwrap(),
+//!         Environment::Sandbox
+//!     );
+//!
+//!     let response = client
+//!         .bill_manager_cancel_invoice()
+//!         .external_references(vec!["9KLSS011"])
+//!         .send()
+//!         .await;
+//!     assert!(response.is_ok())
+//! }
+//! ```
+//!
 //! * C2B Register
 //! ```rust,no_run
 //! use mpesa::{Mpesa, Environment};

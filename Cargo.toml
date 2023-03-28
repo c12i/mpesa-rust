@@ -33,6 +33,7 @@ default = [
 	"bill_manager_onboard_modify",
 	"bill_manager_bulk_invoice",
 	"bill_manager_single_invoice",
+	"bill_manager_cancel_invoice",
 	"bill_manager_reconciliation",
 	"c2b_register",
 	"c2b_simulate",
@@ -47,6 +48,7 @@ bill_manager_onboard = []
 bill_manager_onboard_modify = []
 bill_manager_bulk_invoice = []
 bill_manager_single_invoice = []
+bill_manager_cancel_invoice = []
 bill_manager_reconciliation = []
 c2b_register = []
 c2b_simulate = []

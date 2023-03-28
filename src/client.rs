@@ -1,9 +1,10 @@
 use crate::environment::ApiEnvironment;
 use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, BillManagerBulkInvoiceBuilder,
-    BillManagerOnboardBuilder, BillManagerOnboardModifyBuilder, BillManagerReconciliationBuilder,
-    BillManagerSingleInvoiceBuilder, C2bRegisterBuilder, C2bSimulateBuilder,
-    MpesaExpressRequestBuilder, TransactionReversalBuilder, TransactionStatusBuilder,
+    BillManagerCancelInvoiceBuilder, BillManagerOnboardBuilder, BillManagerOnboardModifyBuilder,
+    BillManagerReconciliationBuilder, BillManagerSingleInvoiceBuilder, C2bRegisterBuilder,
+    C2bSimulateBuilder, MpesaExpressRequestBuilder, TransactionReversalBuilder,
+    TransactionStatusBuilder,
 };
 use crate::MpesaError;
 use openssl::base64;
@@ -323,6 +324,27 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         &'mpesa self,
     ) -> BillManagerReconciliationBuilder<'mpesa, Env> {
         BillManagerReconciliationBuilder::new(self)
+    }
+
+    /// **Bill Manager Cancel Invoice Builder**
+    ///
+    /// Creates a `BillManagerCancelInvoiceBuilder` which allows you to recall a sent invoice.
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
+    ///
+    /// # Example
+    /// ```ignore
+    /// use chrono::prelude::Utc;
+    ///
+    /// let response = client
+    ///     .bill_manager_cancel_invoice()
+    ///     .external_references(vec!["9KLSS011"])
+    ///     .send()
+    ///     .await;
+    /// ```
+    pub fn bill_manager_cancel_invoice(
+        &'mpesa self,
+    ) -> BillManagerCancelInvoiceBuilder<'mpesa, Env> {
+        BillManagerCancelInvoiceBuilder::new(self)
     }
 
     /// **C2B Register builder**

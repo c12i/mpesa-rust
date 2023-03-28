@@ -25,6 +25,8 @@ pub enum MpesaError {
     BillManagerReconciliationError(serde_json::Value),
     #[error("Bill manager single invoice failed: {0}")]
     BillManagerSingleInvoiceError(serde_json::Value),
+    #[error("Bill manager cancel invoice failed: {0}")]
+    BillManagerCancelInvoiceError(serde_json::Value),
     #[error("Mpesa Express request/ STK push failed: {0}")]
     MpesaExpressRequestError(serde_json::Value),
     #[error("Mpesa Transaction reversal failed: {0}")]
