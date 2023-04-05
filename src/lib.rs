@@ -181,7 +181,7 @@
 //!     );
 //!
 //!     let response = client
-//!         .bill_manager_onboard()
+//!         .onboard()
 //!         .callback_url("https://testdomain.com/true")
 //!         .email("email@test.com")
 //!         .logo("https://file.domain/file.png")
@@ -211,7 +211,7 @@
 //!     );
 //!
 //!     let response = client
-//!         .bill_manager_onboard_modify()
+//!         .onboard_modify()
 //!         .callback_url("https://testdomain.com/true")
 //!         .email("email@test.com")
 //!         .short_code("600496")
@@ -239,7 +239,7 @@
 //!     );
 //!
 //!     let response = client
-//!         .bill_manager_bulk_invoice()
+//!         .bulk_invoice()
 //!         .invoices(vec![
 //!             Invoice {
 //!                 amount: 1000.0,
@@ -279,7 +279,7 @@
 //!     );
 //!
 //!     let response = client
-//!         .bill_manager_single_invoice()
+//!         .single_invoice()
 //!         .amount(1000.0)
 //!         .account_reference("John Doe")
 //!         .billed_full_name("John Doe")
@@ -315,7 +315,7 @@
 //!     );
 //!
 //!     let response = client
-//!         .bill_manager_reconciliation()
+//!         .reconciliation()
 //!         .account_reference("John Doe")
 //!         .external_reference("INV2345")
 //!         .full_name("John Doe")
@@ -347,7 +347,7 @@
 //!     );
 //!
 //!     let response = client
-//!         .bill_manager_cancel_invoice()
+//!         .cancel_invoice()
 //!         .external_references(vec!["9KLSS011"])
 //!         .send()
 //!         .await;

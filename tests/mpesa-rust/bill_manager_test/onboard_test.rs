@@ -14,7 +14,7 @@ fn sample_response() -> ResponseTemplate {
 }
 
 #[tokio::test]
-async fn bill_manager_onboard_success() {
+async fn onboard_success() {
     let (client, server) = get_mpesa_client!();
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/optin"))
@@ -23,7 +23,7 @@ async fn bill_manager_onboard_success() {
         .mount(&server)
         .await;
     let response = client
-        .bill_manager_onboard()
+        .onboard()
         .callback_url("https://testdomain.com/true")
         .email("email@test.com")
         .logo("https://file.domain/file.png")
@@ -38,7 +38,7 @@ async fn bill_manager_onboard_success() {
 }
 
 #[tokio::test]
-async fn bill_manager_onboard_fails_if_no_callback_url_is_provided() {
+async fn onboard_fails_if_no_callback_url_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/optin"))
@@ -47,7 +47,7 @@ async fn bill_manager_onboard_fails_if_no_callback_url_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_onboard()
+        .onboard()
         .email("email@test.com")
         .logo("https://file.domain/file.png")
         .official_contact("0712345678")
@@ -63,7 +63,7 @@ async fn bill_manager_onboard_fails_if_no_callback_url_is_provided() {
 }
 
 #[tokio::test]
-async fn bill_manager_onboard_fails_if_no_email_is_provided() {
+async fn onboard_fails_if_no_email_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/optin"))
@@ -72,7 +72,7 @@ async fn bill_manager_onboard_fails_if_no_email_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_onboard()
+        .onboard()
         .callback_url("https://testdomain.com/true")
         .logo("https://file.domain/file.png")
         .official_contact("0712345678")
@@ -88,7 +88,7 @@ async fn bill_manager_onboard_fails_if_no_email_is_provided() {
 }
 
 #[tokio::test]
-async fn bill_manager_onboard_fails_if_no_logo_is_provided() {
+async fn onboard_fails_if_no_logo_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/optin"))
@@ -97,7 +97,7 @@ async fn bill_manager_onboard_fails_if_no_logo_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_onboard()
+        .onboard()
         .callback_url("https://testdomain.com/true")
         .email("email@test.com")
         .official_contact("0712345678")
@@ -113,7 +113,7 @@ async fn bill_manager_onboard_fails_if_no_logo_is_provided() {
 }
 
 #[tokio::test]
-async fn bill_manager_onboard_fails_if_no_official_contact_is_provided() {
+async fn onboard_fails_if_no_official_contact_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/optin"))
@@ -122,7 +122,7 @@ async fn bill_manager_onboard_fails_if_no_official_contact_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_onboard()
+        .onboard()
         .callback_url("https://testdomain.com/true")
         .email("email@test.com")
         .logo("https://file.domain/file.png")
@@ -138,7 +138,7 @@ async fn bill_manager_onboard_fails_if_no_official_contact_is_provided() {
 }
 
 #[tokio::test]
-async fn bill_manager_onboard_fails_if_short_code_is_provided() {
+async fn onboard_fails_if_short_code_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/optin"))
@@ -147,7 +147,7 @@ async fn bill_manager_onboard_fails_if_short_code_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_onboard()
+        .onboard()
         .callback_url("https://testdomain.com/true")
         .email("email@test.com")
         .logo("https://file.domain/file.png")

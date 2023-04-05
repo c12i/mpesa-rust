@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize)]
 /// Payload to modify opt-in details to the bill manager api.
-struct BillManagerOnboardModifyPayload<'mpesa> {
+struct OnboardModifyPayload<'mpesa> {
     #[serde(
         rename(serialize = "callbackUrl"),
         skip_serializing_if = "Option::is_none"
@@ -34,7 +34,7 @@ struct BillManagerOnboardModifyPayload<'mpesa> {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct BillManagerOnboardModifyResponse {
+pub struct OnboardModifyResponse {
     #[serde(rename(deserialize = "rescode"))]
     pub res_code: String,
     #[serde(rename(deserialize = "resmsg"))]
@@ -42,7 +42,7 @@ pub struct BillManagerOnboardModifyResponse {
 }
 
 #[derive(Debug)]
-pub struct BillManagerOnboardModifyBuilder<'mpesa, Env: ApiEnvironment> {
+pub struct OnboardModifyBuilder<'mpesa, Env: ApiEnvironment> {
     client: &'mpesa Mpesa<Env>,
     callback_url: Option<&'mpesa str>,
     email: Option<&'mpesa str>,
@@ -52,10 +52,10 @@ pub struct BillManagerOnboardModifyBuilder<'mpesa, Env: ApiEnvironment> {
     short_code: Option<&'mpesa str>,
 }
 
-impl<'mpesa, Env: ApiEnvironment> BillManagerOnboardModifyBuilder<'mpesa, Env> {
+impl<'mpesa, Env: ApiEnvironment> OnboardModifyBuilder<'mpesa, Env> {
     /// Creates a new Bill Manager Onboard Modify builder
-    pub fn new(client: &'mpesa Mpesa<Env>) -> BillManagerOnboardModifyBuilder<'mpesa, Env> {
-        BillManagerOnboardModifyBuilder {
+    pub fn new(client: &'mpesa Mpesa<Env>) -> OnboardModifyBuilder<'mpesa, Env> {
+        OnboardModifyBuilder {
             client,
             callback_url: None,
             email: None,
@@ -67,22 +67,19 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerOnboardModifyBuilder<'mpesa, Env> {
     }
 
     /// Adds `callbackUrl`.
-    pub fn callback_url(
-        mut self,
-        callback_url: &'mpesa str,
-    ) -> BillManagerOnboardModifyBuilder<'mpesa, Env> {
+    pub fn callback_url(mut self, callback_url: &'mpesa str) -> OnboardModifyBuilder<'mpesa, Env> {
         self.callback_url = Some(callback_url);
         self
     }
 
     /// Adds an `email` address to the request.
-    pub fn email(mut self, email: &'mpesa str) -> BillManagerOnboardModifyBuilder<'mpesa, Env> {
+    pub fn email(mut self, email: &'mpesa str) -> OnboardModifyBuilder<'mpesa, Env> {
         self.email = Some(email);
         self
     }
 
     /// Adds `logo`; a file with your organizions's logo.
-    pub fn logo(mut self, logo: &'mpesa str) -> BillManagerOnboardModifyBuilder<'mpesa, Env> {
+    pub fn logo(mut self, logo: &'mpesa str) -> OnboardModifyBuilder<'mpesa, Env> {
         self.logo = Some(logo);
         self
     }
@@ -91,7 +88,7 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerOnboardModifyBuilder<'mpesa, Env> {
     pub fn official_contact(
         mut self,
         official_contact: &'mpesa str,
-    ) -> BillManagerOnboardModifyBuilder<'mpesa, Env> {
+    ) -> OnboardModifyBuilder<'mpesa, Env> {
         self.official_contact = Some(official_contact);
         self
     }
@@ -100,16 +97,13 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerOnboardModifyBuilder<'mpesa, Env> {
     pub fn send_reminders(
         mut self,
         send_reminders: SendRemindersTypes,
-    ) -> BillManagerOnboardModifyBuilder<'mpesa, Env> {
+    ) -> OnboardModifyBuilder<'mpesa, Env> {
         self.send_reminders = Some(send_reminders);
         self
     }
 
     /// Adds `ShortCode`; the 6 digit MPESA Till Number or PayBill Number
-    pub fn short_code(
-        mut self,
-        short_code: &'mpesa str,
-    ) -> BillManagerOnboardModifyBuilder<'mpesa, Env> {
+    pub fn short_code(mut self, short_code: &'mpesa str) -> OnboardModifyBuilder<'mpesa, Env> {
         self.short_code = Some(short_code);
         self
     }
@@ -118,18 +112,18 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerOnboardModifyBuilder<'mpesa, Env> {
     ///
     /// Modifies opt-in details to the bill manager api.
     ///
-    /// A successful request returns a `BillManagerOnboardModifyResponse` type
+    /// A successful request returns a `OnboardModifyResponse` type
     ///
     /// # Errors
     /// Returns an `MpesaError` on failure
     #[allow(clippy::unnecessary_lazy_evaluations)]
-    pub async fn send(self) -> MpesaResult<BillManagerOnboardModifyResponse> {
+    pub async fn send(self) -> MpesaResult<OnboardModifyResponse> {
         let url = format!(
             "{}/v1/billmanager-invoice/change-optin-details",
             self.client.environment.base_url()
         );
 
-        let payload = BillManagerOnboardModifyPayload {
+        let payload = OnboardModifyPayload {
             callback_url: self.callback_url,
             email: self.email,
             logo: self.logo,
@@ -153,6 +147,6 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerOnboardModifyBuilder<'mpesa, Env> {
         }
 
         let value = response.json().await?;
-        Err(MpesaError::BillManagerOnboardModifyError(value))
+        Err(MpesaError::OnboardModifyError(value))
     }
 }

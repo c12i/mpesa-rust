@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize)]
 /// Payload to opt you in as a biller to the bill manager features.
-struct BillManagerOnboardPayload<'mpesa> {
+struct OnboardPayload<'mpesa> {
     #[serde(rename(serialize = "callbackUrl"))]
     callback_url: &'mpesa str,
     #[serde(rename(serialize = "email"))]
@@ -22,7 +22,7 @@ struct BillManagerOnboardPayload<'mpesa> {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct BillManagerOnboardResponse {
+pub struct OnboardResponse {
     #[serde(rename(deserialize = "app_key"))]
     pub app_key: String,
     #[serde(rename(deserialize = "rescode"))]
@@ -32,7 +32,7 @@ pub struct BillManagerOnboardResponse {
 }
 
 #[derive(Debug)]
-pub struct BillManagerOnboardBuilder<'mpesa, Env: ApiEnvironment> {
+pub struct OnboardBuilder<'mpesa, Env: ApiEnvironment> {
     client: &'mpesa Mpesa<Env>,
     callback_url: Option<&'mpesa str>,
     email: Option<&'mpesa str>,
@@ -42,10 +42,10 @@ pub struct BillManagerOnboardBuilder<'mpesa, Env: ApiEnvironment> {
     short_code: Option<&'mpesa str>,
 }
 
-impl<'mpesa, Env: ApiEnvironment> BillManagerOnboardBuilder<'mpesa, Env> {
+impl<'mpesa, Env: ApiEnvironment> OnboardBuilder<'mpesa, Env> {
     /// Creates a new Bill Manager Onboard builder
-    pub fn new(client: &'mpesa Mpesa<Env>) -> BillManagerOnboardBuilder<'mpesa, Env> {
-        BillManagerOnboardBuilder {
+    pub fn new(client: &'mpesa Mpesa<Env>) -> OnboardBuilder<'mpesa, Env> {
+        OnboardBuilder {
             client,
             callback_url: None,
             email: None,
@@ -60,10 +60,7 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerOnboardBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// If 'callbackUrl` is not provided.
-    pub fn callback_url(
-        mut self,
-        callback_url: &'mpesa str,
-    ) -> BillManagerOnboardBuilder<'mpesa, Env> {
+    pub fn callback_url(mut self, callback_url: &'mpesa str) -> OnboardBuilder<'mpesa, Env> {
         self.callback_url = Some(callback_url);
         self
     }
@@ -72,7 +69,7 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerOnboardBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// If `email` is not provided.
-    pub fn email(mut self, email: &'mpesa str) -> BillManagerOnboardBuilder<'mpesa, Env> {
+    pub fn email(mut self, email: &'mpesa str) -> OnboardBuilder<'mpesa, Env> {
         self.email = Some(email);
         self
     }
@@ -81,7 +78,7 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerOnboardBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// If `logo` is not provided.
-    pub fn logo(mut self, logo: &'mpesa str) -> BillManagerOnboardBuilder<'mpesa, Env> {
+    pub fn logo(mut self, logo: &'mpesa str) -> OnboardBuilder<'mpesa, Env> {
         self.logo = Some(logo);
         self
     }
@@ -93,7 +90,7 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerOnboardBuilder<'mpesa, Env> {
     pub fn official_contact(
         mut self,
         official_contact: &'mpesa str,
-    ) -> BillManagerOnboardBuilder<'mpesa, Env> {
+    ) -> OnboardBuilder<'mpesa, Env> {
         self.official_contact = Some(official_contact);
         self
     }
@@ -105,7 +102,7 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerOnboardBuilder<'mpesa, Env> {
     pub fn send_reminders(
         mut self,
         send_reminders: SendRemindersTypes,
-    ) -> BillManagerOnboardBuilder<'mpesa, Env> {
+    ) -> OnboardBuilder<'mpesa, Env> {
         self.send_reminders = Some(send_reminders);
         self
     }
@@ -114,7 +111,7 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerOnboardBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// If Till or PayBill number is invalid or not provided
-    pub fn short_code(mut self, short_code: &'mpesa str) -> BillManagerOnboardBuilder<'mpesa, Env> {
+    pub fn short_code(mut self, short_code: &'mpesa str) -> OnboardBuilder<'mpesa, Env> {
         self.short_code = Some(short_code);
         self
     }
@@ -123,18 +120,18 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerOnboardBuilder<'mpesa, Env> {
     ///
     /// Opt in as a biller to mpesa's bill manager features.
     ///
-    /// A successful request returns a `BillManagerOnboardResponse` type
+    /// A successful request returns a `OnboardResponse` type
     ///
     /// # Errors
     /// Returns an `MpesaError` on failure
     #[allow(clippy::unnecessary_lazy_evaluations)]
-    pub async fn send(self) -> MpesaResult<BillManagerOnboardResponse> {
+    pub async fn send(self) -> MpesaResult<OnboardResponse> {
         let url = format!(
             "{}/v1/billmanager-invoice/optin",
             self.client.environment.base_url()
         );
 
-        let payload = BillManagerOnboardPayload {
+        let payload = OnboardPayload {
             callback_url: self
                 .callback_url
                 .ok_or(MpesaError::Message("callback_url is required"))?,
@@ -166,6 +163,6 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerOnboardBuilder<'mpesa, Env> {
         }
 
         let value = response.json().await?;
-        Err(MpesaError::BillManagerOnboardError(value))
+        Err(MpesaError::OnboardError(value))
     }
 }

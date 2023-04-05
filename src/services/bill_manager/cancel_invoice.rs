@@ -5,12 +5,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
-struct BillManagerCancelInvoicePayload<'mpesa> {
+struct CancelInvoicePayload<'mpesa> {
     external_reference: &'mpesa str,
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct BillManagerCancelInvoiceResponse {
+pub struct CancelInvoiceResponse {
     #[serde(rename(deserialize = "rescode"))]
     pub res_code: String,
     #[serde(rename(deserialize = "resmsg"))]
@@ -20,15 +20,15 @@ pub struct BillManagerCancelInvoiceResponse {
 }
 
 #[derive(Debug)]
-pub struct BillManagerCancelInvoiceBuilder<'mpesa, Env: ApiEnvironment> {
+pub struct CancelInvoiceBuilder<'mpesa, Env: ApiEnvironment> {
     client: &'mpesa Mpesa<Env>,
-    external_references: Vec<BillManagerCancelInvoicePayload<'mpesa>>,
+    external_references: Vec<CancelInvoicePayload<'mpesa>>,
 }
 
-impl<'mpesa, Env: ApiEnvironment> BillManagerCancelInvoiceBuilder<'mpesa, Env> {
+impl<'mpesa, Env: ApiEnvironment> CancelInvoiceBuilder<'mpesa, Env> {
     /// Creates a new Bill Manager Cancel invoice builder
-    pub fn new(client: &'mpesa Mpesa<Env>) -> BillManagerCancelInvoiceBuilder<'mpesa, Env> {
-        BillManagerCancelInvoiceBuilder {
+    pub fn new(client: &'mpesa Mpesa<Env>) -> CancelInvoiceBuilder<'mpesa, Env> {
+        CancelInvoiceBuilder {
             client,
             external_references: vec![],
         }
@@ -38,10 +38,10 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerCancelInvoiceBuilder<'mpesa, Env> {
     pub fn external_references(
         mut self,
         external_references: Vec<&'mpesa str>,
-    ) -> BillManagerCancelInvoiceBuilder<'mpesa, Env> {
+    ) -> CancelInvoiceBuilder<'mpesa, Env> {
         self.external_references = external_references
             .into_iter()
-            .map(|external_reference| BillManagerCancelInvoicePayload { external_reference })
+            .map(|external_reference| CancelInvoicePayload { external_reference })
             .collect();
         self
     }
@@ -50,12 +50,12 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerCancelInvoiceBuilder<'mpesa, Env> {
     ///
     /// Cancels a list of invoices by their `external_reference`
     ///
-    /// A successful request returns a `BillManagerCancelInvoiceResponse` type
+    /// A successful request returns a `CancelInvoiceResponse` type
     ///
     /// # Errors
     /// Returns an `MpesaError` on failure
     #[allow(clippy::unnecessary_lazy_evaluations)]
-    pub async fn send(self) -> MpesaResult<BillManagerCancelInvoiceResponse> {
+    pub async fn send(self) -> MpesaResult<CancelInvoiceResponse> {
         let url = format!(
             "{}/v1/billmanager-invoice/cancel-single-invoice",
             self.client.environment.base_url()
@@ -76,6 +76,6 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerCancelInvoiceBuilder<'mpesa, Env> {
         }
 
         let value = response.json().await?;
-        Err(MpesaError::BillManagerCancelInvoiceError(value))
+        Err(MpesaError::CancelInvoiceError(value))
     }
 }

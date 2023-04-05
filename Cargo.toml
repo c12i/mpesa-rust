@@ -29,12 +29,7 @@ default = [
 	"account_balance",
 	"b2b",
 	"b2c",
-	"bill_manager_onboard",
-	"bill_manager_onboard_modify",
-	"bill_manager_bulk_invoice",
-	"bill_manager_single_invoice",
-	"bill_manager_cancel_invoice",
-	"bill_manager_reconciliation",
+	"bill_manager",
 	"c2b_register",
 	"c2b_simulate",
 	"express_request",
@@ -44,12 +39,7 @@ default = [
 account_balance = ["dep:openssl"]
 b2b = ["dep:openssl"]
 b2c = ["dep:openssl"]
-bill_manager_onboard = []
-bill_manager_onboard_modify = []
-bill_manager_bulk_invoice = []
-bill_manager_single_invoice = []
-bill_manager_cancel_invoice = []
-bill_manager_reconciliation = []
+bill_manager = []
 c2b_register = []
 c2b_simulate = []
 express_request = ["dep:chrono"]

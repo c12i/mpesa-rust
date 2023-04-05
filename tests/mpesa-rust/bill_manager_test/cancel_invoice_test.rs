@@ -13,7 +13,7 @@ fn sample_response() -> ResponseTemplate {
 }
 
 #[tokio::test]
-async fn bill_manager_cancel_invoice_success() {
+async fn cancel_invoice_success() {
     let (client, server) = get_mpesa_client!();
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/cancel-single-invoice"))
@@ -22,7 +22,7 @@ async fn bill_manager_cancel_invoice_success() {
         .mount(&server)
         .await;
     let response = client
-        .bill_manager_cancel_invoice()
+        .cancel_invoice()
         .external_references(vec!["9KLSS011"])
         .send()
         .await

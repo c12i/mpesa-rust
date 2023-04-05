@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
-struct BillManagerReconciliationPayload<'mpesa> {
+struct ReconciliationPayload<'mpesa> {
     account_reference: &'mpesa str,
     external_reference: &'mpesa str,
     full_name: &'mpesa str,
@@ -18,7 +18,7 @@ struct BillManagerReconciliationPayload<'mpesa> {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct BillManagerReconciliationResponse {
+pub struct ReconciliationResponse {
     #[serde(rename(deserialize = "rescode"))]
     pub res_code: String,
     #[serde(rename(deserialize = "resmsg"))]
@@ -26,7 +26,7 @@ pub struct BillManagerReconciliationResponse {
 }
 
 #[derive(Debug)]
-pub struct BillManagerReconciliationBuilder<'mpesa, Env: ApiEnvironment> {
+pub struct ReconciliationBuilder<'mpesa, Env: ApiEnvironment> {
     client: &'mpesa Mpesa<Env>,
     account_reference: Option<&'mpesa str>,
     external_reference: Option<&'mpesa str>,
@@ -38,10 +38,10 @@ pub struct BillManagerReconciliationBuilder<'mpesa, Env: ApiEnvironment> {
     transaction_id: Option<&'mpesa str>,
 }
 
-impl<'mpesa, Env: ApiEnvironment> BillManagerReconciliationBuilder<'mpesa, Env> {
+impl<'mpesa, Env: ApiEnvironment> ReconciliationBuilder<'mpesa, Env> {
     /// Creates a new Bill Manager Reconciliation Builder
-    pub fn new(client: &'mpesa Mpesa<Env>) -> BillManagerReconciliationBuilder<'mpesa, Env> {
-        BillManagerReconciliationBuilder {
+    pub fn new(client: &'mpesa Mpesa<Env>) -> ReconciliationBuilder<'mpesa, Env> {
+        ReconciliationBuilder {
             client,
             account_reference: None,
             external_reference: None,
@@ -58,7 +58,7 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerReconciliationBuilder<'mpesa, Env> 
     pub fn account_reference(
         mut self,
         account_reference: &'mpesa str,
-    ) -> BillManagerReconciliationBuilder<'mpesa, Env> {
+    ) -> ReconciliationBuilder<'mpesa, Env> {
         self.account_reference = Some(account_reference);
         self
     }
@@ -67,34 +67,25 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerReconciliationBuilder<'mpesa, Env> 
     pub fn external_reference(
         mut self,
         external_reference: &'mpesa str,
-    ) -> BillManagerReconciliationBuilder<'mpesa, Env> {
+    ) -> ReconciliationBuilder<'mpesa, Env> {
         self.external_reference = Some(external_reference);
         self
     }
 
     /// Adds `full_name`
-    pub fn full_name(
-        mut self,
-        full_name: &'mpesa str,
-    ) -> BillManagerReconciliationBuilder<'mpesa, Env> {
+    pub fn full_name(mut self, full_name: &'mpesa str) -> ReconciliationBuilder<'mpesa, Env> {
         self.full_name = Some(full_name);
         self
     }
 
     /// Adds `invoice_name`
-    pub fn invoice_name(
-        mut self,
-        invoice_name: &'mpesa str,
-    ) -> BillManagerReconciliationBuilder<'mpesa, Env> {
+    pub fn invoice_name(mut self, invoice_name: &'mpesa str) -> ReconciliationBuilder<'mpesa, Env> {
         self.invoice_name = Some(invoice_name);
         self
     }
 
     /// Adds `paid_amount`
-    pub fn paid_amount(
-        mut self,
-        paid_amount: f64,
-    ) -> BillManagerReconciliationBuilder<'mpesa, Env> {
+    pub fn paid_amount(mut self, paid_amount: f64) -> ReconciliationBuilder<'mpesa, Env> {
         self.paid_amount = Some(paid_amount);
         self
     }
@@ -103,16 +94,13 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerReconciliationBuilder<'mpesa, Env> 
     pub fn payment_date(
         mut self,
         payment_date: DateTime<Utc>,
-    ) -> BillManagerReconciliationBuilder<'mpesa, Env> {
+    ) -> ReconciliationBuilder<'mpesa, Env> {
         self.payment_date = Some(payment_date);
         self
     }
 
     /// Adds `phone_number`
-    pub fn phone_number(
-        mut self,
-        phone_number: &'mpesa str,
-    ) -> BillManagerReconciliationBuilder<'mpesa, Env> {
+    pub fn phone_number(mut self, phone_number: &'mpesa str) -> ReconciliationBuilder<'mpesa, Env> {
         self.phone_number = Some(phone_number);
         self
     }
@@ -121,7 +109,7 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerReconciliationBuilder<'mpesa, Env> 
     pub fn transaction_id(
         mut self,
         transaction_id: &'mpesa str,
-    ) -> BillManagerReconciliationBuilder<'mpesa, Env> {
+    ) -> ReconciliationBuilder<'mpesa, Env> {
         self.transaction_id = Some(transaction_id);
         self
     }
@@ -130,18 +118,18 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerReconciliationBuilder<'mpesa, Env> 
     ///
     /// Enables your customers to receive e-receipts for payments made to your paybill account
     ///
-    /// A successful request returns a `BillManagerReconciliationResponse` type.
+    /// A successful request returns a `ReconciliationResponse` type.
     ///
     /// # Errors
     /// Returns an `MpesaError` on failure.
     #[allow(clippy::unnecessary_lazy_evaluations)]
-    pub async fn send(self) -> MpesaResult<BillManagerReconciliationResponse> {
+    pub async fn send(self) -> MpesaResult<ReconciliationResponse> {
         let url = format!(
             "{}/v1/billmanager-invoice/reconciliation",
             self.client.environment.base_url()
         );
 
-        let payload = BillManagerReconciliationPayload {
+        let payload = ReconciliationPayload {
             account_reference: self
                 .account_reference
                 .ok_or(MpesaError::Message("account_reference is required"))?,
@@ -183,6 +171,6 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerReconciliationBuilder<'mpesa, Env> 
         }
 
         let value = response.json().await?;
-        Err(MpesaError::BillManagerReconciliationError(value))
+        Err(MpesaError::ReconciliationError(value))
     }
 }

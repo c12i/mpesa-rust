@@ -12,7 +12,7 @@ fn sample_response() -> ResponseTemplate {
 }
 
 #[tokio::test]
-async fn bill_manager_onboard_modify_success() {
+async fn onboard_modify_success() {
     let (client, server) = get_mpesa_client!();
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/change-optin-details"))
@@ -21,7 +21,7 @@ async fn bill_manager_onboard_modify_success() {
         .mount(&server)
         .await;
     let response = client
-        .bill_manager_onboard_modify()
+        .onboard_modify()
         .callback_url("https://testdomain.com/true")
         .email("email@test.com")
         .logo("https://file.domain/file.png")

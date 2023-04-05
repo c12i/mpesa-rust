@@ -16,17 +16,17 @@ pub enum MpesaError {
     #[error("Account Balance request failed: {0}")]
     AccountBalanceError(serde_json::Value),
     #[error("Bill manager onboarding failed: {0}")]
-    BillManagerOnboardError(serde_json::Value),
+    OnboardError(serde_json::Value),
     #[error("Bill manager onboarding modify failed: {0}")]
-    BillManagerOnboardModifyError(serde_json::Value),
+    OnboardModifyError(serde_json::Value),
     #[error("Bill manager bulk invoice failed: {0}")]
-    BillManagerBulkInvoiceError(serde_json::Value),
+    BulkInvoiceError(serde_json::Value),
     #[error("Bill manager reconciliation failed: {0}")]
-    BillManagerReconciliationError(serde_json::Value),
+    ReconciliationError(serde_json::Value),
     #[error("Bill manager single invoice failed: {0}")]
-    BillManagerSingleInvoiceError(serde_json::Value),
+    SingleInvoiceError(serde_json::Value),
     #[error("Bill manager cancel invoice failed: {0}")]
-    BillManagerCancelInvoiceError(serde_json::Value),
+    CancelInvoiceError(serde_json::Value),
     #[error("Mpesa Express request/ STK push failed: {0}")]
     MpesaExpressRequestError(serde_json::Value),
     #[error("Mpesa Transaction reversal failed: {0}")]

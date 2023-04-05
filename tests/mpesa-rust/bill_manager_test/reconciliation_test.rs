@@ -14,7 +14,7 @@ fn sample_response() -> ResponseTemplate {
 }
 
 #[tokio::test]
-async fn bill_manager_reconciliation_success() {
+async fn reconciliation_success() {
     let (client, server) = get_mpesa_client!();
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/reconciliation"))
@@ -23,7 +23,7 @@ async fn bill_manager_reconciliation_success() {
         .mount(&server)
         .await;
     let response = client
-        .bill_manager_reconciliation()
+        .reconciliation()
         .account_reference("John Doe")
         .external_reference("INV2345")
         .full_name("John Doe")
@@ -40,7 +40,7 @@ async fn bill_manager_reconciliation_success() {
 }
 
 #[tokio::test]
-async fn bill_manager_reconciliation_fails_if_no_account_reference_is_provided() {
+async fn reconciliation_fails_if_no_account_reference_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/reconciliation"))
@@ -49,7 +49,7 @@ async fn bill_manager_reconciliation_fails_if_no_account_reference_is_provided()
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_reconciliation()
+        .reconciliation()
         .external_reference("INV2345")
         .full_name("John Doe")
         .invoice_name("Invoice 001")
@@ -68,7 +68,7 @@ async fn bill_manager_reconciliation_fails_if_no_account_reference_is_provided()
 }
 
 #[tokio::test]
-async fn bill_manager_reconciliation_fails_if_no_external_reference_is_provided() {
+async fn reconciliation_fails_if_no_external_reference_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/reconciliation"))
@@ -77,7 +77,7 @@ async fn bill_manager_reconciliation_fails_if_no_external_reference_is_provided(
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_reconciliation()
+        .reconciliation()
         .account_reference("John Doe")
         .full_name("John Doe")
         .invoice_name("Invoice 001")
@@ -96,7 +96,7 @@ async fn bill_manager_reconciliation_fails_if_no_external_reference_is_provided(
 }
 
 #[tokio::test]
-async fn bill_manager_reconciliation_fails_if_no_full_name_is_provided() {
+async fn reconciliation_fails_if_no_full_name_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/reconciliation"))
@@ -105,7 +105,7 @@ async fn bill_manager_reconciliation_fails_if_no_full_name_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_reconciliation()
+        .reconciliation()
         .account_reference("John Doe")
         .external_reference("INV2345")
         .invoice_name("Invoice 001")
@@ -124,7 +124,7 @@ async fn bill_manager_reconciliation_fails_if_no_full_name_is_provided() {
 }
 
 #[tokio::test]
-async fn bill_manager_reconciliation_fails_if_no_invoice_name_is_provided() {
+async fn reconciliation_fails_if_no_invoice_name_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/reconciliation"))
@@ -133,7 +133,7 @@ async fn bill_manager_reconciliation_fails_if_no_invoice_name_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_reconciliation()
+        .reconciliation()
         .account_reference("John Doe")
         .external_reference("INV2345")
         .full_name("John Doe")
@@ -152,7 +152,7 @@ async fn bill_manager_reconciliation_fails_if_no_invoice_name_is_provided() {
 }
 
 #[tokio::test]
-async fn bill_manager_reconciliation_fails_if_no_paid_amount_is_provided() {
+async fn reconciliation_fails_if_no_paid_amount_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/reconciliation"))
@@ -161,7 +161,7 @@ async fn bill_manager_reconciliation_fails_if_no_paid_amount_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_reconciliation()
+        .reconciliation()
         .account_reference("John Doe")
         .external_reference("INV2345")
         .full_name("John Doe")
@@ -180,7 +180,7 @@ async fn bill_manager_reconciliation_fails_if_no_paid_amount_is_provided() {
 }
 
 #[tokio::test]
-async fn bill_manager_reconciliation_fails_if_no_payment_date_is_provided() {
+async fn reconciliation_fails_if_no_payment_date_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/reconciliation"))
@@ -189,7 +189,7 @@ async fn bill_manager_reconciliation_fails_if_no_payment_date_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_reconciliation()
+        .reconciliation()
         .account_reference("John Doe")
         .external_reference("INV2345")
         .full_name("John Doe")
@@ -208,7 +208,7 @@ async fn bill_manager_reconciliation_fails_if_no_payment_date_is_provided() {
 }
 
 #[tokio::test]
-async fn bill_manager_reconciliation_fails_if_no_phone_number_is_provided() {
+async fn reconciliation_fails_if_no_phone_number_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/reconciliation"))
@@ -217,7 +217,7 @@ async fn bill_manager_reconciliation_fails_if_no_phone_number_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_reconciliation()
+        .reconciliation()
         .account_reference("John Doe")
         .external_reference("INV2345")
         .full_name("John Doe")
@@ -236,7 +236,7 @@ async fn bill_manager_reconciliation_fails_if_no_phone_number_is_provided() {
 }
 
 #[tokio::test]
-async fn bill_manager_reconciliation_fails_if_no_transaction_id_is_provided() {
+async fn reconciliation_fails_if_no_transaction_id_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/reconciliation"))
@@ -245,7 +245,7 @@ async fn bill_manager_reconciliation_fails_if_no_transaction_id_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_reconciliation()
+        .reconciliation()
         .account_reference("John Doe")
         .external_reference("INV2345")
         .full_name("John Doe")

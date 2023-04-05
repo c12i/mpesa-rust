@@ -5,7 +5,7 @@ use crate::errors::MpesaError;
 use serde::Deserialize;
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct BillManagerBulkInvoiceResponse {
+pub struct BulkInvoiceResponse {
     #[serde(rename(deserialize = "rescode"))]
     pub res_code: String,
     #[serde(rename(deserialize = "resmsg"))]
@@ -15,25 +15,22 @@ pub struct BillManagerBulkInvoiceResponse {
 }
 
 #[derive(Debug)]
-pub struct BillManagerBulkInvoiceBuilder<'mpesa, Env: ApiEnvironment> {
+pub struct BulkInvoiceBuilder<'mpesa, Env: ApiEnvironment> {
     client: &'mpesa Mpesa<Env>,
     invoices: Option<Vec<Invoice<'mpesa>>>,
 }
 
-impl<'mpesa, Env: ApiEnvironment> BillManagerBulkInvoiceBuilder<'mpesa, Env> {
+impl<'mpesa, Env: ApiEnvironment> BulkInvoiceBuilder<'mpesa, Env> {
     /// Creates a new Bill Manager Bulk Invoice builder
-    pub fn new(client: &'mpesa Mpesa<Env>) -> BillManagerBulkInvoiceBuilder<'mpesa, Env> {
-        BillManagerBulkInvoiceBuilder {
+    pub fn new(client: &'mpesa Mpesa<Env>) -> BulkInvoiceBuilder<'mpesa, Env> {
+        BulkInvoiceBuilder {
             client,
             invoices: None,
         }
     }
 
     /// Adds `invoices`
-    pub fn invoices(
-        mut self,
-        invoices: Vec<Invoice<'mpesa>>,
-    ) -> BillManagerBulkInvoiceBuilder<'mpesa, Env> {
+    pub fn invoices(mut self, invoices: Vec<Invoice<'mpesa>>) -> BulkInvoiceBuilder<'mpesa, Env> {
         self.invoices = Some(invoices);
         self
     }
@@ -45,7 +42,7 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerBulkInvoiceBuilder<'mpesa, Env> {
     /// # Errors
     /// Returns an `MpesaError` on failure.
     #[allow(clippy::unnecessary_lazy_evaluations)]
-    pub async fn send(self) -> MpesaResult<BillManagerBulkInvoiceResponse> {
+    pub async fn send(self) -> MpesaResult<BulkInvoiceResponse> {
         let url = format!(
             "{}/v1/billmanager-invoice/bulk-invoicing",
             self.client.environment.base_url()
@@ -70,6 +67,6 @@ impl<'mpesa, Env: ApiEnvironment> BillManagerBulkInvoiceBuilder<'mpesa, Env> {
         }
 
         let value = response.json().await?;
-        Err(MpesaError::BillManagerBulkInvoiceError(value))
+        Err(MpesaError::BulkInvoiceError(value))
     }
 }

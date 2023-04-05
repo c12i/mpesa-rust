@@ -5,17 +5,7 @@ mod b2b_test;
 #[cfg(test)]
 mod b2c_test;
 #[cfg(test)]
-mod bill_manager_bulk_invoice_test;
-#[cfg(test)]
-mod bill_manager_cancel_invoice_test;
-#[cfg(test)]
-mod bill_manager_onboard_modify_test;
-#[cfg(test)]
-mod bill_manager_onboard_test;
-#[cfg(test)]
-mod bill_manager_reconciliation_test;
-#[cfg(test)]
-mod bill_manager_single_invoice_test;
+mod bill_manager_test;
 #[cfg(test)]
 mod c2b_register_test;
 #[cfg(test)]

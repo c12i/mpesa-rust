@@ -15,7 +15,7 @@ fn sample_response() -> ResponseTemplate {
 }
 
 #[tokio::test]
-async fn bill_manager_single_invoice_success() {
+async fn single_invoice_success() {
     let (client, server) = get_mpesa_client!();
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/single-invoicing"))
@@ -24,7 +24,7 @@ async fn bill_manager_single_invoice_success() {
         .mount(&server)
         .await;
     let response = client
-        .bill_manager_single_invoice()
+        .single_invoice()
         .amount(1000.0)
         .account_reference("John Doe")
         .billed_full_name("John Doe")
@@ -46,7 +46,7 @@ async fn bill_manager_single_invoice_success() {
 }
 
 #[tokio::test]
-async fn bill_manager_single_invoice_fails_if_no_amount_is_provided() {
+async fn single_invoice_fails_if_no_amount_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/single-invoicing"))
@@ -55,7 +55,7 @@ async fn bill_manager_single_invoice_fails_if_no_amount_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_single_invoice()
+        .single_invoice()
         .account_reference("John Doe")
         .billed_full_name("John Doe")
         .billed_period("August 2021")
@@ -74,7 +74,7 @@ async fn bill_manager_single_invoice_fails_if_no_amount_is_provided() {
 }
 
 #[tokio::test]
-async fn bill_manager_single_invoice_fails_if_no_account_reference_is_provided() {
+async fn single_invoice_fails_if_no_account_reference_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/single-invoicing"))
@@ -83,7 +83,7 @@ async fn bill_manager_single_invoice_fails_if_no_account_reference_is_provided()
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_single_invoice()
+        .single_invoice()
         .amount(1000.0)
         .billed_full_name("John Doe")
         .billed_period("August 2021")
@@ -102,7 +102,7 @@ async fn bill_manager_single_invoice_fails_if_no_account_reference_is_provided()
 }
 
 #[tokio::test]
-async fn bill_manager_single_invoice_fails_if_no_billed_full_name_is_provided() {
+async fn single_invoice_fails_if_no_billed_full_name_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/single-invoicing"))
@@ -111,7 +111,7 @@ async fn bill_manager_single_invoice_fails_if_no_billed_full_name_is_provided() 
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_single_invoice()
+        .single_invoice()
         .amount(1000.0)
         .account_reference("John Doe")
         .billed_period("August 2021")
@@ -130,7 +130,7 @@ async fn bill_manager_single_invoice_fails_if_no_billed_full_name_is_provided() 
 }
 
 #[tokio::test]
-async fn bill_manager_single_invoice_fails_if_no_billed_period_is_provided() {
+async fn single_invoice_fails_if_no_billed_period_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/single-invoicing"))
@@ -139,7 +139,7 @@ async fn bill_manager_single_invoice_fails_if_no_billed_period_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_single_invoice()
+        .single_invoice()
         .amount(1000.0)
         .account_reference("John Doe")
         .billed_full_name("John Doe")
@@ -158,7 +158,7 @@ async fn bill_manager_single_invoice_fails_if_no_billed_period_is_provided() {
 }
 
 #[tokio::test]
-async fn bill_manager_single_invoice_fails_if_no_billed_phone_number_is_provided() {
+async fn single_invoice_fails_if_no_billed_phone_number_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/single-invoicing"))
@@ -167,7 +167,7 @@ async fn bill_manager_single_invoice_fails_if_no_billed_phone_number_is_provided
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_single_invoice()
+        .single_invoice()
         .amount(1000.0)
         .account_reference("John Doe")
         .billed_full_name("John Doe")
@@ -186,7 +186,7 @@ async fn bill_manager_single_invoice_fails_if_no_billed_phone_number_is_provided
 }
 
 #[tokio::test]
-async fn bill_manager_single_invoice_fails_if_no_due_date_is_provided() {
+async fn single_invoice_fails_if_no_due_date_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/single-invoicing"))
@@ -195,7 +195,7 @@ async fn bill_manager_single_invoice_fails_if_no_due_date_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_single_invoice()
+        .single_invoice()
         .amount(1000.0)
         .account_reference("John Doe")
         .billed_full_name("John Doe")
@@ -214,7 +214,7 @@ async fn bill_manager_single_invoice_fails_if_no_due_date_is_provided() {
 }
 
 #[tokio::test]
-async fn bill_manager_single_invoice_fails_if_no_external_reference_is_provided() {
+async fn single_invoice_fails_if_no_external_reference_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/single-invoicing"))
@@ -223,7 +223,7 @@ async fn bill_manager_single_invoice_fails_if_no_external_reference_is_provided(
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_single_invoice()
+        .single_invoice()
         .amount(1000.0)
         .account_reference("John Doe")
         .billed_full_name("John Doe")
@@ -242,7 +242,7 @@ async fn bill_manager_single_invoice_fails_if_no_external_reference_is_provided(
 }
 
 #[tokio::test]
-async fn bill_manager_single_invoice_fails_if_no_invoice_name_is_provided() {
+async fn single_invoice_fails_if_no_invoice_name_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/single-invoicing"))
@@ -251,7 +251,7 @@ async fn bill_manager_single_invoice_fails_if_no_invoice_name_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .bill_manager_single_invoice()
+        .single_invoice()
         .amount(1000.0)
         .account_reference("John Doe")
         .billed_full_name("John Doe")

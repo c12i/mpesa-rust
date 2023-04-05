@@ -1,9 +1,8 @@
 use crate::environment::ApiEnvironment;
 use crate::services::{
-    AccountBalanceBuilder, B2bBuilder, B2cBuilder, BillManagerBulkInvoiceBuilder,
-    BillManagerCancelInvoiceBuilder, BillManagerOnboardBuilder, BillManagerOnboardModifyBuilder,
-    BillManagerReconciliationBuilder, BillManagerSingleInvoiceBuilder, C2bRegisterBuilder,
-    C2bSimulateBuilder, MpesaExpressRequestBuilder, TransactionReversalBuilder,
+    AccountBalanceBuilder, B2bBuilder, B2cBuilder, BulkInvoiceBuilder, C2bRegisterBuilder,
+    C2bSimulateBuilder, CancelInvoiceBuilder, MpesaExpressRequestBuilder, OnboardBuilder,
+    OnboardModifyBuilder, ReconciliationBuilder, SingleInvoiceBuilder, TransactionReversalBuilder,
     TransactionStatusBuilder,
 };
 use crate::MpesaError;
@@ -186,14 +185,14 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
 
     /// **Bill Manager Onboard Builder**
     ///
-    /// Creates a `BillManagerOnboardBuilder` which allows you to opt in as a biller to the bill manager features.
+    /// Creates a `OnboardBuilder` which allows you to opt in as a biller to the bill manager features.
     ///
     /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
     ///
     /// # Example
     /// ```ignore
     /// let response = client
-    ///     .bill_manager_onboard()
+    ///     .onboard()
     ///     .callback_url("https://testdomain.com/true")
     ///     .email("email@test.com")
     ///     .logo("https://file.domain/file.png")
@@ -203,21 +202,21 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///     .send()
     ///     .await;
     /// ```
-    #[cfg(feature = "bill_manager_onboard")]
-    pub fn bill_manager_onboard(&'mpesa self) -> BillManagerOnboardBuilder<'mpesa, Env> {
-        BillManagerOnboardBuilder::new(self)
+    #[cfg(feature = "bill_manager")]
+    pub fn onboard(&'mpesa self) -> OnboardBuilder<'mpesa, Env> {
+        OnboardBuilder::new(self)
     }
 
     /// **Bill Manager Onboard Modify Builder**
     ///
-    /// Creates a `BillManagerOnboardModifyBuilder` which allows you to opt in as a biller to the bill manager features.
+    /// Creates a `OnboardModifyBuilder` which allows you to opt in as a biller to the bill manager features.
     ///
     /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
     ///
     /// # Example
     /// ```ignore
     /// let response = client
-    ///     .bill_manager_onboard_modify()
+    ///     .onboard_modify()
     ///     .callback_url("https://testdomain.com/true")
     ///     .email("email@test.com")
     ///     .logo("https://file.domain/file.png")
@@ -227,16 +226,14 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///     .send()
     ///     .await;
     /// ```
-    #[cfg(feature = "bill_manager_onboard_modify")]
-    pub fn bill_manager_onboard_modify(
-        &'mpesa self,
-    ) -> BillManagerOnboardModifyBuilder<'mpesa, Env> {
-        BillManagerOnboardModifyBuilder::new(self)
+    #[cfg(feature = "bill_manager")]
+    pub fn onboard_modify(&'mpesa self) -> OnboardModifyBuilder<'mpesa, Env> {
+        OnboardModifyBuilder::new(self)
     }
 
     /// **Bill Manager Bulk Invoice Builder**
     ///
-    /// Creates a `BillManagerBulkInvoiceBuilder` which allows you to send invoices to your customers in bulk.
+    /// Creates a `BulkInvoiceBuilder` which allows you to send invoices to your customers in bulk.
     /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
     ///
     /// # Example
@@ -244,7 +241,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// use chrone::prelude::Utc;
     ///
     /// let response = client
-    ///     .bill_manager_bulk_invoice()
+    ///     .bulk_invoice()
     ///     .invoices(vec![
     ///         Invoice {
     ///             amount: 1000.0,
@@ -263,13 +260,14 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///     .send()
     ///     .await;
     /// ```
-    pub fn bill_manager_bulk_invoice(&'mpesa self) -> BillManagerBulkInvoiceBuilder<'mpesa, Env> {
-        BillManagerBulkInvoiceBuilder::new(self)
+    #[cfg(feature = "bill_manager")]
+    pub fn bulk_invoice(&'mpesa self) -> BulkInvoiceBuilder<'mpesa, Env> {
+        BulkInvoiceBuilder::new(self)
     }
 
     /// **Bill Manager Single Invoice Builder**
     ///
-    /// Creates a `BillManagerSingleInvoiceBuilder` which allows you to create and send invoices to your customers.
+    /// Creates a `SingleInvoiceBuilder` which allows you to create and send invoices to your customers.
     /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
     ///
     /// # Example
@@ -277,7 +275,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// use chrono::prelude::Utc;
     ///
     /// let response = client
-    ///     .bill_manager_single_invoice()
+    ///     .single_invoice()
     ///     .amount(1000.0)
     ///     .account_reference("John Doe")
     ///     .billed_full_name("John Doe")
@@ -292,15 +290,14 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///     .send()
     ///     .await;
     /// ```
-    pub fn bill_manager_single_invoice(
-        &'mpesa self,
-    ) -> BillManagerSingleInvoiceBuilder<'mpesa, Env> {
-        BillManagerSingleInvoiceBuilder::new(self)
+    #[cfg(feature = "bill_manager")]
+    pub fn single_invoice(&'mpesa self) -> SingleInvoiceBuilder<'mpesa, Env> {
+        SingleInvoiceBuilder::new(self)
     }
 
     /// **Bill Manager Reconciliation Builder**
     ///
-    /// Creates a `BillManagerReconciliationBuilder` which enables your customers to receive e-receipts for payments made to your paybill account.
+    /// Creates a `ReconciliationBuilder` which enables your customers to receive e-receipts for payments made to your paybill account.
     /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
     ///
     /// # Example
@@ -308,7 +305,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// use chrono::prelude::Utc;
     ///
     /// let response = client
-    ///     .bill_manager_reconciliation()
+    ///     .reconciliation()
     ///     .account_reference("John Doe")
     ///     .external_reference("INV2345")
     ///     .full_name("John Doe")
@@ -320,15 +317,14 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///     .send()
     ///     .await;
     /// ```
-    pub fn bill_manager_reconciliation(
-        &'mpesa self,
-    ) -> BillManagerReconciliationBuilder<'mpesa, Env> {
-        BillManagerReconciliationBuilder::new(self)
+    #[cfg(feature = "bill_manager")]
+    pub fn reconciliation(&'mpesa self) -> ReconciliationBuilder<'mpesa, Env> {
+        ReconciliationBuilder::new(self)
     }
 
     /// **Bill Manager Cancel Invoice Builder**
     ///
-    /// Creates a `BillManagerCancelInvoiceBuilder` which allows you to recall a sent invoice.
+    /// Creates a `CancelInvoiceBuilder` which allows you to recall a sent invoice.
     /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
     ///
     /// # Example
@@ -336,15 +332,14 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// use chrono::prelude::Utc;
     ///
     /// let response = client
-    ///     .bill_manager_cancel_invoice()
+    ///     .cancel_invoice()
     ///     .external_references(vec!["9KLSS011"])
     ///     .send()
     ///     .await;
     /// ```
-    pub fn bill_manager_cancel_invoice(
-        &'mpesa self,
-    ) -> BillManagerCancelInvoiceBuilder<'mpesa, Env> {
-        BillManagerCancelInvoiceBuilder::new(self)
+    #[cfg(feature = "bill_manager")]
+    pub fn cancel_invoice(&'mpesa self) -> CancelInvoiceBuilder<'mpesa, Env> {
+        CancelInvoiceBuilder::new(self)
     }
 
     /// **C2B Register builder**
