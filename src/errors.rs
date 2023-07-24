@@ -1,33 +1,6 @@
 use std::{env::VarError, fmt};
 use serde::{Serialize, Deserialize};
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct ApiError {
-    pub request_id: String,
-    pub error_code: String,
-    pub error_message: String,
-}
-
-impl fmt::Display for ApiError {
-    fn fmt(&self, f:&mut fmt::Formatter<'_>) -> fmt::Result{
-        write!(
-            f,
-            "requestID: {}, errorCode:{}, errorMessage:{}",self.request_id, self.error_code, self.error_message
-        )
-    }
-}
-
-impl ApiError {
-    pub fn new(request_id: String, error_code: String, error_message: String) -> Self {
-        ApiError {
-            request_id,
-            error_code,
-            error_message,
-        }
-    }
-}
-
-
 /// Mpesa error stack
 #[derive(thiserror::Error, Debug)]
 pub enum MpesaError {
@@ -59,4 +32,31 @@ pub enum MpesaError {
     EncryptionError(#[from] openssl::error::ErrorStack),
     #[error("{0}")]
     Message(&'static str),
+}
+
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ApiError {
+    pub request_id: String,
+    pub error_code: String,
+    pub error_message: String,
+}
+
+impl fmt::Display for ApiError {
+    fn fmt(&self, f:&mut fmt::Formatter<'_>) -> fmt::Result{
+        write!(
+            f,
+            "requestID: {}, errorCode:{}, errorMessage:{}",self.request_id, self.error_code, self.error_message
+        )
+    }
+}
+
+impl ApiError {
+    pub fn new(request_id: String, error_code: String, error_message: String) -> Self {
+        ApiError {
+            request_id,
+            error_code,
+            error_message,
+        }
+    }
 }

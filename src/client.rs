@@ -114,24 +114,17 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
             .await?;
         if response.status().is_success() {
             let value = response.json::<Value>().await?;
-            let error_message ="Failed to extract token from the response";
             let access_token = value
                 .get("access_token")
-                .ok_or_else(|| MpesaError::AuthenticationError(
-                    ApiError::new(value.to_string(),String::new(),error_message.to_string()
-                )))?;
+                .ok_or_else(||  String::from("Failed to extract token from the response")).unwrap();
             let access_token = access_token
                 .as_str()
-                .ok_or_else(|| MpesaError::AuthenticationError(
-                    ApiError::new(value.to_string(), String::new(),error_message.to_string())
-                ))?;
+                .ok_or_else(|| String::from("Error converting access token to string")).unwrap();
+            
             return Ok(access_token.to_string());
         }
-        let value = response.json::<Value>().await?;
-        let request_id = value.get("requestId").and_then(Value::as_str).unwrap_or_default().to_string();
-        let error_code = value.get("errorCode").and_then(Value::as_str).unwrap_or_default().to_string();
-        let error_message = value.get("errorMessage").and_then(Value::as_str).unwrap_or_default().to_string();
-        let api_error = ApiError::new(request_id, error_code, error_message);
+        let error = response.json::<ApiError>().await?;
+        let api_error = ApiError::new(error.request_id, error.error_code, error.error_message);
         Err(MpesaError::AuthenticationError(api_error))
     }
 
