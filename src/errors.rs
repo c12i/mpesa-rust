@@ -1,5 +1,5 @@
+use serde::{Deserialize, Serialize};
 use std::{env::VarError, fmt};
-use serde::{Serialize, Deserialize};
 
 /// Mpesa error stack
 #[derive(thiserror::Error, Debug)]
@@ -34,7 +34,6 @@ pub enum MpesaError {
     Message(&'static str),
 }
 
-
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ApiError {
     pub request_id: String,
@@ -43,10 +42,11 @@ pub struct ApiError {
 }
 
 impl fmt::Display for ApiError {
-    fn fmt(&self, f:&mut fmt::Formatter<'_>) -> fmt::Result{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
-            "requestID: {}, errorCode:{}, errorMessage:{}",self.request_id, self.error_code, self.error_message
+            "requestID: {}, errorCode:{}, errorMessage:{}",
+            self.request_id, self.error_code, self.error_message
         )
     }
 }
