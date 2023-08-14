@@ -187,7 +187,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///
     /// Creates a `OnboardBuilder` which allows you to opt in as a biller to the bill manager features.
     ///
-    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/APIs/BillManager)
     ///
     /// # Example
     /// ```ignore
@@ -211,7 +211,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///
     /// Creates a `OnboardModifyBuilder` which allows you to opt in as a biller to the bill manager features.
     ///
-    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/APIs/BillManager)
     ///
     /// # Example
     /// ```ignore
@@ -234,7 +234,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// **Bill Manager Bulk Invoice Builder**
     ///
     /// Creates a `BulkInvoiceBuilder` which allows you to send invoices to your customers in bulk.
-    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/APIs/BillManager)
     ///
     /// # Example
     /// ```ignore
@@ -268,7 +268,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// **Bill Manager Single Invoice Builder**
     ///
     /// Creates a `SingleInvoiceBuilder` which allows you to create and send invoices to your customers.
-    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/APIs/BillManager)
     ///
     /// # Example
     /// ```ignore
@@ -298,7 +298,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// **Bill Manager Reconciliation Builder**
     ///
     /// Creates a `ReconciliationBuilder` which enables your customers to receive e-receipts for payments made to your paybill account.
-    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/APIs/BillManager)
     ///
     /// # Example
     /// ```ignore
@@ -325,7 +325,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// **Bill Manager Cancel Invoice Builder**
     ///
     /// Creates a `CancelInvoiceBuilder` which allows you to recall a sent invoice.
-    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/APIs/BillManager)
     ///
     /// # Example
     /// ```ignore
