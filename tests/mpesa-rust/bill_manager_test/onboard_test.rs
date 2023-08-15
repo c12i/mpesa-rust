@@ -33,8 +33,8 @@ async fn onboard_success() {
         .await
         .unwrap();
     assert_eq!(response.app_key, "kfpB9X4o0H");
-    assert_eq!(response.res_code, "200");
-    assert_eq!(response.res_msg, "Success");
+    assert_eq!(response.response_code, "200");
+    assert_eq!(response.response_message, "Success");
 }
 
 #[tokio::test]

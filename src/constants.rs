@@ -102,18 +102,6 @@ impl Display for SendRemindersTypes {
 }
 
 #[derive(Debug, Serialize)]
-pub struct InvoiceItem<'i> {
-    pub amount: f64,
-    pub item_name: &'i str,
-}
-
-impl<'i> Display for InvoiceItem<'i> {
-    fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        write!(f, "amount: {}, item_name: {}", self.amount, self.item_name)
-    }
-}
-
-#[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Invoice<'i> {
     pub amount: f64,
@@ -130,6 +118,25 @@ pub struct Invoice<'i> {
 
 impl<'i> Display for Invoice<'i> {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        write!(f, "{self:?}")
+        write!(
+            f,
+            "amount: {}, account_reference: {}, due_date: {}, invoice_name: {}",
+            self.amount,
+            self.account_reference,
+            self.due_date.format("%Y-%m-%d"),
+            self.invoice_name,
+        )
+    }
+}
+
+#[derive(Debug, Serialize)]
+pub struct InvoiceItem<'i> {
+    pub amount: f64,
+    pub item_name: &'i str,
+}
+
+impl<'i> Display for InvoiceItem<'i> {
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
+        write!(f, "amount: {}, item_name: {}", self.amount, self.item_name)
     }
 }

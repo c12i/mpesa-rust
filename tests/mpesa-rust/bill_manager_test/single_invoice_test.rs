@@ -40,8 +40,8 @@ async fn single_invoice_success() {
         .send()
         .await
         .unwrap();
-    assert_eq!(response.res_code, "200");
-    assert_eq!(response.res_msg, "Success");
+    assert_eq!(response.response_code, "200");
+    assert_eq!(response.response_message, "Success");
     assert_eq!(response.status_message, "Invoice sent successfully");
 }
 

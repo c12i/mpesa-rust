@@ -20,9 +20,9 @@ struct ReconciliationPayload<'mpesa> {
 #[derive(Clone, Debug, Deserialize)]
 pub struct ReconciliationResponse {
     #[serde(rename(deserialize = "rescode"))]
-    pub res_code: String,
+    pub response_code: String,
     #[serde(rename(deserialize = "resmsg"))]
-    pub res_msg: String,
+    pub response_message: String,
 }
 
 #[derive(Debug)]

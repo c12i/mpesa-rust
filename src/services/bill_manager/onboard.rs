@@ -26,9 +26,9 @@ pub struct OnboardResponse {
     #[serde(rename(deserialize = "app_key"))]
     pub app_key: String,
     #[serde(rename(deserialize = "rescode"))]
-    pub res_code: String,
+    pub response_code: String,
     #[serde(rename(deserialize = "resmsg"))]
-    pub res_msg: String,
+    pub response_message: String,
 }
 
 #[derive(Debug)]
