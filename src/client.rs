@@ -126,8 +126,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
             return Ok(access_token.to_string());
         }
         let error = response.json::<ApiError>().await?;
-        let api_error = ApiError::new(error.request_id, error.error_code, error.error_message);
-        Err(MpesaError::AuthenticationError(api_error))
+        Err(MpesaError::AuthenticationError(error))
     }
 
     /// **B2C Builder**

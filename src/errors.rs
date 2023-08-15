@@ -50,13 +50,3 @@ impl fmt::Display for ApiError {
         )
     }
 }
-
-impl ApiError {
-    pub fn new(request_id: String, error_code: String, error_message: String) -> Self {
-        ApiError {
-            request_id,
-            error_code,
-            error_message,
-        }
-    }
-}
