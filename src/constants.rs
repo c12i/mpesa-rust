@@ -109,7 +109,7 @@ pub struct InvoiceItem<'i> {
 
 impl<'i> Display for InvoiceItem<'i> {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        write!(f, "{self:?}")
+        write!(f, "amount: {}, item_name: {}", self.amount, self.item_name)
     }
 }
 
