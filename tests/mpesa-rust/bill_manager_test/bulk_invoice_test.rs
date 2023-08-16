@@ -48,7 +48,7 @@ async fn bulk_invoice_success() {
 }
 
 #[tokio::test]
-async fn bulk_invoice_fails_if_no_invoices_is_provided() {
+async fn bulk_invoice_fails_if_invoices_is_empty() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/bulk-invoicing"))
@@ -58,7 +58,7 @@ async fn bulk_invoice_fails_if_no_invoices_is_provided() {
         .await;
     if let Err(e) = client.bulk_invoice().send().await {
         let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message but found {}", e)};
-        assert_eq!(msg, "invoices is required");
+        assert_eq!(msg, "invoices cannot be empty");
     } else {
         panic!("Expected Error")
     }

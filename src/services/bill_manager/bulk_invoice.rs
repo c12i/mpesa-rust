@@ -17,7 +17,7 @@ pub struct BulkInvoiceResponse {
 #[derive(Debug)]
 pub struct BulkInvoiceBuilder<'mpesa, Env: ApiEnvironment> {
     client: &'mpesa Mpesa<Env>,
-    invoices: Option<Vec<Invoice<'mpesa>>>,
+    invoices: Vec<Invoice<'mpesa>>,
 }
 
 impl<'mpesa, Env: ApiEnvironment> BulkInvoiceBuilder<'mpesa, Env> {
@@ -25,13 +25,22 @@ impl<'mpesa, Env: ApiEnvironment> BulkInvoiceBuilder<'mpesa, Env> {
     pub fn new(client: &'mpesa Mpesa<Env>) -> BulkInvoiceBuilder<'mpesa, Env> {
         BulkInvoiceBuilder {
             client,
-            invoices: None,
+            invoices: vec![],
         }
     }
 
-    /// Adds `invoices`
-    pub fn invoices(mut self, invoices: Vec<Invoice<'mpesa>>) -> BulkInvoiceBuilder<'mpesa, Env> {
-        self.invoices = Some(invoices);
+    /// Adds a single `invoice`
+    pub fn invoice(mut self, invoice: Invoice<'mpesa>) -> BulkInvoiceBuilder<'mpesa, Env> {
+        self.invoices.push(invoice);
+        self
+    }
+
+    /// Adds multiple `invoices`
+    pub fn invoices(
+        mut self,
+        mut invoices: Vec<Invoice<'mpesa>>,
+    ) -> BulkInvoiceBuilder<'mpesa, Env> {
+        self.invoices.append(&mut invoices);
         self
     }
 
@@ -48,16 +57,16 @@ impl<'mpesa, Env: ApiEnvironment> BulkInvoiceBuilder<'mpesa, Env> {
             self.client.environment.base_url()
         );
 
-        let payload = self
-            .invoices
-            .ok_or(MpesaError::Message("invoices is required"))?;
+        if self.invoices.is_empty() {
+            return Err(MpesaError::Message("invoices cannot be empty"));
+        }
 
         let response = self
             .client
             .http_client
             .post(&url)
             .bearer_auth(self.client.auth().await?)
-            .json(&payload)
+            .json(&self.invoices)
             .send()
             .await?;
 
