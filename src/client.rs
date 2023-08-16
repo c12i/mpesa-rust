@@ -3,7 +3,7 @@ use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, C2bRegisterBuilder, C2bSimulateBuilder,
     MpesaExpressRequestBuilder, TransactionReversalBuilder, TransactionStatusBuilder,
 };
-use crate::MpesaError;
+use crate::{ApiError, MpesaError};
 use openssl::base64;
 use openssl::rsa::Padding;
 use openssl::x509::X509;
@@ -116,14 +116,17 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
             let value = response.json::<Value>().await?;
             let access_token = value
                 .get("access_token")
-                .ok_or_else(|| MpesaError::AuthenticationError(value.clone()))?;
+                .ok_or_else(|| String::from("Failed to extract token from the response"))
+                .unwrap();
             let access_token = access_token
                 .as_str()
-                .ok_or_else(|| MpesaError::AuthenticationError(value.clone()))?;
+                .ok_or_else(|| String::from("Error converting access token to string"))
+                .unwrap();
+
             return Ok(access_token.to_string());
         }
-        let value = response.json::<Value>().await?;
-        Err(MpesaError::AuthenticationError(value))
+        let error = response.json::<ApiError>().await?;
+        Err(MpesaError::AuthenticationError(error))
     }
 
     /// **B2C Builder**

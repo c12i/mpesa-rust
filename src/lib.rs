@@ -357,4 +357,4 @@ pub use client::{Mpesa, MpesaResult};
 pub use constants::{CommandId, IdentifierTypes, ResponseType};
 pub use environment::ApiEnvironment;
 pub use environment::Environment::{self, Production, Sandbox};
-pub use errors::MpesaError;
+pub use errors::{ApiError, MpesaError};
