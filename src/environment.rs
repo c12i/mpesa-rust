@@ -13,7 +13,7 @@
 use crate::MpesaError;
 use std::{convert::TryFrom, str::FromStr};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 /// Enum to map to desired environment so as to access certificate
 /// and the base url
 /// Required to construct a new `Mpesa` struct

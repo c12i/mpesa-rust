@@ -37,7 +37,7 @@ mpesa = { git = "https://github.com/collinsmuriuki/mpesa-rust", default_features
 
 In your lib or binary crate:
 
-```rs
+```rust,no_run
 use mpesa::Mpesa;
 ```
 
@@ -52,7 +52,7 @@ read the docs [here](https://developer.safaricom.co.ke/docs?javascript#going-liv
 
 These are the following ways you can instantiate `Mpesa`:
 
-```rust
+```rust,no_run
 use mpesa::{Mpesa, Environment};
 
 let client = Mpesa::new(
@@ -67,7 +67,7 @@ assert!(client.is_connected().await)
 Since the `Environment` enum implements `FromStr` and `TryFrom` for `String` and `&str` types, you can call `Environment::from_str` or `Environment::try_from` to create an `Environment` type. This is ideal if the environment values are
 stored in a `.env` or any other configuration file:
 
-```rust
+```rust,no_run
 use mpesa::{Mpesa, Environment};
 use std::str::FromStr;
 use std::convert::TryFrom;
@@ -77,13 +77,13 @@ let client0 = Mpesa::new(
       env!("CLIENT_SECRET"),
       Environment::from_str("sandbox")? // "Sandbox" and "SANDBOX" also valid
 );
+assert!(client0.is_connected().await)
 
 let client1 = Mpesa::new(
       env!("CLIENT_KEY"),
       env!("CLIENT_SECRET"),
       Environment::try_from("production")? // "Production" and "PRODUCTION" also valid
 );
-assert!(client0.is_connected().await)
 assert!(client1.is_connected().await)
 ```
 
@@ -101,7 +101,7 @@ This trait allows you to create your own type to pass to the `environment` param
 
 See the example below (and [here](./src/environment.rs) so see how the trait is implemented for the `Environment` enum):
 
-```rust
+```rust,no_run
 use mpesa::{Mpesa, ApiEnvironment};
 use std::str::FromStr;
 use std::convert::TryFrom;
@@ -132,7 +132,7 @@ let client: Mpesa<MyCustomEnvironment> = Mpesa::new(
 If you intend to use in production, you will need to call a the `set_initiator_password` method from `Mpesa` after initially
 creating the client. Here you provide your initiator password, which overrides the default password used in sandbox `"Safcom496!"`:
 
-```rust
+```rust,no_run
 use mpesa::Mpesa;
 
 let client = Mpesa::new(
@@ -152,7 +152,7 @@ The following services are currently available from the `Mpesa` client as method
 
 - B2C
 
-```rust
+```rust,no_run
 let response = client
     .b2c("testapi496")
     .party_a("600496")
@@ -167,7 +167,7 @@ assert!(response.is_ok())
 
 - B2B
 
-```rust
+```rust,no_run
 let response = client
     .b2b("testapi496")
     .party_a("600496")
@@ -183,7 +183,7 @@ assert!(response.is_ok())
 
 - C2B Register
 
-```rust
+```rust,no_run
 let response = client
     .c2b_register()
     .short_code("600496")
@@ -196,8 +196,7 @@ assert!(response.is_ok())
 
 - C2B Simulate
 
-```rust
-
+```rust,no_run
 let response = client
     .c2b_simulate()
     .short_code("600496")
@@ -210,7 +209,7 @@ assert!(response.is_ok())
 
 - Account Balance
 
-```rust
+```rust,no_run
 let response = client
     .account_balance("testapi496")
     .result_url("https://testdomain.com/ok")
@@ -223,7 +222,7 @@ assert!(response.is_ok())
 
 - Mpesa Express Request / STK push / Lipa na M-PESA online
 
-```rust
+```rust,no_run
 let response = client
     .express_request("174379")
     .phone_number("254708374149")
@@ -236,7 +235,7 @@ assert!(response.is_ok())
 
 - Transaction Reversal:
 
-```rust
+```rust,no_run
 let response = client
     .transaction_reversal("testapi496")
     .result_url("https://testdomain.com/ok")
@@ -252,7 +251,7 @@ assert!(response.is_ok())
 
 - Transaction Status
 
-```rust
+```rust,no_run
 let response = client
     .transaction_status("testapi496")
     .result_url("https://testdomain.com/ok")
@@ -278,7 +277,7 @@ More will be added progressively, pull requests welcome
 
 ## Contributing
 
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/collinsmuriuki/mpesa-rust/issues). You can also take a look at the [contributing guide](CONTRIBUTING.md).
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/collinsmuriuki/mpesa-rust/issues). You can also take a look at the [contributing guide](https://raw.githubusercontent.com/collinsmuriuki/mpesa-rust/master/CONTRIBUTING.md).
 
 Copyright © 2023 [Collins Muriuki](https://github.com/collinsmuriuki).<br />
-This project is [MIT](LICENSE) licensed.
+This project is [MIT](https://raw.githubusercontent.com/collinsmuriuki/mpesa-rust/master/LICENSE) licensed.

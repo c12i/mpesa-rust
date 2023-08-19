@@ -1,6 +1,7 @@
 use mpesa::ApiEnvironment;
 use wiremock::MockServer;
 
+#[derive(Debug, Clone)]
 pub struct TestEnvironment {
     pub server_url: String,
 }
