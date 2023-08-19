@@ -24,6 +24,7 @@ async fn cancel_invoice_success() {
     let response = client
         .cancel_invoice()
         .external_references(vec!["9KLSS011"])
+        .external_reference("87TH7JK1")
         .send()
         .await
         .unwrap();

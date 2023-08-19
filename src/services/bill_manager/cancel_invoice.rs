@@ -34,15 +34,27 @@ impl<'mpesa, Env: ApiEnvironment> CancelInvoiceBuilder<'mpesa, Env> {
         }
     }
 
+    /// Adds an `external_reference`
+    pub fn external_reference(
+        mut self,
+        external_reference: &'mpesa str,
+    ) -> CancelInvoiceBuilder<'mpesa, Env> {
+        self.external_references
+            .push(CancelInvoicePayload { external_reference });
+        self
+    }
+
     /// Adds `external_references`
     pub fn external_references(
         mut self,
         external_references: Vec<&'mpesa str>,
     ) -> CancelInvoiceBuilder<'mpesa, Env> {
-        self.external_references = external_references
-            .into_iter()
-            .map(|external_reference| CancelInvoicePayload { external_reference })
-            .collect();
+        self.external_references.append(
+            &mut external_references
+                .into_iter()
+                .map(|external_reference| CancelInvoicePayload { external_reference })
+                .collect(),
+        );
         self
     }
 
