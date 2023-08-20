@@ -16,6 +16,18 @@ pub enum MpesaError {
     C2bSimulateError(ApiError),
     #[error("Account Balance request failed: {0}")]
     AccountBalanceError(ApiError),
+    #[error("Bill manager onboarding failed: {0}")]
+    OnboardError(ApiError),
+    #[error("Bill manager onboarding modify failed: {0}")]
+    OnboardModifyError(ApiError),
+    #[error("Bill manager bulk invoice failed: {0}")]
+    BulkInvoiceError(ApiError),
+    #[error("Bill manager reconciliation failed: {0}")]
+    ReconciliationError(ApiError),
+    #[error("Bill manager single invoice failed: {0}")]
+    SingleInvoiceError(ApiError),
+    #[error("Bill manager cancel invoice failed: {0}")]
+    CancelInvoiceError(ApiError),
     #[error("Mpesa Express request/ STK push failed: {0}")]
     MpesaExpressRequestError(ApiError),
     #[error("Mpesa Transaction reversal failed: {0}")]

@@ -266,6 +266,110 @@ let response = client
 assert!(response.is_ok())
 ```
 
+- Bill Manager Onboard
+
+```rust,ignore
+let response = client
+    .onboard()
+    .callback_url("https://testdomain.com/true")
+    .email("email@test.com")
+    .logo("https://file.domain/file.png")
+    .official_contact("0712345678")
+    .send_reminders(SendRemindersTypes::Enable)
+    .short_code("600496")
+    .send()
+    .await;
+assert!(response.is_ok())
+```
+
+- Bill Manager Onboard Modify
+
+```rust,ignore
+let response = client
+    .onboard_modify()
+    .callback_url("https://testdomain.com/true")
+    .email("email@test.com")
+    .short_code("600496")
+    .send()
+    .await;
+assert!(response.is_ok())
+```
+
+- Bill Manager Bulk Invoice
+
+```rust,ignore
+let response = client
+    .bulk_invoice()
+    .invoices(vec![
+        Invoice {
+            amount: 1000.0,
+            account_reference: "John Doe",
+            billed_full_name: "John Doe",
+            billed_period: "August 2021",
+            billed_phone_number: "0712345678",
+            due_date: Utc::now(),
+            external_reference: "INV2345",
+            invoice_items: Some(
+                vec![InvoiceItem {amount: 1000.0, item_name: "An item"}]
+            ),
+            invoice_name: "Invoice 001"
+        }
+    ])
+    .send()
+    .await;
+assert!(response.is_ok())
+```
+
+- Bill Manager Single Invoice
+
+```rust,ignore
+let response = client
+    .single_invoice()
+    .amount(1000.0)
+    .account_reference("John Doe")
+    .billed_full_name("John Doe")
+    .billed_period("August 2021")
+    .billed_phone_number("0712345678")
+    .due_date(Utc::now())
+    .external_reference("INV2345")
+    .invoice_items(vec![
+        InvoiceItem {amount: 1000.0, item_name: "An item"}
+    ])
+    .invoice_name("Invoice 001")
+    .send()
+    .await;
+assert!(response.is_ok())
+```
+
+- Bill Manager Reconciliation
+
+```rust,ignore
+let response = client
+    .reconciliation()
+    .account_reference("John Doe")
+    .external_reference("INV2345")
+    .full_name("John Doe")
+    .invoice_name("Invoice 001")
+    .paid_amount(1000.0)
+    .payment_date(Utc::now())
+    .phone_number("0712345678")
+    .transaction_id("TRANSACTION_ID")
+    .send()
+    .await;
+assert!(response.is_ok())
+```
+
+- Bill Manager Cancel Invoice
+
+```rust,ignore
+let response = client
+    .cancel_invoice()
+    .external_references(vec!["9KLSS011"])
+    .send()
+    .await;
+assert!(response.is_ok())
+```
+
 More will be added progressively, pull requests welcome
 
 ## Author

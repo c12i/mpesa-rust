@@ -5,6 +5,8 @@ mod b2b_test;
 #[cfg(test)]
 mod b2c_test;
 #[cfg(test)]
+mod bill_manager_test;
+#[cfg(test)]
 mod c2b_register_test;
 #[cfg(test)]
 mod c2b_simulate_test;
