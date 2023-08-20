@@ -37,7 +37,7 @@ mpesa = { git = "https://github.com/collinsmuriuki/mpesa-rust", default_features
 
 In your lib or binary crate:
 
-```rust,no_run
+```rust,ignore
 use mpesa::Mpesa;
 ```
 
@@ -52,7 +52,7 @@ read the docs [here](https://developer.safaricom.co.ke/docs?javascript#going-liv
 
 These are the following ways you can instantiate `Mpesa`:
 
-```rust,no_run
+```rust,ignore
 use mpesa::{Mpesa, Environment};
 
 let client = Mpesa::new(
@@ -67,7 +67,7 @@ assert!(client.is_connected().await)
 Since the `Environment` enum implements `FromStr` and `TryFrom` for `String` and `&str` types, you can call `Environment::from_str` or `Environment::try_from` to create an `Environment` type. This is ideal if the environment values are
 stored in a `.env` or any other configuration file:
 
-```rust,no_run
+```rust,ignore
 use mpesa::{Mpesa, Environment};
 use std::str::FromStr;
 use std::convert::TryFrom;
@@ -101,7 +101,7 @@ This trait allows you to create your own type to pass to the `environment` param
 
 See the example below (and [here](./src/environment.rs) so see how the trait is implemented for the `Environment` enum):
 
-```rust,no_run
+```rust,ignore
 use mpesa::{Mpesa, ApiEnvironment};
 use std::str::FromStr;
 use std::convert::TryFrom;
@@ -132,7 +132,7 @@ let client: Mpesa<MyCustomEnvironment> = Mpesa::new(
 If you intend to use in production, you will need to call a the `set_initiator_password` method from `Mpesa` after initially
 creating the client. Here you provide your initiator password, which overrides the default password used in sandbox `"Safcom496!"`:
 
-```rust,no_run
+```rust,ignore
 use mpesa::Mpesa;
 
 let client = Mpesa::new(
@@ -152,7 +152,7 @@ The following services are currently available from the `Mpesa` client as method
 
 - B2C
 
-```rust,no_run
+```rust,ignore
 let response = client
     .b2c("testapi496")
     .party_a("600496")
@@ -167,7 +167,7 @@ assert!(response.is_ok())
 
 - B2B
 
-```rust,no_run
+```rust,ignore
 let response = client
     .b2b("testapi496")
     .party_a("600496")
@@ -183,7 +183,7 @@ assert!(response.is_ok())
 
 - C2B Register
 
-```rust,no_run
+```rust,ignore
 let response = client
     .c2b_register()
     .short_code("600496")
@@ -196,7 +196,7 @@ assert!(response.is_ok())
 
 - C2B Simulate
 
-```rust,no_run
+```rust,ignore
 let response = client
     .c2b_simulate()
     .short_code("600496")
@@ -209,7 +209,7 @@ assert!(response.is_ok())
 
 - Account Balance
 
-```rust,no_run
+```rust,ignore
 let response = client
     .account_balance("testapi496")
     .result_url("https://testdomain.com/ok")
@@ -222,7 +222,7 @@ assert!(response.is_ok())
 
 - Mpesa Express Request / STK push / Lipa na M-PESA online
 
-```rust,no_run
+```rust,ignore
 let response = client
     .express_request("174379")
     .phone_number("254708374149")
@@ -235,7 +235,7 @@ assert!(response.is_ok())
 
 - Transaction Reversal:
 
-```rust,no_run
+```rust,ignore
 let response = client
     .transaction_reversal("testapi496")
     .result_url("https://testdomain.com/ok")
@@ -251,7 +251,7 @@ assert!(response.is_ok())
 
 - Transaction Status
 
-```rust,no_run
+```rust,ignore
 let response = client
     .transaction_status("testapi496")
     .result_url("https://testdomain.com/ok")
