@@ -55,7 +55,9 @@ async fn onboard_fails_if_no_callback_url_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "callback_url is required");
     } else {
         panic!("Expected error")
@@ -80,7 +82,9 @@ async fn onboard_fails_if_no_email_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "email is required");
     } else {
         panic!("Expected error")
@@ -105,7 +109,9 @@ async fn onboard_fails_if_no_logo_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "logo is required");
     } else {
         panic!("Expected error")
@@ -130,7 +136,9 @@ async fn onboard_fails_if_no_official_contact_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "official_contact is required");
     } else {
         panic!("Expected error")
@@ -155,7 +163,9 @@ async fn onboard_fails_if_short_code_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "short_code is required");
     } else {
         panic!("Expected error")

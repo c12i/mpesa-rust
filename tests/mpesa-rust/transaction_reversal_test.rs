@@ -60,7 +60,9 @@ async fn transaction_reversal_fails_if_no_transaction_id_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e  else { panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "transaction_id is required");
     } else {
         panic!("Expected error");
@@ -90,7 +92,9 @@ async fn transaction_reversal_fails_if_no_amount_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e  else { panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "amount is required")
     } else {
         panic!("Expected error");
@@ -120,7 +124,9 @@ async fn transaction_reversal_fails_if_no_result_url_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e  else { panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "timeout_url is required")
     } else {
         panic!("Expected error");
@@ -150,7 +156,9 @@ async fn transaction_reversal_fails_if_no_timeout_url_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e  else { panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "result_url is required")
     } else {
         panic!("Expected error");
@@ -180,7 +188,9 @@ async fn transaction_reversal_fails_if_no_receiver_party_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e  else { panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "receiver_party is required")
     } else {
         panic!("Expected error");

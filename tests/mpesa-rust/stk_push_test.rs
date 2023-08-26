@@ -63,7 +63,9 @@ async fn stk_push_fails_if_no_amount_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e  else { panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "amount is required")
     } else {
         panic!("Expected error");
@@ -93,7 +95,9 @@ async fn stk_push_fails_if_no_callback_url_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e  else { panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "callback_url is required")
     } else {
         panic!("Expected error");
@@ -123,7 +127,9 @@ async fn stk_push_fails_if_no_phone_number_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e  else { panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "phone_number is required")
     } else {
         panic!("Expected error");

@@ -58,7 +58,9 @@ async fn account_balance_fails_if_party_a_is_not_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e  else { panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "party_a is required")
     } else {
         panic!("Expected error");
@@ -87,7 +89,9 @@ async fn account_balance_fails_if_result_url_is_not_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e  else { panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "result_url is required")
     } else {
         panic!("Expected error");
@@ -116,7 +120,9 @@ async fn account_balance_fails_if_queue_timeout_url_is_not_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e  else { panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "queue_timeout_url is required")
     } else {
         panic!("Expected error");

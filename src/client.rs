@@ -63,7 +63,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// If `None`, the default password is `"Safcom496!"`
     pub(crate) fn initiator_password(&'mpesa self) -> String {
         let Some(p) = &*self.initiator_password.borrow() else {
-            return DEFAULT_INITIATOR_PASSWORD.to_owned()
+            return DEFAULT_INITIATOR_PASSWORD.to_owned();
         };
         p.to_owned()
     }

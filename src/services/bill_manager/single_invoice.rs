@@ -47,8 +47,11 @@ impl<'mpesa, Env: ApiEnvironment> SingleInvoiceBuilder<'mpesa, Env> {
     }
 
     /// Adds `amount`
-    pub fn amount(mut self, amount: f64) -> SingleInvoiceBuilder<'mpesa, Env> {
-        self.amount = Some(amount);
+    pub fn amount<Number: Into<f64>>(
+        mut self,
+        amount: Number,
+    ) -> SingleInvoiceBuilder<'mpesa, Env> {
+        self.amount = Some(amount.into());
         self
     }
 

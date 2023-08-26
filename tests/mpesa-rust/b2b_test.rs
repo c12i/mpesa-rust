@@ -65,7 +65,9 @@ async fn b2b_fails_if_no_amount_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e  else { panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "amount is required");
     } else {
         panic!("Expected error");
@@ -97,7 +99,9 @@ async fn b2b_fails_if_no_party_a_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e  else { panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "party_a is required");
     } else {
         panic!("Expected error");
@@ -129,7 +133,9 @@ async fn b2b_fails_if_no_party_b_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e  else { panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "party_b is required");
     } else {
         panic!("Expected error");

@@ -85,8 +85,11 @@ impl<'mpesa, Env: ApiEnvironment> ReconciliationBuilder<'mpesa, Env> {
     }
 
     /// Adds `paid_amount`
-    pub fn paid_amount(mut self, paid_amount: f64) -> ReconciliationBuilder<'mpesa, Env> {
-        self.paid_amount = Some(paid_amount);
+    pub fn paid_amount<Number: Into<f64>>(
+        mut self,
+        paid_amount: Number,
+    ) -> ReconciliationBuilder<'mpesa, Env> {
+        self.paid_amount = Some(paid_amount.into());
         self
     }
 

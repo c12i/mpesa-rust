@@ -62,7 +62,9 @@ async fn b2c_fails_if_no_amount_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "amount is required");
     } else {
         panic!("Expected error");
@@ -93,7 +95,9 @@ async fn b2c_fails_if_no_party_a_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "party_a is required");
     } else {
         panic!("Expected error");
@@ -124,7 +128,9 @@ async fn b2c_fails_if_no_party_b_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "party_b is required");
     } else {
         panic!("Expected error");
@@ -155,7 +161,9 @@ async fn b2c_fails_if_no_result_url_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "result_url is required");
     } else {
         panic!("Expected error");
@@ -186,7 +194,9 @@ async fn b2c_fails_if_no_queue_timeout_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "queue_timeout_url is required");
     } else {
         panic!("Expected error");

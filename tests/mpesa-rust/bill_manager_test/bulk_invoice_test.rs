@@ -57,7 +57,9 @@ async fn bulk_invoice_fails_if_invoices_is_empty() {
         .mount(&server)
         .await;
     if let Err(e) = client.bulk_invoice().send().await {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "invoices cannot be empty");
     } else {
         panic!("Expected Error")

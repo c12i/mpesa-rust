@@ -58,7 +58,9 @@ async fn c2b_simulate_fails_if_no_amount_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "amount is required");
     } else {
         panic!("Expected error")
@@ -87,7 +89,9 @@ async fn c2b_simulate_fails_if_no_short_code_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "short_code is required");
     } else {
         panic!("Expected error")
@@ -116,7 +120,9 @@ async fn c2b_simulate_fails_if_no_bill_ref_number_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "bill_ref_number is required");
     } else {
         panic!("Expected error")
@@ -145,7 +151,9 @@ async fn c2b_simulate_fails_if_no_msisdn_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message, but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "msisdn is required");
     } else {
         panic!("Expected error")

@@ -66,7 +66,9 @@ async fn single_invoice_fails_if_no_amount_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "amount is required");
     } else {
         panic!("Expected error")
@@ -94,7 +96,9 @@ async fn single_invoice_fails_if_no_account_reference_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "account_reference is required");
     } else {
         panic!("Expected error")
@@ -122,7 +126,9 @@ async fn single_invoice_fails_if_no_billed_full_name_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "billed_full_name is required");
     } else {
         panic!("Expected error")
@@ -150,7 +156,9 @@ async fn single_invoice_fails_if_no_billed_period_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "billed_period is required");
     } else {
         panic!("Expected error")
@@ -178,7 +186,9 @@ async fn single_invoice_fails_if_no_billed_phone_number_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message but found {}", e);
+        };
         assert_eq!(msg, "billed_phone_number is required");
     } else {
         panic!("Expected error")
@@ -206,7 +216,9 @@ async fn single_invoice_fails_if_no_due_date_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "due_date is required");
     } else {
         panic!("Expected error")
@@ -234,7 +246,9 @@ async fn single_invoice_fails_if_no_external_reference_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "external_reference is required");
     } else {
         panic!("Expected error")
@@ -262,7 +276,9 @@ async fn single_invoice_fails_if_no_invoice_name_is_provided() {
         .send()
         .await
     {
-        let MpesaError::Message(msg) = e else {panic!("Expected MpesaError::Message but found {}", e)};
+        let MpesaError::Message(msg) = e else {
+            panic!("Expected MpesaError::Message, but found {}", e);
+        };
         assert_eq!(msg, "invoice_name is required");
     } else {
         panic!("Expected error")

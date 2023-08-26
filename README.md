@@ -27,6 +27,7 @@ Optionally, you can disable default-features, which is basically the entire suit
 - `express_request`
 - `transaction_reversal`
 - `transaction_status`
+- `bill_manager`
 
 Example:
 
