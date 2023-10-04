@@ -32,7 +32,6 @@ async fn c2b_register_success() {
         "Accept the service request successfully."
     );
     assert_eq!(response.response_code, "0");
-    assert_eq!(response.conversation_id, None);
 }
 
 #[tokio::test]

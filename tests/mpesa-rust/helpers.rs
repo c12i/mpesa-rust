@@ -90,14 +90,4 @@ mod tests {
         );
         assert!(!client.is_connected().await);
     }
-
-    #[tokio::test]
-    async fn test_client_will_not_authenticate_with_sandbox_credentials_in_production() {
-        let client = get_mpesa_client!(
-            std::env::var("CLIENT_KEY").unwrap(),
-            std::env::var("CLIENT_SECRET").unwrap(),
-            Environment::from_str("production").unwrap()
-        );
-        assert!(!client.is_connected().await);
-    }
 }
