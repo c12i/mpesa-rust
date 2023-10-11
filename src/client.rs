@@ -14,9 +14,9 @@ use serde_json::Value;
 use std::cell::RefCell;
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
-static DEFAULT_INITIATOR_PASSWORD: &str = "Safcom496!";
+const DEFAULT_INITIATOR_PASSWORD: &str = "Safcom496!";
 /// Get current package version from metadata
-static CARGO_PACKAGE_VERSION: &str = env!("CARGO_PKG_VERSION");
+const CARGO_PACKAGE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 /// `Result` enum type alias
 pub type MpesaResult<T> = Result<T, MpesaError>;
