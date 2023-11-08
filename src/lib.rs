@@ -6,6 +6,9 @@ pub mod environment;
 mod errors;
 pub mod services;
 
+#[cfg(test)]
+mod test_utils;
+
 pub use client::{Mpesa, MpesaResult};
 pub use constants::{
     CommandId, IdentifierTypes, Invoice, InvoiceItem, ResponseType, SendRemindersTypes,

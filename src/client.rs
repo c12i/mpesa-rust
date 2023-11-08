@@ -1,9 +1,6 @@
 use crate::environment::ApiEnvironment;
 use crate::services::{
-    AccountBalanceBuilder, B2bBuilder, B2cBuilder, BulkInvoiceBuilder, C2bRegisterBuilder,
-    C2bSimulateBuilder, CancelInvoiceBuilder, MpesaExpressRequestBuilder, OnboardBuilder,
-    OnboardModifyBuilder, ReconciliationBuilder, SingleInvoiceBuilder, TransactionReversalBuilder,
-    TransactionStatusBuilder,
+    AccountBalanceBuilder, MpesaExpressRequestBuilder, TransactionStatusBuilder,
 };
 use crate::{ApiError, MpesaError};
 use openssl::base64;
@@ -12,6 +9,24 @@ use openssl::x509::X509;
 use reqwest::Client as HttpClient;
 use serde_json::Value;
 use std::cell::RefCell;
+
+#[cfg(feature = "b2b")]
+pub use crate::services::B2bBuilder;
+#[cfg(feature = "b2c")]
+pub use crate::services::B2cBuilder;
+#[cfg(feature = "bill_manager")]
+pub use crate::services::{
+    BulkInvoiceBuilder, CancelInvoiceBuilder, OnboardBuilder, OnboardModifyBuilder,
+    ReconciliationBuilder, SingleInvoiceBuilder,
+};
+
+#[cfg(feature = "c2b_register")]
+pub use crate::services::C2bRegisterBuilder;
+#[cfg(feature = "c2b_simulate")]
+pub use crate::services::C2bSimulateBuilder;
+
+#[cfg(feature = "transaction_reversal")]
+pub use crate::services::TransactionReversalBuilder;
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
 const DEFAULT_INITIATOR_PASSWORD: &str = "Safcom496!";

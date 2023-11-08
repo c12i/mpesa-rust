@@ -14,14 +14,23 @@
 //! 7. [Transaction Reversal](https://developer.safaricom.co.ke/docs#reversal)
 //! 8. [Bill Manager](https://developer.safaricom.co.ke/APIs/BillManager)
 
+#[cfg(feature = "account_balance")]
 mod account_balance;
+#[cfg(feature = "b2b")]
 mod b2b;
+#[cfg(feature = "b2c")]
 mod b2c;
+#[cfg(feature = "bill_manager")]
 mod bill_manager;
+#[cfg(feature = "c2b_register")]
 mod c2b_register;
+#[cfg(feature = "c2b_simulate")]
 mod c2b_simulate;
+#[cfg(feature = "express_request")]
 mod express_request;
+#[cfg(feature = "transaction_reversal")]
 mod transaction_reversal;
+#[cfg(feature = "transaction_status")]
 mod transaction_status;
 
 #[cfg(feature = "account_balance")]
