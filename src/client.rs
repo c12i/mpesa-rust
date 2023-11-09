@@ -101,7 +101,6 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
-    #[allow(clippy::single_char_pattern)]
     pub(crate) async fn auth(&self) -> MpesaResult<String> {
         let url = format!(
             "{}/oauth/v1/generate?grant_type=client_credentials",
