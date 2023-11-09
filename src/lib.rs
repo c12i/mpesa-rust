@@ -5,6 +5,7 @@ mod constants;
 pub mod environment;
 mod errors;
 pub mod services;
+mod auth;
 
 pub use client::{Mpesa, MpesaResult};
 pub use constants::{

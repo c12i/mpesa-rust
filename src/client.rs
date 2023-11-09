@@ -1,3 +1,4 @@
+use crate::auth::AUTH;
 use crate::environment::ApiEnvironment;
 use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, BulkInvoiceBuilder, C2bRegisterBuilder,
@@ -5,12 +6,13 @@ use crate::services::{
     OnboardModifyBuilder, ReconciliationBuilder, SingleInvoiceBuilder, TransactionReversalBuilder,
     TransactionStatusBuilder,
 };
-use crate::{ApiError, MpesaError};
+use crate::{auth, MpesaError};
+use cached::Cached;
 use openssl::base64;
 use openssl::rsa::Padding;
 use openssl::x509::X509;
 use reqwest::Client as HttpClient;
-use serde_json::Value;
+
 use std::cell::RefCell;
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
@@ -68,6 +70,16 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         p.to_owned()
     }
 
+    /// Get the client key
+    pub fn client_key(&self) -> &str {
+        &self.client_key
+    }
+
+    /// Get the client secret
+    pub fn client_secret(&self) -> &str {
+        &self.client_secret
+    }
+
     /// Optional in development but required for production, you will need to call this method and set your production initiator password.
     /// If in development, default initiator password is already pre-set
     /// ```ignore
@@ -102,33 +114,28 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
-    #[allow(clippy::single_char_pattern)]
     pub(crate) async fn auth(&self) -> MpesaResult<String> {
-        let url = format!(
-            "{}/oauth/v1/generate?grant_type=client_credentials",
-            self.environment.base_url()
-        );
-        let response = self
-            .http_client
-            .get(&url)
-            .basic_auth(&self.client_key, Some(&self.client_secret))
-            .send()
-            .await?;
-        if response.status().is_success() {
-            let value = response.json::<Value>().await?;
-            let access_token = value
-                .get("access_token")
-                .ok_or_else(|| String::from("Failed to extract token from the response"))
-                .unwrap();
-            let access_token = access_token
-                .as_str()
-                .ok_or_else(|| String::from("Error converting access token to string"))
-                .unwrap();
-
-            return Ok(access_token.to_string());
+        if let Some(token) = AUTH.lock().await.cache_get(&self.client_key) {
+            return Ok(token.clone());
         }
-        let error = response.json::<ApiError>().await?;
-        Err(MpesaError::AuthenticationError(error))
+
+        // Generate a new access token
+        let new_token = match auth::auth_prime_cache(self).await {
+            Ok(token) => token,
+            Err(e) => return Err(e),
+        };
+
+        // Double-check if the access token is cached by another thread
+        if let Some(token) = AUTH.lock().await.cache_get(&self.client_key) {
+            return Ok(token.clone());
+        }
+
+        // Cache the new token
+        AUTH.lock()
+            .await
+            .cache_set(self.client_key.clone(), new_token.clone());
+
+        Ok(new_token)
     }
 
     /// **B2C Builder**

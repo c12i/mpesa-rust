@@ -49,7 +49,8 @@ macro_rules! get_mpesa_client {
             .and(path("/oauth/v1/generate"))
             .and(query_param("grant_type", "client_credentials"))
             .respond_with(ResponseTemplate::new(200).set_body_json(json!({
-                "access_token": "dummy_access_token"
+                "access_token": "dummy_access_token",
+                "expiry_in": 3600
             })))
             .expect($expected_requests)
             .mount(&server)
