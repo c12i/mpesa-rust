@@ -26,7 +26,7 @@ pub type MpesaResult<T> = Result<T, MpesaError>;
 pub struct Mpesa<Env: ApiEnvironment> {
     client_key: String,
     client_secret: Secret<String>,
-    initiator_password: RefCell<Option<String>>,
+    initiator_password: RefCell<Option<Secret<String>>>,
     pub(crate) environment: Env,
     pub(crate) http_client: HttpClient,
 }
@@ -65,7 +65,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         let Some(p) = &*self.initiator_password.borrow() else {
             return DEFAULT_INITIATOR_PASSWORD.to_owned();
         };
-        p.to_owned()
+        p.expose_secret().into()
     }
 
     /// Optional in development but required for production, you will need to call this method and set your production initiator password.
@@ -82,7 +82,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// client.set_initiator_password("your_initiator_password");
     /// ```
     pub fn set_initiator_password<S: Into<String>>(&self, initiator_password: S) {
-        *self.initiator_password.borrow_mut() = Some(initiator_password.into());
+        *self.initiator_password.borrow_mut() = Some(Secret::new(initiator_password.into()));
     }
 
     /// Checks if the client can be authenticated
