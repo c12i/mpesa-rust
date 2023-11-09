@@ -5,12 +5,13 @@ use crate::services::{
     OnboardModifyBuilder, ReconciliationBuilder, SingleInvoiceBuilder, TransactionReversalBuilder,
     TransactionStatusBuilder,
 };
-use crate::MpesaError;
+use crate::{ApiError, MpesaError};
 use openssl::base64;
 use openssl::rsa::Padding;
 use openssl::x509::X509;
 use reqwest::Client as HttpClient;
 use secrecy::{ExposeSecret, Secret};
+use serde_json::Value;
 use std::cell::RefCell;
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
@@ -115,11 +116,22 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
             .get(&url)
             .basic_auth(&self.client_key, Some(&self.client_secret.expose_secret()))
             .send()
-            .await?
-            .error_for_status()?
-            .json::<AuthResponse>()
             .await?;
-        Ok(response.access_token)
+        if response.status().is_success() {
+            let value = response.json::<Value>().await?;
+            let access_token = value
+                .get("access_token")
+                .ok_or_else(|| String::from("Failed to extract token from the response"))
+                .unwrap();
+            let access_token = access_token
+                .as_str()
+                .ok_or_else(|| String::from("Error converting access token to string"))
+                .unwrap();
+
+            return Ok(access_token.to_string());
+        }
+        let error = response.json::<ApiError>().await?;
+        Err(MpesaError::AuthenticationError(error))
     }
 
     /// **B2C Builder**
@@ -513,11 +525,6 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         )?;
         Ok(base64::encode_block(&buffer))
     }
-}
-
-#[derive(Debug, serde::Deserialize)]
-struct AuthResponse {
-    pub access_token: String,
 }
 
 #[cfg(test)]
