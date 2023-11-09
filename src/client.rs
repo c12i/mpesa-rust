@@ -10,6 +10,7 @@ use openssl::base64;
 use openssl::rsa::Padding;
 use openssl::x509::X509;
 use reqwest::Client as HttpClient;
+use secrecy::{ExposeSecret, Secret};
 use std::cell::RefCell;
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
@@ -24,7 +25,7 @@ pub type MpesaResult<T> = Result<T, MpesaError>;
 #[derive(Clone, Debug)]
 pub struct Mpesa<Env: ApiEnvironment> {
     client_key: String,
-    client_secret: String,
+    client_secret: Secret<String>,
     initiator_password: RefCell<Option<String>>,
     pub(crate) environment: Env,
     pub(crate) http_client: HttpClient,
@@ -51,7 +52,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
             .expect("Error building http client");
         Self {
             client_key: client_key.into(),
-            client_secret: client_secret.into(),
+            client_secret: Secret::new(client_secret.into()),
             initiator_password: RefCell::new(None),
             environment,
             http_client,
@@ -109,7 +110,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         let response = self
             .http_client
             .get(&url)
-            .basic_auth(&self.client_key, Some(&self.client_secret))
+            .basic_auth(&self.client_key, Some(&self.client_secret.expose_secret()))
             .send()
             .await?
             .error_for_status()?
