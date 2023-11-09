@@ -42,6 +42,9 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///     Environment::Sandbox,
     /// );
     /// ```
+    ///
+    /// # Panics
+    /// This method can panic if a TLS backend cannot be initialized for the internal http_client
     pub fn new<S: Into<String>>(client_key: S, client_secret: S, environment: Env) -> Self {
         let http_client = HttpClient::builder()
             .connect_timeout(std::time::Duration::from_millis(10_000))
