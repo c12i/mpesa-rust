@@ -21,10 +21,13 @@ async fn stk_push_success_success() {
         .mount(&server)
         .await;
     let response = client
-        .express_request("174379")
+        .express_request()
+        .business_short_code("174379")
         .phone_number("254708374149")
         .amount(500)
         .callback_url("https://test.example.com/api")
+        .build()
+        .unwrap()
         .send()
         .await
         .unwrap();
@@ -57,9 +60,12 @@ async fn stk_push_fails_if_no_amount_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .express_request("174379")
+        .express_request()
+        .business_short_code("174379")
         .phone_number("254708374149")
         .callback_url("https://test.example.com/api")
+        .build()
+        .unwrap()
         .send()
         .await
     {
@@ -89,9 +95,12 @@ async fn stk_push_fails_if_no_callback_url_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .express_request("174379")
+        .express_request()
+        .business_short_code("174379")
         .phone_number("254708374149")
         .amount(500)
+        .build()
+        .unwrap()
         .send()
         .await
     {
@@ -121,9 +130,12 @@ async fn stk_push_fails_if_no_phone_number_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .express_request("174379")
+        .express_request()
+        .business_short_code("174379")
         .amount(500)
         .callback_url("https://test.example.com/api")
+        .build()
+        .unwrap()
         .send()
         .await
     {

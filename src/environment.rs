@@ -26,7 +26,7 @@ pub enum Environment {
 
 /// Expected behavior of an `Mpesa` client environment
 /// This abstraction exists to make it possible to mock the MPESA api server for tests
-pub trait ApiEnvironment {
+pub trait ApiEnvironment: Clone {
     fn base_url(&self) -> &str;
     fn get_certificate(&self) -> &str;
 }

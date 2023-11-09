@@ -1,7 +1,7 @@
 use crate::environment::ApiEnvironment;
 use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, BulkInvoiceBuilder, C2bRegisterBuilder,
-    C2bSimulateBuilder, CancelInvoiceBuilder, MpesaExpressRequestBuilder, OnboardBuilder,
+    C2bSimulateBuilder, CancelInvoiceBuilder, MpesaExpress, MpesaExpressBuilder, OnboardBuilder,
     OnboardModifyBuilder, ReconciliationBuilder, SingleInvoiceBuilder, TransactionReversalBuilder,
     TransactionStatusBuilder,
 };
@@ -455,11 +455,8 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///    .send();
     /// ```
     #[cfg(feature = "express_request")]
-    pub fn express_request(
-        &'mpesa self,
-        business_short_code: &'mpesa str,
-    ) -> MpesaExpressRequestBuilder<'mpesa, Env> {
-        MpesaExpressRequestBuilder::new(self, business_short_code)
+    pub fn express_request(&'mpesa self) -> MpesaExpressBuilder<'mpesa, Env> {
+        MpesaExpress::builder(&self)
     }
 
     ///**Transaction Reversal Builder**
@@ -537,7 +534,7 @@ mod tests {
         client.set_initiator_password("foo_bar");
         assert_eq!(client.initiator_password(), "foo_bar".to_string());
     }
-
+    #[derive(Clone)]
     struct TestEnvironment;
 
     impl ApiEnvironment for TestEnvironment {
