@@ -15,6 +15,7 @@ use crate::services::{
     TransactionStatusBuilder,
 };
 use crate::{auth, MpesaError};
+use secrecy::{ExposeSecret, Secret};
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
 const DEFAULT_INITIATOR_PASSWORD: &str = "Safcom496!";
@@ -28,8 +29,8 @@ pub type MpesaResult<T> = Result<T, MpesaError>;
 #[derive(Clone, Debug)]
 pub struct Mpesa<Env: ApiEnvironment> {
     client_key: String,
-    client_secret: String,
-    initiator_password: RefCell<Option<String>>,
+    client_secret: Secret<String>,
+    initiator_password: RefCell<Option<Secret<String>>>,
     pub(crate) environment: Env,
     pub(crate) http_client: HttpClient,
 }
@@ -45,6 +46,9 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///     Environment::Sandbox,
     /// );
     /// ```
+    ///
+    /// # Panics
+    /// This method can panic if a TLS backend cannot be initialized for the internal http_client
     pub fn new<S: Into<String>>(client_key: S, client_secret: S, environment: Env) -> Self {
         let http_client = HttpClient::builder()
             .connect_timeout(std::time::Duration::from_millis(10_000))
@@ -55,7 +59,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
             .expect("Error building http client");
         Self {
             client_key: client_key.into(),
-            client_secret: client_secret.into(),
+            client_secret: Secret::new(client_secret.into()),
             initiator_password: RefCell::new(None),
             environment,
             http_client,
@@ -68,7 +72,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         let Some(p) = &*self.initiator_password.borrow() else {
             return DEFAULT_INITIATOR_PASSWORD.to_owned();
         };
-        p.to_owned()
+        p.expose_secret().into()
     }
 
     /// Get the client key
@@ -95,7 +99,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// client.set_initiator_password("your_initiator_password");
     /// ```
     pub fn set_initiator_password<S: Into<String>>(&self, initiator_password: S) {
-        *self.initiator_password.borrow_mut() = Some(initiator_password.into());
+        *self.initiator_password.borrow_mut() = Some(Secret::new(initiator_password.into()));
     }
 
     /// Checks if the client can be authenticated
