@@ -1,11 +1,11 @@
 #![doc = include_str!("../README.md")]
 
+mod auth;
 mod client;
 mod constants;
 pub mod environment;
 mod errors;
 pub mod services;
-mod auth;
 
 pub use client::{Mpesa, MpesaResult};
 pub use constants::{

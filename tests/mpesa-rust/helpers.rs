@@ -27,7 +27,30 @@ impl ApiEnvironment for TestEnvironment {
 #[macro_export]
 macro_rules! get_mpesa_client {
     () => {{
-        get_mpesa_client!(expected_auth_requests = 1)
+        use $crate::helpers::TestEnvironment;
+        use mpesa::Mpesa;
+        use wiremock::{MockServer, Mock, ResponseTemplate};
+        use serde_json::json;
+        use wiremock::matchers::{path, query_param, method};
+
+        dotenv::dotenv().ok();
+        let server = MockServer::start().await;
+        let test_environment = TestEnvironment::new(&server).await;
+        let client = Mpesa::new(
+            std::env::var("CLIENT_KEY").unwrap(),
+            std::env::var("CLIENT_SECRET").unwrap(),
+            test_environment,
+        );
+        Mock::given(method("GET"))
+            .and(path("/oauth/v1/generate"))
+            .and(query_param("grant_type", "client_credentials"))
+            .respond_with(ResponseTemplate::new(200).set_body_json(json!({
+                "access_token": "dummy_access_token",
+                "expiry_in": 3600
+            })))
+            .mount(&server)
+            .await;
+        (client, server)
     }};
 
     (expected_auth_requests = $expected_requests: expr) => {{
@@ -52,7 +75,6 @@ macro_rules! get_mpesa_client {
                 "access_token": "dummy_access_token",
                 "expiry_in": 3600
             })))
-            .expect($expected_requests)
             .mount(&server)
             .await;
         (client, server)

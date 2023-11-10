@@ -1,7 +1,7 @@
-use crate::{ApiEnvironment, ApiError, Mpesa, MpesaError, MpesaResult};
 use cached::proc_macro::cached;
-
 use serde::{Deserialize, Serialize};
+
+use crate::{ApiEnvironment, ApiError, Mpesa, MpesaError, MpesaResult};
 
 /// Response returned from the authentication function
 #[derive(Debug, Serialize, Deserialize)]
@@ -57,7 +57,6 @@ mod tests {
     use wiremock::{Mock, MockServer};
 
     use super::*;
-    use crate::Environment;
 
     #[derive(Debug, Clone)]
     pub struct TestEnvironment {
@@ -84,8 +83,9 @@ mod tests {
 
     #[tokio::test]
     async fn test_cached_auth() {
-        use crate::Mpesa;
         use cached::Cached;
+
+        use crate::Mpesa;
 
         let server = MockServer::start().await;
 

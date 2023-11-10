@@ -1,3 +1,11 @@
+use std::cell::RefCell;
+
+use cached::Cached;
+use openssl::base64;
+use openssl::rsa::Padding;
+use openssl::x509::X509;
+use reqwest::Client as HttpClient;
+
 use crate::auth::AUTH;
 use crate::environment::ApiEnvironment;
 use crate::services::{
@@ -7,13 +15,6 @@ use crate::services::{
     TransactionStatusBuilder,
 };
 use crate::{auth, MpesaError};
-use cached::Cached;
-use openssl::base64;
-use openssl::rsa::Padding;
-use openssl::x509::X509;
-use reqwest::Client as HttpClient;
-
-use std::cell::RefCell;
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
 const DEFAULT_INITIATOR_PASSWORD: &str = "Safcom496!";
@@ -533,9 +534,8 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
 
 #[cfg(test)]
 mod tests {
-    use crate::Sandbox;
-
     use super::*;
+    use crate::Sandbox;
 
     #[test]
     fn test_setting_initator_password() {
