@@ -1,5 +1,7 @@
+use std::env::VarError;
+use std::fmt;
+
 use serde::{Deserialize, Serialize};
-use std::{env::VarError, fmt};
 
 /// Mpesa error stack
 #[derive(thiserror::Error, Debug)]
@@ -34,6 +36,8 @@ pub enum MpesaError {
     MpesaTransactionReversalError(ApiError),
     #[error("Mpesa Transaction status failed: {0}")]
     MpesaTransactionStatusError(ApiError),
+    #[error("Mpesa Dynamic QR failed: {0}")]
+    MpesaDynamicQrError(ApiError),
     #[error("An error has occured while performing the http request")]
     NetworkError(#[from] reqwest::Error),
     #[error("An error has occured while serializig/ deserializing")]

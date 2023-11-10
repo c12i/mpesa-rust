@@ -9,6 +9,7 @@ pub mod services;
 pub use client::{Mpesa, MpesaResult};
 pub use constants::{
     CommandId, IdentifierTypes, Invoice, InvoiceItem, ResponseType, SendRemindersTypes,
+    TransactionType,
 };
 pub use environment::ApiEnvironment;
 pub use environment::Environment::{self, Production, Sandbox};
