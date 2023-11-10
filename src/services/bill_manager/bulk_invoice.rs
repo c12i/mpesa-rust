@@ -1,9 +1,9 @@
 use serde::Deserialize;
 
-use crate::client::{Mpesa, MpesaResult};
+use crate::client::Mpesa;
 use crate::constants::Invoice;
 use crate::environment::ApiEnvironment;
-use crate::errors::MpesaError;
+use crate::errors::{MpesaError, MpesaResult};
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct BulkInvoiceResponse {

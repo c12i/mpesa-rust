@@ -3,6 +3,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::{ApiEnvironment, ApiError, Mpesa, MpesaError, MpesaResult};
 
+const AUTHENTICATION_URL: &str = "/oauth/v1/generate?grant_type=client_credentials";
+
 /// Response returned from the authentication function
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AuthenticationResponse {
@@ -30,10 +32,8 @@ impl std::fmt::Display for AuthenticationResponse {
     convert = r#"{ format!("{}", client.client_key()) }"#
 )]
 pub(crate) async fn auth(client: &Mpesa<impl ApiEnvironment>) -> MpesaResult<String> {
-    let url = format!(
-        "{}/oauth/v1/generate?grant_type=client_credentials",
-        client.environment.base_url()
-    );
+    let url = format!("{}{}", client.environment.base_url(), AUTHENTICATION_URL);
+
     let response = client
         .http_client
         .get(&url)

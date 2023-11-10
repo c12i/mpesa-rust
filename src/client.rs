@@ -14,16 +14,13 @@ use crate::services::{
     OnboardModifyBuilder, ReconciliationBuilder, SingleInvoiceBuilder, TransactionReversalBuilder,
     TransactionStatusBuilder,
 };
-use crate::{auth, MpesaError};
+use crate::{auth, MpesaResult};
 use secrecy::{ExposeSecret, Secret};
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
 const DEFAULT_INITIATOR_PASSWORD: &str = "Safcom496!";
 /// Get current package version from metadata
 const CARGO_PACKAGE_VERSION: &str = env!("CARGO_PKG_VERSION");
-
-/// `Result` enum type alias
-pub type MpesaResult<T> = Result<T, MpesaError>;
 
 /// Mpesa client that will facilitate communication with the Safaricom API
 #[derive(Clone, Debug)]
@@ -76,13 +73,13 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     }
 
     /// Get the client key
-    pub fn client_key(&self) -> &str {
+    pub(crate) fn client_key(&self) -> &str {
         &self.client_key
     }
 
     /// Get the client secret
-    pub fn client_secret(&self) -> &str {
-        &self.client_secret
+    pub(crate) fn client_secret(&self) -> &str {
+        self.client_secret.expose_secret()
     }
 
     /// Optional in development but required for production, you will need to call this method and set your production initiator password.

@@ -48,6 +48,9 @@ pub enum MpesaError {
     Message(&'static str),
 }
 
+/// `Result` enum type alias
+pub type MpesaResult<T> = Result<T, MpesaError>;
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ApiError {
     pub request_id: String,

@@ -2,10 +2,10 @@ use chrono::prelude::Local;
 use openssl::base64;
 use serde::{Deserialize, Serialize};
 
-use crate::client::{Mpesa, MpesaResult};
+use crate::client::Mpesa;
 use crate::constants::CommandId;
 use crate::environment::ApiEnvironment;
-use crate::errors::MpesaError;
+use crate::errors::{MpesaError, MpesaResult};
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
 static DEFAULT_PASSKEY: &str = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
