@@ -1,5 +1,13 @@
-use crate::environment::ApiEnvironment;
+use std::cell::RefCell;
 
+use base64::engine::general_purpose;
+use base64::Engine as _;
+use reqwest::Client as HttpClient;
+use rsa::{BigUint, Pkcs1v15Encrypt};
+use secrecy::{ExposeSecret, Secret};
+use serde_json::Value;
+
+use crate::environment::ApiEnvironment;
 use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, BulkInvoiceBuilder, C2bRegisterBuilder,
     C2bSimulateBuilder, CancelInvoiceBuilder, MpesaExpressRequestBuilder, OnboardBuilder,
@@ -7,15 +15,6 @@ use crate::services::{
     TransactionStatusBuilder,
 };
 use crate::{ApiError, MpesaError};
-
-use base64::engine::general_purpose;
-use base64::Engine as _;
-use reqwest::Client as HttpClient;
-
-use rsa::{BigUint, Pkcs1v15Encrypt};
-use secrecy::{ExposeSecret, Secret};
-use serde_json::Value;
-use std::cell::RefCell;
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
 const DEFAULT_INITIATOR_PASSWORD: &str = "Safcom496!";
@@ -556,9 +555,8 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
 
 #[cfg(test)]
 mod tests {
-    use crate::Sandbox;
-
     use super::*;
+    use crate::Sandbox;
 
     #[test]
     fn test_setting_initator_password() {

@@ -1,7 +1,8 @@
+use std::fmt::{Display, Formatter, Result as FmtResult};
+
 use chrono::prelude::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
-use std::fmt::{Display, Formatter, Result as FmtResult};
 
 /// Mpesa command ids
 #[derive(Debug, Serialize, Deserialize)]

@@ -10,8 +10,10 @@
 //! and the `public key` an X509 certificate used for encrypting initiator passwords. You can read more about that from
 //! the Safaricom API [docs](https://developer.safaricom.co.ke/docs?javascript#security-credentials).
 
+use std::convert::TryFrom;
+use std::str::FromStr;
+
 use crate::MpesaError;
-use std::{convert::TryFrom, str::FromStr};
 
 #[derive(Debug, Clone)]
 /// Enum to map to desired environment so as to access certificate

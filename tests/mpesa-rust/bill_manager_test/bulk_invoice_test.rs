@@ -1,9 +1,10 @@
-use crate::get_mpesa_client;
 use chrono::prelude::Utc;
 use mpesa::{Invoice, InvoiceItem, MpesaError};
 use serde_json::json;
 use wiremock::matchers::{method, path};
 use wiremock::{Mock, ResponseTemplate};
+
+use crate::get_mpesa_client;
 
 fn sample_response() -> ResponseTemplate {
     let sample_response = json!({

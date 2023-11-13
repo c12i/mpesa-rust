@@ -1,7 +1,8 @@
+use serde::{Deserialize, Serialize};
+
 use crate::client::MpesaResult;
 use crate::environment::ApiEnvironment;
 use crate::{CommandId, Mpesa, MpesaError};
-use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize)]
 /// Payload to allow for b2c transactions:

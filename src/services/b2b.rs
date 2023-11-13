@@ -1,8 +1,9 @@
+use serde::{Deserialize, Serialize};
+
 use crate::client::{Mpesa, MpesaResult};
 use crate::constants::{CommandId, IdentifierTypes};
 use crate::environment::ApiEnvironment;
 use crate::errors::MpesaError;
-use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize)]
 struct B2bPayload<'mpesa> {

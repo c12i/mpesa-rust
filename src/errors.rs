@@ -1,5 +1,7 @@
+use std::env::VarError;
+use std::fmt;
+
 use serde::{Deserialize, Serialize};
-use std::{env::VarError, fmt};
 
 /// Mpesa error stack
 #[derive(thiserror::Error, Debug)]
