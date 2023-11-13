@@ -41,7 +41,7 @@ pub enum MpesaError {
     #[error("An error has occured while retreiving an environmental variable")]
     EnvironmentalVariableError(#[from] VarError),
     #[error("An error has occurred while generating security credentials")]
-    EncryptionError(#[from] openssl::error::ErrorStack),
+    EncryptionError(String),
     #[error("{0}")]
     Message(&'static str),
 }
