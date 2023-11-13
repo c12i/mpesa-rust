@@ -2,9 +2,10 @@ use std::env::VarError;
 use std::fmt;
 
 use serde::{Deserialize, Serialize};
+use thiserror::Error;
 
 /// Mpesa error stack
-#[derive(thiserror::Error, Debug)]
+#[derive(Error, Debug)]
 pub enum MpesaError {
     #[error("{0}")]
     AuthenticationError(ApiError),
@@ -48,6 +49,8 @@ pub enum MpesaError {
     EncryptionError(#[from] openssl::error::ErrorStack),
     #[error("{0}")]
     Message(&'static str),
+    #[error("An error has occurred while building the request: {0}")]
+    BuilderError(BuilderError),
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -64,5 +67,25 @@ impl fmt::Display for ApiError {
             "requestID: {}, errorCode:{}, errorMessage:{}",
             self.request_id, self.error_code, self.error_message
         )
+    }
+}
+
+#[derive(Debug, Error)]
+pub enum BuilderError {
+    #[error("Field [{0}] is required")]
+    UninitializedField(&'static str),
+    #[error("Field [{0}] is invalid")]
+    ValidationError(String),
+}
+
+impl From<String> for BuilderError {
+    fn from(s: String) -> Self {
+        Self::ValidationError(s)
+    }
+}
+
+impl From<derive_builder::UninitializedFieldError> for MpesaError {
+    fn from(e: derive_builder::UninitializedFieldError) -> Self {
+        Self::BuilderError(BuilderError::UninitializedField(e.field_name()))
     }
 }

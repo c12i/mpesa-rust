@@ -20,12 +20,12 @@ struct DynamicQRRequest<'mpesa> {
     #[serde(rename = "TrxCode")]
     /// Transaction Type
     transaction_type: TransactionType,
-    #[serde(rename = "CPI")]
 
     ///Credit Party Identifier.
     ///
     /// Can be a Mobile Number, Business Number, Agent
     /// Till, Paybill or Business number, or Merchant Buy Goods.
+    #[serde(rename = "CPI")]
     credit_party_identifier: &'mpesa str,
     /// Size of the QR code image in pixels.
     ///
@@ -44,18 +44,18 @@ pub struct DynamicQRResponse {
 
 /// Dynamic QR builder struct
 #[derive(Builder, Debug, Clone)]
+#[builder(build_fn(error = "MpesaError"))]
 pub struct DynamicQR<'mpesa, Env: ApiEnvironment> {
-    #[builder(pattern = "owned")]
+    #[builder(pattern = "immutable")]
     client: &'mpesa Mpesa<Env>,
-    #[builder(setter(into))]
     /// Name of the Company/M-Pesa Merchant Name
-    merchant_name: &'mpesa str,
     #[builder(setter(into))]
+    merchant_name: &'mpesa str,
     /// Transaction Reference Number
+    #[builder(setter(into))]
     amount: f64,
     /// The total amount of the transaction
     ref_no: &'mpesa str,
-    #[builder(try_setter, setter(into))]
     /// Transaction Type
     ///
     /// This can be a `TransactionType` or a `&str`
@@ -65,10 +65,12 @@ pub struct DynamicQR<'mpesa, Env: ApiEnvironment> {
     /// - `WA` Withdraw Cash
     /// - `SM` Send Money (Mobile Number)
     /// - `SB` Sent to Business. Business number CPI in MSISDN format.
+    #[builder(try_setter, setter(into))]
     transaction_type: TransactionType,
     /// Credit Party Identifier.
     /// Can be a Mobile Number, Business Number, Agent
     /// Till, Paybill or Business number, or Merchant Buy Goods.
+    #[builder(setter(into))]
     credit_party_identifier: &'mpesa str,
     /// Size of the QR code image in pixels.
     ///
