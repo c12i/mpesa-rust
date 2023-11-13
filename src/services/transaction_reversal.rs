@@ -10,9 +10,11 @@ use crate::Mpesa;
 use crate::MpesaError;
 use crate::MpesaResult;
 
+const TRANSACTION_REVERSAL_URL: &str = "/mpesa/reversal/v1/request";
+
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "PascalCase")]
-pub struct TransactionReversalRequest<'mpesa> {
+struct TransactionReversalRequest<'mpesa> {
     initiator: &'mpesa str,
     security_credential: String,
     #[serde(rename = "CommandID")]
@@ -132,8 +134,9 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversal<'mpesa, Env> {
     /// Returns a `MpesaError` on failure.
     pub async fn send(self) -> MpesaResult<TransactionReversalResponse> {
         let url = format!(
-            "{}/mpesa/reversal/v1/request",
-            self.client.environment.base_url()
+            "{}{}",
+            self.client.environment.base_url(),
+            TRANSACTION_REVERSAL_URL
         );
 
         let response = self

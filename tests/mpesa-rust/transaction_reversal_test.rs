@@ -96,14 +96,19 @@ async fn transaction_reversal_fails_if_no_amount_is_provided() {
         .initiator("testapi496")
         .try_result_url("https://testdomain.com/ok")
         .unwrap()
+        .receiver_identifier_type(IdentifierTypes::ShortCode)
         .try_timeout_url("https://testdomain.com/err")
         .unwrap()
         .transaction_id("OEI2AK4Q16")
+        .remarks("wrong recipient")
         .receiver_party("600111")
         .build()
         .unwrap_err();
 
-    assert_eq!(err.to_string(), "Field amount is required");
+    assert_eq!(
+        err.to_string(),
+        "An error has occurred while building the request: Field [amount] is required"
+    );
 }
 
 #[tokio::test]
@@ -120,26 +125,24 @@ async fn transaction_reversal_fails_if_no_result_url_is_provided() {
         .expect(0)
         .mount(&server)
         .await;
-    if let Err(e) = client
+    let err = client
         .transaction_reversal()
         .initiator("testapi496")
         .transaction_id("OEI2AK4Q16")
         .amount(1.0)
-        .try_result_url("https://testdomain.com/ok")
+        .try_timeout_url("https://testdomain.com/err")
         .unwrap()
+        .remarks("wrong recipient")
+        .amount(100.0)
         .receiver_party("600111")
+        .receiver_identifier_type(IdentifierTypes::MSISDN)
         .build()
-        .unwrap()
-        .send()
-        .await
-    {
-        let MpesaError::Message(msg) = e else {
-            panic!("Expected MpesaError::Message, but found {}", e);
-        };
-        assert_eq!(msg, "timeout_url is required")
-    } else {
-        panic!("Expected error");
-    }
+        .unwrap_err();
+
+    assert_eq!(
+        err.to_string(),
+        "An error has occurred while building the request: Field [result_url] is required"
+    );
 }
 
 #[tokio::test]
@@ -185,6 +188,7 @@ async fn transaction_reversal_fails_if_no_receiver_party_is_provided() {
         "OriginatorConversationID": "29464-48063588-1",
         "ConversationID": "AG_20230206_201056794190723278ff",
         "ResponseDescription": "Accept the service request successfully.",
+        "ResponseCode": "0"
     });
     Mock::given(method("POST"))
         .and(path("/mpesa/reversal/v1/request"))
@@ -192,7 +196,8 @@ async fn transaction_reversal_fails_if_no_receiver_party_is_provided() {
         .expect(0)
         .mount(&server)
         .await;
-    if let Err(e) = client
+
+    let err = client
         .transaction_reversal()
         .initiator("testapi496")
         .transaction_id("OEI2AK4Q16")
@@ -205,12 +210,7 @@ async fn transaction_reversal_fails_if_no_receiver_party_is_provided() {
         .unwrap()
         .send()
         .await
-    {
-        let MpesaError::Message(msg) = e else {
-            panic!("Expected MpesaError::Message, but found {}", e);
-        };
-        assert_eq!(msg, "receiver_party is required")
-    } else {
-        panic!("Expected error");
-    }
+        .unwrap_err();
+
+    assert_eq!(err.to_string(), "Field receiver_party is required");
 }
