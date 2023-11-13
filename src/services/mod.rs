@@ -39,6 +39,8 @@ pub use c2b_simulate::{C2bSimulateBuilder, C2bSimulateResponse};
 #[cfg(feature = "express_request")]
 pub use express_request::{MpesaExpress, MpesaExpressBuilder, MpesaExpressRequestResponse};
 #[cfg(feature = "transaction_reversal")]
-pub use transaction_reversal::{TransactionReversalBuilder, TransactionReversalResponse};
+pub use transaction_reversal::{
+    TransactionReversal, TransactionReversalBuilder, TransactionReversalResponse,
+};
 #[cfg(feature = "transaction_status")]
 pub use transaction_status::{TransactionStatusBuilder, TransactionStatusResponse};

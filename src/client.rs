@@ -2,8 +2,8 @@ use crate::environment::ApiEnvironment;
 use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, BulkInvoiceBuilder, C2bRegisterBuilder,
     C2bSimulateBuilder, CancelInvoiceBuilder, MpesaExpress, MpesaExpressBuilder, OnboardBuilder,
-    OnboardModifyBuilder, ReconciliationBuilder, SingleInvoiceBuilder, TransactionReversalBuilder,
-    TransactionStatusBuilder,
+    OnboardModifyBuilder, ReconciliationBuilder, SingleInvoiceBuilder, TransactionReversal,
+    TransactionReversalBuilder, TransactionStatusBuilder,
 };
 use crate::{ApiError, MpesaError};
 use openssl::base64;
@@ -456,7 +456,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// ```
     #[cfg(feature = "express_request")]
     pub fn express_request(&'mpesa self) -> MpesaExpressBuilder<'mpesa, Env> {
-        MpesaExpress::builder(&self)
+        MpesaExpress::builder(self)
     }
 
     ///**Transaction Reversal Builder**
@@ -464,11 +464,8 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///
     /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
     #[cfg(feature = "transaction_reversal")]
-    pub fn transaction_reversal(
-        &'mpesa self,
-        initiator_name: &'mpesa str,
-    ) -> TransactionReversalBuilder<'mpesa, Env> {
-        TransactionReversalBuilder::new(self, initiator_name)
+    pub fn transaction_reversal(&'mpesa self) -> TransactionReversalBuilder<'mpesa, Env> {
+        TransactionReversal::builder(self)
     }
 
     ///**Transaction Status Builder**

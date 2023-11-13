@@ -1,7 +1,7 @@
 use crate::client::{Mpesa, MpesaResult};
 use crate::constants::CommandId;
 use crate::environment::ApiEnvironment;
-use crate::errors::MpesaError;
+use crate::errors::{BuilderError, MpesaError};
 use chrono::prelude::Local;
 use derive_builder::Builder;
 use openssl::base64;
@@ -37,9 +37,9 @@ pub struct MpesaExpressRequestResponse {
 }
 
 #[derive(Builder, Debug, Clone)]
-#[builder(build_fn(validate = "Self::validate"))]
+#[builder(build_fn(error = "BuilderError"))]
 pub struct MpesaExpress<'mpesa, Env: ApiEnvironment> {
-    #[builder(pattern = "owned")]
+    #[builder(pattern = "immutable")]
     client: &'mpesa Mpesa<Env>,
     #[builder(setter(into))]
     business_short_code: &'mpesa str,
@@ -85,13 +85,8 @@ impl<'mpesa, Env: ApiEnvironment> From<MpesaExpress<'mpesa, Env>> for MpesaExpre
     }
 }
 
-impl<'mpesa, Env: ApiEnvironment> MpesaExpressBuilder<'mpesa, Env> {
-    fn validate(&self) -> Result<(), String> {
-        // None of the option can be none except transaction desc
-        Ok(())
-    }
-}
 impl<'mpesa, Env: ApiEnvironment> MpesaExpress<'mpesa, Env> {
+    /// Creates new `MpesaExpressBuilder`
     pub(crate) fn builder(client: &'mpesa Mpesa<Env>) -> MpesaExpressBuilder<'mpesa, Env> {
         MpesaExpressBuilder::default().client(client)
     }
@@ -104,8 +99,6 @@ impl<'mpesa, Env: ApiEnvironment> MpesaExpress<'mpesa, Env> {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
-    #[allow(clippy::or_fun_call)]
-    #[allow(clippy::unnecessary_lazy_evaluations)]
     pub async fn send(self) -> MpesaResult<MpesaExpressRequestResponse> {
         let url = format!(
             "{}/mpesa/stkpush/v1/processrequest",
