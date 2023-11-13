@@ -23,6 +23,7 @@ thiserror = "1.0.37"
 wiremock = "0.5"
 derive_builder = "0.12"
 url = { version = "2", features = ["serde"] }
+secrecy = "0.8"
 
 
 [dev-dependencies]
