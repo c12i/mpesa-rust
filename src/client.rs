@@ -20,7 +20,6 @@ use std::cell::RefCell;
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
 const DEFAULT_INITIATOR_PASSWORD: &str = "Safcom496!";
 /// Get current package version from metadata
-const CARGO_PACKAGE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 /// `Result` enum type alias
 pub type MpesaResult<T> = Result<T, MpesaError>;
@@ -50,11 +49,16 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// # Panics
     /// This method can panic if a TLS backend cannot be initialized for the internal http_client
     pub fn new<S: Into<String>>(client_key: S, client_secret: S, environment: Env) -> Self {
+        #[cfg(target_arch = "wasm32")]
+        let http_client = HttpClient::new();
+
+        #[cfg(not(target_arch = "wasm32"))]
         let http_client = HttpClient::builder()
             .connect_timeout(std::time::Duration::from_millis(10_000))
-            .user_agent(format!("mpesa-rust@{CARGO_PACKAGE_VERSION}"))
+            .user_agent(format!("mpesa-rust@{}", env!("CARGO_PKG_VERSION")))
             .build()
             .expect("Error building http client");
+
         Self {
             client_key: client_key.into(),
             client_secret: Secret::new(client_secret.into()),
