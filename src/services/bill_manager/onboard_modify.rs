@@ -1,8 +1,9 @@
+use serde::{Deserialize, Serialize};
+
 use crate::client::{Mpesa, MpesaResult};
 use crate::constants::SendRemindersTypes;
 use crate::environment::ApiEnvironment;
 use crate::errors::MpesaError;
-use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize)]
 /// Payload to modify opt-in details to the bill manager api.

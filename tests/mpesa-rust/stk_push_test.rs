@@ -1,8 +1,9 @@
-use crate::get_mpesa_client;
 use mpesa::MpesaError;
 use serde_json::json;
 use wiremock::matchers::{method, path};
 use wiremock::{Mock, ResponseTemplate};
+
+use crate::get_mpesa_client;
 
 #[tokio::test]
 async fn stk_push_success_success() {

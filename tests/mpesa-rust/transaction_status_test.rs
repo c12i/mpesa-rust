@@ -1,5 +1,4 @@
 use mpesa::MpesaError;
-
 use serde_json::json;
 use wiremock::matchers::{method, path};
 use wiremock::{Mock, ResponseTemplate};

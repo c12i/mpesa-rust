@@ -1,3 +1,12 @@
+use std::cell::RefCell;
+
+use base64::engine::general_purpose;
+use base64::Engine as _;
+use reqwest::Client as HttpClient;
+use rsa::{BigUint, Pkcs1v15Encrypt};
+use secrecy::{ExposeSecret, Secret};
+use serde_json::Value;
+
 use crate::environment::ApiEnvironment;
 use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, BulkInvoiceBuilder, C2bRegisterBuilder,
@@ -6,18 +15,10 @@ use crate::services::{
     TransactionStatusBuilder,
 };
 use crate::{ApiError, MpesaError};
-use openssl::base64;
-use openssl::rsa::Padding;
-use openssl::x509::X509;
-use reqwest::Client as HttpClient;
-use secrecy::{ExposeSecret, Secret};
-use serde_json::Value;
-use std::cell::RefCell;
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
 const DEFAULT_INITIATOR_PASSWORD: &str = "Safcom496!";
 /// Get current package version from metadata
-const CARGO_PACKAGE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 /// `Result` enum type alias
 pub type MpesaResult<T> = Result<T, MpesaError>;
@@ -47,13 +48,16 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// # Panics
     /// This method can panic if a TLS backend cannot be initialized for the internal http_client
     pub fn new<S: Into<String>>(client_key: S, client_secret: S, environment: Env) -> Self {
+        #[cfg(target_arch = "wasm32")]
+        let http_client = HttpClient::new();
+
+        #[cfg(not(target_arch = "wasm32"))]
         let http_client = HttpClient::builder()
             .connect_timeout(std::time::Duration::from_millis(10_000))
-            .user_agent(format!("mpesa-rust@{CARGO_PACKAGE_VERSION}"))
-            // TODO: Potentialy return a `Result` enum from Mpesa::new?
-            //       Making assumption that creation of http client cannot fail
+            .user_agent(format!("mpesa-rust@{}", env!("CARGO_PKG_VERSION")))
             .build()
             .expect("Error building http client");
+
         Self {
             client_key: client_key.into(),
             client_secret: Secret::new(client_secret.into()),
@@ -508,30 +512,51 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///
     /// # Errors
     /// Returns `EncryptionError` variant of `MpesaError`
+
     pub(crate) fn gen_security_credentials(&self) -> MpesaResult<String> {
         let pem = self.environment.get_certificate().as_bytes();
-        let cert = X509::from_pem(pem)?;
-        // getting the public and rsa keys
-        let pub_key = cert.public_key()?;
-        let rsa_key = pub_key.rsa()?;
-        // configuring the buffer
-        let buf_len = pub_key.size();
-        let mut buffer = vec![0; buf_len];
 
-        rsa_key.public_encrypt(
-            self.initiator_password().as_bytes(),
-            &mut buffer,
-            Padding::PKCS1,
-        )?;
-        Ok(base64::encode_block(&buffer))
+        let (_, cert) = x509_parser::pem::parse_x509_pem(pem)
+            .map_err(|e| MpesaError::EncryptionError(e.to_string()))?;
+
+        let cert = cert
+            .parse_x509()
+            .map_err(|e| MpesaError::EncryptionError(e.to_string()))?;
+
+        let key = cert
+            .public_key()
+            .parsed()
+            .map_err(|e| MpesaError::EncryptionError(e.to_string()))?;
+
+        let rsa = match key {
+            x509_parser::public_key::PublicKey::RSA(rsa_key) => rsa_key,
+            _ => unreachable!("Invalid public key type"),
+        };
+
+        let value = rsa::RsaPublicKey::new(
+            BigUint::from_bytes_be(rsa.modulus),
+            BigUint::from_bytes_be(rsa.exponent),
+        )
+        .map_err(|e| MpesaError::EncryptionError(e.to_string()))?;
+
+        let value = value
+            .encrypt(
+                &mut rand::rngs::OsRng,
+                Pkcs1v15Encrypt,
+                self.initiator_password().as_bytes(),
+            )
+            .map_err(|e| MpesaError::EncryptionError(e.to_string()))?;
+
+        let value = general_purpose::STANDARD.encode(value);
+
+        Ok(value)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::Sandbox;
-
     use super::*;
+    use crate::Sandbox;
 
     #[test]
     fn test_setting_initator_password() {

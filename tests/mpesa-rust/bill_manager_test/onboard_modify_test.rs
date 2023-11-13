@@ -1,7 +1,8 @@
-use crate::get_mpesa_client;
 use serde_json::json;
 use wiremock::matchers::{method, path};
 use wiremock::{Mock, ResponseTemplate};
+
+use crate::get_mpesa_client;
 
 fn sample_response() -> ResponseTemplate {
     let sample_response_body = json!({
