@@ -45,7 +45,7 @@ pub enum MpesaError {
     EncryptionError(#[from] openssl::error::ErrorStack),
     #[error("{0}")]
     Message(&'static str),
-    #[error("An error has occurred while building the request")]
+    #[error("An error has occurred while building the request: {0}")]
     BuilderError(BuilderError),
 }
 
@@ -68,9 +68,9 @@ impl fmt::Display for ApiError {
 
 #[derive(Debug, Error)]
 pub enum BuilderError {
-    #[error("Field {0} is required")]
+    #[error("Field [{0}] is required")]
     UninitializedField(&'static str),
-    #[error("Field {0} is invalid")]
+    #[error("Field [{0}] is invalid")]
     ValidationError(String),
 }
 
@@ -80,8 +80,14 @@ impl From<String> for BuilderError {
     }
 }
 
-impl From<derive_builder::UninitializedFieldError> for BuilderError {
+impl From<derive_builder::UninitializedFieldError> for MpesaError {
     fn from(e: derive_builder::UninitializedFieldError) -> Self {
-        Self::UninitializedField(e.field_name())
+        Self::BuilderError(BuilderError::UninitializedField(e.field_name()))
+    }
+}
+
+impl From<url::ParseError> for MpesaError {
+    fn from(e: url::ParseError) -> Self {
+        Self::BuilderError(BuilderError::ValidationError(e.to_string()))
     }
 }

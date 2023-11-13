@@ -7,8 +7,8 @@ use crate::ApiEnvironment;
 use crate::CommandId;
 use crate::IdentifierTypes;
 use crate::Mpesa;
+use crate::MpesaError;
 use crate::MpesaResult;
-use crate::{BuilderError, MpesaError};
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "PascalCase")]
@@ -46,7 +46,7 @@ pub struct TransactionReversalResponse {
 }
 
 #[derive(Builder, Debug)]
-#[builder(build_fn(error = "BuilderError"))]
+#[builder(build_fn(error = "MpesaError"))]
 pub struct TransactionReversal<'mpesa, Env: ApiEnvironment> {
     #[builder(pattern = "immutable")]
     client: &'mpesa Mpesa<Env>,

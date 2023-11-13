@@ -71,7 +71,10 @@ async fn transaction_reversal_fails_if_no_transaction_id_is_provided() {
         .build()
         .unwrap_err();
 
-    assert_eq!(err.to_string(), "Field transaction_id is required");
+    assert_eq!(
+        err.to_string(),
+        "An error has occurred while building the request: Field [transaction_id] is required"
+    );
 }
 
 #[tokio::test]
@@ -88,7 +91,7 @@ async fn transaction_reversal_fails_if_no_amount_is_provided() {
         .expect(0)
         .mount(&server)
         .await;
-    if let Err(e) = client
+    let err = client
         .transaction_reversal()
         .initiator("testapi496")
         .try_result_url("https://testdomain.com/ok")
@@ -98,17 +101,9 @@ async fn transaction_reversal_fails_if_no_amount_is_provided() {
         .transaction_id("OEI2AK4Q16")
         .receiver_party("600111")
         .build()
-        .unwrap()
-        .send()
-        .await
-    {
-        let MpesaError::Message(msg) = e else {
-            panic!("Expected MpesaError::Message, but found {}", e);
-        };
-        assert_eq!(msg, "amount is required")
-    } else {
-        panic!("Expected error");
-    }
+        .unwrap_err();
+
+    assert_eq!(err.to_string(), "Field amount is required");
 }
 
 #[tokio::test]

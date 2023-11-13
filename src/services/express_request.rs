@@ -1,7 +1,7 @@
 use crate::client::{Mpesa, MpesaResult};
 use crate::constants::CommandId;
 use crate::environment::ApiEnvironment;
-use crate::errors::{BuilderError, MpesaError};
+use crate::errors::MpesaError;
 use chrono::prelude::Local;
 use derive_builder::Builder;
 use openssl::base64;
@@ -37,7 +37,7 @@ pub struct MpesaExpressRequestResponse {
 }
 
 #[derive(Builder, Debug, Clone)]
-#[builder(build_fn(error = "BuilderError"))]
+#[builder(build_fn(error = "MpesaError"))]
 pub struct MpesaExpress<'mpesa, Env: ApiEnvironment> {
     #[builder(pattern = "immutable")]
     client: &'mpesa Mpesa<Env>,
