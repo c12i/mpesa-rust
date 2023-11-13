@@ -29,7 +29,7 @@ async fn dynamic_qr_code_test() {
         .ref_no("rf38f04")
         .size("300")
         .try_transaction_type("bg")
-        // .try_transaction_type(TransactionType::BuyGoods) // This is the same as the above
+        //.transaction_type(TransactionType::BuyGoods) // This is the same as the above
         .unwrap()
         .build()
         .unwrap()
