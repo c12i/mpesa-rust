@@ -1,12 +1,6 @@
-use serde::Deserialize;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-use crate::ApiEnvironment;
-use crate::CommandId;
-use crate::IdentifierTypes;
-use crate::Mpesa;
-use crate::MpesaError;
-use crate::MpesaResult;
+use crate::{ApiEnvironment, CommandId, IdentifierTypes, Mpesa, MpesaError, MpesaResult};
 
 #[derive(Debug, Serialize)]
 pub struct TransactionReversalPayload<'mpesa> {

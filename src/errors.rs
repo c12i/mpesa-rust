@@ -1,5 +1,7 @@
+use std::env::VarError;
+use std::fmt;
+
 use serde::{Deserialize, Serialize};
-use std::{env::VarError, fmt};
 
 /// Mpesa error stack
 #[derive(thiserror::Error, Debug)]
@@ -45,6 +47,9 @@ pub enum MpesaError {
     #[error("{0}")]
     Message(&'static str),
 }
+
+/// `Result` enum type alias
+pub type MpesaResult<T> = Result<T, MpesaError>;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ApiError {

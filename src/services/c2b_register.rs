@@ -1,8 +1,9 @@
-use crate::client::{Mpesa, MpesaResult};
+use serde::{Deserialize, Serialize};
+
+use crate::client::Mpesa;
 use crate::constants::ResponseType;
 use crate::environment::ApiEnvironment;
-use crate::errors::MpesaError;
-use serde::{Deserialize, Serialize};
+use crate::errors::{MpesaError, MpesaResult};
 
 #[derive(Debug, Serialize)]
 /// Payload to register the 3rd party’s confirmation and validation URLs to M-Pesa

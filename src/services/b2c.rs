@@ -1,7 +1,7 @@
-use crate::client::MpesaResult;
-use crate::environment::ApiEnvironment;
-use crate::{CommandId, Mpesa, MpesaError};
 use serde::{Deserialize, Serialize};
+
+use crate::environment::ApiEnvironment;
+use crate::{CommandId, Mpesa, MpesaError, MpesaResult};
 
 #[derive(Debug, Serialize)]
 /// Payload to allow for b2c transactions:
@@ -182,7 +182,6 @@ impl<'mpesa, Env: ApiEnvironment> B2cBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure.
-    #[allow(clippy::unnecessary_lazy_evaluations)]
     pub async fn send(self) -> MpesaResult<B2cResponse> {
         let url = format!(
             "{}/mpesa/b2c/v1/paymentrequest",
@@ -193,9 +192,7 @@ impl<'mpesa, Env: ApiEnvironment> B2cBuilder<'mpesa, Env> {
         let payload = B2cPayload {
             initiator_name: self.initiator_name,
             security_credential: &credentials,
-            command_id: self
-                .command_id
-                .unwrap_or_else(|| CommandId::BusinessPayment),
+            command_id: self.command_id.unwrap_or(CommandId::BusinessPayment),
             amount: self
                 .amount
                 .ok_or(MpesaError::Message("amount is required"))?,

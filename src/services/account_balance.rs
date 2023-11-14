@@ -1,8 +1,8 @@
-use crate::client::MpesaResult;
+use serde::{Deserialize, Serialize};
+
 use crate::constants::{CommandId, IdentifierTypes};
 use crate::environment::ApiEnvironment;
-use crate::{Mpesa, MpesaError};
-use serde::{Deserialize, Serialize};
+use crate::{Mpesa, MpesaError, MpesaResult};
 
 #[derive(Debug, Serialize)]
 /// Account Balance payload
