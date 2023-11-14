@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"macro":["StringOrVecToVecParser","enum_number_declare"],"mod":["container_attributes","field_attributes","prelude","serde_introspection"]};

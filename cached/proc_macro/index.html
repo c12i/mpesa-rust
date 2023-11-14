@@ -1,0 +1,273 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Procedural macros for defining functions that wrap a static-ref cache object."><title>cached::proc_macro - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="cached" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0 (cc66ad468 2023-10-03)" data-channel="1.73.0" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-1596385f77d47ef2.css" data-theme-dark-css="dark-0a43001d3fc2282c.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-1596385f77d47ef2.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-0a43001d3fc2282c.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../../cached/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../../cached/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2 class="location"><a href="#">Module proc_macro</a></h2><div class="sidebar-elems"><section><ul class="block"><li><a href="#structs">Structs</a></li><li><a href="#attributes">Attribute Macros</a></li></ul></section></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Module <a href="../index.html">cached</a>::<wbr><a class="mod" href="#">proc_macro</a><button id="copy-path" title="Copy item path to clipboard"><img src="../../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="src" href="../../src/cached/proc_macro.rs.html#1-333">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Procedural macros for defining functions that wrap a static-ref cache object.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::thread::sleep;
+<span class="kw">use </span>std::time::Duration;
+<span class="kw">use </span>cached::proc_macro::cached;
+
+<span class="doccomment">/// Use an lru cache with size 100 and a `(String, String)` cache key
+</span><span class="attr">#[cached(size=<span class="number">100</span>)]
+</span><span class="kw">fn </span>keyed(a: String, b: String) -&gt; usize {
+    <span class="kw">let </span>size = a.len() + b.len();
+    sleep(Duration::new(size <span class="kw">as </span>u64, <span class="number">0</span>));
+    size
+}</code></pre></div>
+<hr />
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::thread::sleep;
+<span class="kw">use </span>std::time::Duration;
+<span class="kw">use </span>cached::proc_macro::cached;
+
+<span class="doccomment">/// Use a timed-lru cache with size 1, a TTL of 60s,
+/// and a `(usize, usize)` cache key
+</span><span class="attr">#[cached(size=<span class="number">1</span>, time=<span class="number">60</span>)]
+</span><span class="kw">fn </span>keyed(a: usize, b: usize) -&gt; usize {
+    <span class="kw">let </span>total = a + b;
+    sleep(Duration::new(total <span class="kw">as </span>u64, <span class="number">0</span>));
+    total
+}
+<span class="kw">pub fn </span>main() {
+    keyed(<span class="number">1</span>, <span class="number">2</span>);  <span class="comment">// Not cached, will sleep (1+2)s
+
+    </span>keyed(<span class="number">1</span>, <span class="number">2</span>);  <span class="comment">// Cached, no sleep
+
+    </span>sleep(Duration::new(<span class="number">60</span>, <span class="number">0</span>));  <span class="comment">// Sleep for the TTL
+
+    </span>keyed(<span class="number">1</span>, <span class="number">2</span>);  <span class="comment">// 60s TTL has passed so the cached
+                  // value has expired, will sleep (1+2)s
+
+    </span>keyed(<span class="number">1</span>, <span class="number">2</span>);  <span class="comment">// Cached, no sleep
+
+    </span>keyed(<span class="number">2</span>, <span class="number">1</span>);  <span class="comment">// New args, not cached, will sleep (2+1)s
+
+    </span>keyed(<span class="number">1</span>, <span class="number">2</span>);  <span class="comment">// Was evicted because of lru size of 1,
+                  // will sleep (1+2)s
+</span>}</code></pre></div>
+<hr />
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::thread::sleep;
+<span class="kw">use </span>std::time::Duration;
+<span class="kw">use </span>cached::proc_macro::cached;
+
+<span class="doccomment">/// Use a timed cache with a TTL of 60s
+/// that refreshes the entry TTL on cache hit,
+/// and a `(String, String)` cache key
+</span><span class="attr">#[cached(time=<span class="number">60</span>, time_refresh=<span class="bool-val">true</span>)]
+</span><span class="kw">fn </span>keyed(a: String, b: String) -&gt; usize {
+    <span class="kw">let </span>size = a.len() + b.len();
+    sleep(Duration::new(size <span class="kw">as </span>u64, <span class="number">0</span>));
+    size
+}</code></pre></div>
+<hr />
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>cached::proc_macro::cached;
+
+
+<span class="doccomment">/// Cache a fallible function. Only `Ok` results are cached.
+</span><span class="attr">#[cached(size=<span class="number">1</span>, result = <span class="bool-val">true</span>)]
+</span><span class="kw">fn </span>keyed(a: String) -&gt; <span class="prelude-ty">Result</span>&lt;usize, ()&gt; {
+    do_something_fallible()<span class="question-mark">?</span>;
+    <span class="prelude-val">Ok</span>(a.len())
+}</code></pre></div>
+<hr />
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>cached::proc_macro::cached;
+
+<span class="doccomment">/// Cache an optional function. Only `Some` results are cached.
+</span><span class="attr">#[cached(size=<span class="number">1</span>, option = <span class="bool-val">true</span>)]
+</span><span class="kw">fn </span>keyed(a: String) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+    <span class="kw">if </span>a == <span class="string">&quot;a&quot; </span>{
+        <span class="prelude-val">Some</span>(a.len())
+    } <span class="kw">else </span>{
+        <span class="prelude-val">None
+    </span>}
+}</code></pre></div>
+<hr />
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>cached::proc_macro::cached;
+
+<span class="doccomment">/// Cache an optional function. Only `Some` results are cached.
+/// When called concurrently, duplicate argument-calls will be
+/// synchronized so as to only run once - the remaining concurrent
+/// calls return a cached value.
+</span><span class="attr">#[cached(size=<span class="number">1</span>, option = <span class="bool-val">true</span>, sync_writes = <span class="bool-val">true</span>)]
+</span><span class="kw">fn </span>keyed(a: String) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+    <span class="kw">if </span>a == <span class="string">&quot;a&quot; </span>{
+        <span class="prelude-val">Some</span>(a.len())
+    } <span class="kw">else </span>{
+        <span class="prelude-val">None
+    </span>}
+}</code></pre></div>
+<hr />
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>cached::proc_macro::cached;
+<span class="kw">use </span>cached::Return;
+
+<span class="doccomment">/// Get a `cached::Return` value that indicates
+/// whether the value returned came from the cache:
+/// `cached::Return.was_cached`.
+/// Use an LRU cache and a `String` cache key.
+</span><span class="attr">#[cached(size=<span class="number">1</span>, with_cached_flag = <span class="bool-val">true</span>)]
+</span><span class="kw">fn </span>calculate(a: String) -&gt; Return&lt;String&gt; {
+    Return::new(a)
+}
+<span class="kw">pub fn </span>main() {
+    <span class="kw">let </span>r = calculate(<span class="string">&quot;a&quot;</span>.to_string());
+    <span class="macro">assert!</span>(!r.was_cached);
+    <span class="kw">let </span>r = calculate(<span class="string">&quot;a&quot;</span>.to_string());
+    <span class="macro">assert!</span>(r.was_cached);
+    <span class="comment">// Return&lt;String&gt; derefs to String
+    </span><span class="macro">assert_eq!</span>(r.to_uppercase(), <span class="string">&quot;A&quot;</span>);
+}</code></pre></div>
+<hr />
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>cached::proc_macro::cached;
+<span class="kw">use </span>cached::Return;
+
+
+<span class="doccomment">/// Same as the previous, but returning a Result
+</span><span class="attr">#[cached(size=<span class="number">1</span>, result = <span class="bool-val">true</span>, with_cached_flag = <span class="bool-val">true</span>)]
+</span><span class="kw">fn </span>calculate(a: String) -&gt; <span class="prelude-ty">Result</span>&lt;Return&lt;usize&gt;, ()&gt; {
+    do_something_fallible()<span class="question-mark">?</span>;
+    <span class="prelude-val">Ok</span>(Return::new(a.len()))
+}
+<span class="kw">pub fn </span>main() {
+    <span class="kw">match </span>calculate(<span class="string">&quot;a&quot;</span>.to_string()) {
+        <span class="prelude-val">Err</span>(e) =&gt; <span class="macro">eprintln!</span>(<span class="string">&quot;error: {:?}&quot;</span>, e),
+        <span class="prelude-val">Ok</span>(r) =&gt; {
+            <span class="macro">println!</span>(<span class="string">&quot;value: {:?}, was cached: {}&quot;</span>, <span class="kw-2">*</span>r, r.was_cached);
+            <span class="comment">// value: &quot;a&quot;, was cached: true
+        </span>}
+    }
+}</code></pre></div>
+<hr />
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>cached::proc_macro::cached;
+<span class="kw">use </span>cached::Return;
+
+<span class="doccomment">/// Same as the previous, but returning an Option
+</span><span class="attr">#[cached(size=<span class="number">1</span>, option = <span class="bool-val">true</span>, with_cached_flag = <span class="bool-val">true</span>)]
+</span><span class="kw">fn </span>calculate(a: String) -&gt; <span class="prelude-ty">Option</span>&lt;Return&lt;usize&gt;&gt; {
+    <span class="kw">if </span>a == <span class="string">&quot;a&quot; </span>{
+        <span class="prelude-val">Some</span>(Return::new(a.len()))
+    } <span class="kw">else </span>{
+        <span class="prelude-val">None
+    </span>}
+}
+<span class="kw">pub fn </span>main() {
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(a) = calculate(<span class="string">&quot;a&quot;</span>.to_string()) {
+        <span class="macro">println!</span>(<span class="string">&quot;value: {:?}, was cached: {}&quot;</span>, <span class="kw-2">*</span>a, a.was_cached);
+        <span class="comment">// value: &quot;a&quot;, was cached: true
+    </span>}
+}</code></pre></div>
+<hr />
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::thread::sleep;
+<span class="kw">use </span>std::time::Duration;
+<span class="kw">use </span>cached::proc_macro::cached;
+<span class="kw">use </span>cached::SizedCache;
+
+<span class="doccomment">/// Use an explicit cache-type with a custom creation block and custom cache-key generating block
+</span><span class="attr">#[cached(
+    <span class="kw">type </span>= <span class="string">&quot;SizedCache&lt;String, usize&gt;&quot;</span>,
+    create = <span class="string">&quot;{ SizedCache::with_size(100) }&quot;</span>,
+    convert = <span class="string">r#&quot;{ format!(&quot;{}{}&quot;, a, b) }&quot;#
+</span>)]
+</span><span class="kw">fn </span>keyed(a: <span class="kw-2">&amp;</span>str, b: <span class="kw-2">&amp;</span>str) -&gt; usize {
+    <span class="kw">let </span>size = a.len() + b.len();
+    sleep(Duration::new(size <span class="kw">as </span>u64, <span class="number">0</span>));
+    size
+}</code></pre></div>
+<hr />
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>cached::proc_macro::once;
+
+<span class="doccomment">/// Only cache the initial function call.
+/// Function will be re-executed after the cache
+/// expires (according to `time` seconds).
+/// When no (or expired) cache, concurrent calls
+/// will synchronize (`sync_writes`) so the function
+/// is only executed once.
+</span><span class="attr">#[once(time=<span class="number">10</span>, option = <span class="bool-val">true</span>, sync_writes = <span class="bool-val">true</span>)]
+</span><span class="kw">fn </span>keyed(a: String) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+    <span class="kw">if </span>a == <span class="string">&quot;a&quot; </span>{
+        <span class="prelude-val">Some</span>(a.len())
+    } <span class="kw">else </span>{
+        <span class="prelude-val">None
+    </span>}
+}</code></pre></div>
+<hr />
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::thread::sleep;
+<span class="kw">use </span>std::time::Duration;
+<span class="kw">use </span>cached::proc_macro::cached;
+
+<span class="doccomment">/// Use a timed cache with a TTL of 60s.
+/// Run a background thread to continuously refresh a specific key.
+</span><span class="attr">#[cached(time = <span class="number">60</span>, key = <span class="string">&quot;String&quot;</span>, convert = <span class="string">r#&quot;{ String::from(a) }&quot;#</span>)]
+</span><span class="kw">fn </span>keyed(a: <span class="kw-2">&amp;</span>str) -&gt; usize {
+    a.len()
+}
+<span class="kw">pub fn </span>main() {
+    <span class="kw">let </span>_handler = std::thread::spawn(|| {
+        <span class="kw">loop </span>{
+            sleep(Duration::from_secs(<span class="number">50</span>));
+            <span class="comment">// this method is generated by the `cached` macro
+            </span>keyed_prime_cache(<span class="string">&quot;a&quot;</span>);
+        }
+    });
+    <span class="comment">// handler.join().unwrap();
+</span>}</code></pre></div>
+<hr />
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::thread::sleep;
+<span class="kw">use </span>std::time::Duration;
+<span class="kw">use </span>cached::proc_macro::once;
+
+<span class="doccomment">/// Run a background thread to continuously refresh a singleton.
+</span><span class="attr">#[once]
+</span><span class="kw">fn </span>keyed() -&gt; String {
+    <span class="comment">// do some long http request
+    </span><span class="string">&quot;some data&quot;</span>.to_string()
+}
+<span class="kw">pub fn </span>main() {
+    <span class="kw">let </span>_handler = std::thread::spawn(|| {
+        <span class="kw">loop </span>{
+            sleep(Duration::from_secs(<span class="number">60</span>));
+            <span class="comment">// this method is generated by the `cached` macro
+            </span>keyed_prime_cache();
+        }
+    });
+    <span class="comment">// handler.join().unwrap();
+</span>}</code></pre></div>
+<hr />
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::thread::sleep;
+<span class="kw">use </span>std::time::Duration;
+<span class="kw">use </span>cached::proc_macro::cached;
+
+<span class="doccomment">/// Run a background thread to continuously refresh every key of a cache
+</span><span class="attr">#[cached(key = <span class="string">&quot;String&quot;</span>, convert = <span class="string">r#&quot;{ String::from(a) }&quot;#</span>)]
+</span><span class="kw">fn </span>keyed(a: <span class="kw-2">&amp;</span>str) -&gt; usize {
+    a.len()
+}
+<span class="kw">pub fn </span>main() {
+    <span class="kw">let </span>_handler = std::thread::spawn(|| {
+        <span class="kw">loop </span>{
+            sleep(Duration::from_secs(<span class="number">60</span>));
+            <span class="kw">let </span>keys: Vec&lt;String&gt; = {
+                <span class="comment">// note the cache keys are a tuple of all function arguments, unless it&#39;s one value
+                </span>KEYED.lock().unwrap().get_store().keys().map(|k| k.clone()).collect()
+            };
+            <span class="kw">for </span>k <span class="kw">in </span><span class="kw-2">&amp;</span>keys {
+                <span class="comment">// this method is generated by the `cached` macro
+                </span>keyed_prime_cache(k);
+            }
+        }
+    });
+    <span class="comment">// handler.join().unwrap();
+</span>}</code></pre></div>
+</div></details><h2 id="structs" class="small-section-header"><a href="#structs">Structs</a></h2><ul class="item-table"><li><div class="item-name"><a class="struct" href="struct.Return.html" title="struct cached::proc_macro::Return">Return</a></div></li></ul><h2 id="attributes" class="small-section-header"><a href="#attributes">Attribute Macros</a></h2><ul class="item-table"><li><div class="item-name"><a class="attr" href="attr.cached.html" title="attr cached::proc_macro::cached">cached</a></div><div class="desc docblock-short">Define a memoized function using a cache store that implements <code>cached::Cached</code> (and
+<code>cached::CachedAsync</code> for async functions)</div></li><li><div class="item-name"><a class="attr" href="attr.io_cached.html" title="attr cached::proc_macro::io_cached">io_cached</a></div><div class="desc docblock-short">Define a memoized function using a cache store that implements <code>cached::IOCached</code> (and
+<code>cached::IOCachedAsync</code> for async functions)</div></li><li><div class="item-name"><a class="attr" href="attr.once.html" title="attr cached::proc_macro::once">once</a></div><div class="desc docblock-short">Define a memoized function using a cache store that implements <code>cached::Cached</code> (and
+<code>cached::CachedAsync</code> for async functions). Function arguments are not used to identify
+a cached value, only one value is cached unless a <code>time</code> expiry is specified.</div></li></ul></section></div></main></body></html>

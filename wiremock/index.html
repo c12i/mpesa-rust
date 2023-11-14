@@ -1,0 +1,107 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="`wiremock` provides HTTP mocking to perform black-box testing of Rust applications that interact with third-party APIs."><title>wiremock - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="wiremock" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0 (cc66ad468 2023-10-03)" data-channel="1.73.0" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-1596385f77d47ef2.css" data-theme-dark-css="dark-0a43001d3fc2282c.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../static.files/light-1596385f77d47ef2.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../static.files/dark-0a43001d3fc2282c.css"><link rel="stylesheet" href="../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../wiremock/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../wiremock/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2 class="location"><a href="#">Crate wiremock</a></h2><div class="sidebar-elems"><ul class="block"><li class="version">Version 0.5.21</li><li><a id="all-types" href="all.html">All Items</a></li></ul><section><ul class="block"><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#traits">Traits</a></li></ul></section></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Crate <a class="mod" href="#">wiremock</a><button id="copy-path" title="Copy item path to clipboard"><img src="../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="src" href="../src/wiremock/lib.rs.html#1-162">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p><code>wiremock</code> provides HTTP mocking to perform black-box testing of Rust applications that
+interact with third-party APIs.</p>
+<p>It provides mocking of HTTP responses using request matching and response templating.</p>
+<h3 id="how-to-install"><a href="#how-to-install">How to install</a></h3>
+<p>Add <code>wiremock</code> to your development dependencies:</p>
+<div class="example-wrap"><pre class="language-toml"><code>[dev-dependencies]
+# ...
+wiremock = &quot;0.5&quot;
+</code></pre></div>
+<p>If you are using <a href="https://github.com/killercup/cargo-edit"><code>cargo-edit</code></a>, run</p>
+<div class="example-wrap"><pre class="language-bash"><code>cargo add wiremock --dev
+</code></pre></div><h3 id="getting-started"><a href="#getting-started">Getting started</a></h3>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>wiremock::{MockServer, Mock, ResponseTemplate};
+<span class="kw">use </span>wiremock::matchers::{method, path};
+
+<span class="attr">#[async_std::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="comment">// Start a background HTTP server on a random local port
+    </span><span class="kw">let </span>mock_server = MockServer::start().<span class="kw">await</span>;
+
+    <span class="comment">// Arrange the behaviour of the MockServer adding a Mock:
+    // when it receives a GET request on &#39;/hello&#39; it will respond with a 200.
+    </span>Mock::given(method(<span class="string">&quot;GET&quot;</span>))
+        .and(path(<span class="string">&quot;/hello&quot;</span>))
+        .respond_with(ResponseTemplate::new(<span class="number">200</span>))
+        <span class="comment">// Mounting the mock on the mock server - it&#39;s now effective!
+        </span>.mount(<span class="kw-2">&amp;</span>mock_server)
+        .<span class="kw">await</span>;
+     
+    <span class="comment">// If we probe the MockServer using any HTTP client it behaves as expected.
+    </span><span class="kw">let </span>status = surf::get(<span class="macro">format!</span>(<span class="string">&quot;{}/hello&quot;</span>, <span class="kw-2">&amp;</span>mock_server.uri()))
+        .<span class="kw">await
+        </span>.unwrap()
+        .status();
+    <span class="macro">assert_eq!</span>(status, <span class="number">200</span>);
+
+    <span class="comment">// If the request doesn&#39;t match any `Mock` mounted on our `MockServer` a 404 is returned.
+    </span><span class="kw">let </span>status = surf::get(<span class="macro">format!</span>(<span class="string">&quot;{}/missing&quot;</span>, <span class="kw-2">&amp;</span>mock_server.uri()))
+        .<span class="kw">await
+        </span>.unwrap()
+        .status();
+    <span class="macro">assert_eq!</span>(status, <span class="number">404</span>);
+}</code></pre></div>
+<h3 id="matchers"><a href="#matchers">Matchers</a></h3>
+<p><code>wiremock</code> provides a set of matching strategies out of the box - check the <a href="matchers/index.html" title="mod wiremock::matchers"><code>matchers</code></a> module
+for a complete list.</p>
+<p>You can define your own matchers using the <a href="trait.Match.html" title="trait wiremock::Match"><code>Match</code></a> trait, as well as using <code>Fn</code> closures.<br />
+Check <a href="trait.Match.html" title="trait wiremock::Match"><code>Match</code></a>’s documentation for more details and examples.</p>
+<h3 id="spying"><a href="#spying">Spying</a></h3>
+<p><code>wiremock</code> empowers you to set expectations on the number of invocations to your <a href="struct.Mock.html" title="struct wiremock::Mock"><code>Mock</code></a>s -
+check the <a href="struct.Mock.html#method.expect" title="method wiremock::Mock::expect"><code>expect</code></a> method for more details.</p>
+<p>Expectations can be used to verify that a side-effect has (or has not) taken place!</p>
+<p>Expectations are automatically verified during the shutdown of each <a href="struct.MockServer.html" title="struct wiremock::MockServer"><code>MockServer</code></a> instance,
+at the end of your test. A failed verification will trigger a panic.<br />
+By default, no expectations are set on your <a href="struct.Mock.html" title="struct wiremock::Mock"><code>Mock</code></a>s.</p>
+<h3 id="responses"><a href="#responses">Responses</a></h3>
+<p><code>wiremock</code> lets you specify pre-determined responses using <a href="struct.ResponseTemplate.html" title="struct wiremock::ResponseTemplate"><code>ResponseTemplate</code></a> and
+<a href="struct.MockBuilder.html#method.respond_with" title="method wiremock::MockBuilder::respond_with"><code>respond_with</code></a>.</p>
+<p>You also given the option to have <a href="struct.Mock.html" title="struct wiremock::Mock"><code>Mock</code></a>s that return different responses based on the matched
+<a href="struct.Request.html" title="struct wiremock::Request"><code>Request</code></a> using the <a href="trait.Respond.html" title="trait wiremock::Respond"><code>Respond</code></a> trait.<br />
+Check <a href="trait.Respond.html" title="trait wiremock::Respond"><code>Respond</code></a>’s documentation for more details and examples.</p>
+<h3 id="test-isolation"><a href="#test-isolation">Test isolation</a></h3>
+<p>Each instance of <a href="struct.MockServer.html" title="struct wiremock::MockServer"><code>MockServer</code></a> is fully isolated: <a href="struct.MockServer.html#method.start" title="associated function wiremock::MockServer::start"><code>start</code></a> takes care of finding a random port
+available on your local machine which is assigned to the new <a href="struct.MockServer.html" title="struct wiremock::MockServer"><code>MockServer</code></a>.</p>
+<p>To ensure full isolation and no cross-test interference, <a href="struct.MockServer.html" title="struct wiremock::MockServer"><code>MockServer</code></a>s shouldn’t be
+shared between tests. Instead, <a href="struct.MockServer.html" title="struct wiremock::MockServer"><code>MockServer</code></a>s should be created in the test where they are used.</p>
+<p>When a <a href="struct.MockServer.html" title="struct wiremock::MockServer"><code>MockServer</code></a> instance goes out of scope (e.g. the test finishes), the corresponding
+HTTP server running in the background is shut down to free up the port it was using.</p>
+<h3 id="runtime-compatibility"><a href="#runtime-compatibility">Runtime compatibility</a></h3>
+<p><code>wiremock</code> can be used (and it is tested to work) with both <a href="https://docs.rs/async-std/"><code>async_std</code></a> and <a href="https://docs.rs/tokio/"><code>tokio</code></a> as
+futures runtimes.<br />
+If you encounter any compatibility bug, please open an issue on our <a href="https://github.com/LukeMathWalker/wiremock-rs">GitHub repository</a>.</p>
+<h3 id="efficiency"><a href="#efficiency">Efficiency</a></h3>
+<p><code>wiremock</code> maintains a pool of mock servers in the background to minimise the number of
+connections and the time spent starting up a new <a href="struct.MockServer.html" title="struct wiremock::MockServer"><code>MockServer</code></a>.<br />
+Pooling reduces the likelihood of you having to tune your OS configurations (e.g. ulimit).</p>
+<p>The pool is designed to be invisible: it makes your life easier and your tests faster. If you
+end up having to worry about it, it’s a bug: open an issue!</p>
+<h3 id="prior-art"><a href="#prior-art">Prior art</a></h3>
+<p><a href="https://docs.rs/mockito/"><code>mockito</code></a> and <a href="https://docs.rs/httpmock/"><code>httpmock</code></a> provide HTTP mocking for Rust.</p>
+<p>Check the table below to see how <code>wiremock</code> compares to them across the following dimensions:</p>
+<ul>
+<li>Test execution strategy (do tests have to be executed sequentially or can they be executed in parallel?);</li>
+<li>How many APIs can I mock in a test?</li>
+<li>Out-of-the-box request matchers;</li>
+<li>Extensible request matching (i.e. you can define your own matchers);</li>
+<li>Sync/Async API;</li>
+<li>Spying (e.g. verify that a mock has/hasn’t been called in a test);</li>
+<li>Standalone mode (i.e. can I launch an HTTP mock server outside of a test suite?).</li>
+</ul>
+<div><table><thead><tr><th></th><th>Test execution strategy</th><th>How many APIs can I mock?</th><th>Out-of-the-box request matchers</th><th>Extensible request matching</th><th>API</th><th>Spying</th><th>Standalone mode</th></tr></thead><tbody>
+<tr><td>mockito</td><td>❌ Sequential</td><td>❌ 1</td><td>✔</td><td>❌</td><td>Sync</td><td>✔</td><td>❌</td></tr>
+<tr><td>httpmock</td><td>✔ Parallel</td><td>✔ Unbounded</td><td>✔</td><td>✔</td><td>Async/Sync</td><td>✔</td><td>✔</td></tr>
+<tr><td>wiremock</td><td>✔ Parallel ️</td><td>✔ Unbounded</td><td>✔</td><td>✔</td><td>Async</td><td>✔</td><td>❌</td></tr>
+</tbody></table>
+</div><h3 id="future-evolution"><a href="#future-evolution">Future evolution</a></h3>
+<p>More request matchers can be added to those provided out-of-the-box to handle common usecases.</p>
+<h3 id="related-projects"><a href="#related-projects">Related projects</a></h3>
+<ul>
+<li><a href="https://github.com/beltram/stubr"><code>stubr</code></a> for mounting <a href="http://wiremock.org/"><code>Wiremock</code></a> json stubs in a <a href="struct.MockServer.html" title="struct wiremock::MockServer"><code>MockServer</code></a>. Also works as a cli.</li>
+</ul>
+</div></details><h2 id="modules" class="small-section-header"><a href="#modules">Modules</a></h2><ul class="item-table"><li><div class="item-name"><a class="mod" href="http/index.html" title="mod wiremock::http">http</a></div><div class="desc docblock-short">Convenient re-exports of <code>http-types</code>’ types that are part of <code>wiremock</code>’s public API.</div></li><li><div class="item-name"><a class="mod" href="matchers/index.html" title="mod wiremock::matchers">matchers</a></div><div class="desc docblock-short">A collection of different matching strategies provided out-of-the-box by <code>wiremock</code>.</div></li></ul><h2 id="structs" class="small-section-header"><a href="#structs">Structs</a></h2><ul class="item-table"><li><div class="item-name"><a class="struct" href="struct.Mock.html" title="struct wiremock::Mock">Mock</a></div><div class="desc docblock-short">Given a set of matchers, a <code>Mock</code> instructs an instance of <a href="struct.MockServer.html" title="struct wiremock::MockServer"><code>MockServer</code></a> to return a pre-determined response if the matching conditions are satisfied.</div></li><li><div class="item-name"><a class="struct" href="struct.MockBuilder.html" title="struct wiremock::MockBuilder">MockBuilder</a></div><div class="desc docblock-short">A fluent builder to construct a <a href="struct.Mock.html" title="struct wiremock::Mock"><code>Mock</code></a> instance given matchers and a <a href="struct.ResponseTemplate.html" title="struct wiremock::ResponseTemplate"><code>ResponseTemplate</code></a>.</div></li><li><div class="item-name"><a class="struct" href="struct.MockGuard.html" title="struct wiremock::MockGuard">MockGuard</a></div><div class="desc docblock-short">You get a <code>MockGuard</code> when registering a <strong>scoped</strong> <a href="struct.Mock.html" title="struct wiremock::Mock"><code>Mock</code></a> using <a href="struct.MockServer.html#method.register_as_scoped" title="method wiremock::MockServer::register_as_scoped"><code>MockServer::register_as_scoped</code></a>
+or <a href="struct.Mock.html#method.mount_as_scoped" title="method wiremock::Mock::mount_as_scoped"><code>Mock::mount_as_scoped</code></a>.</div></li><li><div class="item-name"><a class="struct" href="struct.MockServer.html" title="struct wiremock::MockServer">MockServer</a></div><div class="desc docblock-short">An HTTP web-server running in the background to behave as one of your dependencies using <a href="struct.Mock.html" title="struct wiremock::Mock"><code>Mock</code></a>s
+for testing purposes.</div></li><li><div class="item-name"><a class="struct" href="struct.MockServerBuilder.html" title="struct wiremock::MockServerBuilder">MockServerBuilder</a></div><div class="desc docblock-short">A builder providing a fluent API to assemble a <a href="struct.MockServer.html" title="struct wiremock::MockServer"><code>MockServer</code></a> step-by-step.<br />
+Use <a href="struct.MockServer.html#method.builder" title="associated function wiremock::MockServer::builder"><code>MockServer::builder</code></a> to get started.</div></li><li><div class="item-name"><a class="struct" href="struct.Request.html" title="struct wiremock::Request">Request</a></div><div class="desc docblock-short">An incoming request to an instance of <a href="struct.MockServer.html" title="struct wiremock::MockServer"><code>MockServer</code></a>.</div></li><li><div class="item-name"><a class="struct" href="struct.ResponseTemplate.html" title="struct wiremock::ResponseTemplate">ResponseTemplate</a></div><div class="desc docblock-short">The blueprint for the response returned by a <a href="struct.MockServer.html" title="struct wiremock::MockServer"><code>MockServer</code></a> when a <a href="struct.Mock.html" title="struct wiremock::Mock"><code>Mock</code></a> matches on an incoming request.</div></li><li><div class="item-name"><a class="struct" href="struct.Times.html" title="struct wiremock::Times">Times</a></div><div class="desc docblock-short">Specify how many times we expect a <a href="struct.Mock.html" title="struct wiremock::Mock"><code>Mock</code></a> to match via <a href="struct.Mock.html#method.expect" title="method wiremock::Mock::expect"><code>expect</code></a>.
+It is used to set expectations on the usage of a <a href="struct.Mock.html" title="struct wiremock::Mock"><code>Mock</code></a> in a test case.</div></li></ul><h2 id="traits" class="small-section-header"><a href="#traits">Traits</a></h2><ul class="item-table"><li><div class="item-name"><a class="trait" href="trait.Match.html" title="trait wiremock::Match">Match</a></div><div class="desc docblock-short">Anything that implements <code>Match</code> can be used to constrain when a <a href="struct.Mock.html" title="struct wiremock::Mock"><code>Mock</code></a> is activated.</div></li><li><div class="item-name"><a class="trait" href="trait.Respond.html" title="trait wiremock::Respond">Respond</a></div><div class="desc docblock-short">Anything that implements <code>Respond</code> can be used to reply to an incoming request when a
+<a href="struct.Mock.html" title="struct wiremock::Mock"><code>Mock</code></a> is activated.</div></li></ul></section></div></main></body></html>

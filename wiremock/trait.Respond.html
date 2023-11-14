@@ -1,0 +1,115 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Anything that implements `Respond` can be used to reply to an incoming request when a `Mock` is activated."><title>Respond in wiremock - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="wiremock" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0 (cc66ad468 2023-10-03)" data-channel="1.73.0" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-1596385f77d47ef2.css" data-theme-dark-css="dark-0a43001d3fc2282c.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../static.files/light-1596385f77d47ef2.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../static.files/dark-0a43001d3fc2282c.css"><link rel="stylesheet" href="../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc trait"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../wiremock/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../wiremock/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2 class="location"><a href="#">Respond</a></h2><div class="sidebar-elems"><section><h3><a href="#required-methods">Required Methods</a></h3><ul class="block"><li><a href="#tymethod.respond">respond</a></li></ul><h3><a href="#implementors">Implementors</a></h3></section><h2><a href="index.html">In wiremock</a></h2></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Trait <a href="index.html">wiremock</a>::<wbr><a class="trait" href="#">Respond</a><button id="copy-path" title="Copy item path to clipboard"><img src="../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="src" href="../src/wiremock/respond.rs.html#124-132">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><pre class="rust item-decl"><code>pub trait Respond: <a class="trait" href="https://doc.rust-lang.org/1.73.0/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/1.73.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> {
+    // Required method
+    fn <a href="#tymethod.respond" class="fn">respond</a>(&amp;self, request: &amp;<a class="struct" href="struct.Request.html" title="struct wiremock::Request">Request</a>) -&gt; <a class="struct" href="struct.ResponseTemplate.html" title="struct wiremock::ResponseTemplate">ResponseTemplate</a>;
+}</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Anything that implements <code>Respond</code> can be used to reply to an incoming request when a
+<a href="struct.Mock.html" title="struct wiremock::Mock"><code>Mock</code></a> is activated.</p>
+<h3 id="fixed-responses"><a href="#fixed-responses">Fixed responses</a></h3>
+<p>The simplest <code>Respond</code> is <a href="struct.ResponseTemplate.html" title="struct wiremock::ResponseTemplate"><code>ResponseTemplate</code></a>: no matter the request, it will
+always return itself.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>wiremock::{MockServer, Mock, ResponseTemplate};
+<span class="kw">use </span>wiremock::matchers::method;
+
+<span class="attr">#[async_std::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="comment">// Arrange
+    </span><span class="kw">let </span>mock_server = MockServer::start().<span class="kw">await</span>;
+    <span class="kw">let </span>correlation_id = <span class="string">&quot;1311db4f-fe65-4cb2-b514-1bb47f781aa7&quot;</span>;
+    <span class="kw">let </span>template = ResponseTemplate::new(<span class="number">200</span>).insert_header(
+        <span class="string">&quot;X-Correlation-ID&quot;</span>,
+        correlation_id
+    );
+    Mock::given(method(<span class="string">&quot;GET&quot;</span>))
+        .respond_with(template)
+        .mount(<span class="kw-2">&amp;</span>mock_server)
+        .<span class="kw">await</span>;
+
+    <span class="comment">// Act
+    </span><span class="kw">let </span>response = surf::get(<span class="kw-2">&amp;</span>mock_server.uri())
+        .<span class="kw">await
+        </span>.unwrap();
+
+    <span class="comment">// Assert
+    </span><span class="macro">assert_eq!</span>(response.status(), <span class="number">200</span>);
+    <span class="macro">assert_eq!</span>(response.header(<span class="string">&quot;X-Correlation-ID&quot;</span>).unwrap().as_str(), correlation_id);
+}</code></pre></div>
+<h3 id="dynamic-responses"><a href="#dynamic-responses">Dynamic responses</a></h3>
+<p>You can use <code>Respond</code>, though, to implement responses that depend on the data in
+the request matched by a <a href="struct.Mock.html" title="struct wiremock::Mock"><code>Mock</code></a>.</p>
+<p>Functions from <code>Request</code> to <code>ResponseTemplate</code> implement <code>Respond</code>, so for simple cases you
+can use a closure to build a response dynamically, for instance to echo the request body back:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>wiremock::{Match, MockServer, Mock, Request, ResponseTemplate};
+<span class="kw">use </span>wiremock::matchers::path;
+
+<span class="attr">#[async_std::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="kw">let </span>mock_server = MockServer::start().<span class="kw">await</span>;
+    <span class="kw">let </span>body = <span class="string">&quot;Mock Server!&quot;</span>.to_string();
+
+    Mock::given(path(<span class="string">&quot;/echo&quot;</span>))
+        .respond_with(|req: <span class="kw-2">&amp;</span>Request| {
+            <span class="kw">let </span>body_string = String::from_utf8(req.body.clone()).unwrap();
+            ResponseTemplate::new(<span class="number">200</span>).set_body_string(body_string)
+        })
+        .mount(<span class="kw-2">&amp;</span>mock_server)
+        .<span class="kw">await</span>;
+
+    <span class="kw">let </span><span class="kw-2">mut </span>response = surf::post(<span class="macro">format!</span>(<span class="string">&quot;{}/echo&quot;</span>, <span class="kw-2">&amp;</span>mock_server.uri()))
+        .body(body.clone())
+        .<span class="kw">await
+        </span>.unwrap();
+    <span class="macro">assert_eq!</span>(response.status(), <span class="number">200</span>);
+    <span class="macro">assert_eq!</span>(response.body_string().<span class="kw">await</span>.unwrap(), body);
+}</code></pre></div>
+<p>For more complex cases you may want to implement <code>Respond</code> yourself. As an example, this is a
+<code>Respond</code> that propagates back a request header in the response:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>http_types::headers::HeaderName;
+<span class="kw">use </span>wiremock::{Match, MockServer, Mock, Request, ResponseTemplate, Respond};
+<span class="kw">use </span>wiremock::matchers::path;
+<span class="kw">use </span>std::convert::TryInto;
+<span class="kw">use </span>std::str::FromStr;
+
+<span class="doccomment">/// Responds using the specified `ResponseTemplate`, but it dynamically populates the
+/// `X-Correlation-Id` header from the request data.
+</span><span class="kw">pub struct </span>CorrelationIdResponder(<span class="kw">pub </span>ResponseTemplate);
+
+<span class="kw">impl </span>Respond <span class="kw">for </span>CorrelationIdResponder {
+    <span class="kw">fn </span>respond(<span class="kw-2">&amp;</span><span class="self">self</span>, request: <span class="kw-2">&amp;</span>Request) -&gt; ResponseTemplate {
+        <span class="kw">let </span><span class="kw-2">mut </span>response_template = <span class="self">self</span>.<span class="number">0</span>.clone();
+        <span class="kw">let </span>header_name = HeaderName::from_str(<span class="string">&quot;X-Correlation-Id&quot;</span>).unwrap();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(correlation_id) = request.headers.get(<span class="kw-2">&amp;</span>header_name) {
+            response_template = response_template.insert_header(
+                header_name,
+                correlation_id.last().to_owned()
+            );
+        }
+        response_template
+    }
+}
+
+<span class="attr">#[async_std::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="comment">// Arrange
+    </span><span class="kw">let </span>mock_server = MockServer::start().<span class="kw">await</span>;
+    <span class="kw">let </span>correlation_id = <span class="string">&quot;1241-1245-1548-4567&quot;</span>;
+
+    Mock::given(path(<span class="string">&quot;/hello&quot;</span>))
+        .respond_with(CorrelationIdResponder(ResponseTemplate::new(<span class="number">200</span>)))
+        .mount(<span class="kw-2">&amp;</span>mock_server)
+        .<span class="kw">await</span>;
+     
+    <span class="kw">let </span>response = surf::get(<span class="macro">format!</span>(<span class="string">&quot;{}/hello&quot;</span>, <span class="kw-2">&amp;</span>mock_server.uri()))
+        .header(<span class="string">&quot;X-Correlation-Id&quot;</span>, correlation_id)
+        .<span class="kw">await
+        </span>.unwrap();
+    <span class="macro">assert_eq!</span>(response.status(), <span class="number">200</span>);
+    <span class="macro">assert_eq!</span>(response.header(<span class="string">&quot;X-Correlation-Id&quot;</span>).unwrap().as_str(), correlation_id);
+}</code></pre></div>
+</div></details><h2 id="required-methods" class="small-section-header">Required Methods<a href="#required-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="tymethod.respond" class="method"><a class="src rightside" href="../src/wiremock/respond.rs.html#131">source</a><h4 class="code-header">fn <a href="#tymethod.respond" class="fn">respond</a>(&amp;self, request: &amp;<a class="struct" href="struct.Request.html" title="struct wiremock::Request">Request</a>) -&gt; <a class="struct" href="struct.ResponseTemplate.html" title="struct wiremock::ResponseTemplate">ResponseTemplate</a></h4></section></summary><div class="docblock"><p>Given a reference to a <a href="struct.Request.html" title="struct wiremock::Request"><code>Request</code></a> return a <a href="struct.ResponseTemplate.html" title="struct wiremock::ResponseTemplate"><code>ResponseTemplate</code></a> that will be used
+by the <a href="struct.MockServer.html" title="struct wiremock::MockServer"><code>MockServer</code></a> as blueprint for the response returned to the client.</p>
+</div></details></div><h2 id="implementors" class="small-section-header">Implementors<a href="#implementors" class="anchor">§</a></h2><div id="implementors-list"><section id="impl-Respond-for-ResponseTemplate" class="impl"><a class="src rightside" href="../src/wiremock/respond.rs.html#136-140">source</a><a href="#impl-Respond-for-ResponseTemplate" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="trait.Respond.html" title="trait wiremock::Respond">Respond</a> for <a class="struct" href="struct.ResponseTemplate.html" title="struct wiremock::ResponseTemplate">ResponseTemplate</a></h3></section><div class="docblock"><p>A <code>ResponseTemplate</code> is the simplest <code>Respond</code> implementation: it returns a clone of itself
+no matter what the incoming request contains!</p>
+</div><section id="impl-Respond-for-F" class="impl"><a class="src rightside" href="../src/wiremock/respond.rs.html#142-149">source</a><a href="#impl-Respond-for-F" class="anchor">§</a><h3 class="code-header">impl&lt;F&gt; <a class="trait" href="trait.Respond.html" title="trait wiremock::Respond">Respond</a> for F<span class="where fmt-newline">where
+    F: <a class="trait" href="https://doc.rust-lang.org/1.73.0/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/1.73.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> + <a class="trait" href="https://doc.rust-lang.org/1.73.0/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(&amp;<a class="struct" href="struct.Request.html" title="struct wiremock::Request">Request</a>) -&gt; <a class="struct" href="struct.ResponseTemplate.html" title="struct wiremock::ResponseTemplate">ResponseTemplate</a>,</span></h3></section></div><script src="../implementors/wiremock/respond/trait.Respond.js" async></script></section></div></main></body></html>

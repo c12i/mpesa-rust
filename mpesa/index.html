@@ -1,0 +1,356 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="mpesa-rust"><title>mpesa - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="mpesa" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0 (cc66ad468 2023-10-03)" data-channel="1.73.0" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-1596385f77d47ef2.css" data-theme-dark-css="dark-0a43001d3fc2282c.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../static.files/light-1596385f77d47ef2.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../static.files/dark-0a43001d3fc2282c.css"><link rel="stylesheet" href="../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../mpesa/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../mpesa/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2 class="location"><a href="#">Crate mpesa</a></h2><div class="sidebar-elems"><ul class="block"><li class="version">Version 1.1.0</li><li><a id="all-types" href="all.html">All Items</a></li></ul><section><ul class="block"><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#types">Type Definitions</a></li></ul></section></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Crate <a class="mod" href="#">mpesa</a><button id="copy-path" title="Copy item path to clipboard"><img src="../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="src" href="../src/mpesa/lib.rs.html#1-17">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="mpesa-rust"><a href="#mpesa-rust">mpesa-rust</a></h2>
+<p><a href="https://github.com/collinsmuriuki/mpesa-rust/actions/workflows/general.yml"><img src="https://github.com/collinsmuriuki/mpesa-rust/actions/workflows/general.yml/badge.svg" alt="Rust" /></a>
+<a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="" /></a>
+<a href="https://crates.io/crates/mpesa"><img src="https://img.shields.io/crates/v/mpesa" alt="" /></a></p>
+<h3 id="about"><a href="#about">About</a></h3>
+<p>An unofficial Rust wrapper around the <a href="https://developer.safaricom.co.ke/docs?shell#introduction">Safaricom API</a> for accessing M-Pesa services.</p>
+<h3 id="install"><a href="#install">Install</a></h3>
+<p><code>Cargo.toml</code></p>
+<div class="example-wrap"><pre class="language-toml"><code>[dependencies]
+mpesa = { version = &quot;1.1.0&quot; }
+</code></pre></div>
+<p>Optionally, you can disable default-features, which is basically the entire suite of MPESA APIs to conditionally select from either:</p>
+<ul>
+<li><code>b2b</code></li>
+<li><code>b2c</code></li>
+<li><code>account_balance</code></li>
+<li><code>c2b_register</code></li>
+<li><code>c2b_simulate</code></li>
+<li><code>express_request</code></li>
+<li><code>transaction_reversal</code></li>
+<li><code>transaction_status</code></li>
+<li><code>bill_manager</code></li>
+<li><code>dynamic_qr</code></li>
+</ul>
+<p>Example:</p>
+<div class="example-wrap"><pre class="language-toml"><code>[dependencies]
+mpesa = { git = &quot;1.1.0&quot;, default_features = false, features = [&quot;b2b&quot;, &quot;express_request&quot;] }
+</code></pre></div>
+<p>In your lib or binary crate:</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">use </span>mpesa::Mpesa;</code></pre></div>
+<h3 id="usage"><a href="#usage">Usage</a></h3><h4 id="creating-a-mpesa-client"><a href="#creating-a-mpesa-client">Creating a <code>Mpesa</code> client</a></h4>
+<p>You will first need to create an instance of the <code>Mpesa</code> instance (the client). You are required to provide a <strong>CLIENT_KEY</strong> and
+<strong>CLIENT_SECRET</strong>. <a href="https://developer.safaricom.co.ke/test_credentials">Here</a> is how you can get these credentials for the Safaricom sandbox
+environment. It’s worth noting that these credentials are only valid in the sandbox environment. To go live and get production keys
+read the docs <a href="https://developer.safaricom.co.ke/docs?javascript#going-live">here</a>.</p>
+<p>These are the following ways you can instantiate <code>Mpesa</code>:</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">use </span>mpesa::{Mpesa, Environment};
+
+<span class="kw">let </span>client = Mpesa::new(
+      <span class="macro">env!</span>(<span class="string">&quot;CLIENT_KEY&quot;</span>),
+      <span class="macro">env!</span>(<span class="string">&quot;CLIENT_SECRET&quot;</span>),
+      Environment::Sandbox,
+);
+
+<span class="macro">assert!</span>(client.is_connected().<span class="kw">await</span>)</code></pre></div>
+<p>Since the <code>Environment</code> enum implements <code>FromStr</code> and <code>TryFrom</code> for <code>String</code> and <code>&amp;str</code> types, you can call <code>Environment::from_str</code> or <code>Environment::try_from</code> to create an <code>Environment</code> type. This is ideal if the environment values are
+stored in a <code>.env</code> or any other configuration file:</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">use </span>mpesa::{Mpesa, Environment};
+<span class="kw">use </span>std::str::FromStr;
+<span class="kw">use </span>std::convert::TryFrom;
+
+<span class="kw">let </span>client0 = Mpesa::new(
+      <span class="macro">env!</span>(<span class="string">&quot;CLIENT_KEY&quot;</span>),
+      <span class="macro">env!</span>(<span class="string">&quot;CLIENT_SECRET&quot;</span>),
+      Environment::from_str(<span class="string">&quot;sandbox&quot;</span>)<span class="question-mark">? </span><span class="comment">// &quot;Sandbox&quot; and &quot;SANDBOX&quot; also valid
+</span>);
+<span class="macro">assert!</span>(client0.is_connected().<span class="kw">await</span>)
+
+<span class="kw">let </span>client1 = Mpesa::new(
+      <span class="macro">env!</span>(<span class="string">&quot;CLIENT_KEY&quot;</span>),
+      <span class="macro">env!</span>(<span class="string">&quot;CLIENT_SECRET&quot;</span>),
+      Environment::try_from(<span class="string">&quot;production&quot;</span>)<span class="question-mark">? </span><span class="comment">// &quot;Production&quot; and &quot;PRODUCTION&quot; also valid
+</span>);
+<span class="macro">assert!</span>(client1.is_connected().<span class="kw">await</span>)</code></pre></div>
+<p>The <code>Mpesa</code> struct’s <code>environment</code> parameter is generic over any type that implements the <code>ApiEnvironment</code> trait. This trait
+expects the following methods to be implemented for a given type:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">pub trait </span>ApiEnvironment {
+    <span class="kw">fn </span>base_url(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str;
+    <span class="kw">fn </span>get_certificate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str;
+}</code></pre></div>
+<p>This trait allows you to create your own type to pass to the <code>environment</code> parameter. With this in place, you are able to mock http requests (for testing purposes) from the MPESA api by returning a mock server uri from the <code>base_url</code> method as well as using your own certificates, required to sign select requests to the MPESA api, by providing your own <code>get_certificate</code> implementation.</p>
+<p>See the example below (and <a href="./src/environment.rs">here</a> so see how the trait is implemented for the <code>Environment</code> enum):</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">use </span>mpesa::{Mpesa, ApiEnvironment};
+<span class="kw">use </span>std::str::FromStr;
+<span class="kw">use </span>std::convert::TryFrom;
+
+<span class="kw">pub struct </span>MyCustomEnvironment;
+
+<span class="kw">impl </span>ApiEnvironment <span class="kw">for </span>MyCustomEnvironment {
+    <span class="kw">fn </span>base_url(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="comment">// your base url here
+        </span><span class="string">&quot;https://your_base_url.com&quot;
+    </span>}
+
+    <span class="kw">fn </span>get_certificate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="comment">// your certificate here
+        </span><span class="string">r#&quot;...&quot;#
+    </span>}
+}
+
+<span class="kw">let </span>client: Mpesa&lt;MyCustomEnvironment&gt; = Mpesa::new(
+    <span class="macro">env!</span>(<span class="string">&quot;CLIENT_KEY&quot;</span>),
+    <span class="macro">env!</span>(<span class="string">&quot;CLIENT_SECRET&quot;</span>),
+    MyCustomEnvironment <span class="comment">// ✔ valid
+</span>);
+
+<span class="comment">//...</span></code></pre></div>
+<p>If you intend to use in production, you will need to call a the <code>set_initiator_password</code> method from <code>Mpesa</code> after initially
+creating the client. Here you provide your initiator password, which overrides the default password used in sandbox <code>&quot;Safcom496!&quot;</code>:</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">use </span>mpesa::Mpesa;
+
+<span class="kw">let </span>client = Mpesa::new(
+      <span class="macro">env!</span>(<span class="string">&quot;CLIENT_KEY&quot;</span>),
+      <span class="macro">env!</span>(<span class="string">&quot;CLIENT_SECRET&quot;</span>),
+      Environment::Sandbox,
+);
+
+client.set_initiator_password(<span class="string">&quot;new_password&quot;</span>);
+
+<span class="macro">assert!</span>(client.is_connected().<span class="kw">await</span>)</code></pre></div>
+<h4 id="services"><a href="#services">Services</a></h4>
+<p>The following services are currently available from the <code>Mpesa</code> client as methods that return builders:</p>
+<ul>
+<li>B2C</li>
+</ul>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">let </span>response = client
+    .b2c(<span class="string">&quot;testapi496&quot;</span>)
+    .party_a(<span class="string">&quot;600496&quot;</span>)
+    .party_b(<span class="string">&quot;254708374149&quot;</span>)
+    .result_url(<span class="string">&quot;https://testdomain.com/ok&quot;</span>)
+    .timeout_url(<span class="string">&quot;https://testdomain.com/err&quot;</span>)
+    .amount(<span class="number">1000</span>)
+    .send()
+    .<span class="kw">await</span>;
+<span class="macro">assert!</span>(response.is_ok())</code></pre></div>
+<ul>
+<li>B2B</li>
+</ul>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">let </span>response = client
+    .b2b(<span class="string">&quot;testapi496&quot;</span>)
+    .party_a(<span class="string">&quot;600496&quot;</span>)
+    .party_b(<span class="string">&quot;254708374149&quot;</span>)
+    .result_url(<span class="string">&quot;https://testdomain.com/ok&quot;</span>)
+    .timeout_url(<span class="string">&quot;https://testdomain.com/err&quot;</span>)
+    .account_ref(<span class="string">&quot;254708374149&quot;</span>)
+    .amount(<span class="number">1000</span>)
+    .send()
+    .<span class="kw">await</span>;
+<span class="macro">assert!</span>(response.is_ok())</code></pre></div>
+<ul>
+<li>C2B Register</li>
+</ul>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">let </span>response = client
+    .c2b_register()
+    .short_code(<span class="string">&quot;600496&quot;</span>)
+    .confirmation_url(<span class="string">&quot;https://testdomain.com/true&quot;</span>)
+    .validation_url(<span class="string">&quot;https://testdomain.com/valid&quot;</span>)
+    .send()
+    .<span class="kw">await</span>;
+<span class="macro">assert!</span>(response.is_ok())</code></pre></div>
+<ul>
+<li>C2B Simulate</li>
+</ul>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">let </span>response = client
+    .c2b_simulate()
+    .short_code(<span class="string">&quot;600496&quot;</span>)
+    .msisdn(<span class="string">&quot;254700000000&quot;</span>)
+    .amount(<span class="number">1000</span>)
+    .send()
+    .<span class="kw">await</span>;
+<span class="macro">assert!</span>(response.is_ok())</code></pre></div>
+<ul>
+<li>Account Balance</li>
+</ul>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">let </span>response = client
+    .account_balance(<span class="string">&quot;testapi496&quot;</span>)
+    .result_url(<span class="string">&quot;https://testdomain.com/ok&quot;</span>)
+    .timeout_url(<span class="string">&quot;https://testdomain.com/err&quot;</span>)
+    .party_a(<span class="string">&quot;600496&quot;</span>)
+    .send()
+    .<span class="kw">await</span>;
+<span class="macro">assert!</span>(response.is_ok())</code></pre></div>
+<ul>
+<li>Mpesa Express Request / STK push / Lipa na M-PESA online</li>
+</ul>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">let </span>response = client
+    .express_request(<span class="string">&quot;174379&quot;</span>)
+    .phone_number(<span class="string">&quot;254708374149&quot;</span>)
+    .amount(<span class="number">500</span>)
+    .callback_url(<span class="string">&quot;https://test.example.com/api&quot;</span>)
+    .send()
+    .<span class="kw">await</span>;
+<span class="macro">assert!</span>(response.is_ok())</code></pre></div>
+<ul>
+<li>Transaction Reversal:</li>
+</ul>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">let </span>response = client
+    .transaction_reversal(<span class="string">&quot;testapi496&quot;</span>)
+    .result_url(<span class="string">&quot;https://testdomain.com/ok&quot;</span>)
+    .timeout_url(<span class="string">&quot;https://testdomain.com/err&quot;</span>)
+    .transaction_id(<span class="string">&quot;OEI2AK4Q16&quot;</span>)
+    .receiver_identifier_type(IdentifierTypes::ShortCode)
+    .amount(<span class="number">100.0</span>)
+    .receiver_party(<span class="string">&quot;600111&quot;</span>)
+    .send()
+    .<span class="kw">await</span>;
+<span class="macro">assert!</span>(response.is_ok())</code></pre></div>
+<ul>
+<li>Transaction Status</li>
+</ul>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">let </span>response = client
+    .transaction_status(<span class="string">&quot;testapi496&quot;</span>)
+    .result_url(<span class="string">&quot;https://testdomain.com/ok&quot;</span>)
+    .timeout_url(<span class="string">&quot;https://testdomain.com/err&quot;</span>)
+    .transaction_id(<span class="string">&quot;OEI2AK4Q16&quot;</span>)
+    .identifier_type(IdentifierTypes::ShortCode)
+    .party_a(<span class="string">&quot;600111&quot;</span>)
+    .remarks(<span class="string">&quot;status&quot;</span>)
+    .occasion(<span class="string">&quot;work&quot;</span>)
+    .send()
+    .<span class="kw">await</span>;
+<span class="macro">assert!</span>(response.is_ok())</code></pre></div>
+<ul>
+<li>Bill Manager Onboard</li>
+</ul>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">let </span>response = client
+    .onboard()
+    .callback_url(<span class="string">&quot;https://testdomain.com/true&quot;</span>)
+    .email(<span class="string">&quot;email@test.com&quot;</span>)
+    .logo(<span class="string">&quot;https://file.domain/file.png&quot;</span>)
+    .official_contact(<span class="string">&quot;0712345678&quot;</span>)
+    .send_reminders(SendRemindersTypes::Enable)
+    .short_code(<span class="string">&quot;600496&quot;</span>)
+    .send()
+    .<span class="kw">await</span>;
+<span class="macro">assert!</span>(response.is_ok())</code></pre></div>
+<ul>
+<li>Bill Manager Onboard Modify</li>
+</ul>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">let </span>response = client
+    .onboard_modify()
+    .callback_url(<span class="string">&quot;https://testdomain.com/true&quot;</span>)
+    .email(<span class="string">&quot;email@test.com&quot;</span>)
+    .short_code(<span class="string">&quot;600496&quot;</span>)
+    .send()
+    .<span class="kw">await</span>;
+<span class="macro">assert!</span>(response.is_ok())</code></pre></div>
+<ul>
+<li>Bill Manager Bulk Invoice</li>
+</ul>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">let </span>response = client
+    .bulk_invoice()
+    .invoices(<span class="macro">vec!</span>[
+        Invoice {
+            amount: <span class="number">1000.0</span>,
+            account_reference: <span class="string">&quot;John Doe&quot;</span>,
+            billed_full_name: <span class="string">&quot;John Doe&quot;</span>,
+            billed_period: <span class="string">&quot;August 2021&quot;</span>,
+            billed_phone_number: <span class="string">&quot;0712345678&quot;</span>,
+            due_date: Utc::now(),
+            external_reference: <span class="string">&quot;INV2345&quot;</span>,
+            invoice_items: <span class="prelude-val">Some</span>(
+                <span class="macro">vec!</span>[InvoiceItem {amount: <span class="number">1000.0</span>, item_name: <span class="string">&quot;An item&quot;</span>}]
+            ),
+            invoice_name: <span class="string">&quot;Invoice 001&quot;
+        </span>}
+    ])
+    .send()
+    .<span class="kw">await</span>;
+<span class="macro">assert!</span>(response.is_ok())</code></pre></div>
+<ul>
+<li>Bill Manager Single Invoice</li>
+</ul>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">let </span>response = client
+    .single_invoice()
+    .amount(<span class="number">1000.0</span>)
+    .account_reference(<span class="string">&quot;John Doe&quot;</span>)
+    .billed_full_name(<span class="string">&quot;John Doe&quot;</span>)
+    .billed_period(<span class="string">&quot;August 2021&quot;</span>)
+    .billed_phone_number(<span class="string">&quot;0712345678&quot;</span>)
+    .due_date(Utc::now())
+    .external_reference(<span class="string">&quot;INV2345&quot;</span>)
+    .invoice_items(<span class="macro">vec!</span>[
+        InvoiceItem {amount: <span class="number">1000.0</span>, item_name: <span class="string">&quot;An item&quot;</span>}
+    ])
+    .invoice_name(<span class="string">&quot;Invoice 001&quot;</span>)
+    .send()
+    .<span class="kw">await</span>;
+<span class="macro">assert!</span>(response.is_ok())</code></pre></div>
+<ul>
+<li>Bill Manager Reconciliation</li>
+</ul>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">let </span>response = client
+    .reconciliation()
+    .account_reference(<span class="string">&quot;John Doe&quot;</span>)
+    .external_reference(<span class="string">&quot;INV2345&quot;</span>)
+    .full_name(<span class="string">&quot;John Doe&quot;</span>)
+    .invoice_name(<span class="string">&quot;Invoice 001&quot;</span>)
+    .paid_amount(<span class="number">1000.0</span>)
+    .payment_date(Utc::now())
+    .phone_number(<span class="string">&quot;0712345678&quot;</span>)
+    .transaction_id(<span class="string">&quot;TRANSACTION_ID&quot;</span>)
+    .send()
+    .<span class="kw">await</span>;
+<span class="macro">assert!</span>(response.is_ok())</code></pre></div>
+<ul>
+<li>Bill Manager Cancel Invoice</li>
+</ul>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">let </span>response = client
+    .cancel_invoice()
+    .external_references(<span class="macro">vec!</span>[<span class="string">&quot;9KLSS011&quot;</span>])
+    .send()
+    .<span class="kw">await</span>;
+<span class="macro">assert!</span>(response.is_ok())</code></pre></div>
+<ul>
+<li>Dynamic QR</li>
+</ul>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">let </span>response = client
+    .dynamic_qr_code()
+    .amount(<span class="number">1000</span>)
+    .ref_no(<span class="string">&quot;John Doe&quot;</span>)
+    .size(<span class="string">&quot;300&quot;</span>)
+    .merchant_name(<span class="string">&quot;John Doe&quot;</span>)
+    .credit_party_identifier(<span class="string">&quot;600496&quot;</span>)
+    .try_transaction_type(<span class="string">&quot;bg&quot;</span>)
+    .unwrap()
+    .build()
+    .unwrap()
+    .send()
+    .<span class="kw">await</span>;
+<span class="macro">assert!</span>(response.is_ok())</code></pre></div>
+<p>More will be added progressively, pull requests welcome</p>
+<h3 id="author"><a href="#author">Author</a></h3>
+<p><strong>Collins Muriuki</strong></p>
+<ul>
+<li>Twitter: <a href="https://twitter.com/collinsmuriuki_">@collinsmuriuki_</a></li>
+<li>Not affiliated with Safaricom.</li>
+</ul>
+<h3 id="contributing"><a href="#contributing">Contributing</a></h3>
+<p>Contributions, issues and feature requests are welcome!<br />Feel free to check <a href="https://github.com/collinsmuriuki/mpesa-rust/issues">issues page</a>. You can also take a look at the <a href="https://raw.githubusercontent.com/collinsmuriuki/mpesa-rust/master/CONTRIBUTING.md">contributing guide</a>.</p>
+<p>Copyright © 2023 <a href="https://github.com/collinsmuriuki">Collins Muriuki</a>.<br />
+This project is <a href="https://raw.githubusercontent.com/collinsmuriuki/mpesa-rust/master/LICENSE">MIT</a> licensed.</p>
+</div></details><h2 id="reexports" class="small-section-header"><a href="#reexports">Re-exports</a></h2><ul class="item-table"><li><div class="item-name" id="reexport.ApiEnvironment"><code>pub use environment::<a class="trait" href="environment/trait.ApiEnvironment.html" title="trait mpesa::environment::ApiEnvironment">ApiEnvironment</a>;</code></div></li><li><div class="item-name" id="reexport.Environment"><code>pub use environment::<a class="enum" href="environment/enum.Environment.html" title="enum mpesa::environment::Environment">Environment</a>;</code></div></li><li><div class="item-name" id="reexport.Production"><code>pub use environment::Environment::<a class="enum" href="environment/enum.Environment.html" title="enum mpesa::environment::Environment">Production</a>;</code></div></li><li><div class="item-name" id="reexport.Sandbox"><code>pub use environment::Environment::<a class="enum" href="environment/enum.Environment.html" title="enum mpesa::environment::Environment">Sandbox</a>;</code></div></li></ul><h2 id="modules" class="small-section-header"><a href="#modules">Modules</a></h2><ul class="item-table"><li><div class="item-name"><a class="mod" href="environment/index.html" title="mod mpesa::environment">environment</a></div><div class="desc docblock-short">MPESA Environment</div></li><li><div class="item-name"><a class="mod" href="services/index.html" title="mod mpesa::services">services</a></div><div class="desc docblock-short">MPESA Services</div></li></ul><h2 id="structs" class="small-section-header"><a href="#structs">Structs</a></h2><ul class="item-table"><li><div class="item-name"><a class="struct" href="struct.ApiError.html" title="struct mpesa::ApiError">ApiError</a></div></li><li><div class="item-name"><a class="struct" href="struct.Invoice.html" title="struct mpesa::Invoice">Invoice</a></div></li><li><div class="item-name"><a class="struct" href="struct.InvoiceItem.html" title="struct mpesa::InvoiceItem">InvoiceItem</a></div></li><li><div class="item-name"><a class="struct" href="struct.Mpesa.html" title="struct mpesa::Mpesa">Mpesa</a></div><div class="desc docblock-short">Mpesa client that will facilitate communication with the Safaricom API</div></li></ul><h2 id="enums" class="small-section-header"><a href="#enums">Enums</a></h2><ul class="item-table"><li><div class="item-name"><a class="enum" href="enum.CommandId.html" title="enum mpesa::CommandId">CommandId</a></div><div class="desc docblock-short">Mpesa command ids</div></li><li><div class="item-name"><a class="enum" href="enum.IdentifierTypes.html" title="enum mpesa::IdentifierTypes">IdentifierTypes</a></div><div class="desc docblock-short">Identifier types - both sender and receiver - identify an M-Pesa transaction’s sending and receiving party as
+either a shortcode, a till number or a MSISDN (phone number).
+There are three identifier types that can be used with M-Pesa APIs.</div></li><li><div class="item-name"><a class="enum" href="enum.MpesaError.html" title="enum mpesa::MpesaError">MpesaError</a></div><div class="desc docblock-short">Mpesa error stack</div></li><li><div class="item-name"><a class="enum" href="enum.ResponseType.html" title="enum mpesa::ResponseType">ResponseType</a></div><div class="desc docblock-short">C2B Register Response types</div></li><li><div class="item-name"><a class="enum" href="enum.SendRemindersTypes.html" title="enum mpesa::SendRemindersTypes">SendRemindersTypes</a></div></li><li><div class="item-name"><a class="enum" href="enum.TransactionType.html" title="enum mpesa::TransactionType">TransactionType</a></div></li></ul><h2 id="types" class="small-section-header"><a href="#types">Type Definitions</a></h2><ul class="item-table"><li><div class="item-name"><a class="type" href="type.MpesaResult.html" title="type mpesa::MpesaResult">MpesaResult</a></div><div class="desc docblock-short"><code>Result</code> enum type alias</div></li></ul></section></div></main></body></html>

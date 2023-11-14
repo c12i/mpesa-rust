@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["BuildError","CreatePoolError","Hook","HookError","HookErrorCause","PoolError","RecycleError","TimeoutType"],"mod":["reexports","sync"],"struct":["Metrics","Object","Pool","PoolBuilder","PoolConfig","Timeouts"],"trait":["Manager"],"type":["HookFuture","HookResult","RecycleResult"]};

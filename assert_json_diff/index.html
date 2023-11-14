@@ -1,0 +1,108 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="This crate includes macros for comparing two serializable values by diffing their JSON representations. It is designed to give much more helpful error messages than the standard `assert_eq!`. It basically does a diff of the two objects and tells you the exact differences. This is useful when asserting that two large JSON objects are the same."><title>assert_json_diff - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="assert_json_diff" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0 (cc66ad468 2023-10-03)" data-channel="1.73.0" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-1596385f77d47ef2.css" data-theme-dark-css="dark-0a43001d3fc2282c.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../static.files/light-1596385f77d47ef2.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../static.files/dark-0a43001d3fc2282c.css"><link rel="stylesheet" href="../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../assert_json_diff/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../assert_json_diff/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2 class="location"><a href="#">Crate assert_json_diff</a></h2><div class="sidebar-elems"><ul class="block"><li class="version">Version 2.0.2</li><li><a id="all-types" href="all.html">All Items</a></li></ul><section><ul class="block"><li><a href="#macros">Macros</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#functions">Functions</a></li></ul></section></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Crate <a class="mod" href="#">assert_json_diff</a><button id="copy-path" title="Copy item path to clipboard"><img src="../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="src" href="../src/assert_json_diff/lib.rs.html#1-660">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>This crate includes macros for comparing two serializable values by diffing their JSON
+representations. It is designed to give much more helpful error messages than the standard
+<a href="https://doc.rust-lang.org/std/macro.assert_eq.html"><code>assert_eq!</code></a>. It basically does a diff of the two objects and tells you the exact
+differences. This is useful when asserting that two large JSON objects are the same.</p>
+<p>It uses the <a href="https://crates.io/crates/serde">serde</a> and <a href="https://crates.io/crates/serde_json">serde_json</a> to perform the serialization.</p>
+<h3 id="partial-matching"><a href="#partial-matching">Partial matching</a></h3>
+<p>If you want to assert that one JSON value is “included” in another use
+<a href="macro.assert_json_include.html"><code>assert_json_include</code></a>:</p>
+
+<div class="example-wrap should_panic"><a href="#" class="tooltip" title="This example panics">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">use </span>assert_json_diff::assert_json_include;
+<span class="kw">use </span>serde_json::json;
+
+<span class="kw">let </span>a = <span class="macro">json!</span>({
+    <span class="string">&quot;data&quot;</span>: {
+        <span class="string">&quot;users&quot;</span>: [
+            {
+                <span class="string">&quot;id&quot;</span>: <span class="number">1</span>,
+                <span class="string">&quot;country&quot;</span>: {
+                    <span class="string">&quot;name&quot;</span>: <span class="string">&quot;Denmark&quot;
+                </span>}
+            },
+            {
+                <span class="string">&quot;id&quot;</span>: <span class="number">24</span>,
+                <span class="string">&quot;country&quot;</span>: {
+                    <span class="string">&quot;name&quot;</span>: <span class="string">&quot;Denmark&quot;
+                </span>}
+            }
+        ]
+    }
+});
+
+<span class="kw">let </span>b = <span class="macro">json!</span>({
+    <span class="string">&quot;data&quot;</span>: {
+        <span class="string">&quot;users&quot;</span>: [
+            {
+                <span class="string">&quot;id&quot;</span>: <span class="number">1</span>,
+                <span class="string">&quot;country&quot;</span>: {
+                    <span class="string">&quot;name&quot;</span>: <span class="string">&quot;Sweden&quot;
+                </span>}
+            },
+            {
+                <span class="string">&quot;id&quot;</span>: <span class="number">2</span>,
+                <span class="string">&quot;country&quot;</span>: {
+                    <span class="string">&quot;name&quot;</span>: <span class="string">&quot;Denmark&quot;
+                </span>}
+            }
+        ]
+    }
+});
+
+<span class="macro">assert_json_include!</span>(actual: a, expected: b)</code></pre></div>
+<p>This will panic with the error message:</p>
+<div class="example-wrap"><pre class="language-text"><code>json atoms at path &quot;.data.users[0].country.name&quot; are not equal:
+    expected:
+        &quot;Sweden&quot;
+    actual:
+        &quot;Denmark&quot;
+
+json atoms at path &quot;.data.users[1].id&quot; are not equal:
+    expected:
+        2
+    actual:
+        24
+</code></pre></div>
+<p><a href="macro.assert_json_include.html"><code>assert_json_include</code></a> allows extra data in <code>actual</code> but not in <code>expected</code>. That is so you can verify just a part
+of the JSON without having to specify the whole thing. For example this test passes:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>assert_json_diff::assert_json_include;
+<span class="kw">use </span>serde_json::json;
+
+<span class="macro">assert_json_include!</span>(
+    actual: <span class="macro">json!</span>({
+        <span class="string">&quot;a&quot;</span>: { <span class="string">&quot;b&quot;</span>: <span class="number">1 </span>},
+    }),
+    expected: <span class="macro">json!</span>({
+        <span class="string">&quot;a&quot;</span>: {},
+    })
+)</code></pre></div>
+<p>However <code>expected</code> cannot contain additional data so this test fails:</p>
+
+<div class="example-wrap should_panic"><a href="#" class="tooltip" title="This example panics">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">use </span>assert_json_diff::assert_json_include;
+<span class="kw">use </span>serde_json::json;
+
+<span class="macro">assert_json_include!</span>(
+    actual: <span class="macro">json!</span>({
+        <span class="string">&quot;a&quot;</span>: {},
+    }),
+    expected: <span class="macro">json!</span>({
+        <span class="string">&quot;a&quot;</span>: { <span class="string">&quot;b&quot;</span>: <span class="number">1 </span>},
+    })
+)</code></pre></div>
+<p>That will print</p>
+<div class="example-wrap"><pre class="language-text"><code>json atom at path &quot;.a.b&quot; is missing from actual
+</code></pre></div><h3 id="exact-matching"><a href="#exact-matching">Exact matching</a></h3>
+<p>If you want to ensure two JSON values are <em>exactly</em> the same, use <a href="macro.assert_json_eq.html"><code>assert_json_eq</code></a>.</p>
+
+<div class="example-wrap should_panic"><a href="#" class="tooltip" title="This example panics">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">use </span>assert_json_diff::assert_json_eq;
+<span class="kw">use </span>serde_json::json;
+
+<span class="macro">assert_json_eq!</span>(
+    <span class="macro">json!</span>({ <span class="string">&quot;a&quot;</span>: { <span class="string">&quot;b&quot;</span>: <span class="number">1 </span>} }),
+    <span class="macro">json!</span>({ <span class="string">&quot;a&quot;</span>: {} })
+)</code></pre></div>
+<p>This will panic with the error message:</p>
+<div class="example-wrap"><pre class="language-text"><code>json atom at path &quot;.a.b&quot; is missing from lhs
+</code></pre></div><h3 id="further-customization"><a href="#further-customization">Further customization</a></h3>
+<p>You can use <a href="macro.assert_json_matches.html" title="macro assert_json_diff::assert_json_matches"><code>assert_json_matches</code></a> to further customize the comparison.</p>
+</div></details><h2 id="macros" class="small-section-header"><a href="#macros">Macros</a></h2><ul class="item-table"><li><div class="item-name"><a class="macro" href="macro.assert_json_eq.html" title="macro assert_json_diff::assert_json_eq">assert_json_eq</a></div><div class="desc docblock-short">Compare two JSON values for an exact match.</div></li><li><div class="item-name"><a class="macro" href="macro.assert_json_include.html" title="macro assert_json_diff::assert_json_include">assert_json_include</a></div><div class="desc docblock-short">Compare two JSON values for an inclusive match.</div></li><li><div class="item-name"><a class="macro" href="macro.assert_json_matches.html" title="macro assert_json_diff::assert_json_matches">assert_json_matches</a></div><div class="desc docblock-short">Compare two JSON values according to a configuration.</div></li></ul><h2 id="structs" class="small-section-header"><a href="#structs">Structs</a></h2><ul class="item-table"><li><div class="item-name"><a class="struct" href="struct.Config.html" title="struct assert_json_diff::Config">Config</a></div><div class="desc docblock-short">Configuration for how JSON values should be compared.</div></li></ul><h2 id="enums" class="small-section-header"><a href="#enums">Enums</a></h2><ul class="item-table"><li><div class="item-name"><a class="enum" href="enum.CompareMode.html" title="enum assert_json_diff::CompareMode">CompareMode</a></div><div class="desc docblock-short">Mode for how JSON values should be compared.</div></li><li><div class="item-name"><a class="enum" href="enum.NumericMode.html" title="enum assert_json_diff::NumericMode">NumericMode</a></div><div class="desc docblock-short">How should numbers be compared.</div></li></ul><h2 id="functions" class="small-section-header"><a href="#functions">Functions</a></h2><ul class="item-table"><li><div class="item-name"><a class="fn" href="fn.assert_json_matches_no_panic.html" title="fn assert_json_diff::assert_json_matches_no_panic">assert_json_matches_no_panic</a></div><div class="desc docblock-short">Compares two JSON values without panicking.</div></li></ul></section></div></main></body></html>
