@@ -24,6 +24,7 @@ serde_repr = "0.1"
 thiserror = "1.0.37"
 wiremock = "0.5"
 secrecy = "0.8.0"
+serde-aux = "4.2.0"
 
 [dev-dependencies]
 dotenv = "0.15"
