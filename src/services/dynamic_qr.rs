@@ -10,26 +10,34 @@ const DYNAMIC_QR_URL: &str = "/mpesa/qrcode/v1/generate";
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "PascalCase")]
-struct DynamicQRRequest<'mpesa> {
+pub struct DynamicQRRequest<'mpesa> {
     /// Name of the Company/M-Pesa Merchant Name
-    merchant_name: &'mpesa str,
+    pub merchant_name: &'mpesa str,
     /// Transaction Reference Number
-    ref_no: &'mpesa str,
+    pub ref_no: &'mpesa str,
     /// The total amount of the transaction
-    amount: f64,
+    pub amount: f64,
     #[serde(rename = "TrxCode")]
     /// Transaction Type
-    transaction_type: TransactionType,
+    ///
+    /// This can be a `TransactionType` or a `&str`
+    /// The `&str` must be one of the following:
+    /// - `BG` for Buy Goods
+    /// - `PB` for Pay Bill
+    /// - `WA` Withdraw Cash
+    /// - `SM` Send Money (Mobile Number)
+    /// - `SB` Sent to Business. Business number CPI in MSISDN format.
+    pub transaction_type: TransactionType,
     ///Credit Party Identifier.
     ///
     /// Can be a Mobile Number, Business Number, Agent
     /// Till, Paybill or Business number, or Merchant Buy Goods.
     #[serde(rename = "CPI")]
-    credit_party_identifier: &'mpesa str,
+    pub credit_party_identifier: &'mpesa str,
     /// Size of the QR code image in pixels.
     ///
     /// QR code image will always be a square image.
-    size: &'mpesa str,
+    pub size: &'mpesa str,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -94,6 +102,24 @@ impl<'mpesa, Env: ApiEnvironment> From<DynamicQR<'mpesa, Env>> for DynamicQRRequ
 impl<'mpesa, Env: ApiEnvironment> DynamicQR<'mpesa, Env> {
     pub(crate) fn builder(client: &'mpesa Mpesa<Env>) -> DynamicQRBuilder<'mpesa, Env> {
         DynamicQRBuilder::default().client(client)
+    }
+
+    /// # Build Dynamic QR
+    ///
+    /// Returns a `DynamicQR` which can be used to send a request
+    pub fn from_request(
+        client: &'mpesa Mpesa<Env>,
+        request: DynamicQRRequest<'mpesa>,
+    ) -> DynamicQR<'mpesa, Env> {
+        DynamicQR {
+            client,
+            merchant_name: request.merchant_name,
+            ref_no: request.ref_no,
+            amount: request.amount,
+            transaction_type: request.transaction_type,
+            credit_party_identifier: request.credit_party_identifier,
+            size: request.size,
+        }
     }
 
     /// # Generate a Dynamic QR

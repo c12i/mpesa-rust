@@ -40,7 +40,7 @@ pub use c2b_register::{C2bRegisterBuilder, C2bRegisterResponse};
 #[cfg(feature = "c2b_simulate")]
 pub use c2b_simulate::{C2bSimulateBuilder, C2bSimulateResponse};
 #[cfg(feature = "dynamic_qr")]
-pub use dynamic_qr::{DynamicQR, DynamicQRBuilder, DynamicQRResponse};
+pub use dynamic_qr::{DynamicQR, DynamicQRBuilder, DynamicQRRequest, DynamicQRResponse};
 #[cfg(feature = "express_request")]
 pub use express_request::{MpesaExpressRequestBuilder, MpesaExpressRequestResponse};
 #[cfg(feature = "transaction_reversal")]
