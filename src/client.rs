@@ -1,28 +1,26 @@
 use std::cell::RefCell;
 
+use cached::Cached;
 use openssl::base64;
 use openssl::rsa::Padding;
 use openssl::x509::X509;
 use reqwest::Client as HttpClient;
-use secrecy::{ExposeSecret, Secret};
-use serde_json::Value;
 
+use crate::auth::AUTH;
 use crate::environment::ApiEnvironment;
 use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, BulkInvoiceBuilder, C2bRegisterBuilder,
-    C2bSimulateBuilder, CancelInvoiceBuilder, DynamicQR, DynamicQRBuilder,
-    MpesaExpressRequestBuilder, OnboardBuilder, OnboardModifyBuilder, ReconciliationBuilder,
-    SingleInvoiceBuilder, TransactionReversalBuilder, TransactionStatusBuilder,
+    C2bSimulateBuilder, CancelInvoiceBuilder, MpesaExpressRequestBuilder, OnboardBuilder,
+    OnboardModifyBuilder, ReconciliationBuilder, SingleInvoiceBuilder, TransactionReversalBuilder,
+    TransactionStatusBuilder,
 };
-use crate::{ApiError, MpesaError};
+use crate::{auth, MpesaResult};
+use secrecy::{ExposeSecret, Secret};
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
 const DEFAULT_INITIATOR_PASSWORD: &str = "Safcom496!";
 /// Get current package version from metadata
 const CARGO_PACKAGE_VERSION: &str = env!("CARGO_PKG_VERSION");
-
-/// `Result` enum type alias
-pub type MpesaResult<T> = Result<T, MpesaError>;
 
 /// Mpesa client that will facilitate communication with the Safaricom API
 #[derive(Clone, Debug)]
@@ -74,6 +72,16 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         p.expose_secret().into()
     }
 
+    /// Get the client key
+    pub(crate) fn client_key(&self) -> &str {
+        &self.client_key
+    }
+
+    /// Get the client secret
+    pub(crate) fn client_secret(&self) -> &str {
+        self.client_secret.expose_secret()
+    }
+
     /// Optional in development but required for production, you will need to call this method and set your production initiator password.
     /// If in development, default initiator password is already pre-set
     /// ```ignore
@@ -109,31 +117,27 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// # Errors
     /// Returns a `MpesaError` on failure
     pub(crate) async fn auth(&self) -> MpesaResult<String> {
-        let url = format!(
-            "{}/oauth/v1/generate?grant_type=client_credentials",
-            self.environment.base_url()
-        );
-        let response = self
-            .http_client
-            .get(&url)
-            .basic_auth(&self.client_key, Some(&self.client_secret.expose_secret()))
-            .send()
-            .await?;
-        if response.status().is_success() {
-            let value = response.json::<Value>().await?;
-            let access_token = value
-                .get("access_token")
-                .ok_or_else(|| String::from("Failed to extract token from the response"))
-                .unwrap();
-            let access_token = access_token
-                .as_str()
-                .ok_or_else(|| String::from("Error converting access token to string"))
-                .unwrap();
-
-            return Ok(access_token.to_string());
+        if let Some(token) = AUTH.lock().await.cache_get(&self.client_key) {
+            return Ok(token.to_owned());
         }
-        let error = response.json::<ApiError>().await?;
-        Err(MpesaError::AuthenticationError(error))
+
+        // Generate a new access token
+        let new_token = match auth::auth_prime_cache(self).await {
+            Ok(token) => token,
+            Err(e) => return Err(e),
+        };
+
+        // Double-check if the access token is cached by another thread
+        if let Some(token) = AUTH.lock().await.cache_get(&self.client_key) {
+            return Ok(token.to_owned());
+        }
+
+        // Cache the new token
+        AUTH.lock()
+            .await
+            .cache_set(self.client_key.clone(), new_token.to_owned());
+
+        Ok(new_token)
     }
 
     /// **B2C Builder**

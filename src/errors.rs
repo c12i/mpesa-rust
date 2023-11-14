@@ -53,6 +53,9 @@ pub enum MpesaError {
     BuilderError(BuilderError),
 }
 
+/// `Result` enum type alias
+pub type MpesaResult<T> = Result<T, MpesaError>;
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ApiError {
     pub request_id: String,

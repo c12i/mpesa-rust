@@ -1,9 +1,9 @@
 use chrono::prelude::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-use crate::client::{Mpesa, MpesaResult};
+use crate::client::Mpesa;
 use crate::environment::ApiEnvironment;
-use crate::errors::MpesaError;
+use crate::errors::{MpesaError, MpesaResult};
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
