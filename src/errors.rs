@@ -57,6 +57,7 @@ pub enum MpesaError {
 pub type MpesaResult<T> = Result<T, MpesaError>;
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all(deserialize = "camelCase"))]
 pub struct ApiError {
     pub request_id: String,
     pub error_code: String,
