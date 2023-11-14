@@ -20,7 +20,6 @@ struct DynamicQRRequest<'mpesa> {
     #[serde(rename = "TrxCode")]
     /// Transaction Type
     transaction_type: TransactionType,
-
     ///Credit Party Identifier.
     ///
     /// Can be a Mobile Number, Business Number, Agent
