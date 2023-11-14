@@ -17,6 +17,7 @@ chrono = { version = "0.4", optional = true, default-features = false, features 
 ] }
 openssl = { version = "0.10", optional = true }
 reqwest = { version = "0.11", features = ["json"] }
+derive_builder = "0.12"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 serde_repr = "0.1"
@@ -40,7 +41,9 @@ default = [
 	"express_request",
 	"transaction_reversal",
 	"transaction_status",
+	"dynamic_qr"
 ]
+dynamic_qr = []
 account_balance = ["dep:openssl"]
 b2b = ["dep:openssl"]
 b2c = ["dep:openssl"]

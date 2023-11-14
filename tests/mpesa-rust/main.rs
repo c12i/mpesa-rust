@@ -10,7 +10,8 @@ mod bill_manager_test;
 mod c2b_register_test;
 #[cfg(test)]
 mod c2b_simulate_test;
-#[cfg(test)]
+
+mod dynamic_qr_tests;
 mod helpers;
 #[cfg(test)]
 mod stk_push_test;

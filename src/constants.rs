@@ -4,6 +4,8 @@ use chrono::prelude::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 
+use crate::MpesaError;
+
 /// Mpesa command ids
 #[derive(Debug, Serialize, Deserialize)]
 pub enum CommandId {
@@ -139,5 +141,40 @@ pub struct InvoiceItem<'i> {
 impl<'i> Display for InvoiceItem<'i> {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
         write!(f, "amount: {}, item_name: {}", self.amount, self.item_name)
+    }
+}
+
+#[derive(Debug, Clone, Copy, Serialize)]
+pub enum TransactionType {
+    /// Send Money(Mobile number).
+    SendMoney,
+    /// Withdraw Cash at Agent Till
+    Withdraw,
+    /// Pay Merchant (Buy Goods)
+    BG,
+    /// Paybill or Business number
+    PayBill,
+    /// Sent to Business. Business number CPI in MSISDN format.
+    SendBusiness,
+}
+
+impl Display for TransactionType {
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
+        write!(f, "{self:?}")
+    }
+}
+
+impl TryFrom<&str> for TransactionType {
+    type Error = MpesaError;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        match value.to_lowercase().as_str() {
+            "bg" => Ok(TransactionType::BG),
+            "wa" => Ok(TransactionType::Withdraw),
+            "pb" => Ok(TransactionType::PayBill),
+            "sm" => Ok(TransactionType::SendMoney),
+            "sb" => Ok(TransactionType::SendBusiness),
+            _ => Err(MpesaError::Message("Invalid transaction type")),
+        }
     }
 }

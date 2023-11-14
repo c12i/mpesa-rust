@@ -28,6 +28,7 @@ Optionally, you can disable default-features, which is basically the entire suit
 - `transaction_reversal`
 - `transaction_status`
 - `bill_manager`
+- `dynamic_qr`
 
 Example:
 
@@ -366,6 +367,25 @@ assert!(response.is_ok())
 let response = client
     .cancel_invoice()
     .external_references(vec!["9KLSS011"])
+    .send()
+    .await;
+assert!(response.is_ok())
+```
+
+- Dynamic QR
+
+```rust,ignore
+let response = client
+    .dynamic_qr_code()
+    .amount(1000)
+    .ref_no("John Doe")
+    .size("300")
+    .merchant_name("John Doe")
+    .credit_party_identifier("600496")
+    .try_transaction_type("bg")
+    .unwrap()
+    .build()
+    .unwrap()
     .send()
     .await;
 assert!(response.is_ok())

@@ -13,6 +13,8 @@
 //! 6. [Mpesa Express/ STK Push](https://developer.safaricom.co.ke/docs#lipa-na-m-pesa-online-payment)
 //! 7. [Transaction Reversal](https://developer.safaricom.co.ke/docs#reversal)
 //! 8. [Bill Manager](https://developer.safaricom.co.ke/APIs/BillManager)
+//! 9. [Transaction Status](https://developer.safaricom.co.ke/docs#transaction-status)
+//! 10. [Dynamic QR](https://developer.safaricom.co.ke/APIs/DynamicQRCode)
 
 mod account_balance;
 mod b2b;
@@ -20,6 +22,7 @@ mod b2c;
 mod bill_manager;
 mod c2b_register;
 mod c2b_simulate;
+mod dynamic_qr;
 mod express_request;
 mod transaction_reversal;
 mod transaction_status;
@@ -36,6 +39,8 @@ pub use bill_manager::*;
 pub use c2b_register::{C2bRegisterBuilder, C2bRegisterResponse};
 #[cfg(feature = "c2b_simulate")]
 pub use c2b_simulate::{C2bSimulateBuilder, C2bSimulateResponse};
+#[cfg(feature = "dynamic_qr")]
+pub use dynamic_qr::{DynamicQR, DynamicQRBuilder, DynamicQRRequest, DynamicQRResponse};
 #[cfg(feature = "express_request")]
 pub use express_request::{MpesaExpressRequestBuilder, MpesaExpressRequestResponse};
 #[cfg(feature = "transaction_reversal")]
