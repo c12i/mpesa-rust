@@ -46,7 +46,7 @@ macro_rules! get_mpesa_client {
             .and(query_param("grant_type", "client_credentials"))
             .respond_with(ResponseTemplate::new(200).set_body_json(json!({
                 "access_token": "dummy_access_token",
-                "expiry_in": 3600
+                "expires_in": 3600
             })))
             .mount(&server)
             .await;
@@ -73,7 +73,7 @@ macro_rules! get_mpesa_client {
             .and(query_param("grant_type", "client_credentials"))
             .respond_with(ResponseTemplate::new(200).set_body_json(json!({
                 "access_token": "dummy_access_token",
-                "expiry_in": 3600
+                "expires_in": "3600"
             })))
             .mount(&server)
             .await;
