@@ -5,17 +5,17 @@ use openssl::base64;
 use openssl::rsa::Padding;
 use openssl::x509::X509;
 use reqwest::Client as HttpClient;
+use secrecy::{ExposeSecret, Secret};
 
 use crate::auth::AUTH;
 use crate::environment::ApiEnvironment;
 use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, BulkInvoiceBuilder, C2bRegisterBuilder,
-    C2bSimulateBuilder, CancelInvoiceBuilder, MpesaExpressRequestBuilder, OnboardBuilder,
-    OnboardModifyBuilder, ReconciliationBuilder, SingleInvoiceBuilder, TransactionReversalBuilder,
-    TransactionStatusBuilder,
+    C2bSimulateBuilder, CancelInvoiceBuilder, DynamicQR, DynamicQRBuilder,
+    MpesaExpressRequestBuilder, OnboardBuilder, OnboardModifyBuilder, ReconciliationBuilder,
+    SingleInvoiceBuilder, TransactionReversalBuilder, TransactionStatusBuilder,
 };
 use crate::{auth, MpesaResult};
-use secrecy::{ExposeSecret, Secret};
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
 const DEFAULT_INITIATOR_PASSWORD: &str = "Safcom496!";

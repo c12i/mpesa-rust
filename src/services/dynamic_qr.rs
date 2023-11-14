@@ -1,10 +1,10 @@
 use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
 
-use crate::client::{Mpesa, MpesaResult};
+use crate::client::Mpesa;
 use crate::constants::TransactionType;
 use crate::environment::ApiEnvironment;
-use crate::errors::MpesaError;
+use crate::errors::{MpesaError, MpesaResult};
 
 const DYNAMIC_QR_URL: &str = "/mpesa/qrcode/v1/generate";
 
