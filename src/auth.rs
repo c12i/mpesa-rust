@@ -5,25 +5,6 @@ use crate::{ApiEnvironment, ApiError, Mpesa, MpesaError, MpesaResult};
 
 const AUTHENTICATION_URL: &str = "/oauth/v1/generate?grant_type=client_credentials";
 
-/// Response returned from the authentication function
-#[derive(Debug, Serialize, Deserialize)]
-pub struct AuthenticationResponse {
-    /// Access token which is used as the Bearer-Auth-Token
-    pub access_token: String,
-    /// Expiry time in seconds
-    pub expiry_in: u64,
-}
-
-impl std::fmt::Display for AuthenticationResponse {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "token :{} expires in: {}",
-            self.access_token, self.expiry_in
-        )
-    }
-}
-
 #[cached(
     size = 1,
     time = 3600,
@@ -50,6 +31,25 @@ pub(crate) async fn auth(client: &Mpesa<impl ApiEnvironment>) -> MpesaResult<Str
 
     let error = response.json::<ApiError>().await?;
     Err(MpesaError::AuthenticationError(error))
+}
+
+/// Response returned from the authentication function
+#[derive(Debug, Serialize, Deserialize)]
+pub struct AuthenticationResponse {
+    /// Access token which is used as the Bearer-Auth-Token
+    pub access_token: String,
+    /// Expiry time in seconds
+    pub expiry_in: u64,
+}
+
+impl std::fmt::Display for AuthenticationResponse {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "token :{} expires in: {}",
+            self.access_token, self.expiry_in
+        )
+    }
 }
 
 #[cfg(test)]

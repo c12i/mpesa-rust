@@ -118,7 +118,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// Returns a `MpesaError` on failure
     pub(crate) async fn auth(&self) -> MpesaResult<String> {
         if let Some(token) = AUTH.lock().await.cache_get(&self.client_key) {
-            return Ok(token.clone());
+            return Ok(token.to_owned());
         }
 
         // Generate a new access token
@@ -129,13 +129,13 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
 
         // Double-check if the access token is cached by another thread
         if let Some(token) = AUTH.lock().await.cache_get(&self.client_key) {
-            return Ok(token.clone());
+            return Ok(token.to_owned());
         }
 
         // Cache the new token
         AUTH.lock()
             .await
-            .cache_set(self.client_key.clone(), new_token.clone());
+            .cache_set(self.client_key.clone(), new_token.to_owned());
 
         Ok(new_token)
     }
