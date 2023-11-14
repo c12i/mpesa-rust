@@ -1,5 +1,6 @@
 use cached::proc_macro::cached;
 use serde::{Deserialize, Serialize};
+use serde_aux::field_attributes::deserialize_number_from_string;
 
 use crate::{ApiEnvironment, ApiError, Mpesa, MpesaError, MpesaResult};
 
@@ -39,7 +40,8 @@ pub struct AuthenticationResponse {
     /// Access token which is used as the Bearer-Auth-Token
     pub access_token: String,
     /// Expiry time in seconds
-    pub expiry_in: u64,
+    #[serde(deserialize_with = "deserialize_number_from_string")]
+    pub expires_in: u64,
 }
 
 impl std::fmt::Display for AuthenticationResponse {
@@ -47,7 +49,7 @@ impl std::fmt::Display for AuthenticationResponse {
         write!(
             f,
             "token :{} expires in: {}",
-            self.access_token, self.expiry_in
+            self.access_token, self.expires_in
         )
     }
 }
@@ -97,7 +99,7 @@ mod tests {
             .respond_with(wiremock::ResponseTemplate::new(200).set_body_json(
                 AuthenticationResponse {
                     access_token: "test_token".to_string(),
-                    expiry_in: 3600,
+                    expires_in: 3600,
                 },
             ))
             .expect(1)
