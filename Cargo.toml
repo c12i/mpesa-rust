@@ -25,6 +25,8 @@ thiserror = "1.0.37"
 wiremock = "0.5"
 secrecy = "0.8.0"
 serde-aux = "4.2.0"
+url = { version = "2", features = ["serde"] }
+
 
 [dev-dependencies]
 dotenv = "0.15"
@@ -42,7 +44,7 @@ default = [
 	"express_request",
 	"transaction_reversal",
 	"transaction_status",
-	"dynamic_qr"
+	"dynamic_qr",
 ]
 dynamic_qr = []
 account_balance = ["dep:openssl"]
