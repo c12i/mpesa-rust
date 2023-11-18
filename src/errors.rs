@@ -7,6 +7,8 @@ use thiserror::Error;
 /// Mpesa error stack
 #[derive(Error, Debug)]
 pub enum MpesaError {
+    #[error("Api error: {0}")]
+    ApiError(ApiError),
     #[error("{0}")]
     AuthenticationError(ApiError),
     #[error("B2B request failed: {0}")]

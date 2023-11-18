@@ -136,23 +136,12 @@ impl<'mpesa, Env: ApiEnvironment> DynamicQR<'mpesa, Env> {
     /// # Errors
     /// Returns a `MpesaError` on failure
     pub async fn send(self) -> MpesaResult<DynamicQRResponse> {
-        let url = format!("{}{}", self.client.environment.base_url(), DYNAMIC_QR_URL);
-
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json::<DynamicQRRequest>(&self.into())
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            let value = response.json::<_>().await?;
-            return Ok(value);
-        }
-
-        let value = response.json().await?;
-        Err(MpesaError::MpesaDynamicQrError(value))
+        self.client
+            .send::<DynamicQRRequest, _>(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: DYNAMIC_QR_URL,
+                body: self.into(),
+            })
+            .await
     }
 }
