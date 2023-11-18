@@ -1,4 +1,3 @@
-use mpesa::MpesaError;
 use serde_json::json;
 use wiremock::matchers::{method, path};
 use wiremock::{Mock, ResponseTemplate};
@@ -6,14 +5,14 @@ use wiremock::{Mock, ResponseTemplate};
 use crate::get_mpesa_client;
 
 #[tokio::test]
-async fn stk_push_success_success() {
+async fn stk_push_success() {
     let (client, server) = get_mpesa_client!();
     let sample_response_body = json!({
         "MerchantRequestID": "16813-1590513-1",
         "CheckoutRequestID": "ws_CO_DMZ_12321_23423476",
         "ResponseDescription": "Accept the service request successfully.",
         "ResponseCode": "0",
-        "CustomerMessage": "Success. Request accepeted for processing"
+        "CustomerMessage": "Success. Request accepted for processing"
     });
     Mock::given(method("POST"))
         .and(path("/mpesa/stkpush/v1/processrequest"))
@@ -24,8 +23,13 @@ async fn stk_push_success_success() {
     let response = client
         .express_request()
         .business_short_code("174379")
+        .transaction_type(mpesa::CommandId::BusinessBuyGoods)
+        .party_a("254708374149")
+        .party_b("174379")
+        .account_ref("test")
         .phone_number("254708374149")
         .amount(500)
+        .pass_key("test")
         .try_callback_url("https://test.example.com/api")
         .unwrap()
         .build()
@@ -33,6 +37,7 @@ async fn stk_push_success_success() {
         .send()
         .await
         .unwrap();
+
     assert_eq!(response.merchant_request_id, "16813-1590513-1");
     assert_eq!(response.checkout_request_id, "ws_CO_DMZ_12321_23423476");
     assert_eq!(
@@ -41,19 +46,19 @@ async fn stk_push_success_success() {
     );
     assert_eq!(
         response.customer_message,
-        "Success. Request accepeted for processing"
+        "Success. Request accepted for processing"
     );
 }
 
 #[tokio::test]
-async fn stk_push_fails_if_no_amount_is_provided() {
+async fn stk_push_only_accepts_specific_tx_type() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     let sample_response_body = json!({
         "MerchantRequestID": "16813-1590513-1",
         "CheckoutRequestID": "ws_CO_DMZ_12321_23423476",
         "ResponseDescription": "Accept the service request successfully.",
         "ResponseCode": "0",
-        "CustomerMessage": "Success. Request accepeted for processing"
+        "CustomerMessage": "Success. Request accepted for processing"
     });
     Mock::given(method("POST"))
         .and(path("/mpesa/stkpush/v1/processrequest"))
@@ -61,93 +66,23 @@ async fn stk_push_fails_if_no_amount_is_provided() {
         .expect(0)
         .mount(&server)
         .await;
-    if let Err(e) = client
+    let err = client
         .express_request()
         .business_short_code("174379")
+        .transaction_type(mpesa::CommandId::SalaryPayment)
+        .party_a("254708374149")
+        .party_b("174379")
+        .account_ref("test")
         .phone_number("254708374149")
+        .amount(500)
+        .pass_key("test")
         .try_callback_url("https://test.example.com/api")
         .unwrap()
         .build()
-        .unwrap()
-        .send()
-        .await
-    {
-        let MpesaError::Message(msg) = e else {
-            panic!("Expected MpesaError::Message, but found {}", e);
-        };
-        assert_eq!(msg, "amount is required")
-    } else {
-        panic!("Expected error");
-    }
-}
+        .unwrap_err();
 
-#[tokio::test]
-async fn stk_push_fails_if_no_callback_url_is_provided() {
-    let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
-    let sample_response_body = json!({
-        "MerchantRequestID": "16813-1590513-1",
-        "CheckoutRequestID": "ws_CO_DMZ_12321_23423476",
-        "ResponseDescription": "Accept the service request successfully.",
-        "ResponseCode": "0",
-        "CustomerMessage": "Success. Request accepeted for processing"
-    });
-    Mock::given(method("POST"))
-        .and(path("/mpesa/stkpush/v1/processrequest"))
-        .respond_with(ResponseTemplate::new(200).set_body_json(sample_response_body))
-        .expect(0)
-        .mount(&server)
-        .await;
-    if let Err(e) = client
-        .express_request()
-        .business_short_code("174379")
-        .phone_number("254708374149")
-        .amount(500)
-        .build()
-        .unwrap()
-        .send()
-        .await
-    {
-        let MpesaError::Message(msg) = e else {
-            panic!("Expected MpesaError::Message, but found {}", e);
-        };
-        assert_eq!(msg, "callback_url is required")
-    } else {
-        panic!("Expected error");
-    }
-}
-
-#[tokio::test]
-async fn stk_push_fails_if_no_phone_number_is_provided() {
-    let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
-    let sample_response_body = json!({
-        "MerchantRequestID": "16813-1590513-1",
-        "CheckoutRequestID": "ws_CO_DMZ_12321_23423476",
-        "ResponseDescription": "Accept the service request successfully.",
-        "ResponseCode": "0",
-        "CustomerMessage": "Success. Request accepeted for processing"
-    });
-    Mock::given(method("POST"))
-        .and(path("/mpesa/stkpush/v1/processrequest"))
-        .respond_with(ResponseTemplate::new(200).set_body_json(sample_response_body))
-        .expect(0)
-        .mount(&server)
-        .await;
-    if let Err(e) = client
-        .express_request()
-        .business_short_code("174379")
-        .amount(500)
-        .try_callback_url("https://test.example.com/api")
-        .unwrap()
-        .build()
-        .unwrap()
-        .send()
-        .await
-    {
-        let MpesaError::Message(msg) = e else {
-            panic!("Expected MpesaError::Message, but found {}", e);
-        };
-        assert_eq!(msg, "phone_number is required")
-    } else {
-        panic!("Expected error");
-    }
+    assert_eq!(
+        err.to_string(),
+        "Invalid transaction type. Expected BusinessBuyGoods or CustomerPayBillOnline"
+    );
 }

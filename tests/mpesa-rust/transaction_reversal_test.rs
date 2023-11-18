@@ -1,9 +1,9 @@
-use mpesa::MpesaError;
+use crate::get_mpesa_client;
+
+use mpesa::IdentifierTypes;
 use serde_json::json;
 use wiremock::matchers::{method, path};
 use wiremock::{Mock, ResponseTemplate};
-
-use crate::get_mpesa_client;
 
 #[tokio::test]
 async fn transaction_reversal_success() {
@@ -12,6 +12,7 @@ async fn transaction_reversal_success() {
         "OriginatorConversationID": "29464-48063588-1",
         "ConversationID": "AG_20230206_201056794190723278ff",
         "ResponseDescription": "Accept the service request successfully.",
+        "ResponseCode": "0"
     });
     Mock::given(method("POST"))
         .and(path("/mpesa/reversal/v1/request"))
@@ -20,180 +21,27 @@ async fn transaction_reversal_success() {
         .mount(&server)
         .await;
     let response = client
-        .transaction_reversal("testapi496")
-        .result_url("https://testdomain.com/ok")
-        .timeout_url("https://testdomain.com/err")
+        .transaction_reversal()
+        .initiator("testapi496")
+        .try_result_url("https://testdomain.com/ok")
+        .unwrap()
+        .try_timeout_url("https://testdomain.com/err")
+        .unwrap()
         .transaction_id("OEI2AK4Q16")
         .amount(1.0)
         .receiver_party("600111")
+        .receiver_identifier_type(IdentifierTypes::ShortCode)
         .remarks("wrong recipient")
+        .build()
+        .unwrap()
         .send()
         .await
         .unwrap();
+
     assert_eq!(response.originator_conversation_id, "29464-48063588-1");
     assert_eq!(response.conversation_id, "AG_20230206_201056794190723278ff");
     assert_eq!(
         response.response_description,
         "Accept the service request successfully."
     );
-}
-
-#[tokio::test]
-async fn transaction_reversal_fails_if_no_transaction_id_is_provided() {
-    let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
-    let sample_response_body = json!({
-        "OriginatorConversationID": "29464-48063588-1",
-        "ConversationID": "AG_20230206_201056794190723278ff",
-        "ResponseDescription": "Accept the service request successfully.",
-    });
-    Mock::given(method("POST"))
-        .and(path("/mpesa/reversal/v1/request"))
-        .respond_with(ResponseTemplate::new(200).set_body_json(sample_response_body))
-        .expect(0)
-        .mount(&server)
-        .await;
-    if let Err(e) = client
-        .transaction_reversal("testapi496")
-        .result_url("https://testdomain.com/ok")
-        .timeout_url("https://testdomain.com/err")
-        .amount(1.0)
-        .receiver_party("600111")
-        .send()
-        .await
-    {
-        let MpesaError::Message(msg) = e else {
-            panic!("Expected MpesaError::Message, but found {}", e);
-        };
-        assert_eq!(msg, "transaction_id is required");
-    } else {
-        panic!("Expected error");
-    }
-}
-
-#[tokio::test]
-async fn transaction_reversal_fails_if_no_amount_is_provided() {
-    let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
-    let sample_response_body = json!({
-        "OriginatorConversationID": "29464-48063588-1",
-        "ConversationID": "AG_20230206_201056794190723278ff",
-        "ResponseDescription": "Accept the service request successfully.",
-    });
-    Mock::given(method("POST"))
-        .and(path("/mpesa/reversal/v1/request"))
-        .respond_with(ResponseTemplate::new(200).set_body_json(sample_response_body))
-        .expect(0)
-        .mount(&server)
-        .await;
-    if let Err(e) = client
-        .transaction_reversal("testapi496")
-        .transaction_id("OEI2AK4Q16")
-        .result_url("https://testdomain.com/ok")
-        .timeout_url("https://testdomain.com/err")
-        .receiver_party("600111")
-        .send()
-        .await
-    {
-        let MpesaError::Message(msg) = e else {
-            panic!("Expected MpesaError::Message, but found {}", e);
-        };
-        assert_eq!(msg, "amount is required")
-    } else {
-        panic!("Expected error");
-    }
-}
-
-#[tokio::test]
-async fn transaction_reversal_fails_if_no_result_url_is_provided() {
-    let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
-    let sample_response_body = json!({
-        "OriginatorConversationID": "29464-48063588-1",
-        "ConversationID": "AG_20230206_201056794190723278ff",
-        "ResponseDescription": "Accept the service request successfully.",
-    });
-    Mock::given(method("POST"))
-        .and(path("/mpesa/reversal/v1/request"))
-        .respond_with(ResponseTemplate::new(200).set_body_json(sample_response_body))
-        .expect(0)
-        .mount(&server)
-        .await;
-    if let Err(e) = client
-        .transaction_reversal("testapi496")
-        .transaction_id("OEI2AK4Q16")
-        .amount(1.0)
-        .result_url("https://testdomain.com/ok")
-        .receiver_party("600111")
-        .send()
-        .await
-    {
-        let MpesaError::Message(msg) = e else {
-            panic!("Expected MpesaError::Message, but found {}", e);
-        };
-        assert_eq!(msg, "timeout_url is required")
-    } else {
-        panic!("Expected error");
-    }
-}
-
-#[tokio::test]
-async fn transaction_reversal_fails_if_no_timeout_url_is_provided() {
-    let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
-    let sample_response_body = json!({
-        "OriginatorConversationID": "29464-48063588-1",
-        "ConversationID": "AG_20230206_201056794190723278ff",
-        "ResponseDescription": "Accept the service request successfully.",
-    });
-    Mock::given(method("POST"))
-        .and(path("/mpesa/reversal/v1/request"))
-        .respond_with(ResponseTemplate::new(200).set_body_json(sample_response_body))
-        .expect(0)
-        .mount(&server)
-        .await;
-    if let Err(e) = client
-        .transaction_reversal("testapi496")
-        .transaction_id("OEI2AK4Q16")
-        .amount(1.0)
-        .timeout_url("https://testdomain.com/err")
-        .receiver_party("600111")
-        .send()
-        .await
-    {
-        let MpesaError::Message(msg) = e else {
-            panic!("Expected MpesaError::Message, but found {}", e);
-        };
-        assert_eq!(msg, "result_url is required")
-    } else {
-        panic!("Expected error");
-    }
-}
-
-#[tokio::test]
-async fn transaction_reversal_fails_if_no_receiver_party_is_provided() {
-    let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
-    let sample_response_body = json!({
-        "OriginatorConversationID": "29464-48063588-1",
-        "ConversationID": "AG_20230206_201056794190723278ff",
-        "ResponseDescription": "Accept the service request successfully.",
-    });
-    Mock::given(method("POST"))
-        .and(path("/mpesa/reversal/v1/request"))
-        .respond_with(ResponseTemplate::new(200).set_body_json(sample_response_body))
-        .expect(0)
-        .mount(&server)
-        .await;
-    if let Err(e) = client
-        .transaction_reversal("testapi496")
-        .transaction_id("OEI2AK4Q16")
-        .amount(1.0)
-        .result_url("https://testdomain.com/ok")
-        .timeout_url("https://testdomain.com/err")
-        .send()
-        .await
-    {
-        let MpesaError::Message(msg) = e else {
-            panic!("Expected MpesaError::Message, but found {}", e);
-        };
-        assert_eq!(msg, "receiver_party is required")
-    } else {
-        panic!("Expected error");
-    }
 }

@@ -9,30 +9,6 @@ repository = "https://github.com/collinsmuriuki/mpesa-rust"
 readme = "./README.md"
 license = "MIT"
 
-[dependencies]
-cached = { version = "0.46", features = ["wasm", "async", "proc_macro"] }
-chrono = { version = "0.4", optional = true, default-features = false, features = [
-	"clock",
-	"serde",
-] }
-openssl = { version = "0.10", optional = true }
-reqwest = { version = "0.11", features = ["json"] }
-derive_builder = "0.12"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-serde_repr = "0.1"
-thiserror = "1.0.37"
-wiremock = "0.5"
-secrecy = "0.8.0"
-serde-aux = "4.2.0"
-url = { version = "2", features = ["serde"] }
-
-
-[dev-dependencies]
-dotenv = "0.15"
-tokio = { version = "1", features = ["rt", "rt-multi-thread", "macros"] }
-wiremock = "0.5"
-
 [features]
 default = [
 	"account_balance",
@@ -56,3 +32,28 @@ c2b_simulate = []
 express_request = ["dep:chrono"]
 transaction_reversal = ["dep:openssl"]
 transaction_status = ["dep:openssl"]
+
+
+[dependencies]
+cached = { version = "0.46", features = ["wasm", "async", "proc_macro"] }
+chrono = { version = "0.4", optional = true, default-features = false, features = [
+	"clock",
+	"serde",
+] }
+openssl = { version = "0.10", optional = true }
+reqwest = { version = "0.11", features = ["json"] }
+derive_builder = "0.12"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_repr = "0.1"
+thiserror = "1.0"
+wiremock = "0.5"
+secrecy = "0.8"
+serde-aux = "4.2"
+url = { version = "2", features = ["serde"] }
+
+
+[dev-dependencies]
+dotenv = "0.15"
+tokio = { version = "1", features = ["rt", "rt-multi-thread", "macros"] }
+wiremock = "0.5"

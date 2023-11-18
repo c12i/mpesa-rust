@@ -1,4 +1,5 @@
 use std::cell::RefCell;
+use std::time::Duration;
 
 use cached::Cached;
 use openssl::base64;
@@ -13,7 +14,8 @@ use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, BulkInvoiceBuilder, C2bRegisterBuilder,
     C2bSimulateBuilder, CancelInvoiceBuilder, DynamicQR, DynamicQRBuilder, MpesaExpress,
     MpesaExpressBuilder, OnboardBuilder, OnboardModifyBuilder, ReconciliationBuilder,
-    SingleInvoiceBuilder, TransactionReversalBuilder, TransactionStatusBuilder,
+    SingleInvoiceBuilder, TransactionReversal, TransactionReversalBuilder,
+    TransactionStatusBuilder,
 };
 use crate::{auth, MpesaResult};
 
@@ -45,15 +47,15 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// ```
     ///
     /// # Panics
-    /// This method can panic if a TLS backend cannot be initialized for the internal http_client
+    /// This method can panic if a TLS backend cannot be initialized for the
+    /// internal http_client
     pub fn new<S: Into<String>>(client_key: S, client_secret: S, environment: Env) -> Self {
         let http_client = HttpClient::builder()
-            .connect_timeout(std::time::Duration::from_millis(10_000))
+            .connect_timeout(Duration::from_secs(10))
             .user_agent(format!("mpesa-rust@{CARGO_PACKAGE_VERSION}"))
-            // TODO: Potentialy return a `Result` enum from Mpesa::new?
-            //       Making assumption that creation of http client cannot fail
             .build()
             .expect("Error building http client");
+
         Self {
             client_key: client_key.into(),
             client_secret: Secret::new(client_secret.into()),
@@ -69,6 +71,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         let Some(p) = &*self.initiator_password.borrow() else {
             return DEFAULT_INITIATOR_PASSWORD.to_owned();
         };
+
         p.expose_secret().into()
     }
 
@@ -473,11 +476,8 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///
     /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
     #[cfg(feature = "transaction_reversal")]
-    pub fn transaction_reversal(
-        &'mpesa self,
-        initiator_name: &'mpesa str,
-    ) -> TransactionReversalBuilder<'mpesa, Env> {
-        TransactionReversalBuilder::new(self, initiator_name)
+    pub fn transaction_reversal(&'mpesa self) -> TransactionReversalBuilder<'mpesa, Env> {
+        TransactionReversal::builder(self)
     }
 
     ///**Transaction Status Builder**

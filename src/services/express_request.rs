@@ -1,5 +1,5 @@
 use chrono::prelude::Local;
-use chrono::{DateTime, Utc};
+use chrono::DateTime;
 use derive_builder::Builder;
 use openssl::base64;
 use serde::{Deserialize, Serialize};
@@ -10,8 +10,10 @@ use crate::constants::CommandId;
 use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
 
+/// The default passkey for the sandbox environment
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
-static DEFAULT_PASSKEY: &str = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
+pub static DEFAULT_PASSKEY: &str =
+    "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
 
 const EXPRESS_REQUEST_URL: &str = "/mpesa/stkpush/v1/processrequest";
 
@@ -27,7 +29,7 @@ pub struct MpesaExpressRequest<'mpesa> {
     /// This is the Timestamp of the transaction, normally in the format of
     /// (YYYYMMDDHHMMSS)
     #[serde(serialize_with = "serialize_utc_to_string")]
-    pub timestamp: DateTime<Utc>,
+    pub timestamp: DateTime<Local>,
     /// This is the transaction type that is used to identify the transaction
     /// when sending the request to M-PESA
     pub transaction_type: CommandId,
@@ -57,7 +59,7 @@ pub struct MpesaExpressRequest<'mpesa> {
     pub transaction_desc: Option<&'mpesa str>,
 }
 
-fn serialize_utc_to_string<S>(date: &DateTime<Utc>, serializer: S) -> Result<S::Ok, S::Error>
+fn serialize_utc_to_string<S>(date: &DateTime<Local>, serializer: S) -> Result<S::Ok, S::Error>
 where
     S: serde::Serializer,
 {
@@ -66,6 +68,7 @@ where
     serializer.serialize_str(&s)
 }
 
+// TODO:: The success response has more fields than this
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct MpesaExpressResponse {
@@ -73,6 +76,8 @@ pub struct MpesaExpressResponse {
     /// request.
     #[serde(rename = "CheckoutRequestID")]
     pub checkout_request_id: String,
+    /// This is a message that your system can display to the customer as an
+    /// acknowledgment of the payment request submission.
     pub customer_message: String,
     /// This is a global unique Identifier for any submitted payment request.
     #[serde(rename = "MerchantRequestID")]
@@ -90,7 +95,7 @@ pub struct MpesaExpressResponse {
 }
 
 #[derive(Builder, Debug, Clone)]
-#[builder(build_fn(error = "MpesaError"))]
+#[builder(build_fn(error = "MpesaError", validate = "Self::validate"))]
 pub struct MpesaExpress<'mpesa, Env: ApiEnvironment> {
     #[builder(pattern = "immutable")]
     client: &'mpesa Mpesa<Env>,
@@ -114,7 +119,7 @@ pub struct MpesaExpress<'mpesa, Env: ApiEnvironment> {
 
 impl<'mpesa, Env: ApiEnvironment> From<MpesaExpress<'mpesa, Env>> for MpesaExpressRequest<'mpesa> {
     fn from(express: MpesaExpress<'mpesa, Env>) -> MpesaExpressRequest<'mpesa> {
-        let timestamp = chrono::Utc::now();
+        let timestamp = chrono::Local::now();
 
         let encoded_password = base64::encode_block(
             format!(
@@ -140,15 +145,35 @@ impl<'mpesa, Env: ApiEnvironment> From<MpesaExpress<'mpesa, Env>> for MpesaExpre
     }
 }
 
+impl<Env: ApiEnvironment> MpesaExpressBuilder<'_, Env> {
+    /// Validates the request, returning a `MpesaError` if validation fails
+    ///
+    /// Express requests can only be of type `BusinessBuyGoods` or
+    /// `CustomerPayBillOnline`
+    fn validate(&self) -> MpesaResult<()> {
+        if self.transaction_type != Some(CommandId::BusinessBuyGoods)
+            && self.transaction_type != Some(CommandId::CustomerPayBillOnline)
+        {
+            return Err(MpesaError::Message(
+                "Invalid transaction type. Expected BusinessBuyGoods or CustomerPayBillOnline",
+            ));
+        }
+
+        Ok(())
+    }
+}
+
 impl<'mpesa, Env: ApiEnvironment> MpesaExpress<'mpesa, Env> {
     /// Creates new `MpesaExpressBuilder`
     pub(crate) fn builder(client: &'mpesa Mpesa<Env>) -> MpesaExpressBuilder<'mpesa, Env> {
         MpesaExpressBuilder::default().client(client)
     }
 
+    /// Creates a new `MpesaExpress` from a `MpesaExpressRequest`
     pub fn from_request(
         client: &'mpesa Mpesa<Env>,
         request: MpesaExpressRequest<'mpesa>,
+        pass_key: Option<&'mpesa str>,
     ) -> MpesaExpress<'mpesa, Env> {
         MpesaExpress {
             client,
@@ -161,7 +186,7 @@ impl<'mpesa, Env: ApiEnvironment> MpesaExpress<'mpesa, Env> {
             callback_url: request.call_back_url,
             account_ref: request.account_reference,
             transaction_desc: request.transaction_desc,
-            pass_key: DEFAULT_PASSKEY,
+            pass_key: pass_key.unwrap_or(DEFAULT_PASSKEY),
         }
     }
 
@@ -169,7 +194,7 @@ impl<'mpesa, Env: ApiEnvironment> MpesaExpress<'mpesa, Env> {
     ///
     /// Initiates a M-Pesa transaction on behalf of a customer using STK Push
     ///
-    /// A sucessfult request returns a `MpesaExpressRequestResponse` type
+    /// A successful request returns a `MpesaExpressRequestResponse` type
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
