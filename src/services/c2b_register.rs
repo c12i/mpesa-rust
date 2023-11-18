@@ -5,6 +5,8 @@ use crate::constants::ResponseType;
 use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
 
+const C2B_REGISTER_URL: &str = "mpesa/c2b/v1/registerurl";
+
 #[derive(Debug, Serialize)]
 /// Payload to register the 3rd party’s confirmation and validation URLs to M-Pesa
 struct C2bRegisterPayload<'mpesa> {
@@ -105,13 +107,8 @@ impl<'mpesa, Env: ApiEnvironment> C2bRegisterBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
-    #[allow(clippy::unnecessary_lazy_evaluations)]
-    pub async fn send(self) -> MpesaResult<C2bRegisterResponse> {
-        let url = format!(
-            "{}/mpesa/c2b/v1/registerurl",
-            self.client.environment.base_url()
-        );
 
+    pub async fn send(self) -> MpesaResult<C2bRegisterResponse> {
         let payload = C2bRegisterPayload {
             validation_url: self
                 .validation_url
@@ -119,29 +116,18 @@ impl<'mpesa, Env: ApiEnvironment> C2bRegisterBuilder<'mpesa, Env> {
             confirmation_url: self
                 .confirmation_url
                 .ok_or(MpesaError::Message("confirmation_url is required"))?,
-            response_type: self
-                .response_type
-                .unwrap_or_else(|| ResponseType::Completed),
+            response_type: self.response_type.unwrap_or(ResponseType::Completed),
             short_code: self
                 .short_code
                 .ok_or(MpesaError::Message("short_code is required"))?,
         };
 
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json(&payload)
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            let value = response.json::<_>().await?;
-            return Ok(value);
-        }
-
-        let value = response.json().await?;
-        Err(MpesaError::C2bRegisterError(value))
+        self.client
+            .send(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: C2B_REGISTER_URL,
+                body: payload,
+            })
+            .await
     }
 }

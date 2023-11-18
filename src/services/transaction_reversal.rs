@@ -2,6 +2,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::{ApiEnvironment, CommandId, IdentifierTypes, Mpesa, MpesaError, MpesaResult};
 
+const TRANSACTION_REVERSAL_URL: &str = "mpesa/reversal/v1/request";
+
 #[derive(Debug, Serialize)]
 pub struct TransactionReversalPayload<'mpesa> {
     #[serde(rename(serialize = "Initiator"))]
@@ -169,11 +171,6 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
     /// # Errors
     /// Returns a `MpesaError` on failure.
     pub async fn send(self) -> MpesaResult<TransactionReversalResponse> {
-        let url = format!(
-            "{}/mpesa/reversal/v1/request",
-            self.client.environment.base_url()
-        );
-
         let credentials = self.client.gen_security_credentials()?;
 
         let payload = TransactionReversalPayload {
@@ -202,21 +199,12 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
                 .ok_or(MpesaError::Message("amount is required"))?,
         };
 
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json(&payload)
-            .send()
-            .await?;
-
-        if !response.status().is_success() {
-            let value = response.json().await?;
-            return Err(MpesaError::MpesaTransactionReversalError(value));
-        };
-
-        let response = response.json::<_>().await?;
-        Ok(response)
+        self.client
+            .send(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: TRANSACTION_REVERSAL_URL,
+                body: payload,
+            })
+            .await
     }
 }

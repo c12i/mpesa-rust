@@ -587,9 +587,9 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
 
             Ok(body)
         } else {
-            let err = res.json::<crate::ApiError>().await?;
+            let err = res.json::<crate::ResponseError>().await?;
 
-            Err(crate::MpesaError::ApiError(err))
+            Err(crate::MpesaError::Service(err))
         }
     }
 }

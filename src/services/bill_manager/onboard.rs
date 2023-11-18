@@ -5,14 +5,14 @@ use crate::constants::SendRemindersTypes;
 use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
 
+const BILL_MANAGER_ONBOARD_API_URL: &str = "v1/billmanager-invoice/optin";
+
 #[derive(Debug, Serialize)]
 /// Payload to opt you in as a biller to the bill manager features.
 struct OnboardPayload<'mpesa> {
     #[serde(rename(serialize = "callbackUrl"))]
     callback_url: &'mpesa str,
-    #[serde(rename(serialize = "email"))]
     email: &'mpesa str,
-    #[serde(rename(serialize = "logo"))]
     logo: &'mpesa str,
     #[serde(rename(serialize = "officialContact"))]
     official_contact: &'mpesa str,
@@ -125,13 +125,7 @@ impl<'mpesa, Env: ApiEnvironment> OnboardBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// Returns an `MpesaError` on failure
-    #[allow(clippy::unnecessary_lazy_evaluations)]
     pub async fn send(self) -> MpesaResult<OnboardResponse> {
-        let url = format!(
-            "{}/v1/billmanager-invoice/optin",
-            self.client.environment.base_url()
-        );
-
         let payload = OnboardPayload {
             callback_url: self
                 .callback_url
@@ -141,29 +135,18 @@ impl<'mpesa, Env: ApiEnvironment> OnboardBuilder<'mpesa, Env> {
             official_contact: self
                 .official_contact
                 .ok_or(MpesaError::Message("official_contact is required"))?,
-            send_reminders: self
-                .send_reminders
-                .unwrap_or_else(|| SendRemindersTypes::Disable),
+            send_reminders: self.send_reminders.unwrap_or(SendRemindersTypes::Disable),
             short_code: self
                 .short_code
                 .ok_or(MpesaError::Message("short_code is required"))?,
         };
 
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json(&payload)
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            let value = response.json().await?;
-            return Ok(value);
-        }
-
-        let value = response.json().await?;
-        Err(MpesaError::OnboardError(value))
+        self.client
+            .send(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: BILL_MANAGER_ONBOARD_API_URL,
+                body: payload,
+            })
+            .await
     }
 }
