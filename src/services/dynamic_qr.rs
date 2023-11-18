@@ -6,7 +6,7 @@ use crate::constants::TransactionType;
 use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
 
-const DYNAMIC_QR_URL: &str = "/mpesa/qrcode/v1/generate";
+const DYNAMIC_QR_URL: &str = "mpesa/qrcode/v1/generate";
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "PascalCase")]
