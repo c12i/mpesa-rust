@@ -32,6 +32,10 @@ pub struct MpesaExpressRequest<'mpesa> {
     pub timestamp: DateTime<Local>,
     /// This is the transaction type that is used to identify the transaction
     /// when sending the request to M-PESA
+    ///
+    /// The TransactionType for Mpesa Express is either
+    /// `CommandId::BusinessBuyGoods` or
+    /// `CommandId::CustomerPayBillOnline`
     pub transaction_type: CommandId,
     /// This is the Amount transacted normally a numeric value
     pub amount: f64,
@@ -99,20 +103,45 @@ pub struct MpesaExpressResponse {
 pub struct MpesaExpress<'mpesa, Env: ApiEnvironment> {
     #[builder(pattern = "immutable")]
     client: &'mpesa Mpesa<Env>,
+    /// This is the organization's shortcode (Paybill or Buygoods - A 5 to
+    /// 6-digit account number) used to identify an organization and receive
+    /// the transaction.
     #[builder(setter(into))]
     business_short_code: &'mpesa str,
+    /// This is the transaction type that is used to identify the transaction
+    /// when sending the request to M-PESA
+    ///
+    /// The TransactionType for Mpesa Express is either
+    /// `CommandId::BusinessBuyGoods` or
+    /// `CommandId::CustomerPayBillOnline`
     transaction_type: CommandId,
+    /// This is the Amount transacted normally a numeric value
     #[builder(setter(into))]
     amount: f64,
+    /// The phone number sending money.
     party_a: &'mpesa str,
+    /// The organization that receives the funds
     party_b: &'mpesa str,
+    /// The Mobile Number to receive the STK Pin Prompt.
     phone_number: &'mpesa str,
+    /// A CallBack URL is a valid secure URL that is used to receive
+    /// notifications from M-Pesa API.
+    /// It is the endpoint to which the results will be sent by M-Pesa API.
     #[builder(try_setter, setter(into))]
     callback_url: Url,
+    /// Account Reference: This is an Alpha-Numeric parameter that is defined
+    /// by your system as an Identifier of the transaction for
+    /// CustomerPayBillOnline
     #[builder(setter(into))]
     account_ref: &'mpesa str,
+    /// This is any additional information/comment that can be sent along with
+    /// the request from your system
     #[builder(setter(into, strip_option), default)]
     transaction_desc: Option<&'mpesa str>,
+    /// This is the password used for encrypting the request sent:
+    /// The password for encrypting the request is obtained by base64 encoding
+    /// BusinessShortCode, Passkey and Timestamp.
+    /// The timestamp format is YYYYMMDDHHmmss
     #[builder(setter(into))]
     pass_key: &'mpesa str,
 }
@@ -167,6 +196,22 @@ impl<'mpesa, Env: ApiEnvironment> MpesaExpress<'mpesa, Env> {
     /// Creates new `MpesaExpressBuilder`
     pub(crate) fn builder(client: &'mpesa Mpesa<Env>) -> MpesaExpressBuilder<'mpesa, Env> {
         MpesaExpressBuilder::default().client(client)
+    }
+
+    /// Encodes the password for the request
+    /// The password for encrypting the request is obtained by base64 encoding
+    /// BusinessShortCode, Passkey and Timestamp.
+    /// The timestamp format is YYYYMMDDHHmmss
+    pub fn encode_password(business_short_code: &str, pass_key: Option<&'mpesa str>) -> String {
+        base64::encode_block(
+            format!(
+                "{}{}{}",
+                business_short_code,
+                pass_key.unwrap_or(DEFAULT_PASSKEY),
+                chrono::Local::now()
+            )
+            .as_bytes(),
+        )
     }
 
     /// Creates a new `MpesaExpress` from a `MpesaExpressRequest`
