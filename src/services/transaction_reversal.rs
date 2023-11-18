@@ -1,14 +1,8 @@
 use derive_builder::Builder;
-use serde::Deserialize;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use url::Url;
 
-use crate::ApiEnvironment;
-use crate::CommandId;
-use crate::IdentifierTypes;
-use crate::Mpesa;
-use crate::MpesaError;
-use crate::MpesaResult;
+use crate::{ApiEnvironment, CommandId, IdentifierTypes, Mpesa, MpesaError, MpesaResult};
 
 const TRANSACTION_REVERSAL_URL: &str = "/mpesa/reversal/v1/request";
 
