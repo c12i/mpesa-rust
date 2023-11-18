@@ -9,21 +9,33 @@ const TRANSACTION_REVERSAL_URL: &str = "/mpesa/reversal/v1/request";
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct TransactionReversalRequest<'mpesa> {
+    /// The name of the initiator to initiate the request.
     pub initiator: &'mpesa str,
+    /// Encrypted Credential of user getting transaction reversed.
     pub security_credential: String,
+    /// Unique command for each transaction type.
     #[serde(rename = "CommandID")]
     pub command_id: CommandId,
+    /// This is the Mpesa Transaction ID of the transaction which you wish to
     #[serde(rename = "TransactionID")]
     pub transaction_id: &'mpesa str,
-    receiver_party: &'mpesa str,
-    receiver_identifier_type: IdentifierTypes,
+    /// The organization that receives the transaction.
+    pub receiver_party: &'mpesa str,
+    /// Type of organization that receives the transaction.
+    pub receiver_identifier_type: IdentifierTypes,
+    /// The path that stores information about the transaction.
     #[serde(rename = "ResultURL")]
-    result_url: Url,
+    pub result_url: Url,
+    /// The path that stores information about the time-out transaction.
     #[serde(rename = "QueueTimeOutURL")]
-    queue_timeout_url: Url,
-    remarks: &'mpesa str,
-    occasion: Option<&'mpesa str>,
-    amount: f64,
+    pub queue_timeout_url: Url,
+    /// Comments that are sent along with the transaction.
+    pub remarks: &'mpesa str,
+    /// Comments that are sent along with the transaction.
+    pub occasion: Option<&'mpesa str>,
+    /// The amount transacted in the transaction is to be reversed, down to the
+    /// cent.
+    pub amount: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -105,6 +117,25 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversal<'mpesa, Env> {
     /// Creates new `TransactionReversalBuilder`
     pub(crate) fn builder(client: &'mpesa Mpesa<Env>) -> TransactionReversalBuilder<'mpesa, Env> {
         TransactionReversalBuilder::default().client(client)
+    }
+
+    /// Creates a new `TransactionReversal` from a `TransactionReversalRequest`
+    pub fn from_request(
+        client: &'mpesa Mpesa<Env>,
+        request: TransactionReversalRequest<'mpesa>,
+    ) -> TransactionReversal<'mpesa, Env> {
+        TransactionReversal {
+            client,
+            initiator: request.initiator,
+            transaction_id: request.transaction_id,
+            receiver_party: request.receiver_party,
+            receiver_identifier_type: request.receiver_identifier_type,
+            result_url: request.result_url,
+            timeout_url: request.queue_timeout_url,
+            remarks: request.remarks,
+            occasion: request.occasion,
+            amount: request.amount,
+        }
     }
 
     /// # Transaction Reversal API

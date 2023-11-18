@@ -6,6 +6,7 @@ mod constants;
 pub mod environment;
 mod errors;
 pub mod services;
+pub mod validator;
 
 pub use client::Mpesa;
 pub use constants::{

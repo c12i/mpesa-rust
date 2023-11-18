@@ -9,6 +9,7 @@ use crate::client::Mpesa;
 use crate::constants::CommandId;
 use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
+use crate::validator::PhoneValidator;
 
 /// The default passkey for the sandbox environment
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
@@ -186,6 +187,14 @@ impl<Env: ApiEnvironment> MpesaExpressBuilder<'_, Env> {
             return Err(MpesaError::Message(
                 "Invalid transaction type. Expected BusinessBuyGoods or CustomerPayBillOnline",
             ));
+        }
+
+        if let Some(phone_number) = self.phone_number {
+            phone_number.validate()?;
+        }
+
+        if let Some(party_a) = self.party_a {
+            party_a.validate()?;
         }
 
         Ok(())
