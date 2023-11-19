@@ -190,11 +190,11 @@ impl<Env: ApiEnvironment> MpesaExpressBuilder<'_, Env> {
         }
 
         if let Some(phone_number) = self.phone_number {
-            phone_number.validate()?;
+            phone_number.validate_number()?;
         }
 
         if let Some(party_a) = self.party_a {
-            party_a.validate()?;
+            party_a.validate_number()?;
         }
 
         Ok(())
