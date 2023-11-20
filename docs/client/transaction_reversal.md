@@ -20,16 +20,16 @@ async fn main() {
     );
 
     let response = client
-    .transaction_reversal("testapi496")
-    .result_url("https://testdomain.com/ok")
-    .timeout_url("https://testdomain.com/err")
-    .transaction_id("OEI2AK4Q16")
-    .command_id(mpesa::CommandId::TransactionReversal) // optional will default to CommandId::TransactionReversal
-    .receiver_identifier_type(mpesa::IdentifierTypes::Reversal) // optional will default to IdentifierTypes::Reversal
-    .amount(100)
-    .receiver_party("600111")
-    .send()
-    .await;
+        .transaction_reversal("testapi496")
+        .result_url("https://testdomain.com/ok")
+        .timeout_url("https://testdomain.com/err")
+        .transaction_id("OEI2AK4Q16")
+        .command_id(mpesa::CommandId::TransactionReversal) // optional will default to CommandId::TransactionReversal
+        .receiver_identifier_type(mpesa::IdentifierTypes::Reversal) // optional will default to IdentifierTypes::Reversal
+        .amount(100)
+        .receiver_party("600111")
+        .send()
+        .await;
 
     assert!(response.is_ok())
 }
