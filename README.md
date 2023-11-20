@@ -84,20 +84,13 @@ use std::str::FromStr;
 async fn main() -> Result<(), Box<dyn Error>> {
     dotenv::dotenv().ok();
 
-    let sandbox_client = Mpesa::new(
+    let client = Mpesa::new(
         env!("CLIENT_KEY"),
         env!("CLIENT_SECRET"),
-        Environment::from_str("sandbox")?,
+        Environment::from_str("production")?, // or Environment::try_from("production")?
     );
-    assert!(sandbox_client.is_connected().await);
 
-    let production_client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
-        Environment::try_from("production")?
-    );
-    assert!(production_client.is_connected().await);
-
+    assert!(client.is_connected().await);
     Ok(())
 }
 ```
