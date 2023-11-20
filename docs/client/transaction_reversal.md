@@ -8,6 +8,8 @@ use mpesa::{Mpesa, Environment};
 
 #[tokio::main]
 async fn main() {
+	dotenv::dotenv().ok();
+
 	let client = Mpesa::new(
 		env!("CLIENT_KEY"),
 		env!("CLIENT_SECRET"),
