@@ -9,15 +9,14 @@ use crate::errors::{MpesaError, MpesaResult};
 const DYNAMIC_QR_URL: &str = "mpesa/qrcode/v1/generate";
 
 #[derive(Debug, Serialize)]
-#[serde(rename_all = "PascalCase")]
+#[serde(rename_all(serialize = "PascalCase"))]
 pub struct DynamicQRRequest<'mpesa> {
     /// Name of the Company/M-Pesa Merchant Name
     pub merchant_name: &'mpesa str,
     /// Transaction Reference Number
     pub ref_no: &'mpesa str,
     /// The total amount of the transaction
-    pub amount: f64,
-    #[serde(rename = "TrxCode")]
+    pub amount: u32,
     /// Transaction Type
     ///
     /// This can be a `TransactionType` or a `&str`
@@ -27,6 +26,7 @@ pub struct DynamicQRRequest<'mpesa> {
     /// - `WA` Withdraw Cash
     /// - `SM` Send Money (Mobile Number)
     /// - `SB` Sent to Business. Business number CPI in MSISDN format.
+    #[serde(rename = "TrxCode")]
     pub transaction_type: TransactionType,
     ///Credit Party Identifier.
     ///
@@ -41,7 +41,7 @@ pub struct DynamicQRRequest<'mpesa> {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "PascalCase")]
+#[serde(rename_all(deserialize = "PascalCase"))]
 pub struct DynamicQRResponse {
     #[serde(rename(deserialize = "QRCode"))]
     pub qr_code: String,
@@ -91,7 +91,7 @@ impl<'mpesa, Env: ApiEnvironment> From<DynamicQR<'mpesa, Env>> for DynamicQRRequ
         DynamicQRRequest {
             merchant_name: express.merchant_name,
             ref_no: express.ref_no,
-            amount: express.amount,
+            amount: express.amount as u32,
             transaction_type: express.transaction_type,
             credit_party_identifier: express.credit_party_identifier,
             size: express.size,
@@ -115,7 +115,7 @@ impl<'mpesa, Env: ApiEnvironment> DynamicQR<'mpesa, Env> {
             client,
             merchant_name: request.merchant_name,
             ref_no: request.ref_no,
-            amount: request.amount,
+            amount: request.amount as f64,
             transaction_type: request.transaction_type,
             credit_party_identifier: request.credit_party_identifier,
             size: request.size,
