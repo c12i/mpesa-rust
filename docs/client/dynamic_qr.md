@@ -11,27 +11,27 @@ use mpesa::{Mpesa, Environment};
 
 #[tokio::main]
 async fn main() {
-	dotenv::dotenv().ok();
+    dotenv::dotenv().ok();
 
-	let client = Mpesa::new(
-		env!("CLIENT_KEY"),
-		env!("CLIENT_SECRET"),
-		Environment::Sandbox,
-	);
+    let client = Mpesa::new(
+        env!("CLIENT_KEY"),
+        env!("CLIENT_SECRET"),
+        Environment::Sandbox,
+    );
 
-	let response = client
-		.dynamic_qr()
-		.amount(2000)
-		.credit_party_identifier("373132")
-		.merchant_name("TEST SUPERMARKET")
-		.ref_no("Invoice Test")
-		.size("300")
-		.transaction_type(mpesa::TransactionType::BG)
-		.build()
-		.unwrap()
-		.send()
-		.await;
+    let response = client
+        .dynamic_qr()
+        .amount(2000)
+        .credit_party_identifier("373132")
+        .merchant_name("TEST SUPERMARKET")
+        .ref_no("Invoice Test")
+        .size("300")
+        .transaction_type(mpesa::TransactionType::BG)
+        .build()
+        .unwrap()
+        .send()
+        .await;
 
-	assert!(response.is_ok())
+    assert!(response.is_ok())
 }
 ```

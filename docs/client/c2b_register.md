@@ -2,7 +2,7 @@ Register URL API works hand in hand with Customer to Business (C2B) APIs and all
 
 There are two URLs required for Register URL API: Validation URL and Confirmation URL.
 
-Returns a `C2bRegisterBuilder` 
+Returns a `C2bRegisterBuilder`
 
 See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/APIs/CustomerToBusinessRegisterURL)
 
@@ -12,23 +12,23 @@ use mpesa::{Mpesa, Environment};
 
 #[tokio::main]
 async fn main() {
-	dotenv::dotenv().ok();
+    dotenv::dotenv().ok();
 
-	let client = Mpesa::new(
-		env!("CLIENT_KEY"),
-		env!("CLIENT_SECRET"),
-		Environment::Sandbox,
-	);
+    let client = Mpesa::new(
+        env!("CLIENT_KEY"),
+        env!("CLIENT_SECRET"),
+        Environment::Sandbox,
+    );
 
-	let response = client
-		.c2b_register()
-		.short_code("600496")
-		.confirmation_url("https://testdomain.com/true")
-		.validation_url("https://testdomain.com/valid")
-		.response_type(mpesa::ResponseType::Completed) // optional, defaults to `ResponseTypes::Complete`
-		.send()
-		.await;
+    let response = client
+        .c2b_register()
+        .short_code("600496")
+        .confirmation_url("https://testdomain.com/true")
+        .validation_url("https://testdomain.com/valid")
+        .response_type(mpesa::ResponseType::Completed) // optional, defaults to `ResponseTypes::Complete`
+        .send()
+        .await;
 
-	assert!(response.is_ok())
+    assert!(response.is_ok())
 }
 ```

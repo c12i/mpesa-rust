@@ -1,17 +1,17 @@
-Constructs a new `Mpesa` instance.
+Constructs a new `Mpesa` client.
 
 # Example
 ```rust
 use mpesa::{Mpesa, Environment};
 
 fn main() {
-  dotenv::dotenv().ok();
+    dotenv::dotenv().ok();
 
-  let client = Mpesa::new(
-      env!("CLIENT_KEY"),
-      env!("CLIENT_SECRET"),
-      Environment::Sandbox,
-  );
+    let client = Mpesa::new(
+        env!("CLIENT_KEY"),
+        env!("CLIENT_SECRET"),
+        Environment::Sandbox,
+    );
 }
 ```
 
