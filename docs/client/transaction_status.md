@@ -1,5 +1,8 @@
 Queries the status of a B2B, B2C or C2B M-Pesa transaction.
 
+Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
+Returns a `TransactionStatusBuilder`.
+
 See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
 
 # Example
