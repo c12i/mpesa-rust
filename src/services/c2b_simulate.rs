@@ -30,7 +30,7 @@ pub struct C2bSimulateResponse {
         skip_serializing_if = "Option::is_none"
     )]
     pub conversation_id: Option<String>,
-    #[serde(rename(deserialize = "OriginatorConversationID"))]
+    #[serde(rename(deserialize = "OriginatorCoversationID"))]
     pub originator_conversation_id: String,
     #[serde(rename(deserialize = "ResponseCode"))]
     pub response_code: String,

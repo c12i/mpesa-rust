@@ -35,19 +35,7 @@ pub struct Mpesa<Env: ApiEnvironment> {
 }
 
 impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
-    /// Constructs a new `Mpesa` instance.
-    ///
-    /// # Example
-    /// ```ignore
-    /// let client: Mpesa = Mpesa::new(
-    ///     env!("CLIENT_KEY"),
-    ///     env!("CLIENT_SECRET"),
-    ///     Environment::Sandbox,
-    /// );
-    /// ```
-    ///
-    /// # Panics
-    /// This method can panic if a TLS backend cannot be initialized for the internal http_client
+    #[doc = include_str!("../docs/client/new.md")]
     pub fn new<S: Into<String>>(client_key: S, client_secret: S, environment: Env) -> Self {
         let http_client = HttpClient::builder()
             .connect_timeout(std::time::Duration::from_millis(10_000))
@@ -84,19 +72,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         self.client_secret.expose_secret()
     }
 
-    /// Optional in development but required for production, you will need to call this method and set your production initiator password.
-    /// If in development, default initiator password is already pre-set
-    /// ```ignore
-    /// use mpesa::Mpesa;
-    ///
-    /// let client: Mpesa = Mpesa::new(
-    ///     env::var("CLIENT_KEY").unwrap(),
-    ///     env::var("CLIENT_SECRET").unwrap(),
-    ///     Environment::Sandbox,
-    /// );
-    ///
-    /// client.set_initiator_password("your_initiator_password");
-    /// ```
+    #[doc = include_str!("../docs/client/set_initiator_password.md")]
     pub fn set_initiator_password<S: Into<String>>(&self, initiator_password: S) {
         *self.initiator_password.borrow_mut() = Some(Secret::new(initiator_password.into()));
     }
@@ -106,18 +82,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         self.auth().await.is_ok()
     }
 
-    /// **Safaricom Oauth**
-    ///
-    /// Generates an access token
-    /// Sends `GET` request to Safaricom oauth to acquire token for token authentication
-    /// The OAuth access token expires after an hour, after which, you will need to generate another access token
-    ///
-    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/docs#authentication)
-    ///
-    /// Returns the auth token as a `String`.
-    ///
-    /// # Errors
-    /// Returns a `MpesaError` on failure
+    #[doc = include_str!("../docs/client/auth.md")]
     pub(crate) async fn auth(&self) -> MpesaResult<String> {
         if let Some(token) = AUTH.lock().await.cache_get(&self.client_key) {
             return Ok(token.to_owned());
@@ -142,57 +107,14 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         Ok(new_token)
     }
 
-    /// **B2C Builder**
-    ///
-    /// Creates a `B2cBuilder` for building a B2C transaction struct.
-    /// The builder is consumed and request made by calling its `send` method.
-    /// See more from Safaricom the API docs [here](https://developer.safaricom.co.ke/docs?shell#b2c-api).
-    ///
-    /// Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
-    ///
-    /// # Example
-    /// ```ignore
-    /// let response = client
-    ///     .b2c("testapi496")
-    ///     .party_a("600496")
-    ///     .party_b("600000")
-    ///     .result_url("https://testdomain.com/err")
-    ///     .timeout_url("https://testdomain.com/ok")
-    ///     .amount(1000)
-    ///     .remarks("Your Remark") // optional, defaults to "None"
-    ///     .occasion("Your Occasion") // optional, defaults to "None"
-    ///     .command_id(mpesa::CommandId::BusinessPayment) // optional, defaults to `CommandId::BusinessPayment`
-    ///     .send();
-    /// ```
     #[cfg(feature = "b2c")]
+    #[doc = include_str!("../docs/client/b2c.md")]
     pub fn b2c(&'mpesa self, initiator_name: &'mpesa str) -> B2cBuilder<'mpesa, Env> {
         B2cBuilder::new(self, initiator_name)
     }
 
-    /// **B2B Builder**
-    ///
-    /// Creates a `B2bBuilder` for building B2B transaction struct.
-    ///
-    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/docs#b2b-api)
-    ///
-    /// Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
-    ///
-    /// # Example
-    /// ```ignore
-    /// let response = client.b2b("testapi496")
-    ///    .party_a("600496")
-    ///    .party_b("600000")
-    ///    .result_url("https://testdomain.com/err")
-    ///    .timeout_url("https://testdomain.com/ok")
-    ///    .account_ref("254708374149")
-    ///    .amount(1000)
-    ///    .command_id(mpesa::CommandId::BusinessToBusinessTransfer) // optional, defaults to `CommandId::BusinessToBusinessTransfer`
-    ///    .remarks("None") // optional, defaults to "None"
-    ///    .sender_id(mpesa::IdentifierTypes::ShortCode) // optional, defaults to `IdentifierTypes::ShortCode`
-    ///    .receiver_id(mpesa::IdentifierTypes::ShortCode) // optional, defaults to `IdentifierTypes::ShortCode`
-    ///    .send();
-    /// ```
     #[cfg(feature = "b2b")]
+    #[doc = include_str!("../docs/client/b2b.md")]
     pub fn b2b(&'mpesa self, initiator_name: &'mpesa str) -> B2bBuilder<'mpesa, Env> {
         B2bBuilder::new(self, initiator_name)
     }
@@ -376,68 +298,20 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         CancelInvoiceBuilder::new(self)
     }
 
-    /// **C2B Register builder**
-    ///
-    /// Creates a `C2bRegisterBuilder` for registering URLs to the 3rd party shortcode.
-    ///
-    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/docs?shell#c2b-api)
-    ///
-    /// # Example
-    /// ```ignore
-    /// let response = client
-    ///    .c2b_register()
-    ///    .short_code("600496")
-    ///    .confirmation_url("https://testdomain.com/true")
-    ///    .validation_url("https://testdomain.com/valid")
-    ///    .response_type(mpesa::ResponseTypes::Complete) // optional, defaults to `ResponseTypes::Complete`
-    ///    .send();
-    /// ```
     #[cfg(feature = "c2b_register")]
+    #[doc = include_str!("../docs/client/c2b_register.md")]
     pub fn c2b_register(&'mpesa self) -> C2bRegisterBuilder<'mpesa, Env> {
         C2bRegisterBuilder::new(self)
     }
 
-    /// **C2B Simulate Builder**
-    ///
-    /// Creates a `C2bSimulateBuilder` for simulating C2B transactions
-    ///
-    /// See more [here](https://developer.safaricom.co.ke/c2b/apis/post/simulate)
-    ///
-    /// # Example
-    /// ```ignore
-    /// let response = client.c2b_simulate()
-    ///    .short_code("600496")
-    ///    .msisdn("254700000000")
-    ///    .amount(1000)
-    ///    .command_id(mpesa::CommandId::CustomerPayBillOnline) // optional, defaults to `CommandId::CustomerPayBillOnline`
-    ///    .bill_ref_number("Your_BillRefNumber>") // optional, defaults to "None"
-    ///    .send();
-    /// ```
     #[cfg(feature = "c2b_simulate")]
+    #[doc = include_str!("../docs/client/c2b_simulate.md")]
     pub fn c2b_simulate(&'mpesa self) -> C2bSimulateBuilder<'mpesa, Env> {
         C2bSimulateBuilder::new(self)
     }
 
-    /// **Account Balance Builder**
-    ///
-    /// Creates an `AccountBalanceBuilder` for enquiring the balance on an MPESA BuyGoods.
-    /// Requires an `initiator_name`.
-    ///
-    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/docs#account-balance-api)
-    ///
-    /// # Example
-    /// ```ignore
-    /// let response = client
-    ///    .account_balance("testapi496")
-    ///    .result_url("https://testdomain.com/err")
-    ///    .timeout_url("https://testdomain.com/ok")
-    ///    .party_a("600496")
-    ///    .command_id(mpesa::CommandId::AccountBalance) // optional, defaults to `CommandId::AccountBalance`
-    ///    .identifier_type(mpesa::IdentifierTypes::ShortCode) // optional, defaults to `IdentifierTypes::ShortCode`
-    ///    .remarks("Your Remarks") // optional, defaults to "None"
-    ///    .send();
-    /// ```
     #[cfg(feature = "account_balance")]
+    #[doc = include_str!("../docs/client/account_balance.md")]
     pub fn account_balance(
         &'mpesa self,
         initiator_name: &'mpesa str,
@@ -445,27 +319,8 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         AccountBalanceBuilder::new(self, initiator_name)
     }
 
-    /// **Mpesa Express Request/ STK push Builder**
-    ///
-    /// Creates a `MpesaExpressRequestBuilder` struct
-    /// Requires a `business_short_code` - The organization shortcode used to receive the transaction
-    ///
-    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/docs#lipa-na-m-pesa-online-payment)
-    ///
-    /// # Example
-    ///```ignore
-    /// let response = client
-    ///    .express_request("174379")
-    ///    .phone_number("254708374149")
-    ///    .party_a("254708374149")
-    ///    .party_b("174379")
-    ///    .amount(500)
-    ///    .callback_url("https://test.example.com/api")
-    ///    .transaction_type(CommandId::CustomerPayBillOnline) // Optional, defaults to `CommandId::CustomerPayBillOnline`
-    ///    .transaction_desc("Description") // Optional, defaults to "None"
-    ///    .send();
-    /// ```
     #[cfg(feature = "express_request")]
+    #[doc = include_str!("../docs/client/express_request.md")]
     pub fn express_request(
         &'mpesa self,
         business_short_code: &'mpesa str,
@@ -473,11 +328,8 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         MpesaExpressRequestBuilder::new(self, business_short_code)
     }
 
-    ///**Transaction Reversal Builder**
-    /// Reverses a B2B, B2C or C2B M-Pesa transaction.
-    ///
-    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
     #[cfg(feature = "transaction_reversal")]
+    #[doc = include_str!("../docs/client/transaction_reversal.md")]
     pub fn transaction_reversal(
         &'mpesa self,
         initiator_name: &'mpesa str,
@@ -485,23 +337,8 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         TransactionReversalBuilder::new(self, initiator_name)
     }
 
-    ///**Transaction Status Builder**
-    /// Queries the status of a B2B, B2C or C2B M-Pesa transaction.
-    ///
-    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
-    /// # Example
-    /// ```ignore
-    /// let response = client
-    ///   .transaction_status("testapi496")
-    ///   .party_a("600496")
-    ///   .identifier_type(mpesa::IdentifierTypes::ShortCode) // optional, defaults to `IdentifierTypes::ShortCode`
-    ///   .remarks("Your Remarks") // optional, defaults to "None"
-    ///   .result_url("https://testdomain.com/err")
-    ///   .timeout_url("https://testdomain.com/ok")
-    ///   .send()
-    ///   .await;
-    /// ```
     #[cfg(feature = "transaction_status")]
+    #[doc = include_str!("../docs/client/transaction_status.md")]
     pub fn transaction_status(
         &'mpesa self,
         initiator_name: &'mpesa str,
@@ -509,32 +346,8 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         TransactionStatusBuilder::new(self, initiator_name)
     }
 
-    /// ** Dynamic QR Code Builder **
-    ///
-    /// Generates a QR code that can be scanned by a M-Pesa customer to make
-    /// payments.
-    ///
-    /// See more from the Safaricom API docs [here](https://developer.safaricom.
-    /// co.ke/APIs/DynamicQRCode)
-    ///
-    /// # Example
-    /// ```ignore
-    /// let response = client
-    ///     .dynamic_qr_code()
-    ///     .amount(1000)
-    ///     .ref_no("John Doe")
-    ///     .size("300")
-    ///     .merchant_name("John Doe")
-    ///     .credit_party_identifier("600496")
-    ///     .try_transaction_type("bg")
-    ///     .unwrap()
-    ///     .build()
-    ///     .unwrap()
-    ///     .send()
-    ///     .await;
-    /// ```
-    ///
     #[cfg(feature = "dynamic_qr")]
+    #[doc = include_str!("../docs/client/dynamic_qr.md")]
     pub fn dynamic_qr(&'mpesa self) -> DynamicQRBuilder<'mpesa, Env> {
         DynamicQR::builder(self)
     }

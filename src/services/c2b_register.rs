@@ -22,7 +22,7 @@ struct C2bRegisterPayload<'mpesa> {
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct C2bRegisterResponse {
-    #[serde(rename(deserialize = "OriginatorConverstionID"))]
+    #[serde(rename(deserialize = "OriginatorCoversationID"))]
     pub originator_conversation_id: String,
     #[serde(rename(deserialize = "ResponseCode"))]
     pub response_code: String,
