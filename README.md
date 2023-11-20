@@ -39,7 +39,7 @@ mpesa = { git = "1.1.0", default_features = false, features = ["b2b", "express_r
 
 In your lib or binary crate:
 
-```rust,ignore
+```rust
 use mpesa::Mpesa;
 ```
 
@@ -54,39 +54,52 @@ read the docs [here](https://developer.safaricom.co.ke/docs?javascript#going-liv
 
 These are the following ways you can instantiate `Mpesa`:
 
-```rust,ignore
+```rust
 use mpesa::{Mpesa, Environment};
 
-let client = Mpesa::new(
-      env!("CLIENT_KEY"),
-      env!("CLIENT_SECRET"),
-      Environment::Sandbox,
-);
+#[tokio::main]
+async fn main() {
+    dotenv::dotenv().ok();
 
-assert!(client.is_connected().await)
+    let client = Mpesa::new(
+        env!("CLIENT_KEY"),
+        env!("CLIENT_SECRET"),
+        Environment::Sandbox,
+    );
+
+    assert!(client.is_connected().await);
+}
 ```
 
 Since the `Environment` enum implements `FromStr` and `TryFrom` for `String` and `&str` types, you can call `Environment::from_str` or `Environment::try_from` to create an `Environment` type. This is ideal if the environment values are
 stored in a `.env` or any other configuration file:
 
-```rust,ignore
+```rust
 use mpesa::{Mpesa, Environment};
-use std::str::FromStr;
 use std::convert::TryFrom;
+use std::error::Error;
+use std::str::FromStr;
 
-let client0 = Mpesa::new(
-      env!("CLIENT_KEY"),
-      env!("CLIENT_SECRET"),
-      Environment::from_str("sandbox")? // "Sandbox" and "SANDBOX" also valid
-);
-assert!(client0.is_connected().await)
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn Error>> {
+    dotenv::dotenv().ok();
 
-let client1 = Mpesa::new(
-      env!("CLIENT_KEY"),
-      env!("CLIENT_SECRET"),
-      Environment::try_from("production")? // "Production" and "PRODUCTION" also valid
-);
-assert!(client1.is_connected().await)
+    let sandbox_client = Mpesa::new(
+        env!("CLIENT_KEY"),
+        env!("CLIENT_SECRET"),
+        Environment::from_str("sandbox")?,
+    );
+    assert!(sandbox_client.is_connected().await);
+
+    let production_client = Mpesa::new(
+        env!("CLIENT_KEY"),
+        env!("CLIENT_SECRET"),
+        Environment::try_from("production")?
+    );
+    assert!(production_client.is_connected().await);
+
+    Ok(())
+}
 ```
 
 The `Mpesa` struct's `environment` parameter is generic over any type that implements the `ApiEnvironment` trait. This trait
@@ -103,14 +116,13 @@ This trait allows you to create your own type to pass to the `environment` param
 
 See the example below (and [here](./src/environment.rs) so see how the trait is implemented for the `Environment` enum):
 
-```rust,ignore
+```rust
 use mpesa::{Mpesa, ApiEnvironment};
-use std::str::FromStr;
-use std::convert::TryFrom;
 
-pub struct MyCustomEnvironment;
+#[derive(Clone)]
+pub struct CustomEnvironment;
 
-impl ApiEnvironment for MyCustomEnvironment {
+impl ApiEnvironment for CustomEnvironment {
     fn base_url(&self) -> &str {
         // your base url here
         "https://your_base_url.com"
@@ -122,30 +134,37 @@ impl ApiEnvironment for MyCustomEnvironment {
     }
 }
 
-let client: Mpesa<MyCustomEnvironment> = Mpesa::new(
-    env!("CLIENT_KEY"),
-    env!("CLIENT_SECRET"),
-    MyCustomEnvironment // ✔ valid
-);
+#[tokio::main]
+async fn main() {
+    dotenv::dotenv().ok();
 
-//...
+    let client = Mpesa::new(
+        env!("CLIENT_KEY"),
+        env!("CLIENT_SECRET"),
+        CustomEnvironment,
+    );
+}
 ```
 
 If you intend to use in production, you will need to call a the `set_initiator_password` method from `Mpesa` after initially
 creating the client. Here you provide your initiator password, which overrides the default password used in sandbox `"Safcom496!"`:
 
-```rust,ignore
-use mpesa::Mpesa;
+```rust
+use mpesa::{Mpesa, Environment};
 
-let client = Mpesa::new(
-      env!("CLIENT_KEY"),
-      env!("CLIENT_SECRET"),
-      Environment::Sandbox,
-);
+#[tokio::main]
+async fn main() {
+    dotenv::dotenv().ok();
 
-client.set_initiator_password("new_password");
+    let client = Mpesa::new(
+        env!("CLIENT_KEY"),
+        env!("CLIENT_SECRET"),
+        Environment::Sandbox,
+    );
 
-assert!(client.is_connected().await)
+    client.set_initiator_password("new_password");
+    assert!(client.is_connected().await)
+}
 ```
 
 ### Services
