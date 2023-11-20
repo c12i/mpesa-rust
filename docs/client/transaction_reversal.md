@@ -1,0 +1,31 @@
+Reverses a B2B, B2C or C2B M-Pesa transaction.
+
+See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
+
+# Example
+```rust,no_run
+use mpesa::{Mpesa, Environment};
+
+#[tokio::main]
+async fn main() {
+	let client = Mpesa::new(
+		env!("CLIENT_KEY"),
+		env!("CLIENT_SECRET"),
+		Environment::Sandbox,
+	);
+
+	let response = client
+    .transaction_reversal("testapi496")
+    .result_url("https://testdomain.com/ok")
+    .timeout_url("https://testdomain.com/err")
+    .transaction_id("OEI2AK4Q16")
+		.command_id(mpesa::CommandId::TransactionReversal) // optional will default to CommandId::TransactionReversal
+    .receiver_identifier_type(mpesa::IdentifierTypes::ShortCode) // optional will default to IdentifierTypes::ShortCode
+    .amount(100)
+    .receiver_party("600111")
+    .send()
+    .await;
+
+	assert!(response.is_ok())
+}
+```
