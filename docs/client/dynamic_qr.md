@@ -21,19 +21,17 @@ async fn main() {
 
 	let response = client
 		.dynamic_qr()
-		.amount(1000)
-		.ref_no("John Doe")
+		.amount(2000)
+		.credit_party_identifier("373132")
+		.merchant_name("TEST SUPERMARKET")
+		.ref_no("Invoice Test")
 		.size("300")
-		.merchant_name("John Doe")
-		.credit_party_identifier("600496")
-		.try_transaction_type("bg")
-		.unwrap()
+		.transaction_type(mpesa::TransactionType::BG)
 		.build()
 		.unwrap()
 		.send()
 		.await;
 
-	println!("{:?}", response);
 	assert!(response.is_ok())
 }
 ```
