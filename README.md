@@ -87,7 +87,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let client = Mpesa::new(
         env!("CLIENT_KEY"),
         env!("CLIENT_SECRET"),
-        Environment::from_str("production")?, // or Environment::try_from("production")?
+        Environment::from_str("sandbox")?, // or
+        // Environment::try_from("sandbox")?,
     );
 
     assert!(client.is_connected().await);
