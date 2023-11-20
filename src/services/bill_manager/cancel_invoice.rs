@@ -69,7 +69,6 @@ impl<'mpesa, Env: ApiEnvironment> CancelInvoiceBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// Returns an `MpesaError` on failure
-
     pub async fn send(self) -> MpesaResult<CancelInvoiceResponse> {
         self.client
             .send(crate::client::Request {
