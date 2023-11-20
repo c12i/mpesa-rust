@@ -34,7 +34,7 @@ Example:
 
 ```toml
 [dependencies]
-mpesa = { git = "1.1.0", default_features = false, features = ["b2b", "express_request"] }
+mpesa = { version = "1.1.0", default_features = false, features = ["b2b", "express_request"] }
 ```
 
 In your lib or binary crate:
