@@ -104,10 +104,12 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// If in development, a default initiator password from the test credentials is already pre-set
     ///
     /// # Example
+    ///
     /// ```rust
     /// use mpesa::{Mpesa, Environment};
     ///
-    /// fn main() {
+    /// #[tokio::main]
+    /// async fn main() {
     ///     dotenv::dotenv().ok();
     ///
     ///     let client = Mpesa::new(
@@ -116,6 +118,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///         Environment::Sandbox,
     ///     );
     ///     client.set_initiator_password("your_initiator_password");
+    ///     assert!(client.is_connected().await);
     /// }
     /// ```
     pub fn set_initiator_password<S: Into<String>>(&self, initiator_password: S) {
