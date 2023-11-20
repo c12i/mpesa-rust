@@ -39,6 +39,7 @@ pub enum IdentifierTypes {
     MSISDN = 1,
     TillNumber = 2,
     ShortCode = 4,
+    Reversal = 11,
 }
 
 impl Display for IdentifierTypes {
@@ -160,7 +161,7 @@ pub enum TransactionType {
 
 impl Display for TransactionType {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        write!(f, "{self}")
+        write!(f, "{self:?}")
     }
 }
 

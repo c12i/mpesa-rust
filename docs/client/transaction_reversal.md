@@ -1,4 +1,4 @@
-Reverses a B2B, B2C or C2B M-Pesa transaction.
+Reverses a C2B M-Pesa transaction.
 
 Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
 Returns a `TransactionReversalBuilder`
@@ -6,7 +6,7 @@ Returns a `TransactionReversalBuilder`
 See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/Documentation)
 
 # Example
-```rust,no_run
+```rust
 use mpesa::{Mpesa, Environment};
 
 #[tokio::main]
@@ -25,7 +25,7 @@ async fn main() {
     .timeout_url("https://testdomain.com/err")
     .transaction_id("OEI2AK4Q16")
 		.command_id(mpesa::CommandId::TransactionReversal) // optional will default to CommandId::TransactionReversal
-    .receiver_identifier_type(mpesa::IdentifierTypes::ShortCode) // optional will default to IdentifierTypes::ShortCode
+    .receiver_identifier_type(mpesa::IdentifierTypes::Reversal) // optional will default to IdentifierTypes::Reversal
     .amount(100)
     .receiver_party("600111")
     .send()
