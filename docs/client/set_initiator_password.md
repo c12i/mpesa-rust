@@ -5,6 +5,8 @@ If in development, default initiator password is already pre-set
 use mpesa::{Mpesa, Environment};
 
 fn main() {
+	dotenv::dotenv().ok();
+
 	let client = Mpesa::new(
 			env!("CLIENT_KEY"),
 			env!("CLIENT_SECRET"),
