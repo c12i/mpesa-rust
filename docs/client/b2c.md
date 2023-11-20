@@ -9,15 +9,15 @@ use mpesa::{Mpesa, Environment};
 
 #[tokio::main]
 async fn main() {
-  dotenv::dotenv().ok();
+    dotenv::dotenv().ok();
 
-	let client = Mpesa::new(
-      env!("CLIENT_KEY"),
-      env!("CLIENT_SECRET"),
-      Environment::Sandbox,
-  );
+    let client = Mpesa::new(
+        env!("CLIENT_KEY"),
+        env!("CLIENT_SECRET"),
+        Environment::Sandbox,
+    );
 
-	let response = client
+    let response = client
     .b2c("testapi496")
     .party_a("600496")
     .party_b("254708374149")
@@ -28,7 +28,7 @@ async fn main() {
     .occasion("Your Occasion") // optional, defaults to "None"
     .command_id(mpesa::CommandId::BusinessPayment) // optional, defaults to `CommandId::BusinessPayment`
     .send()
-		.await;
-	assert!(response.is_ok())
+        .await;
+    assert!(response.is_ok())
 }
 ```

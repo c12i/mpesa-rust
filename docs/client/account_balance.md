@@ -11,25 +11,25 @@ use mpesa::{Mpesa, Environment};
 
 #[tokio::main]
 async fn main() {
-	dotenv::dotenv().ok();
+    dotenv::dotenv().ok();
 
-	let client = Mpesa::new(
-		env!("CLIENT_KEY"),
-		env!("CLIENT_SECRET"),
-		Environment::Sandbox,
-	);
+    let client = Mpesa::new(
+        env!("CLIENT_KEY"),
+        env!("CLIENT_SECRET"),
+        Environment::Sandbox,
+    );
 
-	let response = client
-		.account_balance("testapi496")
-		.result_url("https://testdomain.com/err")
-		.timeout_url("https://testdomain.com/ok")
-		.party_a("600496")
-		.command_id(mpesa::CommandId::AccountBalance) // optional, defaults to `CommandId::AccountBalance`
-		.identifier_type(mpesa::IdentifierTypes::ShortCode) // optional, defaults to `IdentifierTypes::ShortCode`
-		.remarks("Your Remarks") // optional, defaults to "None"
-		.send()
-		.await;
+    let response = client
+        .account_balance("testapi496")
+        .result_url("https://testdomain.com/err")
+        .timeout_url("https://testdomain.com/ok")
+        .party_a("600496")
+        .command_id(mpesa::CommandId::AccountBalance) // optional, defaults to `CommandId::AccountBalance`
+        .identifier_type(mpesa::IdentifierTypes::ShortCode) // optional, defaults to `IdentifierTypes::ShortCode`
+        .remarks("Your Remarks") // optional, defaults to "None"
+        .send()
+        .await;
 
-	assert!(response.is_ok())
+    assert!(response.is_ok())
 }
 ```
