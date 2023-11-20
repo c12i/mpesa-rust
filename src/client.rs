@@ -35,7 +35,28 @@ pub struct Mpesa<Env: ApiEnvironment> {
 }
 
 impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
-    #[doc = include_str!("../docs/client/new.md")]
+    /// Constructs a new `Mpesa` client.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use mpesa::{Mpesa, Environment};
+    ///
+    /// #[tokio::main]
+    /// async fn main() {
+    ///    dotenv::dotenv().ok();
+    ///
+    ///    let client = Mpesa::new(
+    ///         env!("CLIENT_KEY"),
+    ///         env!("CLIENT_SECRET"),
+    ///         Environment::Sandbox,
+    ///    );
+    ///
+    ///    assert!(client.is_connected().await);
+    /// }
+    /// ```
+    /// # Panics
+    /// This method can panic if a TLS backend cannot be initialized for the internal http_client
     pub fn new<S: Into<String>>(client_key: S, client_secret: S, environment: Env) -> Self {
         let http_client = HttpClient::builder()
             .connect_timeout(std::time::Duration::from_millis(10_000))
@@ -72,7 +93,31 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         self.client_secret.expose_secret()
     }
 
-    #[doc = include_str!("../docs/client/set_initiator_password.md")]
+    /// Optional in development but required for production for the following apis:
+    /// - `account_balance`
+    /// - `b2b`
+    /// - `b2c`
+    /// - `transaction_reversal`
+    /// - `transaction_status`
+    ///
+    /// You will need to call this method and set your production initiator password.
+    /// If in development, a default initiator password from the test credentials is already pre-set
+    ///
+    /// # Example
+    /// ```rust
+    /// use mpesa::{Mpesa, Environment};
+    ///
+    /// fn main() {
+    ///     dotenv::dotenv().ok();
+    ///
+    ///     let client = Mpesa::new(
+    ///         env!("CLIENT_KEY"),
+    ///         env!("CLIENT_SECRET"),
+    ///         Environment::Sandbox,
+    ///     );
+    ///     client.set_initiator_password("your_initiator_password");
+    /// }
+    /// ```
     pub fn set_initiator_password<S: Into<String>>(&self, initiator_password: S) {
         *self.initiator_password.borrow_mut() = Some(Secret::new(initiator_password.into()));
     }
@@ -82,7 +127,14 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         self.auth().await.is_ok()
     }
 
-    #[doc = include_str!("../docs/client/auth.md")]
+    /// This API generates the tokens for authenticating your API calls. This is the first API you will engage with within the set of APIs available because all the other APIs require authentication information from this API to work.
+    ///
+    /// Safaricom API docs [reference](https://developer.safaricom.co.ke/APIs/Authorization)
+    ///
+    /// Returns auth token as a `String` that is ttl-cached in memory for subsequent requests.
+    ///
+    /// # Errors
+    /// Returns a `MpesaError` on failure
     pub(crate) async fn auth(&self) -> MpesaResult<String> {
         if let Some(token) = AUTH.lock().await.cache_get(&self.client_key) {
             return Ok(token.to_owned());
