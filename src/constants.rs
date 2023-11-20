@@ -160,7 +160,7 @@ pub enum TransactionType {
 
 impl Display for TransactionType {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        write!(f, "{self:?}")
+        write!(f, "{self}")
     }
 }
 

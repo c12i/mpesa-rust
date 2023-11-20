@@ -56,7 +56,7 @@ async fn dynamic_qr_code_test_using_struct_initialization() {
     });
 
     let request = DynamicQRRequest {
-        amount: 2000.0,
+        amount: 2000,
         credit_party_identifier: "17408",
         merchant_name: "SafaricomLTD",
         ref_no: "rf38f04",
