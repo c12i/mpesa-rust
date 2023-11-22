@@ -15,7 +15,7 @@ use crate::validator::PhoneNumberValidator;
 pub static DEFAULT_PASSKEY: &str =
     "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
 
-const EXPRESS_REQUEST_URL: &str = "/mpesa/stkpush/v1/processrequest";
+const EXPRESS_REQUEST_URL: &str = "mpesa/stkpush/v1/processrequest";
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "PascalCase")]
@@ -251,14 +251,12 @@ impl<'mpesa, Env: ApiEnvironment> MpesaExpress<'mpesa, Env> {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
-    pub async fn send(self) -> MpesaResult<MpesaExpressRequestResponse> {
-        let (password, timestamp) = self.generate_password_and_timestamp();
-
+    pub async fn send(self) -> MpesaResult<MpesaExpressResponse> {
         self.client
-            .send(crate::client::Request {
+            .send::<MpesaExpressRequest, _>(crate::client::Request {
                 method: reqwest::Method::POST,
                 path: EXPRESS_REQUEST_URL,
-                body: payload,
+                body: self.into(),
             })
             .await
     }

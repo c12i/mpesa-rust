@@ -156,10 +156,10 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversal<'mpesa, Env> {
     /// Returns a `MpesaError` on failure.
     pub async fn send(self) -> MpesaResult<TransactionReversalResponse> {
         self.client
-            .send(crate::client::Request {
+            .send::<TransactionReversalRequest, _>(crate::client::Request {
                 method: reqwest::Method::POST,
                 path: TRANSACTION_REVERSAL_URL,
-                body: payload,
+                body: self.try_into()?,
             })
             .await
     }
