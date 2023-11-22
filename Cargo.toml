@@ -50,6 +50,7 @@ thiserror = "1.0"
 secrecy = "0.8"
 serde-aux = "4.2"
 url = { version = "2", features = ["serde"] }
+regex = { version = "1.10", default-features = false, features = ["std"] }
 
 
 [dev-dependencies]

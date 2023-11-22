@@ -1,3 +1,5 @@
+use regex::Regex;
+
 use crate::{MpesaError, MpesaResult};
 
 pub trait PhoneNumberValidator {
@@ -6,14 +8,18 @@ pub trait PhoneNumberValidator {
 
 impl PhoneNumberValidator for &str {
     fn validate(&self) -> MpesaResult<()> {
-        if self.starts_with("254")
-            && self.len() == 12
-            && self.chars().skip(3).all(|c| c.is_ascii_digit())
-        {
+        let phone_regex =
+            Regex::new(r"^(254\d{9}|07\d{8}|011\d{7}|7\d{8}|1\d{8})$").map_err(|_| {
+                MpesaError::Message(
+                "Invalid phone number, must be in the format 2547XXXXXXXX, 07XXXXXXXX, 011XXXXXXX",
+            )
+            })?;
+
+        if phone_regex.is_match(self) {
             Ok(())
         } else {
             Err(MpesaError::Message(
-                "Invalid phone number, must be in the format 2547XXXXXXXX",
+                "Invalid phone number, must be in the format 2547XXXXXXXX, 07XXXXXXXX, 011XXXXXXX",
             ))
         }
     }
@@ -39,6 +45,12 @@ mod tests {
     fn test_validate_phone() {
         assert!("254712345678".validate().is_ok());
         assert!("254012345678".validate().is_ok());
+        assert!("0712345678".validate().is_ok());
+        assert!("712345678".validate().is_ok());
+        assert!("112345678".validate().is_ok());
+        assert!("0112345678".validate().is_ok());
+        assert!("07987654321".validate().is_err());
+        assert!("011987654321".validate().is_err());
         assert!("254712345678900".validate().is_err());
         assert!("25471234567".validate().is_err());
         assert!("2547".validate().is_err());
@@ -75,6 +87,8 @@ mod tests {
     fn test_validate_phone_u64() {
         assert!(254712345678u64.validate().is_ok());
         assert!(254012345678u64.validate().is_ok());
+        assert!(712345678u64.validate().is_ok());
+        assert!(112345678u64.validate().is_ok());
         assert!(254712345678900u64.validate().is_err());
         assert!(25471234567u64.validate().is_err());
         assert!(2547u64.validate().is_err());
