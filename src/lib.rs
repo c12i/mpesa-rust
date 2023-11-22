@@ -14,4 +14,4 @@ pub use constants::{
 };
 pub use environment::ApiEnvironment;
 pub use environment::Environment::{self, Production, Sandbox};
-pub use errors::{ApiError, MpesaError, MpesaResult};
+pub use errors::{MpesaError, MpesaResult, ResponseError};
