@@ -5,6 +5,8 @@ use crate::constants::CommandId;
 use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
 
+const C2B_SIMULATE_URL: &str = "mpesa/c2b/v1/simulate";
+
 #[derive(Debug, Serialize)]
 /// Payload to make payment requests from C2B.
 /// See more: https://developer.safaricom.co.ke/docs#c2b-api
@@ -119,17 +121,9 @@ impl<'mpesa, Env: ApiEnvironment> C2bSimulateBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
-    #[allow(clippy::unnecessary_lazy_evaluations)]
     pub async fn send(self) -> MpesaResult<C2bSimulateResponse> {
-        let url = format!(
-            "{}/mpesa/c2b/v1/simulate",
-            self.client.environment.base_url()
-        );
-
         let payload = C2bSimulatePayload {
-            command_id: self
-                .command_id
-                .unwrap_or_else(|| CommandId::CustomerPayBillOnline),
+            command_id: self.command_id.unwrap_or(CommandId::CustomerPayBillOnline),
             amount: self
                 .amount
                 .ok_or(MpesaError::Message("amount is required"))?,
@@ -144,21 +138,12 @@ impl<'mpesa, Env: ApiEnvironment> C2bSimulateBuilder<'mpesa, Env> {
                 .ok_or(MpesaError::Message("short_code is required"))?,
         };
 
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json(&payload)
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            let value = response.json::<_>().await?;
-            return Ok(value);
-        }
-
-        let value = response.json().await?;
-        Err(MpesaError::C2bSimulateError(value))
+        self.client
+            .send(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: C2B_SIMULATE_URL,
+                body: payload,
+            })
+            .await
     }
 }

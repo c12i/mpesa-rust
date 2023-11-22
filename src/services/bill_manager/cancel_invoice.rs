@@ -2,7 +2,9 @@ use serde::{Deserialize, Serialize};
 
 use crate::client::Mpesa;
 use crate::environment::ApiEnvironment;
-use crate::errors::{MpesaError, MpesaResult};
+use crate::errors::MpesaResult;
+
+const BILL_MANAGER_CANCEL_INVOICE_API_URL: &str = "v1/billmanager-invoice/cancel-single-invoice";
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -67,28 +69,14 @@ impl<'mpesa, Env: ApiEnvironment> CancelInvoiceBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// Returns an `MpesaError` on failure
-    #[allow(clippy::unnecessary_lazy_evaluations)]
+
     pub async fn send(self) -> MpesaResult<CancelInvoiceResponse> {
-        let url = format!(
-            "{}/v1/billmanager-invoice/cancel-single-invoice",
-            self.client.environment.base_url()
-        );
-
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json(&self.external_references)
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            let value = response.json().await?;
-            return Ok(value);
-        }
-
-        let value = response.json().await?;
-        Err(MpesaError::CancelInvoiceError(value))
+        self.client
+            .send(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: BILL_MANAGER_CANCEL_INVOICE_API_URL,
+                body: self.external_references,
+            })
+            .await
     }
 }
