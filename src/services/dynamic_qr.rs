@@ -59,8 +59,7 @@ pub struct DynamicQR<'mpesa, Env: ApiEnvironment> {
     #[builder(setter(into))]
     merchant_name: &'mpesa str,
     /// Transaction Reference Number
-    #[builder(setter(into))]
-    amount: f64,
+    amount: u32,
     /// The total amount of the transaction
     ref_no: &'mpesa str,
     /// Transaction Type
@@ -91,7 +90,7 @@ impl<'mpesa, Env: ApiEnvironment> From<DynamicQR<'mpesa, Env>> for DynamicQRRequ
         DynamicQRRequest {
             merchant_name: express.merchant_name,
             ref_no: express.ref_no,
-            amount: express.amount as u32,
+            amount: express.amount,
             transaction_type: express.transaction_type,
             credit_party_identifier: express.credit_party_identifier,
             size: express.size,
@@ -115,7 +114,7 @@ impl<'mpesa, Env: ApiEnvironment> DynamicQR<'mpesa, Env> {
             client,
             merchant_name: request.merchant_name,
             ref_no: request.ref_no,
-            amount: request.amount as f64,
+            amount: request.amount,
             transaction_type: request.transaction_type,
             credit_party_identifier: request.credit_party_identifier,
             size: request.size,
