@@ -6,6 +6,8 @@ use crate::constants::{Invoice, InvoiceItem};
 use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
 
+const BILL_MANAGER_SINGLE_INVOICE_API_URL: &str = "v1/billmanager-invoice/single-invoicing";
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct SingleInvoiceResponse {
     #[serde(rename(deserialize = "rescode"))]
@@ -130,13 +132,7 @@ impl<'mpesa, Env: ApiEnvironment> SingleInvoiceBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// Returns an `MpesaError` on failure
-    #[allow(clippy::unnecessary_lazy_evaluations)]
     pub async fn send(self) -> MpesaResult<SingleInvoiceResponse> {
-        let url = format!(
-            "{}/v1/billmanager-invoice/single-invoicing",
-            self.client.environment.base_url()
-        );
-
         let payload = Invoice {
             amount: self
                 .amount
@@ -165,21 +161,12 @@ impl<'mpesa, Env: ApiEnvironment> SingleInvoiceBuilder<'mpesa, Env> {
                 .ok_or(MpesaError::Message("invoice_name is required"))?,
         };
 
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json(&payload)
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            let value = response.json().await?;
-            return Ok(value);
-        }
-
-        let value = response.json().await?;
-        Err(MpesaError::SingleInvoiceError(value))
+        self.client
+            .send(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: BILL_MANAGER_SINGLE_INVOICE_API_URL,
+                body: payload,
+            })
+            .await
     }
 }

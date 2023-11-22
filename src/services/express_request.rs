@@ -11,7 +11,6 @@ use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
 use crate::validator::PhoneNumberValidator;
 
-/// The default passkey for the sandbox environment
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
 pub static DEFAULT_PASSKEY: &str =
     "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
@@ -252,28 +251,15 @@ impl<'mpesa, Env: ApiEnvironment> MpesaExpress<'mpesa, Env> {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
-    pub async fn send(self) -> MpesaResult<MpesaExpressResponse> {
-        let url = format!(
-            "{}{}",
-            self.client.environment.base_url(),
-            EXPRESS_REQUEST_URL
-        );
+    pub async fn send(self) -> MpesaResult<MpesaExpressRequestResponse> {
+        let (password, timestamp) = self.generate_password_and_timestamp();
 
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json::<MpesaExpressRequest>(&self.into())
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            let value = response.json::<_>().await?;
-            return Ok(value);
-        }
-
-        let value = response.json().await?;
-        Err(MpesaError::MpesaExpressRequestError(value))
+        self.client
+            .send(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: EXPRESS_REQUEST_URL,
+                body: payload,
+            })
+            .await
     }
 }

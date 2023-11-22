@@ -4,6 +4,8 @@ use crate::constants::{CommandId, IdentifierTypes};
 use crate::environment::ApiEnvironment;
 use crate::{Mpesa, MpesaError, MpesaResult};
 
+const ACCOUNT_BALANCE_URL: &str = "mpesa/accountbalance/v1/query";
+
 #[derive(Debug, Serialize)]
 /// Account Balance payload
 struct AccountBalancePayload<'mpesa> {
@@ -148,23 +150,17 @@ impl<'mpesa, Env: ApiEnvironment> AccountBalanceBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
-    #[allow(clippy::unnecessary_lazy_evaluations)]
     pub async fn send(self) -> MpesaResult<AccountBalanceResponse> {
-        let url = format!(
-            "{}/mpesa/accountbalance/v1/query",
-            self.client.environment.base_url()
-        );
-
         let credentials = self.client.gen_security_credentials()?;
 
         let payload = AccountBalancePayload {
-            command_id: self.command_id.unwrap_or_else(|| CommandId::AccountBalance),
+            command_id: self.command_id.unwrap_or(CommandId::AccountBalance),
             party_a: self
                 .party_a
                 .ok_or(MpesaError::Message("party_a is required"))?,
             identifier_type: &self
                 .identifier_type
-                .unwrap_or_else(|| IdentifierTypes::ShortCode)
+                .unwrap_or(IdentifierTypes::ShortCode)
                 .to_string(),
             remarks: self.remarks.unwrap_or_else(|| stringify!(None)),
             initiator: self.initiator_name,
@@ -177,21 +173,12 @@ impl<'mpesa, Env: ApiEnvironment> AccountBalanceBuilder<'mpesa, Env> {
             security_credential: &credentials,
         };
 
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json(&payload)
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            let value = response.json::<_>().await?;
-            return Ok(value);
-        }
-
-        let value = response.json().await?;
-        Err(MpesaError::AccountBalanceError(value))
+        self.client
+            .send(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: ACCOUNT_BALANCE_URL,
+                body: payload,
+            })
+            .await
     }
 }

@@ -5,6 +5,8 @@ use crate::client::Mpesa;
 use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
 
+const BILL_MANAGER_RECONCILIATION_API_URL: &str = "v1/billmanager-invoice/reconciliation";
+
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 struct ReconciliationPayload<'mpesa> {
@@ -126,13 +128,7 @@ impl<'mpesa, Env: ApiEnvironment> ReconciliationBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// Returns an `MpesaError` on failure.
-    #[allow(clippy::unnecessary_lazy_evaluations)]
     pub async fn send(self) -> MpesaResult<ReconciliationResponse> {
-        let url = format!(
-            "{}/v1/billmanager-invoice/reconciliation",
-            self.client.environment.base_url()
-        );
-
         let payload = ReconciliationPayload {
             account_reference: self
                 .account_reference
@@ -160,21 +156,12 @@ impl<'mpesa, Env: ApiEnvironment> ReconciliationBuilder<'mpesa, Env> {
                 .ok_or(MpesaError::Message("transaction_id is required"))?,
         };
 
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json(&payload)
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            let value = response.json().await?;
-            return Ok(value);
-        }
-
-        let value = response.json().await?;
-        Err(MpesaError::ReconciliationError(value))
+        self.client
+            .send(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: BILL_MANAGER_RECONCILIATION_API_URL,
+                body: payload,
+            })
+            .await
     }
 }

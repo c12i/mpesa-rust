@@ -4,7 +4,7 @@ use url::Url;
 
 use crate::{ApiEnvironment, CommandId, IdentifierTypes, Mpesa, MpesaError, MpesaResult};
 
-const TRANSACTION_REVERSAL_URL: &str = "/mpesa/reversal/v1/request";
+const TRANSACTION_REVERSAL_URL: &str = "mpesa/reversal/v1/request";
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "PascalCase")]
@@ -155,27 +155,12 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversal<'mpesa, Env> {
     /// # Errors
     /// Returns a `MpesaError` on failure.
     pub async fn send(self) -> MpesaResult<TransactionReversalResponse> {
-        let url = format!(
-            "{}{}",
-            self.client.environment.base_url(),
-            TRANSACTION_REVERSAL_URL
-        );
-
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json::<TransactionReversalRequest>(&self.try_into()?)
-            .send()
-            .await?;
-
-        if !response.status().is_success() {
-            let value = response.json().await?;
-            return Err(MpesaError::MpesaTransactionReversalError(value));
-        };
-
-        let response = response.json::<_>().await?;
-        Ok(response)
+        self.client
+            .send(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: TRANSACTION_REVERSAL_URL,
+                body: payload,
+            })
+            .await
     }
 }
