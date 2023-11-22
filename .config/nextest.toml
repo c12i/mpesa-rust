@@ -1,0 +1,2 @@
+[profile.default]
+retries = { backoff = "fixed", count = 3, delay = "1s", jitter = true }
