@@ -9,7 +9,7 @@ use crate::client::Mpesa;
 use crate::constants::CommandId;
 use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
-use crate::validator::PhoneValidator;
+use crate::validator::PhoneNumberValidator;
 
 /// The default passkey for the sandbox environment
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
@@ -190,11 +190,11 @@ impl<Env: ApiEnvironment> MpesaExpressBuilder<'_, Env> {
         }
 
         if let Some(phone_number) = self.phone_number {
-            phone_number.validate_number()?;
+            phone_number.validate()?;
         }
 
         if let Some(party_a) = self.party_a {
-            party_a.validate_number()?;
+            party_a.validate()?;
         }
 
         Ok(())

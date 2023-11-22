@@ -67,8 +67,6 @@ pub struct TransactionReversal<'mpesa, Env: ApiEnvironment> {
     /// The organization that receives the transaction.
     #[builder(setter(into))]
     receiver_party: &'mpesa str,
-    /// Type of organization that receives the transaction.
-    receiver_identifier_type: IdentifierTypes,
     /// The path that stores information about the transaction.
     #[builder(try_setter, setter(into))]
     result_url: Url,
@@ -103,7 +101,7 @@ impl<'mpesa, Env: ApiEnvironment> TryFrom<TransactionReversal<'mpesa, Env>>
             command_id: CommandId::TransactionReversal,
             transaction_id: value.transaction_id,
             receiver_party: value.receiver_party,
-            receiver_identifier_type: value.receiver_identifier_type,
+            receiver_identifier_type: IdentifierTypes::Reversal,
             result_url: value.result_url,
             queue_timeout_url: value.timeout_url,
             remarks: value.remarks,
@@ -129,7 +127,6 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversal<'mpesa, Env> {
             initiator: request.initiator,
             transaction_id: request.transaction_id,
             receiver_party: request.receiver_party,
-            receiver_identifier_type: request.receiver_identifier_type,
             result_url: request.result_url,
             timeout_url: request.queue_timeout_url,
             remarks: request.remarks,
