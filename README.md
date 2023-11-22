@@ -175,7 +175,7 @@ The table below shows all the MPESA APIs from Safaricom and those supported by t
 
 **Collins Muriuki**
 
-- Twitter: [@collinsmuriuki\_](https://twitter.com/collinsmuriuki_)
+- Twitter: [@c12i_](https://twitter.com/c12i_)
 - Not affiliated with Safaricom.
 
 ## Contributing
