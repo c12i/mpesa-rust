@@ -7,7 +7,7 @@ Returns a `C2bRegisterBuilder`
 See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/APIs/CustomerToBusinessRegisterURL)
 
 # Example
-```rust
+```rust,no_run
 use mpesa::{Mpesa, Environment};
 
 #[tokio::main]
