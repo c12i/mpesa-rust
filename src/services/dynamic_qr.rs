@@ -6,7 +6,7 @@ use crate::constants::TransactionType;
 use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
 
-const DYNAMIC_QR_URL: &str = "/mpesa/qrcode/v1/generate";
+const DYNAMIC_QR_URL: &str = "mpesa/qrcode/v1/generate";
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "PascalCase")]
@@ -136,23 +136,12 @@ impl<'mpesa, Env: ApiEnvironment> DynamicQR<'mpesa, Env> {
     /// # Errors
     /// Returns a `MpesaError` on failure
     pub async fn send(self) -> MpesaResult<DynamicQRResponse> {
-        let url = format!("{}{}", self.client.environment.base_url(), DYNAMIC_QR_URL);
-
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json::<DynamicQRRequest>(&self.into())
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            let value = response.json::<_>().await?;
-            return Ok(value);
-        }
-
-        let value = response.json().await?;
-        Err(MpesaError::MpesaDynamicQrError(value))
+        self.client
+            .send::<DynamicQRRequest, _>(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: DYNAMIC_QR_URL,
+                body: self.into(),
+            })
+            .await
     }
 }

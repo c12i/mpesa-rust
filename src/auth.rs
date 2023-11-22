@@ -2,7 +2,7 @@ use cached::proc_macro::cached;
 use serde::{Deserialize, Serialize};
 use serde_aux::field_attributes::deserialize_number_from_string;
 
-use crate::{ApiEnvironment, ApiError, Mpesa, MpesaError, MpesaResult};
+use crate::{ApiEnvironment, Mpesa, MpesaError, MpesaResult, ResponseError};
 
 const AUTHENTICATION_URL: &str = "/oauth/v1/generate?grant_type=client_credentials";
 
@@ -30,8 +30,8 @@ pub(crate) async fn auth(client: &Mpesa<impl ApiEnvironment>) -> MpesaResult<Str
         return Ok(access_token);
     }
 
-    let error = response.json::<ApiError>().await?;
-    Err(MpesaError::AuthenticationError(error))
+    let error = response.json::<ResponseError>().await?;
+    Err(MpesaError::Service(error))
 }
 
 /// Response returned from the authentication function
