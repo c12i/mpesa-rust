@@ -38,7 +38,7 @@ pub struct MpesaExpressRequest<'mpesa> {
     /// `CommandId::CustomerPayBillOnline`
     pub transaction_type: CommandId,
     /// This is the Amount transacted normally a numeric value
-    pub amount: f64,
+    pub amount: u32,
     ///The phone number sending money.
     pub party_a: &'mpesa str,
     /// The organization that receives the funds
@@ -116,8 +116,7 @@ pub struct MpesaExpress<'mpesa, Env: ApiEnvironment> {
     /// `CommandId::CustomerPayBillOnline`
     transaction_type: CommandId,
     /// This is the Amount transacted normally a numeric value
-    #[builder(setter(into))]
-    amount: f64,
+    amount: u32,
     /// The phone number sending money.
     party_a: &'mpesa str,
     /// The organization that receives the funds

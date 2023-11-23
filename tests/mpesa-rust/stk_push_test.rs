@@ -107,7 +107,7 @@ async fn express_request_test_using_struct_initialization() {
     let request = MpesaExpressRequest {
         business_short_code: "174379",
         transaction_type: CommandId::BusinessBuyGoods,
-        amount: 500.0,
+        amount: 500,
         party_a: "254708374149",
         party_b: "174379",
         phone_number: "254708374149",

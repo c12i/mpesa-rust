@@ -30,7 +30,7 @@ async fn transaction_reversal_success() {
         .try_timeout_url("https://testdomain.com/err")
         .unwrap()
         .transaction_id("OEI2AK4Q16")
-        .amount(1.0)
+        .amount(100)
         .receiver_party("600111")
         .remarks("wrong recipient")
         .build()
@@ -74,7 +74,7 @@ async fn transaction_reversal_test_using_struct_initialization() {
         queue_timeout_url: "https://testdomain.com/err".parse().unwrap(),
         remarks: "wrong recipient",
         occasion: None,
-        amount: 1.0,
+        amount: 100,
     };
 
     let response = TransactionReversal::from_request(&client, payload)

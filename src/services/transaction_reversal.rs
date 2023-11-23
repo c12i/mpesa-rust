@@ -35,7 +35,7 @@ pub struct TransactionReversalRequest<'mpesa> {
     pub occasion: Option<&'mpesa str>,
     /// The amount transacted in the transaction is to be reversed, down to the
     /// cent.
-    pub amount: f64,
+    pub amount: u32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -81,8 +81,7 @@ pub struct TransactionReversal<'mpesa, Env: ApiEnvironment> {
     occasion: Option<&'mpesa str>,
     /// The amount transacted in the transaction is to be reversed, down to the
     /// cent.
-    #[builder(setter(into))]
-    amount: f64,
+    amount: u32,
 }
 
 impl<'mpesa, Env: ApiEnvironment> TryFrom<TransactionReversal<'mpesa, Env>>
