@@ -1,3 +1,5 @@
+#![doc = include_str!("../../docs/client/account_balance.md")]
+
 use serde::{Deserialize, Serialize};
 
 use crate::constants::{CommandId, IdentifierTypes};

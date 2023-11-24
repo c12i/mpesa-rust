@@ -1,3 +1,5 @@
+#![doc = include_str!("../../docs/client/dynamic_qr.md")]
+
 use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
 

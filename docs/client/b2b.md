@@ -3,10 +3,9 @@ This API enables you to pay bills directly from your business account to a pay b
 The transaction moves money from your MMF/Working account to the recipient’s utility account.
 
 Returns a `B2bBuilder`.
+Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
 
 Safaricom API docs [reference](https://developer.safaricom.co.ke/APIs/BusinessPayBill)
-
-Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
 
 # Example
 ```rust
