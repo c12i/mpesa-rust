@@ -1,3 +1,5 @@
+#![doc = include_str!("../../../docs/client/bill_manager/onboard.md")]
+
 use serde::{Deserialize, Serialize};
 
 use crate::client::Mpesa;
