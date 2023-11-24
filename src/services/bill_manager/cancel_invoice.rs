@@ -1,3 +1,5 @@
+#![doc = include_str!("../../../docs/client/bill_manager/cancel_invoice.md")]
+
 use serde::{Deserialize, Serialize};
 
 use crate::client::Mpesa;
@@ -69,7 +71,6 @@ impl<'mpesa, Env: ApiEnvironment> CancelInvoiceBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// Returns an `MpesaError` on failure
-
     pub async fn send(self) -> MpesaResult<CancelInvoiceResponse> {
         self.client
             .send(crate::client::Request {

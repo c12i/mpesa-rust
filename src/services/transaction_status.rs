@@ -1,3 +1,5 @@
+#![doc = include_str!("../../docs/client/transaction_status.md")]
+
 use serde::{Deserialize, Serialize};
 
 use crate::{ApiEnvironment, CommandId, IdentifierTypes, Mpesa, MpesaError, MpesaResult};

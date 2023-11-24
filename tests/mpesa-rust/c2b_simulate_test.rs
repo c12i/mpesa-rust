@@ -9,7 +9,7 @@ use crate::get_mpesa_client;
 async fn c2b_simulate_success() {
     let (client, server) = get_mpesa_client!();
     let sample_response_body = json!({
-        "OriginatorConversationID": "29464-48063588-1",
+        "OriginatorCoversationID": "29464-48063588-1",
         "ResponseDescription": "Accept the service request successfully.",
         "ResponseCode": "0"
     });
@@ -41,7 +41,7 @@ async fn c2b_simulate_success() {
 async fn c2b_simulate_fails_if_no_amount_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     let sample_response_body = json!({
-        "OriginatorConversationID": "29464-48063588-1",
+        "OriginatorCoversationID": "29464-48063588-1",
         "ResponseDescription": "Accept the service request successfully.",
         "ResponseCode": "0"
     });
@@ -72,7 +72,7 @@ async fn c2b_simulate_fails_if_no_amount_is_provided() {
 async fn c2b_simulate_fails_if_no_short_code_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     let sample_response_body = json!({
-        "OriginatorConversationID": "29464-48063588-1",
+        "OriginatorCoversationID": "29464-48063588-1",
         "ResponseDescription": "Accept the service request successfully.",
         "ResponseCode": "0"
     });
@@ -103,7 +103,7 @@ async fn c2b_simulate_fails_if_no_short_code_is_provided() {
 async fn c2b_simulate_fails_if_no_bill_ref_number_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     let sample_response_body = json!({
-        "OriginatorConversationID": "29464-48063588-1",
+        "OriginatorCoversationID": "29464-48063588-1",
         "ResponseDescription": "Accept the service request successfully.",
         "ResponseCode": "0"
     });
@@ -134,7 +134,7 @@ async fn c2b_simulate_fails_if_no_bill_ref_number_is_provided() {
 async fn c2b_simulate_fails_if_no_msisdn_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     let sample_response_body = json!({
-        "OriginatorConversationID": "29464-48063588-1",
+        "OriginatorCoversationID": "29464-48063588-1",
         "ResponseDescription": "Accept the service request successfully.",
         "ResponseCode": "0"
     });

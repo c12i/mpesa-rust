@@ -1,3 +1,5 @@
+#![doc = include_str!("../../docs/client/c2b_simulate.md")]
+
 use serde::{Deserialize, Serialize};
 
 use crate::client::Mpesa;
@@ -30,7 +32,7 @@ pub struct C2bSimulateResponse {
         skip_serializing_if = "Option::is_none"
     )]
     pub conversation_id: Option<String>,
-    #[serde(rename(deserialize = "OriginatorConversationID"))]
+    #[serde(rename(deserialize = "OriginatorCoversationID"))]
     pub originator_conversation_id: String,
     #[serde(rename(deserialize = "ResponseCode"))]
     pub response_code: String,

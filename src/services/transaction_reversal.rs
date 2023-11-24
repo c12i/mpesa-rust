@@ -1,3 +1,5 @@
+#![doc = include_str!("../../docs/client/transaction_reversal.md")]
+
 use serde::{Deserialize, Serialize};
 
 use crate::{ApiEnvironment, CommandId, IdentifierTypes, Mpesa, MpesaError, MpesaResult};
@@ -185,7 +187,7 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
                 .ok_or(MpesaError::Message("receiver_party is required"))?,
             receiver_identifier_type: self
                 .receiver_identifier_type
-                .unwrap_or(IdentifierTypes::ShortCode),
+                .unwrap_or(IdentifierTypes::Reversal),
             result_url: self
                 .result_url
                 .ok_or(MpesaError::Message("result_url is required"))?,

@@ -1,3 +1,5 @@
+#![doc = include_str!("../../../docs/client/bill_manager/reconciliation.md")]
+
 use chrono::prelude::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
