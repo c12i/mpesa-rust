@@ -1,3 +1,5 @@
+#![doc = include_str!("../../docs/client/b2c.md")]
+
 use serde::{Deserialize, Serialize};
 
 use crate::environment::ApiEnvironment;

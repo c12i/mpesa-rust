@@ -1,3 +1,5 @@
+#![doc = include_str!("../../docs/client/c2b_simulate.md")]
+
 use serde::{Deserialize, Serialize};
 
 use crate::client::Mpesa;

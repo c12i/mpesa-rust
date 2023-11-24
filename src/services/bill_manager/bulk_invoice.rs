@@ -1,3 +1,5 @@
+#![doc = include_str!("../../../docs/client/bill_manager/bulk_invoice.md")]
+
 use serde::Deserialize;
 
 use crate::client::Mpesa;
