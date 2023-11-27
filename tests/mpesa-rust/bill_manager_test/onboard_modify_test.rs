@@ -26,6 +26,8 @@ async fn onboard_modify_success() {
         .callback_url("https://testdomain.com/true")
         .email("email@test.com")
         .logo("https://file.domain/file.png")
+        .build()
+        .unwrap()
         .send()
         .await
         .unwrap();

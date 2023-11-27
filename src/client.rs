@@ -12,7 +12,7 @@ use crate::environment::ApiEnvironment;
 use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, BulkInvoiceBuilder, C2bRegisterBuilder,
     C2bSimulateBuilder, CancelInvoiceBuilder, DynamicQR, DynamicQRBuilder,
-    MpesaExpressRequestBuilder, Onboard, OnboardBuilder, OnboardModifyBuilder,
+    MpesaExpressRequestBuilder, Onboard, OnboardBuilder, OnboardModify, OnboardModifyBuilder,
     ReconciliationBuilder, SingleInvoiceBuilder, TransactionReversalBuilder,
     TransactionStatusBuilder,
 };
@@ -241,7 +241,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// ```
     #[cfg(feature = "bill_manager")]
     pub fn onboard_modify(&'mpesa self) -> OnboardModifyBuilder<'mpesa, Env> {
-        OnboardModifyBuilder::new(self)
+        OnboardModify::builder(self)
     }
 
     /// **Bill Manager Bulk Invoice Builder**
