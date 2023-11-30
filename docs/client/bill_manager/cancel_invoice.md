@@ -1,19 +1,22 @@
+# Cancel Invoice
+
 Creates a `CancelInvoiceBuilder` which allows you to recall a sent invoice.
 
 Safaricom API docs [reference](https://developer.safaricom.co.ke/APIs/BillManager)
 
-# Example
+## Example
+
 ```rust,ignore
 use mpesa::{Mpesa, Environment, SendRemindersTypes};
 use chrono::prelude::Utc;
 
 #[tokio::main]
 async fn main() {
-    dotenv::dotenv().ok();
+    dotenvy::dotenv().expect("env variables not found");
 
     let client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
+        std::env::var("CLIENT_KEY").unwrap(),
+        std::env::var("CLIENT_SECRET").unwrap(),
         Environment::Sandbox,
     );
 

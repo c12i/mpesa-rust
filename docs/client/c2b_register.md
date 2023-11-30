@@ -1,3 +1,5 @@
+# C2B Register
+
 Register URL API works hand in hand with Customer to Business (C2B) APIs and allows receiving payment notifications to your paybill. This API enables you to register the callback URLs via which you shall receive notifications for payments to your pay bill/till number.
 
 There are two URLs required for Register URL API: Validation URL and Confirmation URL.
@@ -6,17 +8,18 @@ Returns a `C2bRegisterBuilder`
 
 See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/APIs/CustomerToBusinessRegisterURL)
 
-# Example
+## Example
+
 ```rust,no_run
 use mpesa::{Mpesa, Environment};
 
 #[tokio::main]
 async fn main() {
-    dotenv::dotenv().ok();
+    dotenvy::dotenv().expect("env variables not found");
 
     let client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
+        std::env::var("CLIENT_KEY").unwrap(),
+        std::env::var("CLIENT_SECRET").unwrap(),
         Environment::Sandbox,
     );
 

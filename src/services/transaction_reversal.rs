@@ -69,6 +69,8 @@ pub struct TransactionReversal<'mpesa, Env: ApiEnvironment> {
     /// The organization that receives the transaction.
     #[builder(setter(into))]
     receiver_party: &'mpesa str,
+    /// Type of organization that receives the transaction.
+    pub receiver_identifier_type: IdentifierTypes,
     /// The path that stores information about the transaction.
     #[builder(try_setter, setter(into))]
     result_url: Url,
@@ -133,6 +135,7 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversal<'mpesa, Env> {
             remarks: request.remarks,
             occasion: request.occasion,
             amount: request.amount,
+            receiver_identifier_type: request.receiver_identifier_type,
         }
     }
 

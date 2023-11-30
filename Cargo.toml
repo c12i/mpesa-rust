@@ -54,6 +54,6 @@ regex = { version = "1.10", default-features = false, features = ["std"] }
 
 
 [dev-dependencies]
-dotenv = "0.15"
+dotenvy = "0.15.7"
 tokio = { version = "1", features = ["rt", "rt-multi-thread", "macros"] }
 wiremock = "0.5"

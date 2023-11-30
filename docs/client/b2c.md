@@ -1,19 +1,22 @@
+# B2C
+
 Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
 Returns a `B2cBuilder` for building a B2C transaction struct.
 
 Safaricom the API docs [reference](https://developer.safaricom.co.ke/APIs/BusinessToCustomer).
 
-# Example
+## Example
+
 ```rust
 use mpesa::{Mpesa, Environment};
 
 #[tokio::main]
 async fn main() {
-    dotenv::dotenv().ok();
+    dotenvy::dotenv().expect("env variables not found");
 
     let client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
+        std::env::var("CLIENT_KEY").unwrap(),
+        std::env::var("CLIENT_SECRET").unwrap(),
         Environment::Sandbox,
     );
 

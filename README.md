@@ -48,11 +48,11 @@ use mpesa::{Mpesa, Environment};
 
 #[tokio::main]
 async fn main() {
-    dotenv::dotenv().ok();
+    dotenvy::dotenv().expect("env variables not found");
 
     let client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
+        std::env::var("CLIENT_KEY").unwrap(),
+        std::env::var("CLIENT_SECRET").unwrap(),
         Environment::Sandbox,
     );
 
@@ -71,11 +71,11 @@ use std::str::FromStr;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    dotenv::dotenv().ok();
+    dotenvy::dotenv().expect("env variables not found");
 
     let client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
+        std::env::var("CLIENT_KEY").unwrap(),
+        std::env::var("CLIENT_SECRET").unwrap(),
         Environment::from_str("sandbox")?, // or
         // Environment::try_from("sandbox")?,
     );
@@ -119,11 +119,11 @@ impl ApiEnvironment for CustomEnvironment {
 
 #[tokio::main]
 async fn main() {
-    dotenv::dotenv().ok();
+    dotenvy::dotenv().expect("env variables not found");
 
     let client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
+        std::env::var("CLIENT_KEY").unwrap(),
+        std::env::var("CLIENT_SECRET").unwrap(),
         CustomEnvironment,
     );
 }
@@ -137,11 +137,11 @@ use mpesa::{Mpesa, Environment};
 
 #[tokio::main]
 async fn main() {
-    dotenv::dotenv().ok();
+    dotenvy::dotenv().expect("env variables not found");
 
     let client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
+        std::env::var("CLIENT_KEY").unwrap(),
+        std::env::var("CLIENT_SECRET").unwrap(),
         Environment::Sandbox,
     );
 

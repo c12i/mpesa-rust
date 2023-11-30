@@ -19,7 +19,7 @@ use crate::services::{
     SingleInvoiceBuilder, TransactionReversal, TransactionReversalBuilder,
     TransactionStatusBuilder,
 };
-use crate::{auth, MpesaResult};
+use crate::{auth, MpesaError, MpesaResult, ResponseError};
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
 const DEFAULT_INITIATOR_PASSWORD: &str = "Safcom496!";
@@ -46,11 +46,11 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///
     /// #[tokio::main]
     /// async fn main() {
-    ///    dotenv::dotenv().ok();
+    ///    dotenvy::dotenv().expect("env variables not found");
     ///
     ///    let client = Mpesa::new(
-    ///         env!("CLIENT_KEY"),
-    ///         env!("CLIENT_SECRET"),
+    ///         std::env::var("CLIENT_KEY").unwrap(),
+    ///         std::env::var("CLIENT_SECRET").unwrap(),
     ///         Environment::Sandbox,
     ///    );
     ///
@@ -113,11 +113,11 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///
     /// #[tokio::main]
     /// async fn main() {
-    ///     dotenv::dotenv().ok();
+    ///     dotenvy::dotenv().expect("env variables not found");
     ///
     ///     let client = Mpesa::new(
-    ///         env!("CLIENT_KEY"),
-    ///         env!("CLIENT_SECRET"),
+    ///         std::env::var("CLIENT_KEY").unwrap(),
+    ///         std::env::var("CLIENT_SECRET").unwrap(),
     ///         Environment::Sandbox,
     ///     );
     ///     client.set_initiator_password("your_initiator_password");
@@ -309,9 +309,9 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
 
             Ok(body)
         } else {
-            let err = res.json::<crate::ResponseError>().await?;
+            let err = res.json::<ResponseError>().await?;
 
-            Err(crate::MpesaError::Service(err))
+            Err(MpesaError::Service(err))
         }
     }
 }

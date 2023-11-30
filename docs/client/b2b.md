@@ -1,3 +1,5 @@
+# B2B
+
 This API enables you to pay bills directly from your business account to a pay bill number, or a paybill store. You can use this API to pay on behalf of a consumer/requester.
 
 The transaction moves money from your MMF/Working account to the recipient’s utility account.
@@ -7,17 +9,18 @@ Requires an `initiator_name`, the credential/ username used to authenticate the 
 
 Safaricom API docs [reference](https://developer.safaricom.co.ke/APIs/BusinessPayBill)
 
-# Example
+## Example
+
 ```rust
 use mpesa::{Mpesa, Environment};
 
 #[tokio::main]
 async fn main() {
-    dotenv::dotenv().ok();
+    dotenvy::dotenv().expect("env variables not found");
 
     let client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
+        std::env::var("CLIENT_KEY").unwrap(),
+        std::env::var("CLIENT_SECRET").unwrap(),
         Environment::Sandbox,
     );
 
