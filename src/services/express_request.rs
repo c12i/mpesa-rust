@@ -1,3 +1,5 @@
+#![doc = include_str!("../../docs/client/express_request.md")]
+
 use chrono::prelude::Local;
 use chrono::DateTime;
 use derive_builder::Builder;

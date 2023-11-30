@@ -1,3 +1,5 @@
+#![doc = include_str!("../../docs/client/transaction_reversal.md")]
+
 use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
 use url::Url;
