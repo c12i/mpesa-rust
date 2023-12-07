@@ -14,7 +14,7 @@ An unofficial Rust wrapper around the [Safaricom API](https://developer.safarico
 
 ```toml
 [dependencies]
-mpesa = { version = "1.1.0" }
+mpesa = { version = "1.2.0" }
 ```
 
 Optionally, you can disable default-features, which is basically the entire suite of MPESA APIs to conditionally select individual features. (See [Services](#services) table for the full list of Cargo features)
@@ -23,7 +23,7 @@ Example:
 
 ```toml
 [dependencies]
-mpesa = { version = "1.1.0", default_features = false, features = ["b2b", "express_request"] }
+mpesa = { version = "1.2.0", default_features = false, features = ["b2b", "express_request"] }
 ```
 
 In your lib or binary crate:
