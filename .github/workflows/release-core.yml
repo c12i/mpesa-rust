@@ -1,42 +1,42 @@
-name: publish to crates.io
+name: Release
 
 on:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types: [published]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  publish_to_crate_io:
-
+  release-plz:
+    name: Release-plz
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions-rs/toolchain@v1
-      with:
-          toolchain: stable
-          override: true
-    - name: Publish to crates.io
-      run: |
-        cargo doc
-        cargo login ${{ secrets.CARGO_REGISTRY_TOKEN }}
-        cargo publish
-  
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+      - name: Run release-plz
+        uses: MarcoIeni/release-plz-action@v0.5
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+          CARGO_REGISTRY_TOKEN: ${{ CARGO_REGISTRY_TOKEN }}
+
   sync_docs_to_gh_pages:
+    name: Sync cargo docs to gh-pages
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - uses: actions/setup-python@v4
       with:
-          python-version: '3.10'
+        python-version: '3.10'
     - uses: actions-rs/toolchain@v1
       with:
-          toolchain: stable
-          override: true
+        toolchain: stable
+        override: true
     - name: Sync Docs
       run: |
         cargo doc
