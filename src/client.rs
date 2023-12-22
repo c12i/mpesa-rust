@@ -13,7 +13,7 @@ use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, BulkInvoiceBuilder, C2bRegisterBuilder,
     C2bSimulateBuilder, CancelInvoiceBuilder, DynamicQR, DynamicQRBuilder,
     MpesaExpressRequestBuilder, Onboard, OnboardBuilder, OnboardModify, OnboardModifyBuilder,
-    ReconciliationBuilder, SingleInvoiceBuilder, TransactionReversalBuilder,
+    ReconciliationBuilder, SingleInvoice, SingleInvoiceBuilder, TransactionReversalBuilder,
     TransactionStatusBuilder,
 };
 use crate::{auth, MpesaResult};
@@ -212,6 +212,8 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///     .official_contact("0712345678")
     ///     .send_reminders(SendRemindersTypes::Enable)
     ///     .short_code("600496")
+    ///     .build()
+    ///     .unwrap()
     ///     .send()
     ///     .await;
     /// ```
@@ -236,6 +238,8 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///     .official_contact("0712345678")
     ///     .send_reminders(SendRemindersTypes::Enable)
     ///     .short_code("600496")
+    ///     .build()
+    ///     .unwrap()
     ///     .send()
     ///     .await;
     /// ```
@@ -320,12 +324,14 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///         InvoiceItem {amount: 1000.0, item_name: "An item"}
     ///     ])
     ///     .invoice_name("Invoice 001")
+    ///     .build()
+    ///     .unwrap()
     ///     .send()
     ///     .await;
     /// ```
     #[cfg(feature = "bill_manager")]
     pub fn single_invoice(&'mpesa self) -> SingleInvoiceBuilder<'mpesa, Env> {
-        SingleInvoiceBuilder::new(self)
+        SingleInvoice::builder(self)
     }
 
     /// **Bill Manager Reconciliation Builder**

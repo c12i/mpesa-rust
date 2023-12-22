@@ -132,7 +132,7 @@ impl<'i> Display for Invoice<'i> {
     }
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Clone, Debug, Serialize)]
 pub struct InvoiceItem<'i> {
     pub amount: f64,
     pub item_name: &'i str,
