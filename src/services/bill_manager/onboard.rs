@@ -13,20 +13,25 @@ pub struct OnboardRequest<'mpesa> {
     /// push payments done to your paybill.
     #[serde(rename(serialize = "callbackUrl"))]
     callback_url: &'mpesa str,
+
     /// Official contact email address for the organization signing up to
     /// bill manager.
     #[serde(rename(serialize = "email"))]
     email: &'mpesa str,
+
     /// Image to be embedded in the invoices and receipts sent to your customer.
     #[serde(rename(serialize = "logo"))]
     logo: &'mpesa str,
+
     /// Official contact phone number will appear in features sent to the customer such
     /// as invoices and payment receipts for customers to reach out to you as a business.
     #[serde(rename(serialize = "officialContact"))]
     official_contact: &'mpesa str,
+
     /// Allows you to enable or disable sms payment reminders for invoices sent.
     #[serde(rename(serialize = "sendReminders"))]
     send_reminders: SendRemindersTypes,
+
     /// A shortcode (5 to 6 digit account number) used to identify the organization
     /// and receive the transaction.
     #[serde(rename(serialize = "shortcode"))]
@@ -48,24 +53,30 @@ pub struct OnboardResponse {
 pub struct Onboard<'mpesa, Env: ApiEnvironment> {
     #[builder(pattern = "immutable", private)]
     client: &'mpesa Mpesa<Env>,
+
     /// Callback url that will be invoked by our payments API in order to
     /// push payments done to your paybill.
     #[builder(setter(into))]
     callback_url: &'mpesa str,
+
     /// Official contact email address for the organization signing up to
     /// bill manager.
     #[builder(setter(into))]
     email: &'mpesa str,
+
     /// Image to be embedded in the invoices and receipts sent to your customer.
     #[builder(setter(into))]
     logo: &'mpesa str,
+
     /// Official contact phone number will appear in features sent to the customer such
     /// as invoices and payment receipts for customers to reach out to you as a business.
     #[builder(setter(into))]
     official_contact: &'mpesa str,
+
     /// Allows you to enable or disable sms payment reminders for invoices sent.
     #[builder(default = "SendRemindersTypes::Disable", setter(into), try_setter)]
     send_reminders: SendRemindersTypes,
+
     /// A shortcode (5 to 6 digit account number) used to identify the organization
     /// and receive the transaction.
     #[builder(setter(into))]

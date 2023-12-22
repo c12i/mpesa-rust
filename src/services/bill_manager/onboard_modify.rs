@@ -16,13 +16,16 @@ pub struct OnboardModifyRequest<'mpesa> {
         skip_serializing_if = "Option::is_none"
     )]
     callback_url: Option<&'mpesa str>,
+
     /// Official contact email address for the organization signing up to
     /// bill manager.
     #[serde(rename(serialize = "email"), skip_serializing_if = "Option::is_none")]
     email: Option<&'mpesa str>,
+
     /// Image to be embedded in the invoices and receipts sent to your customer.
     #[serde(rename(serialize = "logo"), skip_serializing_if = "Option::is_none")]
     logo: Option<&'mpesa str>,
+
     /// Official contact phone number will appear in features sent to the customer such
     /// as invoices and payment receipts for customers to reach out to you as a business.
     #[serde(
@@ -30,12 +33,14 @@ pub struct OnboardModifyRequest<'mpesa> {
         skip_serializing_if = "Option::is_none"
     )]
     official_contact: Option<&'mpesa str>,
+
     /// Allows you to enable or disable sms payment reminders for invoices sent.
     #[serde(
         rename(serialize = "sendReminders"),
         skip_serializing_if = "Option::is_none"
     )]
     send_reminders: Option<SendRemindersTypes>,
+
     /// A shortcode (5 to 6 digit account number) used to identify the organization
     /// and receive the transaction.
     #[serde(
@@ -58,24 +63,30 @@ pub struct OnboardModifyResponse {
 pub struct OnboardModify<'mpesa, Env: ApiEnvironment> {
     #[builder(pattern = "immutable", private)]
     client: &'mpesa Mpesa<Env>,
+
     /// Callback url that will be invoked by our payments API in order to
     /// push payments done to your paybill.
     #[builder(default = "None", setter(into, strip_option))]
     callback_url: Option<&'mpesa str>,
+
     /// Official contact email address for the organization signing up to
     /// bill manager.
     #[builder(default = "None", setter(into, strip_option))]
     email: Option<&'mpesa str>,
+
     /// Image to be embedded in the invoices and receipts sent to your customer.
     #[builder(default = "None", setter(into, strip_option))]
     logo: Option<&'mpesa str>,
+
     /// Official contact phone number will appear in features sent to the customer such
     /// as invoices and payment receipts for customers to reach out to you as a business.
     #[builder(default = "None", setter(into, strip_option))]
     official_contact: Option<&'mpesa str>,
+
     /// Allows you to enable or disable sms payment reminders for invoices sent.
     #[builder(default = "None", setter(into, strip_option))]
     send_reminders: Option<SendRemindersTypes>,
+
     /// A shortcode (5 to 6 digit account number) used to identify the organization
     /// and receive the transaction.
     #[builder(default = "None", setter(into, strip_option))]
