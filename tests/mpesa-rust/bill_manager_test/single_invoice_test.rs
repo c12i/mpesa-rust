@@ -38,6 +38,8 @@ async fn single_invoice_success() {
             item_name: "An item",
         }])
         .invoice_name("Invoice 001")
+        .build()
+        .unwrap()
         .send()
         .await
         .unwrap();
@@ -64,13 +66,12 @@ async fn single_invoice_fails_if_no_amount_is_provided() {
         .due_date(Utc::now())
         .external_reference("INV2345")
         .invoice_name("Invoice 001")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
+        let MpesaError::BuilderError(err) = e else {
             panic!("Expected MpesaError::Message, but found {}", e);
         };
-        assert_eq!(msg, "amount is required");
+        assert_eq!(err.to_string(), "Field [amount] is required");
     } else {
         panic!("Expected error")
     }
@@ -94,13 +95,12 @@ async fn single_invoice_fails_if_no_account_reference_is_provided() {
         .due_date(Utc::now())
         .external_reference("INV2345")
         .invoice_name("Invoice 001")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
+        let MpesaError::BuilderError(err) = e else {
             panic!("Expected MpesaError::Message, but found {}", e);
         };
-        assert_eq!(msg, "account_reference is required");
+        assert_eq!(err.to_string(), "Field [account_reference] is required");
     } else {
         panic!("Expected error")
     }
@@ -124,13 +124,12 @@ async fn single_invoice_fails_if_no_billed_full_name_is_provided() {
         .due_date(Utc::now())
         .external_reference("INV2345")
         .invoice_name("Invoice 001")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
+        let MpesaError::BuilderError(err) = e else {
             panic!("Expected MpesaError::Message, but found {}", e);
         };
-        assert_eq!(msg, "billed_full_name is required");
+        assert_eq!(err.to_string(), "Field [billed_full_name] is required");
     } else {
         panic!("Expected error")
     }
@@ -154,13 +153,12 @@ async fn single_invoice_fails_if_no_billed_period_is_provided() {
         .due_date(Utc::now())
         .external_reference("INV2345")
         .invoice_name("Invoice 001")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
+        let MpesaError::BuilderError(err) = e else {
             panic!("Expected MpesaError::Message, but found {}", e);
         };
-        assert_eq!(msg, "billed_period is required");
+        assert_eq!(err.to_string(), "Field [billed_period] is required");
     } else {
         panic!("Expected error")
     }
@@ -184,13 +182,12 @@ async fn single_invoice_fails_if_no_billed_phone_number_is_provided() {
         .due_date(Utc::now())
         .external_reference("INV2345")
         .invoice_name("Invoice 001")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
+        let MpesaError::BuilderError(err) = e else {
             panic!("Expected MpesaError::Message but found {}", e);
         };
-        assert_eq!(msg, "billed_phone_number is required");
+        assert_eq!(err.to_string(), "Field [billed_phone_number] is required");
     } else {
         panic!("Expected error")
     }
@@ -214,13 +211,12 @@ async fn single_invoice_fails_if_no_due_date_is_provided() {
         .billed_phone_number("0712345678")
         .external_reference("INV2345")
         .invoice_name("Invoice 001")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
+        let MpesaError::BuilderError(err) = e else {
             panic!("Expected MpesaError::Message, but found {}", e);
         };
-        assert_eq!(msg, "due_date is required");
+        assert_eq!(err.to_string(), "Field [due_date] is required");
     } else {
         panic!("Expected error")
     }
@@ -244,13 +240,12 @@ async fn single_invoice_fails_if_no_external_reference_is_provided() {
         .billed_phone_number("0712345678")
         .due_date(Utc::now())
         .invoice_name("Invoice 001")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
+        let MpesaError::BuilderError(err) = e else {
             panic!("Expected MpesaError::Message, but found {}", e);
         };
-        assert_eq!(msg, "external_reference is required");
+        assert_eq!(err.to_string(), "Field [external_reference] is required");
     } else {
         panic!("Expected error")
     }
@@ -274,13 +269,12 @@ async fn single_invoice_fails_if_no_invoice_name_is_provided() {
         .billed_phone_number("0712345678")
         .due_date(Utc::now())
         .external_reference("INV2345")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
+        let MpesaError::BuilderError(err) = e else {
             panic!("Expected MpesaError::Message, but found {}", e);
         };
-        assert_eq!(msg, "invoice_name is required");
+        assert_eq!(err.to_string(), "Field [invoice_name] is required");
     } else {
         panic!("Expected error")
     }

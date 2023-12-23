@@ -30,6 +30,8 @@ async fn main() {
             InvoiceItem {amount: 1000.0, item_name: "An item"}
         ])
         .invoice_name("Invoice 001")
+        .build()
+        .unwrap()
         .send()
         .await;
 

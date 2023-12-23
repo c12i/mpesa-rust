@@ -1,4 +1,4 @@
-Creates a `CancelInvoiceBuilder` which allows you to recall a sent invoice.
+Creates a `CancelBulkInvoicesBuilder` which allows you to recall a list of sent invoices.
 
 Safaricom API docs [reference](https://developer.safaricom.co.ke/APIs/BillManager)
 
@@ -18,7 +18,7 @@ async fn main() {
     );
 
     let response = client
-        .cancel_invoice()
+        .cancel_bulk_invoice()
         .external_references(vec!["9KLSS011"])
         .send()
         .await;

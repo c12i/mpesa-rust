@@ -1,6 +1,7 @@
 #![doc = include_str!("../../../docs/client/bill_manager/reconciliation.md")]
 
 use chrono::prelude::{DateTime, Utc};
+use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
 
 use crate::client::Mpesa;
@@ -11,14 +12,24 @@ const BILL_MANAGER_RECONCILIATION_API_URL: &str = "v1/billmanager-invoice/reconc
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
-struct ReconciliationPayload<'mpesa> {
+pub struct ReconciliationRequest<'mpesa> {
+    /// An account number being invoiced that uniquely identifies a customer.
     account_reference: &'mpesa str,
-    external_reference: &'mpesa str,
-    full_name: &'mpesa str,
-    invoice_name: &'mpesa str,
+
+    /// The date the payment was done and recorded in the bill manager system.
+    date_created: DateTime<Utc>,
+
+    /// The customer's phone number, in the format 2547XXXXXXXX
+    msisdn: &'mpesa str,
+
+    /// Amount Paid In KES
     paid_amount: f64,
-    payment_date: DateTime<Utc>,
-    phone_number: &'mpesa str,
+
+    /// A shortcode (5 to 6 digit account number) used to identify the organization
+    /// and receive the transaction.
+    short_code: &'mpesa str,
+
+    /// The M-PESA generated reference
     transaction_id: &'mpesa str,
 }
 
@@ -30,96 +41,74 @@ pub struct ReconciliationResponse {
     pub response_message: String,
 }
 
-#[derive(Debug)]
-pub struct ReconciliationBuilder<'mpesa, Env: ApiEnvironment> {
+#[derive(Builder, Clone, Debug)]
+#[builder(build_fn(error = "MpesaError"))]
+pub struct Reconciliation<'mpesa, Env: ApiEnvironment> {
+    #[builder(pattern = "immutable", private)]
     client: &'mpesa Mpesa<Env>,
-    account_reference: Option<&'mpesa str>,
-    external_reference: Option<&'mpesa str>,
-    full_name: Option<&'mpesa str>,
-    invoice_name: Option<&'mpesa str>,
-    paid_amount: Option<f64>,
-    payment_date: Option<DateTime<Utc>>,
-    phone_number: Option<&'mpesa str>,
-    transaction_id: Option<&'mpesa str>,
+
+    /// An account number being invoiced that uniquely identifies a customer.
+    #[builder(setter(into))]
+    account_reference: &'mpesa str,
+
+    /// The date the payment was done and recorded in the bill manager system.
+    #[builder(setter(into), try_setter)]
+    date_created: DateTime<Utc>,
+
+    /// Amount Paid In KES
+    #[builder(setter(into))]
+    paid_amount: f64,
+
+    /// The customer's phone number, in the format 2547XXXXXXXX
+    #[builder(setter(into))]
+    msisdn: &'mpesa str,
+
+    /// A shortcode (5 to 6 digit account number) used to identify the organization
+    /// and receive the transaction.
+    #[builder(setter(into))]
+    short_code: &'mpesa str,
+
+    /// The M-PESA generated reference
+    #[builder(setter(into))]
+    transaction_id: &'mpesa str,
 }
 
-impl<'mpesa, Env: ApiEnvironment> ReconciliationBuilder<'mpesa, Env> {
-    /// Creates a new Bill Manager Reconciliation Builder
-    pub fn new(client: &'mpesa Mpesa<Env>) -> ReconciliationBuilder<'mpesa, Env> {
-        ReconciliationBuilder {
-            client,
-            account_reference: None,
-            external_reference: None,
-            full_name: None,
-            invoice_name: None,
-            paid_amount: None,
-            payment_date: None,
-            phone_number: None,
-            transaction_id: None,
+impl<'mpesa, Env: ApiEnvironment> From<Reconciliation<'mpesa, Env>>
+    for ReconciliationRequest<'mpesa>
+{
+    fn from(value: Reconciliation<'mpesa, Env>) -> Self {
+        ReconciliationRequest {
+            account_reference: value.account_reference,
+            date_created: value.date_created,
+            msisdn: value.msisdn,
+            paid_amount: value.paid_amount,
+            short_code: value.short_code,
+            transaction_id: value.transaction_id,
         }
     }
+}
 
-    /// Adds `account_reference`
-    pub fn account_reference(
-        mut self,
-        account_reference: &'mpesa str,
-    ) -> ReconciliationBuilder<'mpesa, Env> {
-        self.account_reference = Some(account_reference);
-        self
+impl<'mpesa, Env: ApiEnvironment> Reconciliation<'mpesa, Env> {
+    pub(crate) fn builder(client: &'mpesa Mpesa<Env>) -> ReconciliationBuilder<'mpesa, Env> {
+        ReconciliationBuilder::default().client(client)
     }
 
-    /// Adds `external_reference`
-    pub fn external_reference(
-        mut self,
-        external_reference: &'mpesa str,
-    ) -> ReconciliationBuilder<'mpesa, Env> {
-        self.external_reference = Some(external_reference);
-        self
-    }
-
-    /// Adds `full_name`
-    pub fn full_name(mut self, full_name: &'mpesa str) -> ReconciliationBuilder<'mpesa, Env> {
-        self.full_name = Some(full_name);
-        self
-    }
-
-    /// Adds `invoice_name`
-    pub fn invoice_name(mut self, invoice_name: &'mpesa str) -> ReconciliationBuilder<'mpesa, Env> {
-        self.invoice_name = Some(invoice_name);
-        self
-    }
-
-    /// Adds `paid_amount`
-    pub fn paid_amount<Number: Into<f64>>(
-        mut self,
-        paid_amount: Number,
-    ) -> ReconciliationBuilder<'mpesa, Env> {
-        self.paid_amount = Some(paid_amount.into());
-        self
-    }
-
-    /// Adds `payment_date`
-    pub fn payment_date(
-        mut self,
-        payment_date: DateTime<Utc>,
-    ) -> ReconciliationBuilder<'mpesa, Env> {
-        self.payment_date = Some(payment_date);
-        self
-    }
-
-    /// Adds `phone_number`
-    pub fn phone_number(mut self, phone_number: &'mpesa str) -> ReconciliationBuilder<'mpesa, Env> {
-        self.phone_number = Some(phone_number);
-        self
-    }
-
-    /// Adds `transaction_id`
-    pub fn transaction_id(
-        mut self,
-        transaction_id: &'mpesa str,
-    ) -> ReconciliationBuilder<'mpesa, Env> {
-        self.transaction_id = Some(transaction_id);
-        self
+    /// Builds Reconciliation
+    ///
+    /// Returns a `Reconciliation` which can be used to send a request.
+    pub fn from_request(
+        client: &'mpesa Mpesa<Env>,
+        request: ReconciliationRequest<'mpesa>,
+    ) -> Self {
+        Reconciliation {
+            client,
+            account_reference: request.account_reference,
+            date_created: request.date_created,
+            msisdn: request.msisdn,
+            paid_amount: request.paid_amount,
+            short_code: request.short_code,
+            transaction_id: request.transaction_id,
+        }
     }
 
     /// Bill Manager Reconciliation API
@@ -131,38 +120,11 @@ impl<'mpesa, Env: ApiEnvironment> ReconciliationBuilder<'mpesa, Env> {
     /// # Errors
     /// Returns an `MpesaError` on failure.
     pub async fn send(self) -> MpesaResult<ReconciliationResponse> {
-        let payload = ReconciliationPayload {
-            account_reference: self
-                .account_reference
-                .ok_or(MpesaError::Message("account_reference is required"))?,
-            external_reference: self
-                .external_reference
-                .ok_or(MpesaError::Message("external_reference is required"))?,
-            full_name: self
-                .full_name
-                .ok_or(MpesaError::Message("full_name is required"))?,
-            invoice_name: self
-                .invoice_name
-                .ok_or(MpesaError::Message("invoice_name is required"))?,
-            paid_amount: self
-                .paid_amount
-                .ok_or(MpesaError::Message("paid_amount is required"))?,
-            payment_date: self
-                .payment_date
-                .ok_or(MpesaError::Message("payment_date is required"))?,
-            phone_number: self
-                .phone_number
-                .ok_or(MpesaError::Message("phone_number is required"))?,
-            transaction_id: self
-                .transaction_id
-                .ok_or(MpesaError::Message("transaction_id is required"))?,
-        };
-
         self.client
-            .send(crate::client::Request {
+            .send::<ReconciliationRequest, _>(crate::client::Request {
                 method: reqwest::Method::POST,
                 path: BILL_MANAGER_RECONCILIATION_API_URL,
-                body: payload,
+                body: self.into(),
             })
             .await
     }

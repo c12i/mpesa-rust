@@ -27,6 +27,8 @@ async fn main() {
         .payment_date(Utc::now())
         .phone_number("0712345678")
         .transaction_id("TRANSACTION_ID")
+        .build()
+        .unwrap()
         .send()
         .await;
 

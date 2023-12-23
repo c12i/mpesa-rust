@@ -30,6 +30,8 @@ async fn onboard_success() {
         .logo("https://file.domain/file.png")
         .official_contact("0712345678")
         .short_code("600496")
+        .build()
+        .unwrap()
         .send()
         .await
         .unwrap();
@@ -53,13 +55,12 @@ async fn onboard_fails_if_no_callback_url_is_provided() {
         .logo("https://file.domain/file.png")
         .official_contact("0712345678")
         .short_code("600496")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
+        let MpesaError::BuilderError(err) = e else {
             panic!("Expected MpesaError::Message, but found {}", e);
         };
-        assert_eq!(msg, "callback_url is required");
+        assert_eq!(&err.to_string(), "Field [callback_url] is required");
     } else {
         panic!("Expected error")
     }
@@ -80,13 +81,12 @@ async fn onboard_fails_if_no_email_is_provided() {
         .logo("https://file.domain/file.png")
         .official_contact("0712345678")
         .short_code("600496")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
+        let MpesaError::BuilderError(err) = e else {
             panic!("Expected MpesaError::Message, but found {}", e);
         };
-        assert_eq!(msg, "email is required");
+        assert_eq!(&err.to_string(), "Field [email] is required");
     } else {
         panic!("Expected error")
     }
@@ -107,13 +107,12 @@ async fn onboard_fails_if_no_logo_is_provided() {
         .email("email@test.com")
         .official_contact("0712345678")
         .short_code("600496")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
+        let MpesaError::BuilderError(err) = e else {
             panic!("Expected MpesaError::Message, but found {}", e);
         };
-        assert_eq!(msg, "logo is required");
+        assert_eq!(&err.to_string(), "Field [logo] is required");
     } else {
         panic!("Expected error")
     }
@@ -134,13 +133,12 @@ async fn onboard_fails_if_no_official_contact_is_provided() {
         .email("email@test.com")
         .logo("https://file.domain/file.png")
         .short_code("600496")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
+        let MpesaError::BuilderError(err) = e else {
             panic!("Expected MpesaError::Message, but found {}", e);
         };
-        assert_eq!(msg, "official_contact is required");
+        assert_eq!(&err.to_string(), "Field [official_contact] is required");
     } else {
         panic!("Expected error")
     }
@@ -161,13 +159,12 @@ async fn onboard_fails_if_short_code_is_provided() {
         .email("email@test.com")
         .logo("https://file.domain/file.png")
         .official_contact("0712345678")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
+        let MpesaError::BuilderError(err) = e else {
             panic!("Expected MpesaError::Message, but found {}", e);
         };
-        assert_eq!(msg, "short_code is required");
+        assert_eq!(&err.to_string(), "Field [short_code] is required");
     } else {
         panic!("Expected error")
     }

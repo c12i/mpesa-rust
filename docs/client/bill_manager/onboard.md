@@ -23,7 +23,9 @@ async fn main() {
         .logo("https://file.domain/file.png")
         .official_contact("0712345678")
         .send_reminders(SendRemindersTypes::Enable)
-        .short_code("718003")
+        .short_code("600496")
+        .build()
+        .unwrap()
         .send()
         .await;
 

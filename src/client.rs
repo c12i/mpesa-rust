@@ -13,8 +13,9 @@ use crate::auth::AUTH;
 use crate::environment::ApiEnvironment;
 use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, BulkInvoiceBuilder, C2bRegisterBuilder,
-    C2bSimulateBuilder, CancelInvoiceBuilder, DynamicQR, DynamicQRBuilder,
-    MpesaExpressRequestBuilder, OnboardBuilder, OnboardModifyBuilder, ReconciliationBuilder,
+    C2bSimulateBuilder, CancelBulkInvoicesBuilder, CancelSingleInvoice, CancelSingleInvoiceBuilder,
+    DynamicQR, DynamicQRBuilder, MpesaExpressRequestBuilder, Onboard, OnboardBuilder,
+    OnboardModify, OnboardModifyBuilder, Reconciliation, ReconciliationBuilder, SingleInvoice,
     SingleInvoiceBuilder, TransactionReversalBuilder, TransactionStatusBuilder,
 };
 use crate::{auth, MpesaResult};
@@ -177,13 +178,13 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     #[cfg(feature = "bill_manager")]
     #[doc = include_str!("../docs/client/bill_manager/onboard.md")]
     pub fn onboard(&'mpesa self) -> OnboardBuilder<'mpesa, Env> {
-        OnboardBuilder::new(self)
+        Onboard::builder(self)
     }
 
     #[cfg(feature = "bill_manager")]
     #[doc = include_str!("../docs/client/bill_manager/onboard_modify.md")]
     pub fn onboard_modify(&'mpesa self) -> OnboardModifyBuilder<'mpesa, Env> {
-        OnboardModifyBuilder::new(self)
+        OnboardModify::builder(self)
     }
 
     #[cfg(feature = "bill_manager")]
@@ -195,19 +196,25 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     #[cfg(feature = "bill_manager")]
     #[doc = include_str!("../docs/client/bill_manager/single_invoice.md")]
     pub fn single_invoice(&'mpesa self) -> SingleInvoiceBuilder<'mpesa, Env> {
-        SingleInvoiceBuilder::new(self)
+        SingleInvoice::builder(self)
     }
 
     #[cfg(feature = "bill_manager")]
     #[doc = include_str!("../docs/client/bill_manager/reconciliation.md")]
     pub fn reconciliation(&'mpesa self) -> ReconciliationBuilder<'mpesa, Env> {
-        ReconciliationBuilder::new(self)
+        Reconciliation::builder(self)
     }
 
     #[cfg(feature = "bill_manager")]
-    #[doc = include_str!("../docs/client/bill_manager/cancel_invoice.md")]
-    pub fn cancel_invoice(&'mpesa self) -> CancelInvoiceBuilder<'mpesa, Env> {
-        CancelInvoiceBuilder::new(self)
+    #[doc = include_str!("../docs/client/bill_manager/cancel_bulk_invoices.md")]
+    pub fn cancel_bulk_invoices(&'mpesa self) -> CancelBulkInvoicesBuilder<'mpesa, Env> {
+        CancelBulkInvoicesBuilder::new(self)
+    }
+
+    #[cfg(feature = "bill_manager")]
+    #[doc = include_str!("../docs/client/bill_manager/cancel_single_invoice.md")]
+    pub fn cancel_single_invoice(&'mpesa self) -> CancelSingleInvoiceBuilder<'mpesa, Env> {
+        CancelSingleInvoice::builder(self)
     }
 
     #[cfg(feature = "c2b_register")]

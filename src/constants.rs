@@ -133,7 +133,7 @@ impl<'i> Display for Invoice<'i> {
     }
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Clone, Debug, Serialize)]
 pub struct InvoiceItem<'i> {
     pub amount: f64,
     pub item_name: &'i str,
@@ -142,6 +142,18 @@ pub struct InvoiceItem<'i> {
 impl<'i> Display for InvoiceItem<'i> {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
         write!(f, "amount: {}, item_name: {}", self.amount, self.item_name)
+    }
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CancelInvoice<'i> {
+    pub external_reference: &'i str,
+}
+
+impl<'i> Display for CancelInvoice<'i> {
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
+        write!(f, "external_reference: {}", self.external_reference)
     }
 }
 
