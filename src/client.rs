@@ -11,10 +11,10 @@ use crate::auth::AUTH;
 use crate::environment::ApiEnvironment;
 use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, BulkInvoiceBuilder, C2bRegisterBuilder,
-    C2bSimulateBuilder, CancelBulkInvoicesBuilder, DynamicQR, DynamicQRBuilder,
-    MpesaExpressRequestBuilder, Onboard, OnboardBuilder, OnboardModify, OnboardModifyBuilder,
-    Reconciliation, ReconciliationBuilder, SingleInvoice, SingleInvoiceBuilder,
-    TransactionReversalBuilder, TransactionStatusBuilder,
+    C2bSimulateBuilder, CancelBulkInvoicesBuilder, CancelSingleInvoice, CancelSingleInvoiceBuilder,
+    DynamicQR, DynamicQRBuilder, MpesaExpressRequestBuilder, Onboard, OnboardBuilder,
+    OnboardModify, OnboardModifyBuilder, Reconciliation, ReconciliationBuilder, SingleInvoice,
+    SingleInvoiceBuilder, TransactionReversalBuilder, TransactionStatusBuilder,
 };
 use crate::{auth, MpesaResult};
 
@@ -363,9 +363,9 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         Reconciliation::builder(self)
     }
 
-    /// **Bill Manager Cancel Invoice Builder**
+    /// **Bill Manager Cancel Bulk Invoices Builder**
     ///
-    /// Creates a `CancelBulkInvoicesBuilder` which allows you to recall a sent invoice.
+    /// Creates a `CancelBulkInvoicesBuilder` which allows you to recall a list of sent invoices.
     /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/APIs/BillManager)
     ///
     /// # Example
@@ -381,6 +381,26 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     #[cfg(feature = "bill_manager")]
     pub fn cancel_bulk_invoices(&'mpesa self) -> CancelBulkInvoicesBuilder<'mpesa, Env> {
         CancelBulkInvoicesBuilder::new(self)
+    }
+
+    /// **Bill Manager Cancel Single Invoice Builder**
+    ///
+    /// Creates a `CancelSingleInvoiceBuilder` which allows you to recall a sent invoice.
+    /// See more from the Safaricom API docs [here](https://developer.safaricom.co.ke/APIs/BillManager)
+    ///
+    /// # Example
+    /// ```ignore
+    /// use chrono::prelude::Utc;
+    ///
+    /// let response = client
+    ///     .cancel_single_invoice()
+    ///     .external_reference("9KLSS011")
+    ///     .send()
+    ///     .await;
+    /// ```
+    #[cfg(feature = "bill_manager")]
+    pub fn cancel_single_invoice(&'mpesa self) -> CancelSingleInvoiceBuilder<'mpesa, Env> {
+        CancelSingleInvoice::builder(self)
     }
 
     /// **C2B Register builder**
