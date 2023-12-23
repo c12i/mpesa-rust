@@ -9,5 +9,5 @@ pub use bulk_invoice::{BulkInvoiceBuilder, BulkInvoiceResponse};
 pub use cancel_invoice::{CancelInvoiceBuilder, CancelInvoiceResponse};
 pub use onboard::{Onboard, OnboardBuilder, OnboardResponse};
 pub use onboard_modify::{OnboardModify, OnboardModifyBuilder, OnboardModifyResponse};
-pub use reconciliation::{ReconciliationBuilder, ReconciliationResponse};
+pub use reconciliation::{Reconciliation, ReconciliationBuilder, ReconciliationResponse};
 pub use single_invoice::{SingleInvoice, SingleInvoiceBuilder, SingleInvoiceResponse};

@@ -13,8 +13,8 @@ use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, BulkInvoiceBuilder, C2bRegisterBuilder,
     C2bSimulateBuilder, CancelInvoiceBuilder, DynamicQR, DynamicQRBuilder,
     MpesaExpressRequestBuilder, Onboard, OnboardBuilder, OnboardModify, OnboardModifyBuilder,
-    ReconciliationBuilder, SingleInvoice, SingleInvoiceBuilder, TransactionReversalBuilder,
-    TransactionStatusBuilder,
+    Reconciliation, ReconciliationBuilder, SingleInvoice, SingleInvoiceBuilder,
+    TransactionReversalBuilder, TransactionStatusBuilder,
 };
 use crate::{auth, MpesaResult};
 
@@ -353,12 +353,14 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     ///     .payment_date(Utc::now())
     ///     .phone_number("0712345678")
     ///     .transaction_id("TRANSACTION_ID")
+    ///     .build()
+    ///     .unwrap()
     ///     .send()
     ///     .await;
     /// ```
     #[cfg(feature = "bill_manager")]
     pub fn reconciliation(&'mpesa self) -> ReconciliationBuilder<'mpesa, Env> {
-        ReconciliationBuilder::new(self)
+        Reconciliation::builder(self)
     }
 
     /// **Bill Manager Cancel Invoice Builder**

@@ -26,13 +26,13 @@ async fn reconciliation_success() {
     let response = client
         .reconciliation()
         .account_reference("John Doe")
-        .external_reference("INV2345")
-        .full_name("John Doe")
-        .invoice_name("Invoice 001")
+        .date_created(Utc::now())
+        .msisdn("0712345678")
         .paid_amount(1000.0)
-        .payment_date(Utc::now())
-        .phone_number("0712345678")
+        .short_code("600496")
         .transaction_id("TRANSACTION_ID")
+        .build()
+        .unwrap()
         .send()
         .await
         .unwrap();
@@ -51,27 +51,24 @@ async fn reconciliation_fails_if_no_account_reference_is_provided() {
         .await;
     if let Err(e) = client
         .reconciliation()
-        .external_reference("INV2345")
-        .full_name("John Doe")
-        .invoice_name("Invoice 001")
+        .date_created(Utc::now())
+        .msisdn("0712345678")
         .paid_amount(1000.0)
-        .payment_date(Utc::now())
-        .phone_number("0712345678")
+        .short_code("600496")
         .transaction_id("TRANSACTION_ID")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
+        let MpesaError::BuilderError(err) = e else {
             panic!("Expected MpesaError::Message, but found {}", e);
         };
-        assert_eq!(msg, "account_reference is required");
+        assert_eq!(err.to_string(), "Field [account_reference] is required");
     } else {
         panic!("Expected error")
     }
 }
 
 #[tokio::test]
-async fn reconciliation_fails_if_no_external_reference_is_provided() {
+async fn reconciliation_fails_if_no_date_created_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/reconciliation"))
@@ -82,26 +79,23 @@ async fn reconciliation_fails_if_no_external_reference_is_provided() {
     if let Err(e) = client
         .reconciliation()
         .account_reference("John Doe")
-        .full_name("John Doe")
-        .invoice_name("Invoice 001")
+        .msisdn("0712345678")
         .paid_amount(1000.0)
-        .payment_date(Utc::now())
-        .phone_number("0712345678")
+        .short_code("600496")
         .transaction_id("TRANSACTION_ID")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
+        let MpesaError::BuilderError(err) = e else {
             panic!("Expected MpesaError::Message, but found {}", e);
         };
-        assert_eq!(msg, "external_reference is required");
+        assert_eq!(err.to_string(), "Field [date_created] is required");
     } else {
         panic!("Expected error")
     }
 }
 
 #[tokio::test]
-async fn reconciliation_fails_if_no_full_name_is_provided() {
+async fn reconciliation_fails_if_no_msisdn_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/reconciliation"))
@@ -112,49 +106,16 @@ async fn reconciliation_fails_if_no_full_name_is_provided() {
     if let Err(e) = client
         .reconciliation()
         .account_reference("John Doe")
-        .external_reference("INV2345")
-        .invoice_name("Invoice 001")
+        .date_created(Utc::now())
         .paid_amount(1000.0)
-        .payment_date(Utc::now())
-        .phone_number("0712345678")
+        .short_code("600496")
         .transaction_id("TRANSACTION_ID")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
+        let MpesaError::BuilderError(err) = e else {
             panic!("Expected MpesaError::Message, but found {}", e);
         };
-        assert_eq!(msg, "full_name is required");
-    } else {
-        panic!("Expected error")
-    }
-}
-
-#[tokio::test]
-async fn reconciliation_fails_if_no_invoice_name_is_provided() {
-    let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
-    Mock::given(method("POST"))
-        .and(path("/v1/billmanager-invoice/reconciliation"))
-        .respond_with(sample_response())
-        .expect(0)
-        .mount(&server)
-        .await;
-    if let Err(e) = client
-        .reconciliation()
-        .account_reference("John Doe")
-        .external_reference("INV2345")
-        .full_name("John Doe")
-        .paid_amount(1000.0)
-        .payment_date(Utc::now())
-        .phone_number("0712345678")
-        .transaction_id("TRANSACTION_ID")
-        .send()
-        .await
-    {
-        let MpesaError::Message(msg) = e else {
-            panic!("Expected MpesaError::Message, but found {}", e);
-        };
-        assert_eq!(msg, "invoice_name is required");
+        assert_eq!(err.to_string(), "Field [msisdn] is required");
     } else {
         panic!("Expected error")
     }
@@ -172,26 +133,23 @@ async fn reconciliation_fails_if_no_paid_amount_is_provided() {
     if let Err(e) = client
         .reconciliation()
         .account_reference("John Doe")
-        .external_reference("INV2345")
-        .full_name("John Doe")
-        .invoice_name("Invoice 001")
-        .payment_date(Utc::now())
-        .phone_number("0712345678")
+        .date_created(Utc::now())
+        .msisdn("0712345678")
+        .short_code("600496")
         .transaction_id("TRANSACTION_ID")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
+        let MpesaError::BuilderError(err) = e else {
             panic!("Expected MpesaError::Message, but found {}", e);
         };
-        assert_eq!(msg, "paid_amount is required");
+        assert_eq!(err.to_string(), "Field [paid_amount] is required");
     } else {
         panic!("Expected error")
     }
 }
 
 #[tokio::test]
-async fn reconciliation_fails_if_no_payment_date_is_provided() {
+async fn reconciliation_fails_if_no_short_code_is_provided() {
     let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
     Mock::given(method("POST"))
         .and(path("/v1/billmanager-invoice/reconciliation"))
@@ -202,49 +160,16 @@ async fn reconciliation_fails_if_no_payment_date_is_provided() {
     if let Err(e) = client
         .reconciliation()
         .account_reference("John Doe")
-        .external_reference("INV2345")
-        .full_name("John Doe")
-        .invoice_name("Invoice 001")
+        .date_created(Utc::now())
+        .msisdn("0712345678")
         .paid_amount(1000.0)
-        .phone_number("0712345678")
         .transaction_id("TRANSACTION_ID")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
+        let MpesaError::BuilderError(err) = e else {
             panic!("Expected MpesaError::Message, but found {}", e);
         };
-        assert_eq!(msg, "payment_date is required");
-    } else {
-        panic!("Expected error")
-    }
-}
-
-#[tokio::test]
-async fn reconciliation_fails_if_no_phone_number_is_provided() {
-    let (client, server) = get_mpesa_client!(expected_auth_requests = 0);
-    Mock::given(method("POST"))
-        .and(path("/v1/billmanager-invoice/reconciliation"))
-        .respond_with(sample_response())
-        .expect(0)
-        .mount(&server)
-        .await;
-    if let Err(e) = client
-        .reconciliation()
-        .account_reference("John Doe")
-        .external_reference("INV2345")
-        .full_name("John Doe")
-        .invoice_name("Invoice 001")
-        .paid_amount(1000.0)
-        .payment_date(Utc::now())
-        .transaction_id("TRANSACTION_ID")
-        .send()
-        .await
-    {
-        let MpesaError::Message(msg) = e else {
-            panic!("Expected MpesaError::Message, but found {}", e);
-        };
-        assert_eq!(msg, "phone_number is required");
+        assert_eq!(err.to_string(), "Field [short_code] is required");
     } else {
         panic!("Expected error")
     }
@@ -262,19 +187,16 @@ async fn reconciliation_fails_if_no_transaction_id_is_provided() {
     if let Err(e) = client
         .reconciliation()
         .account_reference("John Doe")
-        .external_reference("INV2345")
-        .full_name("John Doe")
-        .invoice_name("Invoice 001")
+        .date_created(Utc::now())
+        .msisdn("0712345678")
+        .short_code("600496")
         .paid_amount(1000.0)
-        .payment_date(Utc::now())
-        .phone_number("0712345678")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
+        let MpesaError::BuilderError(err) = e else {
             panic!("Expected MpesaError::Message, but found {}", e);
         };
-        assert_eq!(msg, "transaction_id is required");
+        assert_eq!(err.to_string(), "Field [transaction_id] is required");
     } else {
         panic!("Expected error")
     }
