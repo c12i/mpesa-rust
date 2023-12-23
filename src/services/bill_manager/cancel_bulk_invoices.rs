@@ -1,9 +1,14 @@
+#![doc = include_str!("../../../docs/client/bill_manager/cancel_bulk_invoices.md")]
+
 use serde::Deserialize;
 
 use crate::client::Mpesa;
 use crate::constants::CancelInvoice;
 use crate::environment::ApiEnvironment;
-use crate::errors::{MpesaError, MpesaResult};
+use crate::errors::MpesaResult;
+
+const BILL_MANAGER_CANCEL_BULK_INVOICES_API_URL: &str =
+    "v1/billmanager-invoice/cancel-bulk-invoices";
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct CancelBulkInvoicesResponse {
@@ -62,28 +67,13 @@ impl<'mpesa, Env: ApiEnvironment> CancelBulkInvoicesBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// Returns an `MpesaError` on failure
-    #[allow(clippy::unnecessary_lazy_evaluations)]
     pub async fn send(self) -> MpesaResult<CancelBulkInvoicesResponse> {
-        let url = format!(
-            "{}/v1/billmanager-invoice/cancel-bulk-invoices",
-            self.client.environment.base_url()
-        );
-
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json(&self.external_references)
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            let value = response.json().await?;
-            return Ok(value);
-        }
-
-        let value = response.json().await?;
-        Err(MpesaError::CancelBulkInvoicesError(value))
+        self.client
+            .send(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: BILL_MANAGER_CANCEL_BULK_INVOICES_API_URL,
+                body: self.external_references,
+            })
+            .await
     }
 }

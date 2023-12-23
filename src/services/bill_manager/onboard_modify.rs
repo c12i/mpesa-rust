@@ -1,3 +1,5 @@
+#![doc = include_str!("../../../docs/client/bill_manager/onboard_modify.md")]
+
 use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
 
@@ -5,6 +7,8 @@ use crate::client::Mpesa;
 use crate::constants::SendRemindersTypes;
 use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
+
+const BILL_MANAGER_ONBOARD_MODIFY_API_URL: &str = "v1/billmanager-invoice/change-optin-details";
 
 #[derive(Debug, Serialize)]
 /// Payload to modify opt-in details to the bill manager api.
@@ -137,26 +141,12 @@ impl<'mpesa, Env: ApiEnvironment> OnboardModify<'mpesa, Env> {
     /// # Errors
     /// Returns an `MpesaError` on failure
     pub async fn send(self) -> MpesaResult<OnboardModifyResponse> {
-        let url = format!(
-            "{}/v1/billmanager-invoice/change-optin-details",
-            self.client.environment.base_url()
-        );
-
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json::<OnboardModifyRequest>(&self.into())
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            let value = response.json().await?;
-            return Ok(value);
-        }
-
-        let value = response.json().await?;
-        Err(MpesaError::OnboardModifyError(value))
+        self.client
+            .send::<OnboardModifyRequest, _>(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: BILL_MANAGER_ONBOARD_MODIFY_API_URL,
+                body: self.into(),
+            })
+            .await
     }
 }

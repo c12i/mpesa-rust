@@ -1,6 +1,10 @@
+#![doc = include_str!("../../docs/client/transaction_reversal.md")]
+
 use serde::{Deserialize, Serialize};
 
 use crate::{ApiEnvironment, CommandId, IdentifierTypes, Mpesa, MpesaError, MpesaResult};
+
+const TRANSACTION_REVERSAL_URL: &str = "mpesa/reversal/v1/request";
 
 #[derive(Debug, Serialize)]
 pub struct TransactionReversalPayload<'mpesa> {
@@ -169,11 +173,6 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
     /// # Errors
     /// Returns a `MpesaError` on failure.
     pub async fn send(self) -> MpesaResult<TransactionReversalResponse> {
-        let url = format!(
-            "{}/mpesa/reversal/v1/request",
-            self.client.environment.base_url()
-        );
-
         let credentials = self.client.gen_security_credentials()?;
 
         let payload = TransactionReversalPayload {
@@ -188,7 +187,7 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
                 .ok_or(MpesaError::Message("receiver_party is required"))?,
             receiver_identifier_type: self
                 .receiver_identifier_type
-                .unwrap_or(IdentifierTypes::ShortCode),
+                .unwrap_or(IdentifierTypes::Reversal),
             result_url: self
                 .result_url
                 .ok_or(MpesaError::Message("result_url is required"))?,
@@ -202,21 +201,12 @@ impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
                 .ok_or(MpesaError::Message("amount is required"))?,
         };
 
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json(&payload)
-            .send()
-            .await?;
-
-        if !response.status().is_success() {
-            let value = response.json().await?;
-            return Err(MpesaError::MpesaTransactionReversalError(value));
-        };
-
-        let response = response.json::<_>().await?;
-        Ok(response)
+        self.client
+            .send(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: TRANSACTION_REVERSAL_URL,
+                body: payload,
+            })
+            .await
     }
 }

@@ -1,7 +1,11 @@
+#![doc = include_str!("../../docs/client/b2c.md")]
+
 use serde::{Deserialize, Serialize};
 
 use crate::environment::ApiEnvironment;
 use crate::{CommandId, Mpesa, MpesaError, MpesaResult};
+
+const B2C_URL: &str = "mpesa/b2c/v1/paymentrequest";
 
 #[derive(Debug, Serialize)]
 /// Payload to allow for b2c transactions:
@@ -183,10 +187,6 @@ impl<'mpesa, Env: ApiEnvironment> B2cBuilder<'mpesa, Env> {
     /// # Errors
     /// Returns a `MpesaError` on failure.
     pub async fn send(self) -> MpesaResult<B2cResponse> {
-        let url = format!(
-            "{}/mpesa/b2c/v1/paymentrequest",
-            self.client.environment.base_url()
-        );
         let credentials = self.client.gen_security_credentials()?;
 
         let payload = B2cPayload {
@@ -212,21 +212,12 @@ impl<'mpesa, Env: ApiEnvironment> B2cBuilder<'mpesa, Env> {
             occasion: self.occasion.unwrap_or_else(|| stringify!(None)),
         };
 
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json(&payload)
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            let value = response.json::<_>().await?;
-            return Ok(value);
-        }
-
-        let value = response.json().await?;
-        Err(MpesaError::B2cError(value))
+        self.client
+            .send(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: B2C_URL,
+                body: payload,
+            })
+            .await
     }
 }

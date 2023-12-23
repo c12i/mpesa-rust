@@ -1,9 +1,13 @@
+#![doc = include_str!("../../../docs/client/bill_manager/bulk_invoice.md")]
+
 use serde::Deserialize;
 
 use crate::client::Mpesa;
 use crate::constants::Invoice;
 use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
+
+const BILL_MANAGER_BULK_INVOICE_API_URL: &str = "v1/billmanager-invoice/bulk-invoicing";
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct BulkInvoiceResponse {
@@ -51,32 +55,17 @@ impl<'mpesa, Env: ApiEnvironment> BulkInvoiceBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// Returns an `MpesaError` on failure.
-    #[allow(clippy::unnecessary_lazy_evaluations)]
     pub async fn send(self) -> MpesaResult<BulkInvoiceResponse> {
-        let url = format!(
-            "{}/v1/billmanager-invoice/bulk-invoicing",
-            self.client.environment.base_url()
-        );
-
         if self.invoices.is_empty() {
             return Err(MpesaError::Message("invoices cannot be empty"));
         }
 
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json(&self.invoices)
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            let value = response.json().await?;
-            return Ok(value);
-        }
-
-        let value = response.json().await?;
-        Err(MpesaError::BulkInvoiceError(value))
+        self.client
+            .send(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: BILL_MANAGER_BULK_INVOICE_API_URL,
+                body: self.invoices,
+            })
+            .await
     }
 }

@@ -1,6 +1,10 @@
+#![doc = include_str!("../../docs/client/transaction_status.md")]
+
 use serde::{Deserialize, Serialize};
 
 use crate::{ApiEnvironment, CommandId, IdentifierTypes, Mpesa, MpesaError, MpesaResult};
+
+const TRANSACTION_STATUS_URL: &str = "mpesa/transactionstatus/v1/query";
 
 #[derive(Debug, Serialize)]
 pub struct TransactionStatusPayload<'mpesa> {
@@ -154,11 +158,6 @@ impl<'mpesa, Env: ApiEnvironment> TransactionStatusBuilder<'mpesa, Env> {
     /// # Errors
     /// Returns a `MpesaError` on failure.
     pub async fn send(self) -> MpesaResult<TransactionStatusResponse> {
-        let url = format!(
-            "{}/mpesa/transactionstatus/v1/query",
-            self.client.environment.base_url()
-        );
-
         let credentials = self.client.gen_security_credentials()?;
 
         let payload = TransactionStatusPayload {
@@ -182,21 +181,12 @@ impl<'mpesa, Env: ApiEnvironment> TransactionStatusBuilder<'mpesa, Env> {
             occasion: self.occasion.unwrap_or(stringify!(None)),
         };
 
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json(&payload)
-            .send()
-            .await?;
-
-        if !response.status().is_success() {
-            let value = response.json().await?;
-            return Err(MpesaError::MpesaTransactionStatusError(value));
-        };
-
-        let response = response.json::<_>().await?;
-        Ok(response)
+        self.client
+            .send(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: TRANSACTION_STATUS_URL,
+                body: payload,
+            })
+            .await
     }
 }

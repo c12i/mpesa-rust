@@ -1,3 +1,5 @@
+#![doc = include_str!("../../../docs/client/bill_manager/single_invoice.md")]
+
 use chrono::prelude::{DateTime, Utc};
 use derive_builder::Builder;
 use serde::Deserialize;
@@ -6,6 +8,8 @@ use crate::client::Mpesa;
 use crate::constants::{Invoice, InvoiceItem};
 use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
+
+const BILL_MANAGER_SINGLE_INVOICE_API_URL: &str = "v1/billmanager-invoice/single-invoicing";
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct SingleInvoiceResponse {
@@ -109,26 +113,12 @@ impl<'mpesa, Env: ApiEnvironment> SingleInvoice<'mpesa, Env> {
     /// # Errors
     /// Returns an `MpesaError` on failure
     pub async fn send(self) -> MpesaResult<SingleInvoiceResponse> {
-        let url = format!(
-            "{}/v1/billmanager-invoice/single-invoicing",
-            self.client.environment.base_url()
-        );
-
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json::<Invoice>(&self.into())
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            let value = response.json().await?;
-            return Ok(value);
-        }
-
-        let value = response.json().await?;
-        Err(MpesaError::SingleInvoiceError(value))
+        self.client
+            .send::<Invoice, _>(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: BILL_MANAGER_SINGLE_INVOICE_API_URL,
+                body: self.into(),
+            })
+            .await
     }
 }

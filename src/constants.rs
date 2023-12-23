@@ -39,6 +39,7 @@ pub enum IdentifierTypes {
     MSISDN = 1,
     TillNumber = 2,
     ShortCode = 4,
+    Reversal = 11,
 }
 
 impl Display for IdentifierTypes {

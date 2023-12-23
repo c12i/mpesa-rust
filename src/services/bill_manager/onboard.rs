@@ -1,3 +1,5 @@
+#![doc = include_str!("../../../docs/client/bill_manager/onboard.md")]
+
 use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
 
@@ -5,6 +7,8 @@ use crate::client::Mpesa;
 use crate::constants::SendRemindersTypes;
 use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
+
+const BILL_MANAGER_ONBOARD_API_URL: &str = "v1/billmanager-invoice/optin";
 
 #[derive(Debug, Serialize)]
 /// Payload to opt you in as a biller to the bill manager features.
@@ -16,11 +20,9 @@ pub struct OnboardRequest<'mpesa> {
 
     /// Official contact email address for the organization signing up to
     /// bill manager.
-    #[serde(rename(serialize = "email"))]
     email: &'mpesa str,
 
     /// Image to be embedded in the invoices and receipts sent to your customer.
-    #[serde(rename(serialize = "logo"))]
     logo: &'mpesa str,
 
     /// Official contact phone number will appear in features sent to the customer such
@@ -125,26 +127,12 @@ impl<'mpesa, Env: ApiEnvironment> Onboard<'mpesa, Env> {
     /// # Errors
     /// Returns an `MpesaError` on failure
     pub async fn send(self) -> MpesaResult<OnboardResponse> {
-        let url = format!(
-            "{}/v1/billmanager-invoice/optin",
-            self.client.environment.base_url()
-        );
-
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json::<OnboardRequest>(&self.into())
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            let value = response.json().await?;
-            return Ok(value);
-        }
-
-        let value = response.json().await?;
-        Err(MpesaError::OnboardError(value))
+        self.client
+            .send::<OnboardRequest, _>(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: BILL_MANAGER_ONBOARD_API_URL,
+                body: self.into(),
+            })
+            .await
     }
 }

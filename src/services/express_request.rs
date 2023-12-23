@@ -1,3 +1,5 @@
+#![doc = include_str!("../../docs/client/express_request.md")]
+
 use chrono::prelude::Local;
 use openssl::base64;
 use serde::{Deserialize, Serialize};
@@ -6,6 +8,8 @@ use crate::client::Mpesa;
 use crate::constants::CommandId;
 use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
+
+const EXPRESS_REQUEST_URL: &str = "mpesa/stkpush/v1/processrequest";
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
 static DEFAULT_PASSKEY: &str = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
@@ -215,14 +219,7 @@ impl<'mpesa, Env: ApiEnvironment> MpesaExpressRequestBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
-    #[allow(clippy::or_fun_call)]
-    #[allow(clippy::unnecessary_lazy_evaluations)]
     pub async fn send(self) -> MpesaResult<MpesaExpressRequestResponse> {
-        let url = format!(
-            "{}/mpesa/stkpush/v1/processrequest",
-            self.client.environment.base_url()
-        );
-
         let (password, timestamp) = self.generate_password_and_timestamp();
 
         let payload = MpesaExpressRequestPayload {
@@ -251,25 +248,16 @@ impl<'mpesa, Env: ApiEnvironment> MpesaExpressRequestBuilder<'mpesa, Env> {
             account_reference: self.account_ref.unwrap_or_else(|| stringify!(None)),
             transaction_type: self
                 .transaction_type
-                .unwrap_or_else(|| CommandId::CustomerPayBillOnline),
+                .unwrap_or(CommandId::CustomerPayBillOnline),
             transaction_desc: self.transaction_desc.unwrap_or_else(|| stringify!(None)),
         };
 
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json(&payload)
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            let value = response.json::<_>().await?;
-            return Ok(value);
-        }
-
-        let value = response.json().await?;
-        Err(MpesaError::MpesaExpressRequestError(value))
+        self.client
+            .send(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: EXPRESS_REQUEST_URL,
+                body: payload,
+            })
+            .await
     }
 }

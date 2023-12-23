@@ -1,3 +1,5 @@
+#![doc = include_str!("../../../docs/client/bill_manager/reconciliation.md")]
+
 use chrono::prelude::{DateTime, Utc};
 use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
@@ -5,6 +7,8 @@ use serde::{Deserialize, Serialize};
 use crate::client::Mpesa;
 use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
+
+const BILL_MANAGER_RECONCILIATION_API_URL: &str = "v1/billmanager-invoice/reconciliation";
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -116,26 +120,12 @@ impl<'mpesa, Env: ApiEnvironment> Reconciliation<'mpesa, Env> {
     /// # Errors
     /// Returns an `MpesaError` on failure.
     pub async fn send(self) -> MpesaResult<ReconciliationResponse> {
-        let url = format!(
-            "{}/v1/billmanager-invoice/reconciliation",
-            self.client.environment.base_url()
-        );
-
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json::<ReconciliationRequest>(&self.into())
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            let value = response.json().await?;
-            return Ok(value);
-        }
-
-        let value = response.json().await?;
-        Err(MpesaError::ReconciliationError(value))
+        self.client
+            .send::<ReconciliationRequest, _>(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: BILL_MANAGER_RECONCILIATION_API_URL,
+                body: self.into(),
+            })
+            .await
     }
 }

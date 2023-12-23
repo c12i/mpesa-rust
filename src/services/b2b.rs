@@ -1,9 +1,13 @@
+#![doc = include_str!("../../docs/client/b2b.md")]
+
 use serde::{Deserialize, Serialize};
 
 use crate::client::Mpesa;
 use crate::constants::{CommandId, IdentifierTypes};
 use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
+
+const B2B_URL: &str = "mpesa/b2b/v1/paymentrequest";
 
 #[derive(Debug, Serialize)]
 struct B2bPayload<'mpesa> {
@@ -215,12 +219,7 @@ impl<'mpesa, Env: ApiEnvironment> B2bBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// Returns a `MpesaError` on failure
-    #[allow(clippy::unnecessary_lazy_evaluations)]
     pub async fn send(self) -> MpesaResult<B2bResponse> {
-        let url = format!(
-            "{}/mpesa/b2b/v1/paymentrequest",
-            self.client.environment.base_url()
-        );
         let credentials = self.client.gen_security_credentials()?;
 
         let payload = B2bPayload {
@@ -228,7 +227,7 @@ impl<'mpesa, Env: ApiEnvironment> B2bBuilder<'mpesa, Env> {
             security_credential: &credentials,
             command_id: self
                 .command_id
-                .unwrap_or_else(|| CommandId::BusinessToBusinessTransfer),
+                .unwrap_or(CommandId::BusinessToBusinessTransfer),
             amount: self
                 .amount
                 .ok_or(MpesaError::Message("amount is required"))?,
@@ -237,14 +236,14 @@ impl<'mpesa, Env: ApiEnvironment> B2bBuilder<'mpesa, Env> {
                 .ok_or(MpesaError::Message("party_a is required"))?,
             sender_identifier_type: &self
                 .sender_id
-                .unwrap_or_else(|| IdentifierTypes::ShortCode)
+                .unwrap_or(IdentifierTypes::ShortCode)
                 .to_string(),
             party_b: self
                 .party_b
                 .ok_or(MpesaError::Message("party_b is required"))?,
             reciever_identifier_type: &self
                 .receiver_id
-                .unwrap_or_else(|| IdentifierTypes::ShortCode)
+                .unwrap_or(IdentifierTypes::ShortCode)
                 .to_string(),
             remarks: self.remarks.unwrap_or_else(|| stringify!(None)),
             queue_time_out_url: self.queue_timeout_url,
@@ -252,21 +251,12 @@ impl<'mpesa, Env: ApiEnvironment> B2bBuilder<'mpesa, Env> {
             account_reference: self.account_ref,
         };
 
-        let response = self
-            .client
-            .http_client
-            .post(&url)
-            .bearer_auth(self.client.auth().await?)
-            .json(&payload)
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            let value = response.json::<_>().await?;
-            return Ok(value);
-        }
-
-        let value = response.json().await?;
-        Err(MpesaError::B2bError(value))
+        self.client
+            .send(crate::client::Request {
+                method: reqwest::Method::POST,
+                path: B2B_URL,
+                body: payload,
+            })
+            .await
     }
 }
