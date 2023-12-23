@@ -1,17 +1,12 @@
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
 use crate::client::Mpesa;
+use crate::constants::CancelInvoice;
 use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
 
-#[derive(Debug, Serialize)]
-#[serde(rename_all = "camelCase")]
-struct CancelInvoicePayload<'mpesa> {
-    external_reference: &'mpesa str,
-}
-
 #[derive(Clone, Debug, Deserialize)]
-pub struct CancelInvoiceResponse {
+pub struct CancelBulkInvoicesResponse {
     #[serde(rename(deserialize = "rescode"))]
     pub response_code: String,
     #[serde(rename(deserialize = "resmsg"))]
@@ -21,15 +16,15 @@ pub struct CancelInvoiceResponse {
 }
 
 #[derive(Debug)]
-pub struct CancelInvoiceBuilder<'mpesa, Env: ApiEnvironment> {
+pub struct CancelBulkInvoicesBuilder<'mpesa, Env: ApiEnvironment> {
     client: &'mpesa Mpesa<Env>,
-    external_references: Vec<CancelInvoicePayload<'mpesa>>,
+    external_references: Vec<CancelInvoice<'mpesa>>,
 }
 
-impl<'mpesa, Env: ApiEnvironment> CancelInvoiceBuilder<'mpesa, Env> {
-    /// Creates a new Bill Manager Cancel invoice builder
-    pub fn new(client: &'mpesa Mpesa<Env>) -> CancelInvoiceBuilder<'mpesa, Env> {
-        CancelInvoiceBuilder {
+impl<'mpesa, Env: ApiEnvironment> CancelBulkInvoicesBuilder<'mpesa, Env> {
+    /// Creates a new Bill Manager Cancel bulk invoices builder
+    pub fn new(client: &'mpesa Mpesa<Env>) -> CancelBulkInvoicesBuilder<'mpesa, Env> {
+        CancelBulkInvoicesBuilder {
             client,
             external_references: vec![],
         }
@@ -39,9 +34,9 @@ impl<'mpesa, Env: ApiEnvironment> CancelInvoiceBuilder<'mpesa, Env> {
     pub fn external_reference(
         mut self,
         external_reference: &'mpesa str,
-    ) -> CancelInvoiceBuilder<'mpesa, Env> {
+    ) -> CancelBulkInvoicesBuilder<'mpesa, Env> {
         self.external_references
-            .push(CancelInvoicePayload { external_reference });
+            .push(CancelInvoice { external_reference });
         self
     }
 
@@ -49,28 +44,28 @@ impl<'mpesa, Env: ApiEnvironment> CancelInvoiceBuilder<'mpesa, Env> {
     pub fn external_references(
         mut self,
         external_references: Vec<&'mpesa str>,
-    ) -> CancelInvoiceBuilder<'mpesa, Env> {
+    ) -> CancelBulkInvoicesBuilder<'mpesa, Env> {
         self.external_references.append(
             &mut external_references
                 .into_iter()
-                .map(|external_reference| CancelInvoicePayload { external_reference })
+                .map(|external_reference| CancelInvoice { external_reference })
                 .collect(),
         );
         self
     }
 
-    /// Bill Manager Cancel Invoice API
+    /// Bill Manager Cancel Bulk Invoices API
     ///
     /// Cancels a list of invoices by their `external_reference`
     ///
-    /// A successful request returns a `CancelInvoiceResponse` type
+    /// A successful request returns a `CancelBulkInvoicesResponse` type
     ///
     /// # Errors
     /// Returns an `MpesaError` on failure
     #[allow(clippy::unnecessary_lazy_evaluations)]
-    pub async fn send(self) -> MpesaResult<CancelInvoiceResponse> {
+    pub async fn send(self) -> MpesaResult<CancelBulkInvoicesResponse> {
         let url = format!(
-            "{}/v1/billmanager-invoice/cancel-single-invoice",
+            "{}/v1/billmanager-invoice/cancel-bulk-invoices",
             self.client.environment.base_url()
         );
 
@@ -89,6 +84,6 @@ impl<'mpesa, Env: ApiEnvironment> CancelInvoiceBuilder<'mpesa, Env> {
         }
 
         let value = response.json().await?;
-        Err(MpesaError::CancelInvoiceError(value))
+        Err(MpesaError::CancelBulkInvoicesError(value))
     }
 }

@@ -29,8 +29,8 @@ pub enum MpesaError {
     ReconciliationError(ApiError),
     #[error("Bill manager single invoice failed: {0}")]
     SingleInvoiceError(ApiError),
-    #[error("Bill manager cancel invoice failed: {0}")]
-    CancelInvoiceError(ApiError),
+    #[error("Bill manager cancel bulk invoices failed: {0}")]
+    CancelBulkInvoicesError(ApiError),
     #[error("Mpesa Express request/ STK push failed: {0}")]
     MpesaExpressRequestError(ApiError),
     #[error("Mpesa Transaction reversal failed: {0}")]

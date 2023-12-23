@@ -144,6 +144,18 @@ impl<'i> Display for InvoiceItem<'i> {
     }
 }
 
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CancelInvoice<'i> {
+    pub external_reference: &'i str,
+}
+
+impl<'i> Display for CancelInvoice<'i> {
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
+        write!(f, "external_reference: {}", self.external_reference)
+    }
+}
+
 #[derive(Debug, Clone, Copy, Serialize)]
 pub enum TransactionType {
     /// Send Money(Mobile number).
