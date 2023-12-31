@@ -33,23 +33,11 @@ pub trait ApiEnvironment: Clone {
     fn get_certificate(&self) -> &str;
 }
 
-macro_rules! environment_from_string {
-    ($v:expr) => {
-        match $v {
-            "production" => Ok(Self::Production),
-            "sandbox" => Ok(Self::Sandbox),
-            _ => Err(MpesaError::Message(
-                "Could not parse the provided environment name",
-            )),
-        }
-    };
-}
-
 impl FromStr for Environment {
     type Err = MpesaError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        environment_from_string!(s.to_lowercase().as_str())
+        s.try_into()
     }
 }
 
@@ -57,7 +45,14 @@ impl TryFrom<&str> for Environment {
     type Error = MpesaError;
 
     fn try_from(v: &str) -> Result<Self, Self::Error> {
-        environment_from_string!(v.to_lowercase().as_str())
+         let v = v.to_lowercase();
+        match v.as_str() {
+            "production" => Ok(Self::Production),
+            "sandbox" => Ok(Self::Sandbox),
+            _ => Err(MpesaError::Message(
+                "Could not parse the provided environment name",
+            )),
+        }
     }
 }
 
@@ -65,7 +60,7 @@ impl TryFrom<String> for Environment {
     type Error = MpesaError;
 
     fn try_from(v: String) -> Result<Self, Self::Error> {
-        environment_from_string!(v.to_lowercase().as_str())
+        v.as_str().try_into()
     }
 }
 

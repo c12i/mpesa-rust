@@ -5,7 +5,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::client::Mpesa;
 use crate::constants::TransactionType;
-use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
 
 const DYNAMIC_QR_URL: &str = "mpesa/qrcode/v1/generate";
@@ -54,9 +53,9 @@ pub struct DynamicQRResponse {
 /// Dynamic QR builder struct
 #[derive(Builder, Debug, Clone)]
 #[builder(build_fn(error = "MpesaError"))]
-pub struct DynamicQR<'mpesa, Env: ApiEnvironment> {
+pub struct DynamicQR<'mpesa> {
     #[builder(pattern = "immutable")]
-    client: &'mpesa Mpesa<Env>,
+    client: &'mpesa Mpesa,
     /// Name of the Company/M-Pesa Merchant Name
     #[builder(setter(into))]
     merchant_name: &'mpesa str,
@@ -87,8 +86,8 @@ pub struct DynamicQR<'mpesa, Env: ApiEnvironment> {
     size: &'mpesa str,
 }
 
-impl<'mpesa, Env: ApiEnvironment> From<DynamicQR<'mpesa, Env>> for DynamicQRRequest<'mpesa> {
-    fn from(express: DynamicQR<'mpesa, Env>) -> DynamicQRRequest<'mpesa> {
+impl<'mpesa> From<DynamicQR<'mpesa>> for DynamicQRRequest<'mpesa> {
+    fn from(express: DynamicQR<'mpesa>) -> DynamicQRRequest<'mpesa> {
         DynamicQRRequest {
             merchant_name: express.merchant_name,
             ref_no: express.ref_no,
@@ -100,8 +99,8 @@ impl<'mpesa, Env: ApiEnvironment> From<DynamicQR<'mpesa, Env>> for DynamicQRRequ
     }
 }
 
-impl<'mpesa, Env: ApiEnvironment> DynamicQR<'mpesa, Env> {
-    pub(crate) fn builder(client: &'mpesa Mpesa<Env>) -> DynamicQRBuilder<'mpesa, Env> {
+impl<'mpesa> DynamicQR<'mpesa> {
+    pub(crate) fn builder(client: &'mpesa Mpesa) -> DynamicQRBuilder<'mpesa> {
         DynamicQRBuilder::default().client(client)
     }
 
@@ -109,9 +108,9 @@ impl<'mpesa, Env: ApiEnvironment> DynamicQR<'mpesa, Env> {
     ///
     /// Returns a `DynamicQR` which can be used to send a request
     pub fn from_request(
-        client: &'mpesa Mpesa<Env>,
+        client: &'mpesa Mpesa,
         request: DynamicQRRequest<'mpesa>,
-    ) -> DynamicQR<'mpesa, Env> {
+    ) -> DynamicQR<'mpesa> {
         DynamicQR {
             client,
             merchant_name: request.merchant_name,

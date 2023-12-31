@@ -4,7 +4,6 @@ use serde::Deserialize;
 
 use crate::client::Mpesa;
 use crate::constants::Invoice;
-use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
 
 const BILL_MANAGER_BULK_INVOICE_API_URL: &str = "v1/billmanager-invoice/bulk-invoicing";
@@ -20,14 +19,14 @@ pub struct BulkInvoiceResponse {
 }
 
 #[derive(Debug)]
-pub struct BulkInvoiceBuilder<'mpesa, Env: ApiEnvironment> {
-    client: &'mpesa Mpesa<Env>,
+pub struct BulkInvoiceBuilder<'mpesa> {
+    client: &'mpesa Mpesa,
     invoices: Vec<Invoice<'mpesa>>,
 }
 
-impl<'mpesa, Env: ApiEnvironment> BulkInvoiceBuilder<'mpesa, Env> {
+impl<'mpesa> BulkInvoiceBuilder<'mpesa> {
     /// Creates a new Bill Manager Bulk Invoice builder
-    pub fn new(client: &'mpesa Mpesa<Env>) -> BulkInvoiceBuilder<'mpesa, Env> {
+    pub fn new(client: &'mpesa Mpesa) -> BulkInvoiceBuilder<'mpesa> {
         BulkInvoiceBuilder {
             client,
             invoices: vec![],
@@ -35,7 +34,7 @@ impl<'mpesa, Env: ApiEnvironment> BulkInvoiceBuilder<'mpesa, Env> {
     }
 
     /// Adds a single `invoice`
-    pub fn invoice(mut self, invoice: Invoice<'mpesa>) -> BulkInvoiceBuilder<'mpesa, Env> {
+    pub fn invoice(mut self, invoice: Invoice<'mpesa>) -> BulkInvoiceBuilder<'mpesa> {
         self.invoices.push(invoice);
         self
     }
@@ -44,7 +43,7 @@ impl<'mpesa, Env: ApiEnvironment> BulkInvoiceBuilder<'mpesa, Env> {
     pub fn invoices(
         mut self,
         mut invoices: Vec<Invoice<'mpesa>>,
-    ) -> BulkInvoiceBuilder<'mpesa, Env> {
+    ) -> BulkInvoiceBuilder<'mpesa> {
         self.invoices.append(&mut invoices);
         self
     }

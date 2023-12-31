@@ -2,7 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::{ApiEnvironment, CommandId, IdentifierTypes, Mpesa, MpesaError, MpesaResult};
+use crate::{CommandId, IdentifierTypes, Mpesa, MpesaError, MpesaResult};
 
 const TRANSACTION_REVERSAL_URL: &str = "mpesa/reversal/v1/request";
 
@@ -43,8 +43,8 @@ pub struct TransactionReversalResponse {
 }
 
 #[derive(Debug)]
-pub struct TransactionReversalBuilder<'mpesa, Env: ApiEnvironment> {
-    client: &'mpesa Mpesa<Env>,
+pub struct TransactionReversalBuilder<'mpesa> {
+    client: &'mpesa Mpesa,
     initiator: &'mpesa str,
     command_id: Option<CommandId>,
     transaction_id: Option<&'mpesa str>,
@@ -57,12 +57,12 @@ pub struct TransactionReversalBuilder<'mpesa, Env: ApiEnvironment> {
     amount: Option<f64>,
 }
 
-impl<'mpesa, Env: ApiEnvironment> TransactionReversalBuilder<'mpesa, Env> {
+impl<'mpesa> TransactionReversalBuilder<'mpesa> {
     /// Creates new `TransactionReversalBuilder`
     pub fn new(
-        client: &'mpesa Mpesa<Env>,
+        client: &'mpesa Mpesa,
         initiator: &'mpesa str,
-    ) -> TransactionReversalBuilder<'mpesa, Env> {
+    ) -> TransactionReversalBuilder<'mpesa> {
         TransactionReversalBuilder {
             client,
             initiator,
