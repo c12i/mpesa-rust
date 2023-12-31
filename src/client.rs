@@ -35,7 +35,7 @@ pub struct Mpesa {
     pub(crate) http_client: HttpClient,
 }
 
-impl<'mpesa> Mpesa {
+impl Mpesa {
     /// Constructs a new `Mpesa` client.
     ///
     /// # Example
@@ -82,9 +82,10 @@ impl<'mpesa> Mpesa {
 
     /// Gets the initiator password
     /// If `None`, the default password is `"Safcom496!"`
-    pub(crate) fn initiator_password(&'mpesa self) -> String {
+    pub(crate) fn initiator_password(&self) -> String {
         self.initiator_password
             .borrow()
+            .as_ref()
             .map(|password| password.expose_secret().into())
             .unwrap_or(DEFAULT_INITIATOR_PASSWORD.to_owned())
     }
@@ -167,103 +168,103 @@ impl<'mpesa> Mpesa {
 
     #[cfg(feature = "b2c")]
     #[doc = include_str!("../docs/client/b2c.md")]
-    pub fn b2c(&'mpesa self, initiator_name: &'mpesa str) -> B2cBuilder<'mpesa> {
+    pub fn b2c<'a>(&'a self, initiator_name: &'a str) -> B2cBuilder {
         B2cBuilder::new(self, initiator_name)
     }
 
     #[cfg(feature = "b2b")]
     #[doc = include_str!("../docs/client/b2b.md")]
-    pub fn b2b(&'mpesa self, initiator_name: &'mpesa str) -> B2bBuilder<'mpesa> {
+    pub fn b2b<'a>(&'a self, initiator_name: &'a str) -> B2bBuilder {
         B2bBuilder::new(self, initiator_name)
     }
 
     #[cfg(feature = "bill_manager")]
     #[doc = include_str!("../docs/client/bill_manager/onboard.md")]
-    pub fn onboard(&'mpesa self) -> OnboardBuilder<'mpesa> {
+    pub fn onboard(&self) -> OnboardBuilder {
         OnboardBuilder::new(self)
     }
 
     #[cfg(feature = "bill_manager")]
     #[doc = include_str!("../docs/client/bill_manager/onboard_modify.md")]
-    pub fn onboard_modify(&'mpesa self) -> OnboardModifyBuilder<'mpesa> {
+    pub fn onboard_modify(&self) -> OnboardModifyBuilder {
         OnboardModifyBuilder::new(self)
     }
 
     #[cfg(feature = "bill_manager")]
     #[doc = include_str!("../docs/client/bill_manager/bulk_invoice.md")]
-    pub fn bulk_invoice(&'mpesa self) -> BulkInvoiceBuilder<'mpesa> {
+    pub fn bulk_invoice(&self) -> BulkInvoiceBuilder {
         BulkInvoiceBuilder::new(self)
     }
 
     #[cfg(feature = "bill_manager")]
     #[doc = include_str!("../docs/client/bill_manager/single_invoice.md")]
-    pub fn single_invoice(&'mpesa self) -> SingleInvoiceBuilder<'mpesa,> {
+    pub fn single_invoice(&self) -> SingleInvoiceBuilder {
         SingleInvoiceBuilder::new(self)
     }
 
     #[cfg(feature = "bill_manager")]
     #[doc = include_str!("../docs/client/bill_manager/reconciliation.md")]
-    pub fn reconciliation(&'mpesa self) -> ReconciliationBuilder<'mpesa> {
+    pub fn reconciliation(&self) -> ReconciliationBuilder {
         ReconciliationBuilder::new(self)
     }
 
     #[cfg(feature = "bill_manager")]
     #[doc = include_str!("../docs/client/bill_manager/cancel_invoice.md")]
-    pub fn cancel_invoice(&'mpesa self) -> CancelInvoiceBuilder<'mpesa> {
+    pub fn cancel_invoice(&self) -> CancelInvoiceBuilder {
         CancelInvoiceBuilder::new(self)
     }
 
     #[cfg(feature = "c2b_register")]
     #[doc = include_str!("../docs/client/c2b_register.md")]
-    pub fn c2b_register(&'mpesa self) -> C2bRegisterBuilder<'mpesa> {
+    pub fn c2b_register(&self) -> C2bRegisterBuilder {
         C2bRegisterBuilder::new(self)
     }
 
     #[cfg(feature = "c2b_simulate")]
     #[doc = include_str!("../docs/client/c2b_simulate.md")]
-    pub fn c2b_simulate(&'mpesa self) -> C2bSimulateBuilder<'mpesa> {
+    pub fn c2b_simulate(&self) -> C2bSimulateBuilder {
         C2bSimulateBuilder::new(self)
     }
 
     #[cfg(feature = "account_balance")]
     #[doc = include_str!("../docs/client/account_balance.md")]
-    pub fn account_balance(
-        &'mpesa self,
-        initiator_name: &'mpesa str,
-    ) -> AccountBalanceBuilder<'mpesa> {
+    pub fn account_balance<'a>(
+        &'a self,
+        initiator_name: &'a str,
+    ) -> AccountBalanceBuilder {
         AccountBalanceBuilder::new(self, initiator_name)
     }
 
     #[cfg(feature = "express_request")]
     #[doc = include_str!("../docs/client/express_request.md")]
-    pub fn express_request(
-        &'mpesa self,
-        business_short_code: &'mpesa str,
-    ) -> MpesaExpressRequestBuilder<'mpesa> {
+    pub fn express_request<'a >(
+        &'a self,
+        business_short_code: &'a str,
+    ) -> MpesaExpressRequestBuilder {
         MpesaExpressRequestBuilder::new(self, business_short_code)
     }
 
     #[cfg(feature = "transaction_reversal")]
     #[doc = include_str!("../docs/client/transaction_reversal.md")]
-    pub fn transaction_reversal(
-        &'mpesa self,
-        initiator_name: &'mpesa str,
-    ) -> TransactionReversalBuilder<'mpesa> {
+    pub fn transaction_reversal<'a>(
+        &'a self,
+        initiator_name: &'a str,
+    ) -> TransactionReversalBuilder {
         TransactionReversalBuilder::new(self, initiator_name)
     }
 
     #[cfg(feature = "transaction_status")]
     #[doc = include_str!("../docs/client/transaction_status.md")]
-    pub fn transaction_status(
-        &'mpesa self,
-        initiator_name: &'mpesa str,
-    ) -> TransactionStatusBuilder<'mpesa> {
+    pub fn transaction_status<'a>(
+        &'a self,
+        initiator_name: &'a str,
+    ) -> TransactionStatusBuilder {
         TransactionStatusBuilder::new(self, initiator_name)
     }
 
     #[cfg(feature = "dynamic_qr")]
     #[doc = include_str!("../docs/client/dynamic_qr.md")]
-    pub fn dynamic_qr(&'mpesa self) -> DynamicQRBuilder<'mpesa> {
+    pub fn dynamic_qr(&self) -> DynamicQRBuilder {
         DynamicQR::builder(self)
     }
 
