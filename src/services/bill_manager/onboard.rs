@@ -89,10 +89,7 @@ impl<'mpesa> OnboardBuilder<'mpesa> {
     ///
     /// # Errors
     /// If `officialContact` is invalid or not provided.
-    pub fn official_contact(
-        mut self,
-        official_contact: &'mpesa str,
-    ) -> OnboardBuilder<'mpesa> {
+    pub fn official_contact(mut self, official_contact: &'mpesa str) -> OnboardBuilder<'mpesa> {
         self.official_contact = Some(official_contact);
         self
     }
@@ -101,10 +98,7 @@ impl<'mpesa> OnboardBuilder<'mpesa> {
     ///
     /// # Errors
     /// If `sendReminders` is not valid.
-    pub fn send_reminders(
-        mut self,
-        send_reminders: SendRemindersTypes,
-    ) -> OnboardBuilder<'mpesa> {
+    pub fn send_reminders(mut self, send_reminders: SendRemindersTypes) -> OnboardBuilder<'mpesa> {
         self.send_reminders = Some(send_reminders);
         self
     }

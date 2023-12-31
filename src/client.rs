@@ -30,7 +30,7 @@ pub struct Mpesa {
     client_key: String,
     client_secret: Secret<String>,
     initiator_password: RefCell<Option<Secret<String>>>,
-    pub (crate) base_url: String,
+    pub(crate) base_url: String,
     certificate: String,
     pub(crate) http_client: HttpClient,
 }
@@ -58,7 +58,11 @@ impl Mpesa {
     /// ```
     /// # Panics
     /// This method can panic if a TLS backend cannot be initialized for the internal http_client
-    pub fn new<S: Into<String>>(client_key: S, client_secret: S, environment: impl ApiEnvironment) -> Self {
+    pub fn new<S: Into<String>>(
+        client_key: S,
+        client_secret: S,
+        environment: impl ApiEnvironment,
+    ) -> Self {
         let http_client = HttpClient::builder()
             .connect_timeout(std::time::Duration::from_millis(10_000))
             .user_agent(format!("mpesa-rust@{CARGO_PACKAGE_VERSION}"))
@@ -228,16 +232,13 @@ impl Mpesa {
 
     #[cfg(feature = "account_balance")]
     #[doc = include_str!("../docs/client/account_balance.md")]
-    pub fn account_balance<'a>(
-        &'a self,
-        initiator_name: &'a str,
-    ) -> AccountBalanceBuilder {
+    pub fn account_balance<'a>(&'a self, initiator_name: &'a str) -> AccountBalanceBuilder {
         AccountBalanceBuilder::new(self, initiator_name)
     }
 
     #[cfg(feature = "express_request")]
     #[doc = include_str!("../docs/client/express_request.md")]
-    pub fn express_request<'a >(
+    pub fn express_request<'a>(
         &'a self,
         business_short_code: &'a str,
     ) -> MpesaExpressRequestBuilder {
@@ -255,10 +256,7 @@ impl Mpesa {
 
     #[cfg(feature = "transaction_status")]
     #[doc = include_str!("../docs/client/transaction_status.md")]
-    pub fn transaction_status<'a>(
-        &'a self,
-        initiator_name: &'a str,
-    ) -> TransactionStatusBuilder {
+    pub fn transaction_status<'a>(&'a self, initiator_name: &'a str) -> TransactionStatusBuilder {
         TransactionStatusBuilder::new(self, initiator_name)
     }
 

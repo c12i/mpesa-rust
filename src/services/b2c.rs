@@ -108,11 +108,7 @@ impl<'mpesa> B2cBuilder<'mpesa> {
     /// # Errors
     /// If either `Party A` or `Party B` is invalid or not provided
     #[deprecated]
-    pub fn parties(
-        mut self,
-        party_a: &'mpesa str,
-        party_b: &'mpesa str,
-    ) -> B2cBuilder<'mpesa> {
+    pub fn parties(mut self, party_a: &'mpesa str, party_b: &'mpesa str) -> B2cBuilder<'mpesa> {
         // TODO: add validation
         self.party_a = Some(party_a);
         self.party_b = Some(party_b);
@@ -161,11 +157,7 @@ impl<'mpesa> B2cBuilder<'mpesa> {
     /// # Error
     /// If either `QueueTimeoutUrl` and `ResultUrl` is invalid or not provided
     #[deprecated]
-    pub fn urls(
-        mut self,
-        timeout_url: &'mpesa str,
-        result_url: &'mpesa str,
-    ) -> B2cBuilder<'mpesa> {
+    pub fn urls(mut self, timeout_url: &'mpesa str, result_url: &'mpesa str) -> B2cBuilder<'mpesa> {
         // TODO: validate urls; will probably return a `Result` from this
         self.queue_timeout_url = Some(timeout_url);
         self.result_url = Some(result_url);

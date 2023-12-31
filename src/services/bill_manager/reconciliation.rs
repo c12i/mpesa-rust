@@ -98,10 +98,7 @@ impl<'mpesa> ReconciliationBuilder<'mpesa> {
     }
 
     /// Adds `payment_date`
-    pub fn payment_date(
-        mut self,
-        payment_date: DateTime<Utc>,
-    ) -> ReconciliationBuilder<'mpesa> {
+    pub fn payment_date(mut self, payment_date: DateTime<Utc>) -> ReconciliationBuilder<'mpesa> {
         self.payment_date = Some(payment_date);
         self
     }
@@ -113,10 +110,7 @@ impl<'mpesa> ReconciliationBuilder<'mpesa> {
     }
 
     /// Adds `transaction_id`
-    pub fn transaction_id(
-        mut self,
-        transaction_id: &'mpesa str,
-    ) -> ReconciliationBuilder<'mpesa> {
+    pub fn transaction_id(mut self, transaction_id: &'mpesa str) -> ReconciliationBuilder<'mpesa> {
         self.transaction_id = Some(transaction_id);
         self
     }

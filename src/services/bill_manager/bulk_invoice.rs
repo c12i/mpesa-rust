@@ -40,10 +40,7 @@ impl<'mpesa> BulkInvoiceBuilder<'mpesa> {
     }
 
     /// Adds multiple `invoices`
-    pub fn invoices(
-        mut self,
-        mut invoices: Vec<Invoice<'mpesa>>,
-    ) -> BulkInvoiceBuilder<'mpesa> {
+    pub fn invoices(mut self, mut invoices: Vec<Invoice<'mpesa>>) -> BulkInvoiceBuilder<'mpesa> {
         self.invoices.append(&mut invoices);
         self
     }
