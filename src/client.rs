@@ -83,10 +83,10 @@ impl<'mpesa> Mpesa {
     /// Gets the initiator password
     /// If `None`, the default password is `"Safcom496!"`
     pub(crate) fn initiator_password(&'mpesa self) -> String {
-        let Some(p) = &*self.initiator_password.borrow() else {
-            return DEFAULT_INITIATOR_PASSWORD.to_owned();
-        };
-        p.expose_secret().into()
+        self.initiator_password
+            .borrow()
+            .map(|password| password.expose_secret().into())
+            .unwrap_or(DEFAULT_INITIATOR_PASSWORD.to_owned())
     }
 
     /// Get the client key
@@ -150,10 +150,7 @@ impl<'mpesa> Mpesa {
         }
 
         // Generate a new access token
-        let new_token = match auth::auth_prime_cache(self).await {
-            Ok(token) => token,
-            Err(e) => return Err(e),
-        };
+        let new_token = auth::auth_prime_cache(self).await?;
 
         // Double-check if the access token is cached by another thread
         if let Some(token) = AUTH.lock().await.cache_get(&self.client_key) {
