@@ -4,7 +4,6 @@ use chrono::prelude::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 use crate::client::Mpesa;
-use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
 
 const BILL_MANAGER_RECONCILIATION_API_URL: &str = "v1/billmanager-invoice/reconciliation";
@@ -31,8 +30,8 @@ pub struct ReconciliationResponse {
 }
 
 #[derive(Debug)]
-pub struct ReconciliationBuilder<'mpesa, Env: ApiEnvironment> {
-    client: &'mpesa Mpesa<Env>,
+pub struct ReconciliationBuilder<'mpesa> {
+    client: &'mpesa Mpesa,
     account_reference: Option<&'mpesa str>,
     external_reference: Option<&'mpesa str>,
     full_name: Option<&'mpesa str>,
@@ -43,9 +42,9 @@ pub struct ReconciliationBuilder<'mpesa, Env: ApiEnvironment> {
     transaction_id: Option<&'mpesa str>,
 }
 
-impl<'mpesa, Env: ApiEnvironment> ReconciliationBuilder<'mpesa, Env> {
+impl<'mpesa> ReconciliationBuilder<'mpesa> {
     /// Creates a new Bill Manager Reconciliation Builder
-    pub fn new(client: &'mpesa Mpesa<Env>) -> ReconciliationBuilder<'mpesa, Env> {
+    pub fn new(client: &'mpesa Mpesa) -> ReconciliationBuilder<'mpesa> {
         ReconciliationBuilder {
             client,
             account_reference: None,
@@ -63,7 +62,7 @@ impl<'mpesa, Env: ApiEnvironment> ReconciliationBuilder<'mpesa, Env> {
     pub fn account_reference(
         mut self,
         account_reference: &'mpesa str,
-    ) -> ReconciliationBuilder<'mpesa, Env> {
+    ) -> ReconciliationBuilder<'mpesa> {
         self.account_reference = Some(account_reference);
         self
     }
@@ -72,19 +71,19 @@ impl<'mpesa, Env: ApiEnvironment> ReconciliationBuilder<'mpesa, Env> {
     pub fn external_reference(
         mut self,
         external_reference: &'mpesa str,
-    ) -> ReconciliationBuilder<'mpesa, Env> {
+    ) -> ReconciliationBuilder<'mpesa> {
         self.external_reference = Some(external_reference);
         self
     }
 
     /// Adds `full_name`
-    pub fn full_name(mut self, full_name: &'mpesa str) -> ReconciliationBuilder<'mpesa, Env> {
+    pub fn full_name(mut self, full_name: &'mpesa str) -> ReconciliationBuilder<'mpesa> {
         self.full_name = Some(full_name);
         self
     }
 
     /// Adds `invoice_name`
-    pub fn invoice_name(mut self, invoice_name: &'mpesa str) -> ReconciliationBuilder<'mpesa, Env> {
+    pub fn invoice_name(mut self, invoice_name: &'mpesa str) -> ReconciliationBuilder<'mpesa> {
         self.invoice_name = Some(invoice_name);
         self
     }
@@ -93,7 +92,7 @@ impl<'mpesa, Env: ApiEnvironment> ReconciliationBuilder<'mpesa, Env> {
     pub fn paid_amount<Number: Into<f64>>(
         mut self,
         paid_amount: Number,
-    ) -> ReconciliationBuilder<'mpesa, Env> {
+    ) -> ReconciliationBuilder<'mpesa> {
         self.paid_amount = Some(paid_amount.into());
         self
     }
@@ -102,13 +101,13 @@ impl<'mpesa, Env: ApiEnvironment> ReconciliationBuilder<'mpesa, Env> {
     pub fn payment_date(
         mut self,
         payment_date: DateTime<Utc>,
-    ) -> ReconciliationBuilder<'mpesa, Env> {
+    ) -> ReconciliationBuilder<'mpesa> {
         self.payment_date = Some(payment_date);
         self
     }
 
     /// Adds `phone_number`
-    pub fn phone_number(mut self, phone_number: &'mpesa str) -> ReconciliationBuilder<'mpesa, Env> {
+    pub fn phone_number(mut self, phone_number: &'mpesa str) -> ReconciliationBuilder<'mpesa> {
         self.phone_number = Some(phone_number);
         self
     }
@@ -117,7 +116,7 @@ impl<'mpesa, Env: ApiEnvironment> ReconciliationBuilder<'mpesa, Env> {
     pub fn transaction_id(
         mut self,
         transaction_id: &'mpesa str,
-    ) -> ReconciliationBuilder<'mpesa, Env> {
+    ) -> ReconciliationBuilder<'mpesa> {
         self.transaction_id = Some(transaction_id);
         self
     }

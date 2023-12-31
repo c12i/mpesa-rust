@@ -2,7 +2,6 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::environment::ApiEnvironment;
 use crate::{CommandId, Mpesa, MpesaError, MpesaResult};
 
 const B2C_URL: &str = "mpesa/b2c/v1/paymentrequest";
@@ -46,9 +45,9 @@ pub struct B2cResponse {
 
 #[derive(Debug)]
 /// B2C transaction builder struct
-pub struct B2cBuilder<'mpesa, Env: ApiEnvironment> {
+pub struct B2cBuilder<'mpesa> {
     initiator_name: &'mpesa str,
-    client: &'mpesa Mpesa<Env>,
+    client: &'mpesa Mpesa,
     command_id: Option<CommandId>,
     amount: Option<f64>,
     party_a: Option<&'mpesa str>,
@@ -59,10 +58,10 @@ pub struct B2cBuilder<'mpesa, Env: ApiEnvironment> {
     occasion: Option<&'mpesa str>,
 }
 
-impl<'mpesa, Env: ApiEnvironment> B2cBuilder<'mpesa, Env> {
+impl<'mpesa> B2cBuilder<'mpesa> {
     /// Create a new B2C builder.
     /// Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
-    pub fn new(client: &'mpesa Mpesa<Env>, initiator_name: &'mpesa str) -> B2cBuilder<'mpesa, Env> {
+    pub fn new(client: &'mpesa Mpesa, initiator_name: &'mpesa str) -> B2cBuilder<'mpesa> {
         B2cBuilder {
             client,
             initiator_name,
@@ -78,7 +77,7 @@ impl<'mpesa, Env: ApiEnvironment> B2cBuilder<'mpesa, Env> {
     }
 
     /// Adds the `CommandId`. Defaults to `CommandId::BusinessPayment` if not explicitly provided.
-    pub fn command_id(mut self, command_id: CommandId) -> B2cBuilder<'mpesa, Env> {
+    pub fn command_id(mut self, command_id: CommandId) -> B2cBuilder<'mpesa> {
         self.command_id = Some(command_id);
         self
     }
@@ -88,7 +87,7 @@ impl<'mpesa, Env: ApiEnvironment> B2cBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// If `Party A` is invalid or not provided
-    pub fn party_a(mut self, party_a: &'mpesa str) -> B2cBuilder<'mpesa, Env> {
+    pub fn party_a(mut self, party_a: &'mpesa str) -> B2cBuilder<'mpesa> {
         self.party_a = Some(party_a);
         self
     }
@@ -98,7 +97,7 @@ impl<'mpesa, Env: ApiEnvironment> B2cBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// If `Party B` is invalid or not provided
-    pub fn party_b(mut self, party_b: &'mpesa str) -> B2cBuilder<'mpesa, Env> {
+    pub fn party_b(mut self, party_b: &'mpesa str) -> B2cBuilder<'mpesa> {
         self.party_b = Some(party_b);
         self
     }
@@ -113,7 +112,7 @@ impl<'mpesa, Env: ApiEnvironment> B2cBuilder<'mpesa, Env> {
         mut self,
         party_a: &'mpesa str,
         party_b: &'mpesa str,
-    ) -> B2cBuilder<'mpesa, Env> {
+    ) -> B2cBuilder<'mpesa> {
         // TODO: add validation
         self.party_a = Some(party_a);
         self.party_b = Some(party_b);
@@ -121,20 +120,20 @@ impl<'mpesa, Env: ApiEnvironment> B2cBuilder<'mpesa, Env> {
     }
 
     /// Adds `Remarks`. This is an optional field, will default to "None" if not explicitly provided
-    pub fn remarks(mut self, remarks: &'mpesa str) -> B2cBuilder<'mpesa, Env> {
+    pub fn remarks(mut self, remarks: &'mpesa str) -> B2cBuilder<'mpesa> {
         self.remarks = Some(remarks);
         self
     }
 
     /// Adds `Occasion`. This is an optional field, will default to an empty string
-    pub fn occasion(mut self, occasion: &'mpesa str) -> B2cBuilder<'mpesa, Env> {
+    pub fn occasion(mut self, occasion: &'mpesa str) -> B2cBuilder<'mpesa> {
         self.occasion = Some(occasion);
         self
     }
 
     /// Adds an `amount` to the request
     /// This is a required field
-    pub fn amount<Number: Into<f64>>(mut self, amount: Number) -> B2cBuilder<'mpesa, Env> {
+    pub fn amount<Number: Into<f64>>(mut self, amount: Number) -> B2cBuilder<'mpesa> {
         self.amount = Some(amount.into());
         self
     }
@@ -143,7 +142,7 @@ impl<'mpesa, Env: ApiEnvironment> B2cBuilder<'mpesa, Env> {
     ///
     /// # Error
     /// If `QueueTimeoutUrl` is invalid or not provided
-    pub fn timeout_url(mut self, timeout_url: &'mpesa str) -> B2cBuilder<'mpesa, Env> {
+    pub fn timeout_url(mut self, timeout_url: &'mpesa str) -> B2cBuilder<'mpesa> {
         self.queue_timeout_url = Some(timeout_url);
         self
     }
@@ -152,7 +151,7 @@ impl<'mpesa, Env: ApiEnvironment> B2cBuilder<'mpesa, Env> {
     ///
     /// # Error
     /// If `ResultUrl` is invalid or not provided
-    pub fn result_url(mut self, result_url: &'mpesa str) -> B2cBuilder<'mpesa, Env> {
+    pub fn result_url(mut self, result_url: &'mpesa str) -> B2cBuilder<'mpesa> {
         self.result_url = Some(result_url);
         self
     }
@@ -166,7 +165,7 @@ impl<'mpesa, Env: ApiEnvironment> B2cBuilder<'mpesa, Env> {
         mut self,
         timeout_url: &'mpesa str,
         result_url: &'mpesa str,
-    ) -> B2cBuilder<'mpesa, Env> {
+    ) -> B2cBuilder<'mpesa> {
         // TODO: validate urls; will probably return a `Result` from this
         self.queue_timeout_url = Some(timeout_url);
         self.result_url = Some(result_url);

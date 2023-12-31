@@ -4,7 +4,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::client::Mpesa;
 use crate::constants::CommandId;
-use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
 
 const C2B_SIMULATE_URL: &str = "mpesa/c2b/v1/simulate";
@@ -41,8 +40,8 @@ pub struct C2bSimulateResponse {
 }
 
 #[derive(Debug)]
-pub struct C2bSimulateBuilder<'mpesa, Env: ApiEnvironment> {
-    client: &'mpesa Mpesa<Env>,
+pub struct C2bSimulateBuilder<'mpesa> {
+    client: &'mpesa Mpesa,
     command_id: Option<CommandId>,
     amount: Option<f64>,
     msisdn: Option<&'mpesa str>,
@@ -50,9 +49,9 @@ pub struct C2bSimulateBuilder<'mpesa, Env: ApiEnvironment> {
     short_code: Option<&'mpesa str>,
 }
 
-impl<'mpesa, Env: ApiEnvironment> C2bSimulateBuilder<'mpesa, Env> {
+impl<'mpesa> C2bSimulateBuilder<'mpesa> {
     /// Creates a new C2B Simulate builder
-    pub fn new(client: &'mpesa Mpesa<Env>) -> C2bSimulateBuilder<'mpesa, Env> {
+    pub fn new(client: &'mpesa Mpesa) -> C2bSimulateBuilder<'mpesa> {
         C2bSimulateBuilder {
             client,
             command_id: None,
@@ -67,7 +66,7 @@ impl<'mpesa, Env: ApiEnvironment> C2bSimulateBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// If `CommandId` is not valid
-    pub fn command_id(mut self, command_id: CommandId) -> C2bSimulateBuilder<'mpesa, Env> {
+    pub fn command_id(mut self, command_id: CommandId) -> C2bSimulateBuilder<'mpesa> {
         self.command_id = Some(command_id);
         self
     }
@@ -76,7 +75,7 @@ impl<'mpesa, Env: ApiEnvironment> C2bSimulateBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// If `Amount` is not provided
-    pub fn amount<Number: Into<f64>>(mut self, amount: Number) -> C2bSimulateBuilder<'mpesa, Env> {
+    pub fn amount<Number: Into<f64>>(mut self, amount: Number) -> C2bSimulateBuilder<'mpesa> {
         self.amount = Some(amount.into());
         self
     }
@@ -86,7 +85,7 @@ impl<'mpesa, Env: ApiEnvironment> C2bSimulateBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// If `MSISDN` is invalid or not provided
-    pub fn msisdn(mut self, msisdn: &'mpesa str) -> C2bSimulateBuilder<'mpesa, Env> {
+    pub fn msisdn(mut self, msisdn: &'mpesa str) -> C2bSimulateBuilder<'mpesa> {
         self.msisdn = Some(msisdn);
         self
     }
@@ -95,7 +94,7 @@ impl<'mpesa, Env: ApiEnvironment> C2bSimulateBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// If Till or PayBill number is invalid or not provided
-    pub fn short_code(mut self, short_code: &'mpesa str) -> C2bSimulateBuilder<'mpesa, Env> {
+    pub fn short_code(mut self, short_code: &'mpesa str) -> C2bSimulateBuilder<'mpesa> {
         self.short_code = Some(short_code);
         self
     }
@@ -107,7 +106,7 @@ impl<'mpesa, Env: ApiEnvironment> C2bSimulateBuilder<'mpesa, Env> {
     pub fn bill_ref_number(
         mut self,
         bill_ref_number: &'mpesa str,
-    ) -> C2bSimulateBuilder<'mpesa, Env> {
+    ) -> C2bSimulateBuilder<'mpesa> {
         self.bill_ref_number = Some(bill_ref_number);
         self
     }

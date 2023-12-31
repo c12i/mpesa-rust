@@ -4,7 +4,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::client::Mpesa;
 use crate::constants::SendRemindersTypes;
-use crate::environment::ApiEnvironment;
 use crate::errors::MpesaResult;
 
 const BILL_MANAGER_ONBOARD_MODIFY_API_URL: &str = "v1/billmanager-invoice/change-optin-details";
@@ -47,8 +46,8 @@ pub struct OnboardModifyResponse {
 }
 
 #[derive(Debug)]
-pub struct OnboardModifyBuilder<'mpesa, Env: ApiEnvironment> {
-    client: &'mpesa Mpesa<Env>,
+pub struct OnboardModifyBuilder<'mpesa> {
+    client: &'mpesa Mpesa,
     callback_url: Option<&'mpesa str>,
     email: Option<&'mpesa str>,
     logo: Option<&'mpesa str>,
@@ -57,9 +56,9 @@ pub struct OnboardModifyBuilder<'mpesa, Env: ApiEnvironment> {
     short_code: Option<&'mpesa str>,
 }
 
-impl<'mpesa, Env: ApiEnvironment> OnboardModifyBuilder<'mpesa, Env> {
+impl<'mpesa> OnboardModifyBuilder<'mpesa> {
     /// Creates a new Bill Manager Onboard Modify builder
-    pub fn new(client: &'mpesa Mpesa<Env>) -> OnboardModifyBuilder<'mpesa, Env> {
+    pub fn new(client: &'mpesa Mpesa) -> OnboardModifyBuilder<'mpesa> {
         OnboardModifyBuilder {
             client,
             callback_url: None,
@@ -72,19 +71,19 @@ impl<'mpesa, Env: ApiEnvironment> OnboardModifyBuilder<'mpesa, Env> {
     }
 
     /// Adds `callbackUrl`.
-    pub fn callback_url(mut self, callback_url: &'mpesa str) -> OnboardModifyBuilder<'mpesa, Env> {
+    pub fn callback_url(mut self, callback_url: &'mpesa str) -> OnboardModifyBuilder<'mpesa> {
         self.callback_url = Some(callback_url);
         self
     }
 
     /// Adds an `email` address to the request.
-    pub fn email(mut self, email: &'mpesa str) -> OnboardModifyBuilder<'mpesa, Env> {
+    pub fn email(mut self, email: &'mpesa str) -> OnboardModifyBuilder<'mpesa> {
         self.email = Some(email);
         self
     }
 
     /// Adds `logo`; a file with your organizions's logo.
-    pub fn logo(mut self, logo: &'mpesa str) -> OnboardModifyBuilder<'mpesa, Env> {
+    pub fn logo(mut self, logo: &'mpesa str) -> OnboardModifyBuilder<'mpesa> {
         self.logo = Some(logo);
         self
     }
@@ -93,7 +92,7 @@ impl<'mpesa, Env: ApiEnvironment> OnboardModifyBuilder<'mpesa, Env> {
     pub fn official_contact(
         mut self,
         official_contact: &'mpesa str,
-    ) -> OnboardModifyBuilder<'mpesa, Env> {
+    ) -> OnboardModifyBuilder<'mpesa> {
         self.official_contact = Some(official_contact);
         self
     }
@@ -102,13 +101,13 @@ impl<'mpesa, Env: ApiEnvironment> OnboardModifyBuilder<'mpesa, Env> {
     pub fn send_reminders(
         mut self,
         send_reminders: SendRemindersTypes,
-    ) -> OnboardModifyBuilder<'mpesa, Env> {
+    ) -> OnboardModifyBuilder<'mpesa> {
         self.send_reminders = Some(send_reminders);
         self
     }
 
     /// Adds `ShortCode`; the 6 digit MPESA Till Number or PayBill Number
-    pub fn short_code(mut self, short_code: &'mpesa str) -> OnboardModifyBuilder<'mpesa, Env> {
+    pub fn short_code(mut self, short_code: &'mpesa str) -> OnboardModifyBuilder<'mpesa> {
         self.short_code = Some(short_code);
         self
     }

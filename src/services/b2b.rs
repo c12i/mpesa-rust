@@ -4,7 +4,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::client::Mpesa;
 use crate::constants::{CommandId, IdentifierTypes};
-use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
 
 const B2B_URL: &str = "mpesa/b2b/v1/paymentrequest";
@@ -60,9 +59,9 @@ pub struct B2bResponse {
 
 #[derive(Debug)]
 /// B2B transaction builder struct
-pub struct B2bBuilder<'mpesa, Env: ApiEnvironment> {
+pub struct B2bBuilder<'mpesa> {
     initiator_name: &'mpesa str,
-    client: &'mpesa Mpesa<Env>,
+    client: &'mpesa Mpesa,
     command_id: Option<CommandId>,
     amount: Option<f64>,
     party_a: Option<&'mpesa str>,
@@ -75,10 +74,10 @@ pub struct B2bBuilder<'mpesa, Env: ApiEnvironment> {
     account_ref: Option<&'mpesa str>,
 }
 
-impl<'mpesa, Env: ApiEnvironment> B2bBuilder<'mpesa, Env> {
+impl<'mpesa> B2bBuilder<'mpesa> {
     /// Creates a new B2B builder
     /// Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
-    pub fn new(client: &'mpesa Mpesa<Env>, initiator_name: &'mpesa str) -> B2bBuilder<'mpesa, Env> {
+    pub fn new(client: &'mpesa Mpesa, initiator_name: &'mpesa str) -> B2bBuilder<'mpesa> {
         B2bBuilder {
             client,
             initiator_name,
@@ -99,7 +98,7 @@ impl<'mpesa, Env: ApiEnvironment> B2bBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// If invalid `CommandId` is provided
-    pub fn command_id(mut self, command_id: CommandId) -> B2bBuilder<'mpesa, Env> {
+    pub fn command_id(mut self, command_id: CommandId) -> B2bBuilder<'mpesa> {
         self.command_id = Some(command_id);
         self
     }
@@ -109,7 +108,7 @@ impl<'mpesa, Env: ApiEnvironment> B2bBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// If `Party A` is invalid or not provided
-    pub fn party_a(mut self, party_a: &'mpesa str) -> B2bBuilder<'mpesa, Env> {
+    pub fn party_a(mut self, party_a: &'mpesa str) -> B2bBuilder<'mpesa> {
         self.party_a = Some(party_a);
         self
     }
@@ -119,7 +118,7 @@ impl<'mpesa, Env: ApiEnvironment> B2bBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// If `Party B` is invalid or not provided
-    pub fn party_b(mut self, party_b: &'mpesa str) -> B2bBuilder<'mpesa, Env> {
+    pub fn party_b(mut self, party_b: &'mpesa str) -> B2bBuilder<'mpesa> {
         self.party_b = Some(party_b);
         self
     }
@@ -134,7 +133,7 @@ impl<'mpesa, Env: ApiEnvironment> B2bBuilder<'mpesa, Env> {
         mut self,
         party_a: &'mpesa str,
         party_b: &'mpesa str,
-    ) -> B2bBuilder<'mpesa, Env> {
+    ) -> B2bBuilder<'mpesa> {
         self.party_a = Some(party_a);
         self.party_b = Some(party_b);
         self
@@ -144,7 +143,7 @@ impl<'mpesa, Env: ApiEnvironment> B2bBuilder<'mpesa, Env> {
     ///
     /// # Error
     /// If `QueueTimeoutUrl` is invalid or not provided
-    pub fn timeout_url(mut self, timeout_url: &'mpesa str) -> B2bBuilder<'mpesa, Env> {
+    pub fn timeout_url(mut self, timeout_url: &'mpesa str) -> B2bBuilder<'mpesa> {
         self.queue_timeout_url = Some(timeout_url);
         self
     }
@@ -153,7 +152,7 @@ impl<'mpesa, Env: ApiEnvironment> B2bBuilder<'mpesa, Env> {
     ///
     /// # Error
     /// If `ResultUrl` is invalid or not provided
-    pub fn result_url(mut self, result_url: &'mpesa str) -> B2bBuilder<'mpesa, Env> {
+    pub fn result_url(mut self, result_url: &'mpesa str) -> B2bBuilder<'mpesa> {
         self.result_url = Some(result_url);
         self
     }
@@ -167,7 +166,7 @@ impl<'mpesa, Env: ApiEnvironment> B2bBuilder<'mpesa, Env> {
         mut self,
         timeout_url: &'mpesa str,
         result_url: &'mpesa str,
-    ) -> B2bBuilder<'mpesa, Env> {
+    ) -> B2bBuilder<'mpesa> {
         // TODO: validate urls
         self.queue_timeout_url = Some(timeout_url);
         self.result_url = Some(result_url);
@@ -175,19 +174,19 @@ impl<'mpesa, Env: ApiEnvironment> B2bBuilder<'mpesa, Env> {
     }
 
     /// Adds `sender_id`. Will default to `IdentifierTypes::ShortCode` if not explicitly provided
-    pub fn sender_id(mut self, sender_id: IdentifierTypes) -> B2bBuilder<'mpesa, Env> {
+    pub fn sender_id(mut self, sender_id: IdentifierTypes) -> B2bBuilder<'mpesa> {
         self.sender_id = Some(sender_id);
         self
     }
 
     /// Adds `receiver_id`. Will default to `IdentifierTypes::ShortCode` if not explicitly provided
-    pub fn receiver_id(mut self, receiver_id: IdentifierTypes) -> B2bBuilder<'mpesa, Env> {
+    pub fn receiver_id(mut self, receiver_id: IdentifierTypes) -> B2bBuilder<'mpesa> {
         self.receiver_id = Some(receiver_id);
         self
     }
 
     /// Adds `account_ref`. This field is required
-    pub fn account_ref(mut self, account_ref: &'mpesa str) -> B2bBuilder<'mpesa, Env> {
+    pub fn account_ref(mut self, account_ref: &'mpesa str) -> B2bBuilder<'mpesa> {
         // TODO: add validation
         self.account_ref = Some(account_ref);
         self
@@ -195,13 +194,13 @@ impl<'mpesa, Env: ApiEnvironment> B2bBuilder<'mpesa, Env> {
 
     /// Adds an `amount` to the request
     /// This is a required field
-    pub fn amount<Number: Into<f64>>(mut self, amount: Number) -> B2bBuilder<'mpesa, Env> {
+    pub fn amount<Number: Into<f64>>(mut self, amount: Number) -> B2bBuilder<'mpesa> {
         self.amount = Some(amount.into());
         self
     }
 
     /// Adds `remarks`. This field is optional, will default to "None" if not explicitly passed
-    pub fn remarks(mut self, remarks: &'mpesa str) -> B2bBuilder<'mpesa, Env> {
+    pub fn remarks(mut self, remarks: &'mpesa str) -> B2bBuilder<'mpesa> {
         self.remarks = Some(remarks);
         self
     }
