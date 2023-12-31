@@ -56,10 +56,7 @@ pub struct TransactionStatusBuilder<'mpesa> {
 
 impl<'mpesa> TransactionStatusBuilder<'mpesa> {
     /// Creates new `TransactionStatusBuilder`
-    pub fn new(
-        client: &'mpesa Mpesa,
-        initiator: &'mpesa str,
-    ) -> TransactionStatusBuilder<'mpesa> {
+    pub fn new(client: &'mpesa Mpesa, initiator: &'mpesa str) -> TransactionStatusBuilder<'mpesa> {
         TransactionStatusBuilder {
             client,
             initiator,

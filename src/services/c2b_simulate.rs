@@ -103,10 +103,7 @@ impl<'mpesa> C2bSimulateBuilder<'mpesa> {
     ///
     /// # Errors
     /// If `BillRefNumber` is invalid or not provided
-    pub fn bill_ref_number(
-        mut self,
-        bill_ref_number: &'mpesa str,
-    ) -> C2bSimulateBuilder<'mpesa> {
+    pub fn bill_ref_number(mut self, bill_ref_number: &'mpesa str) -> C2bSimulateBuilder<'mpesa> {
         self.bill_ref_number = Some(bill_ref_number);
         self
     }
