@@ -56,8 +56,8 @@ impl std::fmt::Display for AuthenticationResponse {
 
 #[cfg(test)]
 mod tests {
-    use wiremock::{Mock, MockServer};
     use crate::ApiEnvironment;
+    use wiremock::{Mock, MockServer};
 
     use super::*;
 

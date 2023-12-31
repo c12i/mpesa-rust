@@ -51,10 +51,7 @@ impl<'mpesa> SingleInvoiceBuilder<'mpesa> {
     }
 
     /// Adds `amount`
-    pub fn amount<Number: Into<f64>>(
-        mut self,
-        amount: Number,
-    ) -> SingleInvoiceBuilder<'mpesa> {
+    pub fn amount<Number: Into<f64>>(mut self, amount: Number) -> SingleInvoiceBuilder<'mpesa> {
         self.amount = Some(amount.into());
         self
     }
@@ -78,10 +75,7 @@ impl<'mpesa> SingleInvoiceBuilder<'mpesa> {
     }
 
     /// Adds `billed_period`; must be in the format `"Month Year"` e.g. `"March 2023"`
-    pub fn billed_period(
-        mut self,
-        billed_period: &'mpesa str,
-    ) -> SingleInvoiceBuilder<'mpesa> {
+    pub fn billed_period(mut self, billed_period: &'mpesa str) -> SingleInvoiceBuilder<'mpesa> {
         self.billed_period = Some(billed_period);
         self
     }

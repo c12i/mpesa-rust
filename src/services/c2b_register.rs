@@ -57,10 +57,7 @@ impl<'mpesa> C2bRegisterBuilder<'mpesa> {
     ///
     /// # Error
     /// If `ValidationURL` is invalid or not provided
-    pub fn validation_url(
-        mut self,
-        validation_url: &'mpesa str,
-    ) -> C2bRegisterBuilder<'mpesa> {
+    pub fn validation_url(mut self, validation_url: &'mpesa str) -> C2bRegisterBuilder<'mpesa> {
         self.validation_url = Some(validation_url);
         self
     }
@@ -69,10 +66,7 @@ impl<'mpesa> C2bRegisterBuilder<'mpesa> {
     ///
     /// # Error
     /// If `ConfirmationUrl` is invalid or not provided
-    pub fn confirmation_url(
-        mut self,
-        confirmation_url: &'mpesa str,
-    ) -> C2bRegisterBuilder<'mpesa> {
+    pub fn confirmation_url(mut self, confirmation_url: &'mpesa str) -> C2bRegisterBuilder<'mpesa> {
         self.confirmation_url = Some(confirmation_url);
         self
     }

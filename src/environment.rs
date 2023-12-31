@@ -45,7 +45,7 @@ impl TryFrom<&str> for Environment {
     type Error = MpesaError;
 
     fn try_from(v: &str) -> Result<Self, Self::Error> {
-         let v = v.to_lowercase();
+        let v = v.to_lowercase();
         match v.as_str() {
             "production" => Ok(Self::Production),
             "sandbox" => Ok(Self::Sandbox),

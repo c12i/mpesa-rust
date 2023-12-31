@@ -141,10 +141,7 @@ impl<'mpesa> MpesaExpressRequestBuilder<'mpesa> {
     ///
     /// # Errors
     /// If `phone_number` is invalid
-    pub fn phone_number(
-        mut self,
-        phone_number: &'mpesa str,
-    ) -> MpesaExpressRequestBuilder<'mpesa> {
+    pub fn phone_number(mut self, phone_number: &'mpesa str) -> MpesaExpressRequestBuilder<'mpesa> {
         self.phone_number = Some(phone_number);
         self
     }
@@ -153,10 +150,7 @@ impl<'mpesa> MpesaExpressRequestBuilder<'mpesa> {
     ///
     /// # Errors
     /// If the `callback_url` is invalid
-    pub fn callback_url(
-        mut self,
-        callback_url: &'mpesa str,
-    ) -> MpesaExpressRequestBuilder<'mpesa> {
+    pub fn callback_url(mut self, callback_url: &'mpesa str) -> MpesaExpressRequestBuilder<'mpesa> {
         self.callback_url = Some(callback_url);
         self
     }
@@ -180,10 +174,7 @@ impl<'mpesa> MpesaExpressRequestBuilder<'mpesa> {
     }
 
     /// Optional - Used with M-Pesa PayBills.
-    pub fn account_ref(
-        mut self,
-        account_ref: &'mpesa str,
-    ) -> MpesaExpressRequestBuilder<'mpesa> {
+    pub fn account_ref(mut self, account_ref: &'mpesa str) -> MpesaExpressRequestBuilder<'mpesa> {
         self.account_ref = Some(account_ref);
         self
     }
@@ -192,10 +183,7 @@ impl<'mpesa> MpesaExpressRequestBuilder<'mpesa> {
     ///
     /// # Errors
     /// If the `CommandId` is invalid
-    pub fn transaction_type(
-        mut self,
-        command_id: CommandId,
-    ) -> MpesaExpressRequestBuilder<'mpesa> {
+    pub fn transaction_type(mut self, command_id: CommandId) -> MpesaExpressRequestBuilder<'mpesa> {
         self.transaction_type = Some(command_id);
         self
     }
