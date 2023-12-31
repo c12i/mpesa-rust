@@ -5,7 +5,6 @@ use serde::Deserialize;
 
 use crate::client::Mpesa;
 use crate::constants::{Invoice, InvoiceItem};
-use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
 
 const BILL_MANAGER_SINGLE_INVOICE_API_URL: &str = "v1/billmanager-invoice/single-invoicing";
@@ -21,8 +20,8 @@ pub struct SingleInvoiceResponse {
 }
 
 #[derive(Debug)]
-pub struct SingleInvoiceBuilder<'mpesa, Env: ApiEnvironment> {
-    client: &'mpesa Mpesa<Env>,
+pub struct SingleInvoiceBuilder<'mpesa> {
+    client: &'mpesa Mpesa,
     amount: Option<f64>,
     account_reference: Option<&'mpesa str>,
     billed_full_name: Option<&'mpesa str>,
@@ -34,9 +33,9 @@ pub struct SingleInvoiceBuilder<'mpesa, Env: ApiEnvironment> {
     invoice_name: Option<&'mpesa str>,
 }
 
-impl<'mpesa, Env: ApiEnvironment> SingleInvoiceBuilder<'mpesa, Env> {
+impl<'mpesa> SingleInvoiceBuilder<'mpesa> {
     /// Creates a new Bill Manager Single Invoice Builder
-    pub fn new(client: &'mpesa Mpesa<Env>) -> SingleInvoiceBuilder<'mpesa, Env> {
+    pub fn new(client: &'mpesa Mpesa) -> SingleInvoiceBuilder<'mpesa> {
         SingleInvoiceBuilder {
             client,
             amount: None,
@@ -55,7 +54,7 @@ impl<'mpesa, Env: ApiEnvironment> SingleInvoiceBuilder<'mpesa, Env> {
     pub fn amount<Number: Into<f64>>(
         mut self,
         amount: Number,
-    ) -> SingleInvoiceBuilder<'mpesa, Env> {
+    ) -> SingleInvoiceBuilder<'mpesa> {
         self.amount = Some(amount.into());
         self
     }
@@ -64,7 +63,7 @@ impl<'mpesa, Env: ApiEnvironment> SingleInvoiceBuilder<'mpesa, Env> {
     pub fn account_reference(
         mut self,
         account_refernce: &'mpesa str,
-    ) -> SingleInvoiceBuilder<'mpesa, Env> {
+    ) -> SingleInvoiceBuilder<'mpesa> {
         self.account_reference = Some(account_refernce);
         self
     }
@@ -73,7 +72,7 @@ impl<'mpesa, Env: ApiEnvironment> SingleInvoiceBuilder<'mpesa, Env> {
     pub fn billed_full_name(
         mut self,
         billed_full_name: &'mpesa str,
-    ) -> SingleInvoiceBuilder<'mpesa, Env> {
+    ) -> SingleInvoiceBuilder<'mpesa> {
         self.billed_full_name = Some(billed_full_name);
         self
     }
@@ -82,7 +81,7 @@ impl<'mpesa, Env: ApiEnvironment> SingleInvoiceBuilder<'mpesa, Env> {
     pub fn billed_period(
         mut self,
         billed_period: &'mpesa str,
-    ) -> SingleInvoiceBuilder<'mpesa, Env> {
+    ) -> SingleInvoiceBuilder<'mpesa> {
         self.billed_period = Some(billed_period);
         self
     }
@@ -91,13 +90,13 @@ impl<'mpesa, Env: ApiEnvironment> SingleInvoiceBuilder<'mpesa, Env> {
     pub fn billed_phone_number(
         mut self,
         billed_phone_number: &'mpesa str,
-    ) -> SingleInvoiceBuilder<'mpesa, Env> {
+    ) -> SingleInvoiceBuilder<'mpesa> {
         self.billed_phone_number = Some(billed_phone_number);
         self
     }
 
     /// Adds `due_date`
-    pub fn due_date(mut self, due_date: DateTime<Utc>) -> SingleInvoiceBuilder<'mpesa, Env> {
+    pub fn due_date(mut self, due_date: DateTime<Utc>) -> SingleInvoiceBuilder<'mpesa> {
         self.due_date = Some(due_date);
         self
     }
@@ -106,7 +105,7 @@ impl<'mpesa, Env: ApiEnvironment> SingleInvoiceBuilder<'mpesa, Env> {
     pub fn external_reference(
         mut self,
         external_reference: &'mpesa str,
-    ) -> SingleInvoiceBuilder<'mpesa, Env> {
+    ) -> SingleInvoiceBuilder<'mpesa> {
         self.external_reference = Some(external_reference);
         self
     }
@@ -115,13 +114,13 @@ impl<'mpesa, Env: ApiEnvironment> SingleInvoiceBuilder<'mpesa, Env> {
     pub fn invoice_items(
         mut self,
         invoice_items: Vec<InvoiceItem<'mpesa>>,
-    ) -> SingleInvoiceBuilder<'mpesa, Env> {
+    ) -> SingleInvoiceBuilder<'mpesa> {
         self.invoice_items = Some(invoice_items);
         self
     }
 
     /// Adds `invoice_name`
-    pub fn invoice_name(mut self, invoice_name: &'mpesa str) -> SingleInvoiceBuilder<'mpesa, Env> {
+    pub fn invoice_name(mut self, invoice_name: &'mpesa str) -> SingleInvoiceBuilder<'mpesa> {
         self.invoice_name = Some(invoice_name);
         self
     }
