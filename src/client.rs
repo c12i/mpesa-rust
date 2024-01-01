@@ -294,7 +294,7 @@ impl Mpesa {
     /// Sends a request to the Safaricom API
     /// This method is used by all the builders to send requests to the
     /// Safaricom API
-    pub(crate) async fn send<Req, Res>(&self, req: Request<'_, Req>) -> MpesaResult<Res>
+    pub(crate) async fn send<Req, Res>(&self, req: Request<Req>) -> MpesaResult<Res>
     where
         Req: Serialize + Send,
         Res: DeserializeOwned,
@@ -321,9 +321,9 @@ impl Mpesa {
     }
 }
 
-pub struct Request<'a, Body: Serialize + Send> {
+pub struct Request<Body: Serialize + Send> {
     pub method: reqwest::Method,
-    pub path: &'a str,
+    pub path: &'static str,
     pub body: Body,
 }
 
