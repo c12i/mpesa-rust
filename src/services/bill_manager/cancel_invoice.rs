@@ -3,7 +3,6 @@
 use serde::{Deserialize, Serialize};
 
 use crate::client::Mpesa;
-use crate::environment::ApiEnvironment;
 use crate::errors::MpesaResult;
 
 const BILL_MANAGER_CANCEL_INVOICE_API_URL: &str = "v1/billmanager-invoice/cancel-single-invoice";
@@ -25,14 +24,14 @@ pub struct CancelInvoiceResponse {
 }
 
 #[derive(Debug)]
-pub struct CancelInvoiceBuilder<'mpesa, Env: ApiEnvironment> {
-    client: &'mpesa Mpesa<Env>,
+pub struct CancelInvoiceBuilder<'mpesa> {
+    client: &'mpesa Mpesa,
     external_references: Vec<CancelInvoicePayload<'mpesa>>,
 }
 
-impl<'mpesa, Env: ApiEnvironment> CancelInvoiceBuilder<'mpesa, Env> {
+impl<'mpesa> CancelInvoiceBuilder<'mpesa> {
     /// Creates a new Bill Manager Cancel invoice builder
-    pub fn new(client: &'mpesa Mpesa<Env>) -> CancelInvoiceBuilder<'mpesa, Env> {
+    pub fn new(client: &'mpesa Mpesa) -> CancelInvoiceBuilder<'mpesa> {
         CancelInvoiceBuilder {
             client,
             external_references: vec![],
@@ -43,7 +42,7 @@ impl<'mpesa, Env: ApiEnvironment> CancelInvoiceBuilder<'mpesa, Env> {
     pub fn external_reference(
         mut self,
         external_reference: &'mpesa str,
-    ) -> CancelInvoiceBuilder<'mpesa, Env> {
+    ) -> CancelInvoiceBuilder<'mpesa> {
         self.external_references
             .push(CancelInvoicePayload { external_reference });
         self
@@ -53,7 +52,7 @@ impl<'mpesa, Env: ApiEnvironment> CancelInvoiceBuilder<'mpesa, Env> {
     pub fn external_references(
         mut self,
         external_references: Vec<&'mpesa str>,
-    ) -> CancelInvoiceBuilder<'mpesa, Env> {
+    ) -> CancelInvoiceBuilder<'mpesa> {
         self.external_references.append(
             &mut external_references
                 .into_iter()
