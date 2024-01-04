@@ -4,6 +4,8 @@
 [![](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![](https://img.shields.io/crates/v/mpesa)](https://crates.io/crates/mpesa)
 
+[![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/xswEKrrVGE)
+
 ## About
 
 An unofficial Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs?shell#introduction) for accessing M-Pesa services.
