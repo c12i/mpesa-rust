@@ -4,6 +4,8 @@
 [![](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![](https://img.shields.io/crates/v/mpesa)](https://crates.io/crates/mpesa)
 
+[![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/xswEKrrVGE)
+
 ## About
 
 An unofficial Rust wrapper around the [Safaricom API](https://developer.safaricom.co.ke/docs?shell#introduction) for accessing M-Pesa services.
@@ -14,7 +16,7 @@ An unofficial Rust wrapper around the [Safaricom API](https://developer.safarico
 
 ```toml
 [dependencies]
-mpesa = { version = "1.1.0" }
+mpesa = { version = "1" }
 ```
 
 Optionally, you can disable default-features, which is basically the entire suite of MPESA APIs to conditionally select individual features. (See [Services](#services) table for the full list of Cargo features)
@@ -23,7 +25,7 @@ Example:
 
 ```toml
 [dependencies]
-mpesa = { version = "1.1.0", default_features = false, features = ["b2b", "express_request"] }
+mpesa = { version = "1", default_features = false, features = ["b2b", "express_request"] }
 ```
 
 In your lib or binary crate:
@@ -154,29 +156,29 @@ async fn main() {
 
 The table below shows all the MPESA APIs from Safaricom and those supported by the crate along with their cargo features and usage examples
 
-| API | Cargo Feature | Status | Example |
-| --------------- | --------------- | --------------- | --------------- |
-| [Account Balance](https://developer.safaricom.co.ke/APIs/AccountBalance) | `account_balance` | Stable ✅ | [account balance example](/docs/client/account_balance.md) |
-| [B2B Express Checkout](https://developer.safaricom.co.ke/APIs/B2BExpressCheckout) | N/A | Unimplemented | N/A |
-| [Bill Manager](https://developer.safaricom.co.ke/APIs/BillManager) | `bill_manager` | Unstable ⚠️ | [bill manager examples](/docs/client/bill_manager/) |
-| [Business Buy Goods](https://developer.safaricom.co.ke/APIs/BusinessBuyGoods ) | `b2b`  | Stable ✅ | [business buy goods example](/docs/client/b2b.md) |
-| [Business Pay Bill](https://developer.safaricom.co.ke/APIs/BusinessPayBill) | N/A | Unimplemented | N/A |
-| [Business To Customer (B2C)](https://developer.safaricom.co.ke/APIs/BusinessToCustomer) | `b2c` | Stable ✅️ | [b2c example](/docs/client/b2c.md) |
-| [Customer To Business (Register URL)](https://developer.safaricom.co.ke/APIs/CustomerToBusinessRegisterURL) | `c2b_register` | Stable  ✅️ | [c2b register example](/docs/client/c2b_register.md) |
-| [Customer To Business (Simulate)](#) | `c2b_simulate` | Stable  ✅️ | [c2b simulate example](/docs/client/c2b_simulate.md) |
-| [Dynamic QR](https://developer.safaricom.co.ke/APIs/DynamicQRCode) | `dynamic_qr` | Stable  ✅️ | [dynamic qr example](/docs/client/dynamic_qr.md) |
-| [M-PESA Express (Query)](https://developer.safaricom.co.ke/APIs/MpesaExpressQuery) | N/A | Unimplemented ️| N/A |
-| [M-PESA Express (Simulate)/ STK push](https://developer.safaricom.co.ke/APIs/MpesaExpressSimulate) | `express_request` | Stable  ✅️ | [express request example](/docs/client/express_request.md) |
-| [Transaction Status](https://developer.safaricom.co.ke/APIs/TransactionStatus) | `transaction_status` | Stable  ✅️ | [transaction status example](/docs/client/transaction_status.md) |
-| [Transaction Reversal](https://developer.safaricom.co.ke/APIs/Reversal) | `transaction_reversal` | Stable  ✅️ | [transaction reversal example](/docs/client/transaction_reversal.md) |
-| [Tax Remittance](https://developer.safaricom.co.ke/APIs/TaxRemittance ) | N/A | Unimplemented | N/A |
+| API                                                                                                         | Cargo Feature          | Status          | Example                                                              |
+| ----------------------------------------------------------------------------------------------------------- | ---------------------- | --------------- | -------------------------------------------------------------------- |
+| [Account Balance](https://developer.safaricom.co.ke/APIs/AccountBalance)                                    | `account_balance`      | Stable ✅       | [account balance example](/docs/client/account_balance.md)           |
+| [B2B Express Checkout](https://developer.safaricom.co.ke/APIs/B2BExpressCheckout)                           | N/A                    | Unimplemented   | N/A                                                                  |
+| [Bill Manager](https://developer.safaricom.co.ke/APIs/BillManager)                                          | `bill_manager`         | Unstable ⚠️     | [bill manager examples](/docs/client/bill_manager/)                  |
+| [Business Buy Goods](https://developer.safaricom.co.ke/APIs/BusinessBuyGoods)                               | `b2b`                  | Stable ✅       | [business buy goods example](/docs/client/b2b.md)                    |
+| [Business Pay Bill](https://developer.safaricom.co.ke/APIs/BusinessPayBill)                                 | N/A                    | Unimplemented   | N/A                                                                  |
+| [Business To Customer (B2C)](https://developer.safaricom.co.ke/APIs/BusinessToCustomer)                     | `b2c`                  | Stable ✅️      | [b2c example](/docs/client/b2c.md)                                   |
+| [Customer To Business (Register URL)](https://developer.safaricom.co.ke/APIs/CustomerToBusinessRegisterURL) | `c2b_register`         | Stable ✅️      | [c2b register example](/docs/client/c2b_register.md)                 |
+| [Customer To Business (Simulate)](#)                                                                        | `c2b_simulate`         | Stable ✅️      | [c2b simulate example](/docs/client/c2b_simulate.md)                 |
+| [Dynamic QR](https://developer.safaricom.co.ke/APIs/DynamicQRCode)                                          | `dynamic_qr`           | Stable ✅️      | [dynamic qr example](/docs/client/dynamic_qr.md)                     |
+| [M-PESA Express (Query)](https://developer.safaricom.co.ke/APIs/MpesaExpressQuery)                          | N/A                    | Unimplemented ️ | N/A                                                                  |
+| [M-PESA Express (Simulate)/ STK push](https://developer.safaricom.co.ke/APIs/MpesaExpressSimulate)          | `express_request`      | Stable ✅️      | [express request example](/docs/client/express_request.md)           |
+| [Transaction Status](https://developer.safaricom.co.ke/APIs/TransactionStatus)                              | `transaction_status`   | Stable ✅️      | [transaction status example](/docs/client/transaction_status.md)     |
+| [Transaction Reversal](https://developer.safaricom.co.ke/APIs/Reversal)                                     | `transaction_reversal` | Stable ✅️      | [transaction reversal example](/docs/client/transaction_reversal.md) |
+| [Tax Remittance](https://developer.safaricom.co.ke/APIs/TaxRemittance)                                      | N/A                    | Unimplemented   | N/A                                                                  |
 
 ## Author
 
 **Collins Muriuki**
 
-- Twitter: [@c12i_](https://twitter.com/c12i_)
-- Not affiliated with Safaricom.
+-   Twitter: [@c12i\_](https://twitter.com/c12i_)
+-   Not affiliated with Safaricom.
 
 ## Contributing
 

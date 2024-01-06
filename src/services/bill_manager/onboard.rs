@@ -4,7 +4,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::client::Mpesa;
 use crate::constants::SendRemindersTypes;
-use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
 
 const BILL_MANAGER_ONBOARD_API_URL: &str = "v1/billmanager-invoice/optin";
@@ -35,8 +34,8 @@ pub struct OnboardResponse {
 }
 
 #[derive(Debug)]
-pub struct OnboardBuilder<'mpesa, Env: ApiEnvironment> {
-    client: &'mpesa Mpesa<Env>,
+pub struct OnboardBuilder<'mpesa> {
+    client: &'mpesa Mpesa,
     callback_url: Option<&'mpesa str>,
     email: Option<&'mpesa str>,
     logo: Option<&'mpesa str>,
@@ -45,9 +44,9 @@ pub struct OnboardBuilder<'mpesa, Env: ApiEnvironment> {
     short_code: Option<&'mpesa str>,
 }
 
-impl<'mpesa, Env: ApiEnvironment> OnboardBuilder<'mpesa, Env> {
+impl<'mpesa> OnboardBuilder<'mpesa> {
     /// Creates a new Bill Manager Onboard builder
-    pub fn new(client: &'mpesa Mpesa<Env>) -> OnboardBuilder<'mpesa, Env> {
+    pub fn new(client: &'mpesa Mpesa) -> OnboardBuilder<'mpesa> {
         OnboardBuilder {
             client,
             callback_url: None,
@@ -63,7 +62,7 @@ impl<'mpesa, Env: ApiEnvironment> OnboardBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// If 'callbackUrl` is not provided.
-    pub fn callback_url(mut self, callback_url: &'mpesa str) -> OnboardBuilder<'mpesa, Env> {
+    pub fn callback_url(mut self, callback_url: &'mpesa str) -> OnboardBuilder<'mpesa> {
         self.callback_url = Some(callback_url);
         self
     }
@@ -72,7 +71,7 @@ impl<'mpesa, Env: ApiEnvironment> OnboardBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// If `email` is not provided.
-    pub fn email(mut self, email: &'mpesa str) -> OnboardBuilder<'mpesa, Env> {
+    pub fn email(mut self, email: &'mpesa str) -> OnboardBuilder<'mpesa> {
         self.email = Some(email);
         self
     }
@@ -81,7 +80,7 @@ impl<'mpesa, Env: ApiEnvironment> OnboardBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// If `logo` is not provided.
-    pub fn logo(mut self, logo: &'mpesa str) -> OnboardBuilder<'mpesa, Env> {
+    pub fn logo(mut self, logo: &'mpesa str) -> OnboardBuilder<'mpesa> {
         self.logo = Some(logo);
         self
     }
@@ -90,10 +89,7 @@ impl<'mpesa, Env: ApiEnvironment> OnboardBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// If `officialContact` is invalid or not provided.
-    pub fn official_contact(
-        mut self,
-        official_contact: &'mpesa str,
-    ) -> OnboardBuilder<'mpesa, Env> {
+    pub fn official_contact(mut self, official_contact: &'mpesa str) -> OnboardBuilder<'mpesa> {
         self.official_contact = Some(official_contact);
         self
     }
@@ -102,10 +98,7 @@ impl<'mpesa, Env: ApiEnvironment> OnboardBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// If `sendReminders` is not valid.
-    pub fn send_reminders(
-        mut self,
-        send_reminders: SendRemindersTypes,
-    ) -> OnboardBuilder<'mpesa, Env> {
+    pub fn send_reminders(mut self, send_reminders: SendRemindersTypes) -> OnboardBuilder<'mpesa> {
         self.send_reminders = Some(send_reminders);
         self
     }
@@ -114,7 +107,7 @@ impl<'mpesa, Env: ApiEnvironment> OnboardBuilder<'mpesa, Env> {
     ///
     /// # Errors
     /// If Till or PayBill number is invalid or not provided
-    pub fn short_code(mut self, short_code: &'mpesa str) -> OnboardBuilder<'mpesa, Env> {
+    pub fn short_code(mut self, short_code: &'mpesa str) -> OnboardBuilder<'mpesa> {
         self.short_code = Some(short_code);
         self
     }

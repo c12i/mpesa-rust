@@ -28,15 +28,16 @@ const CARGO_PACKAGE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 /// Mpesa client that will facilitate communication with the Safaricom API
 #[derive(Clone, Debug)]
-pub struct Mpesa<Env: ApiEnvironment> {
+pub struct Mpesa {
     client_key: String,
     client_secret: Secret<String>,
     initiator_password: RefCell<Option<Secret<String>>>,
-    pub(crate) environment: Env,
+    pub(crate) base_url: String,
+    certificate: String,
     pub(crate) http_client: HttpClient,
 }
 
-impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
+impl Mpesa {
     /// Constructs a new `Mpesa` client.
     ///
     /// # Example
@@ -58,32 +59,39 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// }
     /// ```
     /// # Panics
-    /// This method can panic if a TLS backend cannot be initialized for the
-    /// internal http_client
-    pub fn new<S: Into<String>>(client_key: S, client_secret: S, environment: Env) -> Self {
+    /// This method can panic if a TLS backend cannot be initialized for the internal http_client
+    pub fn new<S: Into<String>>(
+        client_key: S,
+        client_secret: S,
+        environment: impl ApiEnvironment,
+    ) -> Self {
         let http_client = HttpClient::builder()
             .connect_timeout(Duration::from_secs(10))
             .user_agent(format!("mpesa-rust@{CARGO_PACKAGE_VERSION}"))
             .build()
             .expect("Error building http client");
 
+        let base_url = environment.base_url().to_owned();
+        let certificate = environment.get_certificate().to_owned();
+
         Self {
             client_key: client_key.into(),
             client_secret: Secret::new(client_secret.into()),
             initiator_password: RefCell::new(None),
-            environment,
+            base_url,
+            certificate,
             http_client,
         }
     }
 
     /// Gets the initiator password
     /// If `None`, the default password is `"Safcom496!"`
-    pub(crate) fn initiator_password(&'mpesa self) -> String {
-        let Some(p) = &*self.initiator_password.borrow() else {
-            return DEFAULT_INITIATOR_PASSWORD.to_owned();
-        };
-
-        p.expose_secret().into()
+    pub(crate) fn initiator_password(&self) -> String {
+        self.initiator_password
+            .borrow()
+            .as_ref()
+            .map(|password| password.expose_secret().into())
+            .unwrap_or(DEFAULT_INITIATOR_PASSWORD.to_owned())
     }
 
     /// Get the client key
@@ -147,10 +155,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
         }
 
         // Generate a new access token
-        let new_token = match auth::auth_prime_cache(self).await {
-            Ok(token) => token,
-            Err(e) => return Err(e),
-        };
+        let new_token = auth::auth_prime_cache(self).await?;
 
         // Double-check if the access token is cached by another thread
         if let Some(token) = AUTH.lock().await.cache_get(&self.client_key) {
@@ -167,70 +172,67 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
 
     #[cfg(feature = "b2c")]
     #[doc = include_str!("../docs/client/b2c.md")]
-    pub fn b2c(&'mpesa self, initiator_name: &'mpesa str) -> B2cBuilder<'mpesa, Env> {
+    pub fn b2c<'a>(&'a self, initiator_name: &'a str) -> B2cBuilder {
         B2cBuilder::new(self, initiator_name)
     }
 
     #[cfg(feature = "b2b")]
     #[doc = include_str!("../docs/client/b2b.md")]
-    pub fn b2b(&'mpesa self, initiator_name: &'mpesa str) -> B2bBuilder<'mpesa, Env> {
+    pub fn b2b<'a>(&'a self, initiator_name: &'a str) -> B2bBuilder {
         B2bBuilder::new(self, initiator_name)
     }
 
     #[cfg(feature = "bill_manager")]
     #[doc = include_str!("../docs/client/bill_manager/onboard.md")]
-    pub fn onboard(&'mpesa self) -> OnboardBuilder<'mpesa, Env> {
+    pub fn onboard(&self) -> OnboardBuilder {
         OnboardBuilder::new(self)
     }
 
     #[cfg(feature = "bill_manager")]
     #[doc = include_str!("../docs/client/bill_manager/onboard_modify.md")]
-    pub fn onboard_modify(&'mpesa self) -> OnboardModifyBuilder<'mpesa, Env> {
+    pub fn onboard_modify(&self) -> OnboardModifyBuilder {
         OnboardModifyBuilder::new(self)
     }
 
     #[cfg(feature = "bill_manager")]
     #[doc = include_str!("../docs/client/bill_manager/bulk_invoice.md")]
-    pub fn bulk_invoice(&'mpesa self) -> BulkInvoiceBuilder<'mpesa, Env> {
+    pub fn bulk_invoice(&self) -> BulkInvoiceBuilder {
         BulkInvoiceBuilder::new(self)
     }
 
     #[cfg(feature = "bill_manager")]
     #[doc = include_str!("../docs/client/bill_manager/single_invoice.md")]
-    pub fn single_invoice(&'mpesa self) -> SingleInvoiceBuilder<'mpesa, Env> {
+    pub fn single_invoice(&self) -> SingleInvoiceBuilder {
         SingleInvoiceBuilder::new(self)
     }
 
     #[cfg(feature = "bill_manager")]
     #[doc = include_str!("../docs/client/bill_manager/reconciliation.md")]
-    pub fn reconciliation(&'mpesa self) -> ReconciliationBuilder<'mpesa, Env> {
+    pub fn reconciliation(&self) -> ReconciliationBuilder {
         ReconciliationBuilder::new(self)
     }
 
     #[cfg(feature = "bill_manager")]
     #[doc = include_str!("../docs/client/bill_manager/cancel_invoice.md")]
-    pub fn cancel_invoice(&'mpesa self) -> CancelInvoiceBuilder<'mpesa, Env> {
+    pub fn cancel_invoice(&self) -> CancelInvoiceBuilder {
         CancelInvoiceBuilder::new(self)
     }
 
     #[cfg(feature = "c2b_register")]
     #[doc = include_str!("../docs/client/c2b_register.md")]
-    pub fn c2b_register(&'mpesa self) -> C2bRegisterBuilder<'mpesa, Env> {
+    pub fn c2b_register(&self) -> C2bRegisterBuilder {
         C2bRegisterBuilder::new(self)
     }
 
     #[cfg(feature = "c2b_simulate")]
     #[doc = include_str!("../docs/client/c2b_simulate.md")]
-    pub fn c2b_simulate(&'mpesa self) -> C2bSimulateBuilder<'mpesa, Env> {
+    pub fn c2b_simulate(&self) -> C2bSimulateBuilder {
         C2bSimulateBuilder::new(self)
     }
 
     #[cfg(feature = "account_balance")]
     #[doc = include_str!("../docs/client/account_balance.md")]
-    pub fn account_balance(
-        &'mpesa self,
-        initiator_name: &'mpesa str,
-    ) -> AccountBalanceBuilder<'mpesa, Env> {
+    pub fn account_balance<'a>(&'a self, initiator_name: &'a str) -> AccountBalanceBuilder {
         AccountBalanceBuilder::new(self, initiator_name)
     }
 
@@ -248,16 +250,13 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
 
     #[cfg(feature = "transaction_status")]
     #[doc = include_str!("../docs/client/transaction_status.md")]
-    pub fn transaction_status(
-        &'mpesa self,
-        initiator_name: &'mpesa str,
-    ) -> TransactionStatusBuilder<'mpesa, Env> {
+    pub fn transaction_status<'a>(&'a self, initiator_name: &'a str) -> TransactionStatusBuilder {
         TransactionStatusBuilder::new(self, initiator_name)
     }
 
     #[cfg(feature = "dynamic_qr")]
     #[doc = include_str!("../docs/client/dynamic_qr.md")]
-    pub fn dynamic_qr(&'mpesa self) -> DynamicQRBuilder<'mpesa, Env> {
+    pub fn dynamic_qr(&self) -> DynamicQRBuilder {
         DynamicQR::builder(self)
     }
 
@@ -269,7 +268,7 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// # Errors
     /// Returns `EncryptionError` variant of `MpesaError`
     pub(crate) fn gen_security_credentials(&self) -> MpesaResult<String> {
-        let pem = self.environment.get_certificate().as_bytes();
+        let pem = self.certificate.as_bytes();
         let cert = X509::from_pem(pem)?;
         // getting the public and rsa keys
         let pub_key = cert.public_key()?;
@@ -289,12 +288,12 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     /// Sends a request to the Safaricom API
     /// This method is used by all the builders to send requests to the
     /// Safaricom API
-    pub(crate) async fn send<Req, Res>(&self, req: Request<'_, Req>) -> MpesaResult<Res>
+    pub(crate) async fn send<Req, Res>(&self, req: Request<Req>) -> MpesaResult<Res>
     where
         Req: Serialize + Send,
         Res: DeserializeOwned,
     {
-        let url = format!("{}/{}", self.environment.base_url(), req.path);
+        let url = format!("{}/{}", self.base_url, req.path);
 
         let req = self
             .http_client
@@ -316,9 +315,9 @@ impl<'mpesa, Env: ApiEnvironment> Mpesa<Env> {
     }
 }
 
-pub struct Request<'a, Body: Serialize + Send> {
+pub struct Request<Body: Serialize + Send> {
     pub method: reqwest::Method,
-    pub path: &'a str,
+    pub path: &'static str,
     pub body: Body,
 }
 
@@ -352,8 +351,8 @@ mod tests {
     #[test]
     fn test_custom_environment() {
         let client = Mpesa::new("client_key", "client_secret", TestEnvironment);
-        assert_eq!(client.environment.base_url(), "https://example.com");
-        assert_eq!(client.environment.get_certificate(), "certificate");
+        assert_eq!(&client.base_url, "https://example.com");
+        assert_eq!(&client.certificate, "certificate");
     }
 
     #[test]

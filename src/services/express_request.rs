@@ -9,7 +9,6 @@ use url::Url;
 
 use crate::client::Mpesa;
 use crate::constants::CommandId;
-use crate::environment::ApiEnvironment;
 use crate::errors::{MpesaError, MpesaResult};
 use crate::validator::PhoneNumberValidator;
 

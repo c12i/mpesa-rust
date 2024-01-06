@@ -2,7 +2,7 @@ use cached::proc_macro::cached;
 use serde::{Deserialize, Serialize};
 use serde_aux::field_attributes::deserialize_number_from_string;
 
-use crate::{ApiEnvironment, Mpesa, MpesaError, MpesaResult, ResponseError};
+use crate::{Mpesa, MpesaError, MpesaResult, ResponseError};
 
 const AUTHENTICATION_URL: &str = "/oauth/v1/generate?grant_type=client_credentials";
 
@@ -13,8 +13,8 @@ const AUTHENTICATION_URL: &str = "/oauth/v1/generate?grant_type=client_credentia
     result = true,
     convert = r#"{ format!("{}", client.client_key()) }"#
 )]
-pub(crate) async fn auth(client: &Mpesa<impl ApiEnvironment>) -> MpesaResult<String> {
-    let url = format!("{}{}", client.environment.base_url(), AUTHENTICATION_URL);
+pub(crate) async fn auth(client: &Mpesa) -> MpesaResult<String> {
+    let url = format!("{}{}", client.base_url, AUTHENTICATION_URL);
 
     let response = client
         .http_client
@@ -56,6 +56,7 @@ impl std::fmt::Display for AuthenticationResponse {
 
 #[cfg(test)]
 mod tests {
+    use crate::ApiEnvironment;
     use wiremock::{Mock, MockServer};
 
     use super::*;
