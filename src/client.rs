@@ -50,8 +50,8 @@ impl Mpesa {
     ///    dotenvy::dotenv().expect("env variables not found");
     ///
     ///    let client = Mpesa::new(
-    ///         std::env::var("CLIENT_KEY").unwrap(),
-    ///         std::env::var("CLIENT_SECRET").unwrap(),
+    ///         dotenvy::var("CLIENT_KEY").unwrap(),
+    ///         dotenvy::var("CLIENT_SECRET").unwrap(),
     ///         Environment::Sandbox,
     ///    );
     ///
@@ -124,8 +124,8 @@ impl Mpesa {
     ///     dotenvy::dotenv().expect("env variables not found");
     ///
     ///     let client = Mpesa::new(
-    ///         std::env::var("CLIENT_KEY").unwrap(),
-    ///         std::env::var("CLIENT_SECRET").unwrap(),
+    ///         dotenvy::var("CLIENT_KEY").unwrap(),
+    ///         dotenvy::var("CLIENT_SECRET").unwrap(),
     ///         Environment::Sandbox,
     ///     );
     ///     client.set_initiator_password("your_initiator_password");

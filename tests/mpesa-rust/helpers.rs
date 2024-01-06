@@ -37,8 +37,8 @@ macro_rules! get_mpesa_client {
         let server = MockServer::start().await;
         let test_environment = TestEnvironment::new(&server).await;
         let client = Mpesa::new(
-            std::env::var("CLIENT_KEY").unwrap(),
-            std::env::var("CLIENT_SECRET").unwrap(),
+            dotenvy::var("CLIENT_KEY").unwrap(),
+            dotenvy::var("CLIENT_SECRET").unwrap(),
             test_environment,
         );
         Mock::given(method("GET"))
@@ -64,8 +64,8 @@ macro_rules! get_mpesa_client {
         let server = MockServer::start().await;
         let test_environment = TestEnvironment::new(&server).await;
         let client = Mpesa::new(
-            std::env::var("CLIENT_KEY").unwrap(),
-            std::env::var("CLIENT_SECRET").unwrap(),
+            dotenvy::var("CLIENT_KEY").unwrap(),
+            dotenvy::var("CLIENT_SECRET").unwrap(),
             test_environment,
         );
         Mock::given(method("GET"))

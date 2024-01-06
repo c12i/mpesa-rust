@@ -19,8 +19,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>>{
     dotenvy::dotenv().expect("env variables not found");
 
     let client = Mpesa::new(
-        std::env::var("CLIENT_KEY").unwrap(),
-        std::env::var("CLIENT_SECRET").unwrap(),
+        dotenvy::var("CLIENT_KEY").unwrap(),
+        dotenvy::var("CLIENT_SECRET").unwrap(),
         Environment::Sandbox,
     );
 
