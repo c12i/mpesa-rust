@@ -32,6 +32,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>>{
         .party_b("174379")
         .amount(500)
         .try_callback_url("https://test.example.com/api")?
+        .account_ref("Test")
         .transaction_type(mpesa::CommandId::CustomerPayBillOnline) // Optional, defaults to `CommandId::CustomerPayBillOnline`
         .transaction_desc("Description") // Optional, defaults to "None"
         .build()?
