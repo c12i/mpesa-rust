@@ -238,13 +238,13 @@ impl Mpesa {
 
     #[cfg(feature = "express_request")]
     #[doc = include_str!("../docs/client/express_request.md")]
-    pub fn express_request(&'mpesa self) -> MpesaExpressBuilder<'mpesa, Env> {
+    pub fn express_request(&self) -> MpesaExpressBuilder {
         MpesaExpress::builder(self)
     }
 
     #[cfg(feature = "transaction_reversal")]
     #[doc = include_str!("../docs/client/transaction_reversal.md")]
-    pub fn transaction_reversal(&'mpesa self) -> TransactionReversalBuilder<'mpesa, Env> {
+    pub fn transaction_reversal(&self) -> TransactionReversalBuilder {
         TransactionReversal::builder(self)
     }
 

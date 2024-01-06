@@ -5,7 +5,6 @@ use wiremock::matchers::{method, path};
 use wiremock::{Mock, ResponseTemplate};
 
 use crate::get_mpesa_client;
-use crate::helpers::TestEnvironment;
 
 #[tokio::test]
 async fn stk_push_success() {
@@ -102,7 +101,7 @@ async fn express_request_test_using_struct_initialization() {
         "CustomerMessage": "Success. Request accepted for processing"
     });
 
-    let password = MpesaExpress::<TestEnvironment>::encode_password("174379", None);
+    let password = MpesaExpress::encode_password("174379", None);
 
     let request = MpesaExpressRequest {
         business_short_code: "174379",

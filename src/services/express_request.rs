@@ -101,9 +101,9 @@ pub struct MpesaExpressResponse {
 
 #[derive(Builder, Debug, Clone)]
 #[builder(build_fn(error = "MpesaError", validate = "Self::validate"))]
-pub struct MpesaExpress<'mpesa, Env: ApiEnvironment> {
+pub struct MpesaExpress<'mpesa> {
     #[builder(pattern = "immutable")]
-    client: &'mpesa Mpesa<Env>,
+    client: &'mpesa Mpesa,
     /// This is the organization's shortcode (Paybill or Buygoods - A 5 to
     /// 6-digit account number) used to identify an organization and receive
     /// the transaction.
@@ -146,8 +146,8 @@ pub struct MpesaExpress<'mpesa, Env: ApiEnvironment> {
     pass_key: &'mpesa str,
 }
 
-impl<'mpesa, Env: ApiEnvironment> From<MpesaExpress<'mpesa, Env>> for MpesaExpressRequest<'mpesa> {
-    fn from(express: MpesaExpress<'mpesa, Env>) -> MpesaExpressRequest<'mpesa> {
+impl<'mpesa> From<MpesaExpress<'mpesa>> for MpesaExpressRequest<'mpesa> {
+    fn from(express: MpesaExpress<'mpesa>) -> MpesaExpressRequest<'mpesa> {
         let timestamp = chrono::Local::now();
 
         let encoded_password = base64::encode_block(
@@ -174,7 +174,7 @@ impl<'mpesa, Env: ApiEnvironment> From<MpesaExpress<'mpesa, Env>> for MpesaExpre
     }
 }
 
-impl<Env: ApiEnvironment> MpesaExpressBuilder<'_, Env> {
+impl MpesaExpressBuilder<'_> {
     /// Validates the request, returning a `MpesaError` if validation fails
     ///
     /// Express requests can only be of type `BusinessBuyGoods` or
@@ -200,9 +200,9 @@ impl<Env: ApiEnvironment> MpesaExpressBuilder<'_, Env> {
     }
 }
 
-impl<'mpesa, Env: ApiEnvironment> MpesaExpress<'mpesa, Env> {
+impl<'mpesa> MpesaExpress<'mpesa> {
     /// Creates new `MpesaExpressBuilder`
-    pub(crate) fn builder(client: &'mpesa Mpesa<Env>) -> MpesaExpressBuilder<'mpesa, Env> {
+    pub(crate) fn builder(client: &'mpesa Mpesa) -> MpesaExpressBuilder<'mpesa> {
         MpesaExpressBuilder::default().client(client)
     }
 
@@ -224,10 +224,10 @@ impl<'mpesa, Env: ApiEnvironment> MpesaExpress<'mpesa, Env> {
 
     /// Creates a new `MpesaExpress` from a `MpesaExpressRequest`
     pub fn from_request(
-        client: &'mpesa Mpesa<Env>,
+        client: &'mpesa Mpesa,
         request: MpesaExpressRequest<'mpesa>,
         pass_key: Option<&'mpesa str>,
-    ) -> MpesaExpress<'mpesa, Env> {
+    ) -> MpesaExpress<'mpesa> {
         MpesaExpress {
             client,
             business_short_code: request.business_short_code,

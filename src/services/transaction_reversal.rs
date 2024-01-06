@@ -57,9 +57,9 @@ pub struct TransactionReversalResponse {
 
 #[derive(Builder, Debug)]
 #[builder(build_fn(error = "MpesaError"))]
-pub struct TransactionReversal<'mpesa, Env: ApiEnvironment> {
+pub struct TransactionReversal<'mpesa> {
     #[builder(pattern = "immutable")]
-    client: &'mpesa Mpesa<Env>,
+    client: &'mpesa Mpesa,
     /// The name of the initiator to initiate the request.
     initiator: &'mpesa str,
     /// This is the Mpesa Transaction ID of the transaction which you wish to
@@ -88,13 +88,11 @@ pub struct TransactionReversal<'mpesa, Env: ApiEnvironment> {
     amount: u32,
 }
 
-impl<'mpesa, Env: ApiEnvironment> TryFrom<TransactionReversal<'mpesa, Env>>
-    for TransactionReversalRequest<'mpesa>
-{
+impl<'mpesa> TryFrom<TransactionReversal<'mpesa>> for TransactionReversalRequest<'mpesa> {
     type Error = MpesaError;
 
     fn try_from(
-        value: TransactionReversal<'mpesa, Env>,
+        value: TransactionReversal<'mpesa>,
     ) -> Result<TransactionReversalRequest<'mpesa>, Self::Error> {
         let credentials = value.client.gen_security_credentials()?;
 
@@ -114,17 +112,17 @@ impl<'mpesa, Env: ApiEnvironment> TryFrom<TransactionReversal<'mpesa, Env>>
     }
 }
 
-impl<'mpesa, Env: ApiEnvironment> TransactionReversal<'mpesa, Env> {
+impl<'mpesa> TransactionReversal<'mpesa> {
     /// Creates new `TransactionReversalBuilder`
-    pub(crate) fn builder(client: &'mpesa Mpesa<Env>) -> TransactionReversalBuilder<'mpesa, Env> {
+    pub(crate) fn builder(client: &'mpesa Mpesa) -> TransactionReversalBuilder<'mpesa> {
         TransactionReversalBuilder::default().client(client)
     }
 
     /// Creates a new `TransactionReversal` from a `TransactionReversalRequest`
     pub fn from_request(
-        client: &'mpesa Mpesa<Env>,
+        client: &'mpesa Mpesa,
         request: TransactionReversalRequest<'mpesa>,
-    ) -> TransactionReversal<'mpesa, Env> {
+    ) -> TransactionReversal<'mpesa> {
         TransactionReversal {
             client,
             initiator: request.initiator,
