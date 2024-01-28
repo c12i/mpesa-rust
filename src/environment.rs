@@ -2,7 +2,7 @@
 //!
 //! Code related to setting up the desired Safaricom API environment. Environment can be either
 //! sandbox or production.
-//! you will need environment specific credentials (`CLIENT_KEY` AND `CLIENT_SECRET`) when creating
+//! you will need environment specific credentials (`CONSUMER_KEY` AND `CONSUMER_SECRET`) when creating
 //! an instance of the `Mpesa` client struct. Note that you cannot use sandbox credentials in
 //! production and vice versa.
 //!

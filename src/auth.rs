@@ -11,7 +11,7 @@ const AUTHENTICATION_URL: &str = "/oauth/v1/generate?grant_type=client_credentia
     time = 3600,
     key = "String",
     result = true,
-    convert = r#"{ format!("{}", client.client_key()) }"#
+    convert = r#"{ format!("{}", client.consumer_key()) }"#
 )]
 pub(crate) async fn auth(client: &Mpesa) -> MpesaResult<String> {
     let url = format!("{}{}", client.base_url, AUTHENTICATION_URL);
@@ -19,7 +19,7 @@ pub(crate) async fn auth(client: &Mpesa) -> MpesaResult<String> {
     let response = client
         .http_client
         .get(&url)
-        .basic_auth(client.client_key(), Some(&client.client_secret()))
+        .basic_auth(client.consumer_key(), Some(&client.consumer_secret()))
         .send()
         .await?;
 
@@ -111,7 +111,9 @@ mod tests {
 
         let mut cache = AUTH.lock().await;
 
-        assert!(cache.cache_get(&client.client_key().to_string()).is_some());
+        assert!(cache
+            .cache_get(&client.consumer_key().to_string())
+            .is_some());
         assert_eq!(cache.cache_hits().unwrap(), 1);
         assert_eq!(cache.cache_capacity().unwrap(), 1);
     }
