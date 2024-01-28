@@ -186,10 +186,6 @@ impl MpesaExpressBuilder<'_> {
             phone_number.validate()?;
         }
 
-        if let Some(party_a) = self.party_a {
-            party_a.validate()?;
-        }
-
         Ok(())
     }
 }
