@@ -38,8 +38,8 @@ use mpesa::Mpesa;
 
 ### Creating a `Mpesa` client
 
-You will first need to create an instance of the `Mpesa` instance (the client). You are required to provide a **CLIENT_KEY** and
-**CLIENT_SECRET**. [Here](https://developer.safaricom.co.ke/test_credentials) is how you can get these credentials for the Safaricom sandbox
+You will first need to create an instance of the `Mpesa` instance (the client). You are required to provide a **CONSUMER_KEY** and
+**CONSUMER_SECRET**. [Here](https://developer.safaricom.co.ke/test_credentials) is how you can get these credentials for the Safaricom sandbox
 environment. It's worth noting that these credentials are only valid in the sandbox environment. To go live and get production keys
 read the docs [here](https://developer.safaricom.co.ke/docs?javascript#going-live).
 
@@ -53,8 +53,8 @@ async fn main() {
     dotenv::dotenv().ok();
 
     let client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
+        env!("CONSUMER_KEY"),
+        env!("CONSUMER_SECRET"),
         Environment::Sandbox,
     );
 
@@ -76,8 +76,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
     dotenv::dotenv().ok();
 
     let client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
+        env!("CONSUMER_KEY"),
+        env!("CONSUMER_SECRET"),
         Environment::from_str("sandbox")?, // or
         // Environment::try_from("sandbox")?,
     );
@@ -124,8 +124,8 @@ async fn main() {
     dotenv::dotenv().ok();
 
     let client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
+        env!("CONSUMER_KEY"),
+        env!("CONSUMER_SECRET"),
         CustomEnvironment,
     );
 }
@@ -142,8 +142,8 @@ async fn main() {
     dotenv::dotenv().ok();
 
     let client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
+        env!("CONSUMER_KEY"),
+        env!("CONSUMER_SECRET"),
         Environment::Sandbox,
     );
 
@@ -177,8 +177,8 @@ The table below shows all the MPESA APIs from Safaricom and those supported by t
 
 **Collins Muriuki**
 
--   Twitter: [@c12i\_](https://twitter.com/c12i_)
--   Not affiliated with Safaricom.
+- Twitter: [@c12i\_](https://twitter.com/c12i_)
+- Not affiliated with Safaricom.
 
 ## Contributing
 

@@ -10,8 +10,8 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     env:
-      CLIENT_KEY: ${{ secrets.CLIENT_KEY }}
-      CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+      CONSUMER_KEY: ${{ secrets.CLIENT_KEY }}
+      CONSUMER_SECRET: ${{ secrets.CLIENT_SECRET }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -58,8 +58,8 @@ jobs:
     name: Code coverage
     runs-on: ubuntu-latest
     env:
-      CLIENT_KEY: ${{ secrets.CLIENT_KEY }}
-      CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+      CONSUMER_KEY: ${{ secrets.CONSUMER_KEY }}
+      CONSUMER_SECRET: ${{ secrets.CONSUMER_SECRET }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -73,5 +73,5 @@ jobs:
       - name: Run cargo-tarpaulin
         uses: actions-rs/tarpaulin@v0.1
         with:
-          args: '--ignore-tests --no-fail-fast'
-          version: '0.22.0'
+          args: "--ignore-tests --no-fail-fast"
+          version: "0.22.0"

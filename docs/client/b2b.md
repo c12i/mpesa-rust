@@ -8,6 +8,7 @@ Requires an `initiator_name`, the credential/ username used to authenticate the 
 Safaricom API docs [reference](https://developer.safaricom.co.ke/APIs/BusinessPayBill)
 
 # Example
+
 ```rust
 use mpesa::{Mpesa, Environment};
 
@@ -16,8 +17,8 @@ async fn main() {
     dotenv::dotenv().ok();
 
     let client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
+        env!("CONSUMER_KEY"),
+        env!("CONSUMER_SECRET"),
         Environment::Sandbox,
     );
 
