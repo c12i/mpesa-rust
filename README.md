@@ -38,8 +38,8 @@ use mpesa::Mpesa;
 
 ### Creating a `Mpesa` client
 
-You will first need to create an instance of the `Mpesa` instance (the client). You are required to provide a **CLIENT_KEY** and
-**CLIENT_SECRET**. [Here](https://developer.safaricom.co.ke/test_credentials) is how you can get these credentials for the Safaricom sandbox
+You will first need to create an instance of the `Mpesa` instance (the client). You are required to provide a **CONSUMER_KEY** and
+**CONSUMER_SECRET**. [Here](https://developer.safaricom.co.ke/test_credentials) is how you can get these credentials for the Safaricom sandbox
 environment. It's worth noting that these credentials are only valid in the sandbox environment. To go live and get production keys
 read the docs [here](https://developer.safaricom.co.ke/docs?javascript#going-live).
 
@@ -53,8 +53,8 @@ async fn main() {
     dotenvy::dotenv().ok();
 
     let client = Mpesa::new(
-        dotenvy::var("CLIENT_KEY").unwrap(),
-        dotenvy::var("CLIENT_SECRET").unwrap(),
+        dotenvy::var("CONSUMER_KEY").unwrap(),
+        dotenvy::var("CONSUMER_SECRET").unwrap(),
         Environment::Sandbox,
     );
 
@@ -76,8 +76,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
     dotenvy::dotenv().ok();
 
     let client = Mpesa::new(
-        dotenvy::var("CLIENT_KEY").unwrap(),
-        dotenvy::var("CLIENT_SECRET").unwrap(),
+        dotenvy::var("CONSUMER_KEY").unwrap(),
+        dotenvy::var("CONSUMER_SECRET").unwrap(),
         Environment::from_str("sandbox")?, // or
         // Environment::try_from("sandbox")?,
     );
@@ -124,8 +124,8 @@ async fn main() {
     dotenvy::dotenv().ok();
 
     let client = Mpesa::new(
-        dotenvy::var("CLIENT_KEY").unwrap(),
-        dotenvy::var("CLIENT_SECRET").unwrap(),
+        dotenvy::var("CONSUMER_KEY").unwrap(),
+        dotenvy::var("CONSUMER_SECRET").unwrap(),
         CustomEnvironment,
     );
 }
@@ -142,8 +142,8 @@ async fn main() {
     dotenvy::dotenv().ok();
 
     let client = Mpesa::new(
-        dotenvy::var("CLIENT_KEY").unwrap(),
-        dotenvy::var("CLIENT_SECRET").unwrap(),
+        dotenvy::var("CONSUMER_KEY").unwrap(),
+        dotenvy::var("CONSUMER_SECRET").unwrap(),
         Environment::Sandbox,
     );
 
