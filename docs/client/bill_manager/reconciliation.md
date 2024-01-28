@@ -1,19 +1,22 @@
+# Reconciliation
+
 Creates a `ReconciliationBuilder` which enables your customers to receive e-receipts for payments made to your paybill account.
 
 Safaricom API docs [reference](https://developer.safaricom.co.ke/APIs/BillManager)
 
-# Example
+## Example
+
 ```rust,ignore
 use mpesa::{Mpesa, Environment};
 use chrono::prelude::Utc;
 
 #[tokio::main]
 async fn main() {
-    dotenv::dotenv().ok();
+    dotenvy::dotenv().ok();
 
     let client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
+        dotenvy::var("CLIENT_KEY").unwrap(),
+        dotenvy::var("CLIENT_SECRET").unwrap(),
         Environment::Sandbox,
     );
 

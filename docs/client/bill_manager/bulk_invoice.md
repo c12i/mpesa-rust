@@ -1,19 +1,22 @@
+# Bulk Invoice
+
 Creates a `BulkInvoiceBuilder` which allows you to send invoices to your customers in bulk.
 
 Safaricom API docs [reference](https://developer.safaricom.co.ke/APIs/BillManager)
 
-# Example
+## Example
+
 ```rust,ignore
 use mpesa::{Mpesa, Environment, Invoice, InvoiceItem};
 use chrono::prelude::Utc;
 
 #[tokio::main]
 async fn main() {
-    dotenv::dotenv().ok();
+    dotenvy::dotenv().ok();
 
     let client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
+        dotenvy::var("CLIENT_KEY").unwrap(),
+        dotenvy::var("CLIENT_SECRET").unwrap(),
         Environment::Sandbox,
     );
 

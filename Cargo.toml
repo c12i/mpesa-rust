@@ -9,6 +9,31 @@ repository = "https://github.com/collinsmuriuki/mpesa-rust"
 readme = "./README.md"
 license = "MIT"
 
+[features]
+default = [
+	"account_balance",
+	"b2b",
+	"b2c",
+	"bill_manager",
+	"c2b_register",
+	"c2b_simulate",
+	"express_request",
+	"transaction_reversal",
+	"transaction_status",
+	"dynamic_qr",
+]
+dynamic_qr = []
+account_balance = ["dep:openssl"]
+b2b = ["dep:openssl"]
+b2c = ["dep:openssl"]
+bill_manager = ["dep:chrono"]
+c2b_register = []
+c2b_simulate = []
+express_request = ["dep:chrono"]
+transaction_reversal = ["dep:openssl"]
+transaction_status = ["dep:openssl"]
+
+
 [dependencies]
 cached = { version = "0.46", features = ["wasm", "async", "proc_macro"] }
 chrono = { version = "0.4", optional = true, default-features = false, features = [
@@ -21,36 +46,14 @@ derive_builder = "0.12"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 serde_repr = "0.1"
-thiserror = "1.0.37"
-wiremock = "0.5"
-secrecy = "0.8.0"
-serde-aux = "4.2.0"
+thiserror = "1.0"
+secrecy = "0.8"
+serde-aux = "4.2"
+url = { version = "2", features = ["serde"] }
+regex = { version = "1.10", default-features = false, features = ["std"] }
+
 
 [dev-dependencies]
-dotenv = "0.15"
+dotenvy = "0.15.7"
 tokio = { version = "1", features = ["rt", "rt-multi-thread", "macros"] }
 wiremock = "0.5"
-
-[features]
-default = [
-	"account_balance",
-	"b2b",
-	"b2c",
-	"bill_manager",
-	"c2b_register",
-	"c2b_simulate",
-	"express_request",
-	"transaction_reversal",
-	"transaction_status",
-	"dynamic_qr"
-]
-dynamic_qr = []
-account_balance = ["dep:openssl"]
-b2b = ["dep:openssl"]
-b2c = ["dep:openssl"]
-bill_manager = ["dep:chrono"]
-c2b_register = []
-c2b_simulate = []
-express_request = ["dep:chrono"]
-transaction_reversal = ["dep:openssl"]
-transaction_status = ["dep:openssl"]

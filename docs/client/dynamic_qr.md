@@ -1,3 +1,5 @@
+# Dynamic QR
+
 Generates a QR code that can be scanned by a M-Pesa customer to make
 payments.
 
@@ -5,17 +7,18 @@ Returns a `DynamicQRBuilder`
 
 Safaricom API docs [reference](https://developer.safaricom.co.ke/APIs/DynamicQRCode)
 
-# Example
+## Example
+
 ```rust
 use mpesa::{Mpesa, Environment};
 
 #[tokio::main]
 async fn main() {
-    dotenv::dotenv().ok();
+    dotenvy::dotenv().ok();
 
     let client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
+        dotenvy::var("CLIENT_KEY").unwrap(),
+        dotenvy::var("CLIENT_SECRET").unwrap(),
         Environment::Sandbox,
     );
 

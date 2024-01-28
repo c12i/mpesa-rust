@@ -63,3 +63,9 @@ impl From<derive_builder::UninitializedFieldError> for MpesaError {
         Self::BuilderError(BuilderError::UninitializedField(e.field_name()))
     }
 }
+
+impl From<url::ParseError> for MpesaError {
+    fn from(e: url::ParseError) -> Self {
+        Self::BuilderError(BuilderError::ValidationError(e.to_string()))
+    }
+}

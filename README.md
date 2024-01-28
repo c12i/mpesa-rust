@@ -50,11 +50,11 @@ use mpesa::{Mpesa, Environment};
 
 #[tokio::main]
 async fn main() {
-    dotenv::dotenv().ok();
+    dotenvy::dotenv().ok();
 
     let client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
+        dotenvy::var("CLIENT_KEY").unwrap(),
+        dotenvy::var("CLIENT_SECRET").unwrap(),
         Environment::Sandbox,
     );
 
@@ -73,11 +73,11 @@ use std::str::FromStr;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    dotenv::dotenv().ok();
+    dotenvy::dotenv().ok();
 
     let client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
+        dotenvy::var("CLIENT_KEY").unwrap(),
+        dotenvy::var("CLIENT_SECRET").unwrap(),
         Environment::from_str("sandbox")?, // or
         // Environment::try_from("sandbox")?,
     );
@@ -121,11 +121,11 @@ impl ApiEnvironment for CustomEnvironment {
 
 #[tokio::main]
 async fn main() {
-    dotenv::dotenv().ok();
+    dotenvy::dotenv().ok();
 
     let client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
+        dotenvy::var("CLIENT_KEY").unwrap(),
+        dotenvy::var("CLIENT_SECRET").unwrap(),
         CustomEnvironment,
     );
 }
@@ -139,11 +139,11 @@ use mpesa::{Mpesa, Environment};
 
 #[tokio::main]
 async fn main() {
-    dotenv::dotenv().ok();
+    dotenvy::dotenv().ok();
 
     let client = Mpesa::new(
-        env!("CLIENT_KEY"),
-        env!("CLIENT_SECRET"),
+        dotenvy::var("CLIENT_KEY").unwrap(),
+        dotenvy::var("CLIENT_SECRET").unwrap(),
         Environment::Sandbox,
     );
 
@@ -177,8 +177,8 @@ The table below shows all the MPESA APIs from Safaricom and those supported by t
 
 **Collins Muriuki**
 
--   Twitter: [@c12i\_](https://twitter.com/c12i_)
--   Not affiliated with Safaricom.
+- Twitter: [@c12i\_](https://twitter.com/c12i_)
+- Not affiliated with Safaricom.
 
 ## Contributing
 

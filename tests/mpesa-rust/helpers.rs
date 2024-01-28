@@ -33,12 +33,12 @@ macro_rules! get_mpesa_client {
         use serde_json::json;
         use wiremock::matchers::{path, query_param, method};
 
-        dotenv::dotenv().ok();
+        dotenvy::dotenv().ok();
         let server = MockServer::start().await;
         let test_environment = TestEnvironment::new(&server).await;
         let client = Mpesa::new(
-            std::env::var("CLIENT_KEY").unwrap(),
-            std::env::var("CLIENT_SECRET").unwrap(),
+            dotenvy::var("CLIENT_KEY").unwrap(),
+            dotenvy::var("CLIENT_SECRET").unwrap(),
             test_environment,
         );
         Mock::given(method("GET"))
@@ -60,12 +60,12 @@ macro_rules! get_mpesa_client {
         use serde_json::json;
         use wiremock::matchers::{path, query_param, method};
 
-        dotenv::dotenv().ok();
+        dotenvy::dotenv().ok();
         let server = MockServer::start().await;
         let test_environment = TestEnvironment::new(&server).await;
         let client = Mpesa::new(
-            std::env::var("CLIENT_KEY").unwrap(),
-            std::env::var("CLIENT_SECRET").unwrap(),
+            dotenvy::var("CLIENT_KEY").unwrap(),
+            dotenvy::var("CLIENT_SECRET").unwrap(),
             test_environment,
         );
         Mock::given(method("GET"))
@@ -83,7 +83,7 @@ macro_rules! get_mpesa_client {
     ($client_key:expr, $client_secret:expr) => {{
         use mpesa::{Environment, Mpesa};
         use std::str::FromStr;
-        dotenv::dotenv().ok();
+        dotenvy::dotenv().ok();
         let client = Mpesa::new(
             $client_key,
             $client_secret,
@@ -95,7 +95,7 @@ macro_rules! get_mpesa_client {
     ($client_key:expr, $client_secret:expr, $environment:expr) => {{
         use mpesa::{Environment, Mpesa};
         use std::str::FromStr;
-        dotenv::dotenv().ok();
+        dotenvy::dotenv().ok();
         let client = Mpesa::new($client_key, $client_secret, $environment);
         client
     }};

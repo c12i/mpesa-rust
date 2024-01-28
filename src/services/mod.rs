@@ -43,8 +43,13 @@ pub use c2b_simulate::{C2bSimulateBuilder, C2bSimulateResponse};
 #[cfg(feature = "dynamic_qr")]
 pub use dynamic_qr::{DynamicQR, DynamicQRBuilder, DynamicQRRequest, DynamicQRResponse};
 #[cfg(feature = "express_request")]
-pub use express_request::{MpesaExpressRequestBuilder, MpesaExpressRequestResponse};
+pub use express_request::{
+    MpesaExpress, MpesaExpressBuilder, MpesaExpressRequest, MpesaExpressResponse,
+};
 #[cfg(feature = "transaction_reversal")]
-pub use transaction_reversal::{TransactionReversalBuilder, TransactionReversalResponse};
+pub use transaction_reversal::{
+    TransactionReversal, TransactionReversalBuilder, TransactionReversalRequest,
+    TransactionReversalResponse,
+};
 #[cfg(feature = "transaction_status")]
 pub use transaction_status::{TransactionStatusBuilder, TransactionStatusResponse};

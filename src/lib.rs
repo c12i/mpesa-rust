@@ -6,6 +6,7 @@ mod constants;
 pub mod environment;
 mod errors;
 pub mod services;
+pub mod validator;
 
 pub use client::Mpesa;
 pub use constants::{
@@ -14,4 +15,4 @@ pub use constants::{
 };
 pub use environment::ApiEnvironment;
 pub use environment::Environment::{self, Production, Sandbox};
-pub use errors::{MpesaError, MpesaResult, ResponseError};
+pub use errors::{BuilderError, MpesaError, MpesaResult, ResponseError};

@@ -56,10 +56,10 @@ impl std::fmt::Display for AuthenticationResponse {
 
 #[cfg(test)]
 mod tests {
-    use crate::ApiEnvironment;
     use wiremock::{Mock, MockServer};
 
     use super::*;
+    use crate::ApiEnvironment;
 
     #[derive(Debug, Clone)]
     pub struct TestEnvironment {

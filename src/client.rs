@@ -1,4 +1,5 @@
 use std::cell::RefCell;
+use std::time::Duration;
 
 use cached::Cached;
 use openssl::base64;
@@ -13,14 +14,15 @@ use crate::auth::AUTH;
 use crate::environment::ApiEnvironment;
 use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, BulkInvoiceBuilder, C2bRegisterBuilder,
-    C2bSimulateBuilder, CancelInvoiceBuilder, DynamicQR, DynamicQRBuilder,
-    MpesaExpressRequestBuilder, OnboardBuilder, OnboardModifyBuilder, ReconciliationBuilder,
-    SingleInvoiceBuilder, TransactionReversalBuilder, TransactionStatusBuilder,
+    C2bSimulateBuilder, CancelInvoiceBuilder, DynamicQR, DynamicQRBuilder, MpesaExpress,
+    MpesaExpressBuilder, OnboardBuilder, OnboardModifyBuilder, ReconciliationBuilder,
+    SingleInvoiceBuilder, TransactionReversal, TransactionReversalBuilder,
+    TransactionStatusBuilder,
 };
-use crate::{auth, MpesaResult};
+use crate::{auth, MpesaError, MpesaResult, ResponseError};
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
-const DEFAULT_INITIATOR_PASSWORD: &str = "Safcom496!";
+const DEFAULT_INITIATOR_PASSWORD: &str = "Safaricom999!*!";
 /// Get current package version from metadata
 const CARGO_PACKAGE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -45,11 +47,11 @@ impl Mpesa {
     ///
     /// #[tokio::main]
     /// async fn main() {
-    ///    dotenv::dotenv().ok();
+    ///    dotenvy::dotenv().ok();
     ///
     ///    let client = Mpesa::new(
-    ///         env!("CLIENT_KEY"),
-    ///         env!("CLIENT_SECRET"),
+    ///         dotenvy::var("CLIENT_KEY").unwrap(),
+    ///         dotenvy::var("CLIENT_SECRET").unwrap(),
     ///         Environment::Sandbox,
     ///    );
     ///
@@ -64,10 +66,8 @@ impl Mpesa {
         environment: impl ApiEnvironment,
     ) -> Self {
         let http_client = HttpClient::builder()
-            .connect_timeout(std::time::Duration::from_millis(10_000))
+            .connect_timeout(Duration::from_secs(10))
             .user_agent(format!("mpesa-rust@{CARGO_PACKAGE_VERSION}"))
-            // TODO: Potentialy return a `Result` enum from Mpesa::new?
-            //       Making assumption that creation of http client cannot fail
             .build()
             .expect("Error building http client");
 
@@ -121,11 +121,11 @@ impl Mpesa {
     ///
     /// #[tokio::main]
     /// async fn main() {
-    ///     dotenv::dotenv().ok();
+    ///     dotenvy::dotenv().ok();
     ///
     ///     let client = Mpesa::new(
-    ///         env!("CLIENT_KEY"),
-    ///         env!("CLIENT_SECRET"),
+    ///         dotenvy::var("CLIENT_KEY").unwrap(),
+    ///         dotenvy::var("CLIENT_SECRET").unwrap(),
     ///         Environment::Sandbox,
     ///     );
     ///     client.set_initiator_password("your_initiator_password");
@@ -155,7 +155,7 @@ impl Mpesa {
         }
 
         // Generate a new access token
-        let new_token = auth::auth_prime_cache(self).await?;
+        let new_token = auth::auth(self).await?;
 
         // Double-check if the access token is cached by another thread
         if let Some(token) = AUTH.lock().await.cache_get(&self.client_key) {
@@ -238,20 +238,14 @@ impl Mpesa {
 
     #[cfg(feature = "express_request")]
     #[doc = include_str!("../docs/client/express_request.md")]
-    pub fn express_request<'a>(
-        &'a self,
-        business_short_code: &'a str,
-    ) -> MpesaExpressRequestBuilder {
-        MpesaExpressRequestBuilder::new(self, business_short_code)
+    pub fn express_request(&self) -> MpesaExpressBuilder {
+        MpesaExpress::builder(self)
     }
 
     #[cfg(feature = "transaction_reversal")]
     #[doc = include_str!("../docs/client/transaction_reversal.md")]
-    pub fn transaction_reversal<'a>(
-        &'a self,
-        initiator_name: &'a str,
-    ) -> TransactionReversalBuilder {
-        TransactionReversalBuilder::new(self, initiator_name)
+    pub fn transaction_reversal(&self) -> TransactionReversalBuilder {
+        TransactionReversal::builder(self)
     }
 
     #[cfg(feature = "transaction_status")]
@@ -301,22 +295,20 @@ impl Mpesa {
     {
         let url = format!("{}/{}", self.base_url, req.path);
 
-        let req = self
+        let res = self
             .http_client
             .request(req.method, url)
             .bearer_auth(self.auth().await?)
-            .json(&req.body);
-
-        let res = req.send().await?;
+            .json(&req.body)
+            .send()
+            .await?;
 
         if res.status().is_success() {
             let body = res.json().await?;
-
             Ok(body)
         } else {
-            let err = res.json::<crate::ResponseError>().await?;
-
-            Err(crate::MpesaError::Service(err))
+            let err = res.json::<ResponseError>().await?;
+            Err(MpesaError::Service(err))
         }
     }
 }
