@@ -226,7 +226,7 @@ impl Mpesa {
 
     #[cfg(feature = "account_balance")]
     #[doc = include_str!("../docs/client/account_balance.md")]
-    pub fn account_balance<'a>(&'a self) -> AccountBalanceBuilder {
+    pub fn account_balance(&self) -> AccountBalanceBuilder {
         AccountBalance::builder(self)
     }
 
