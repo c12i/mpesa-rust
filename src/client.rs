@@ -12,13 +12,7 @@ use serde::Serialize;
 
 use crate::auth::AUTH;
 use crate::environment::ApiEnvironment;
-use crate::services::{
-    AccountBalanceBuilder, B2bBuilder, B2cBuilder, BulkInvoiceBuilder, C2bRegisterBuilder,
-    C2bSimulateBuilder, CancelInvoiceBuilder, DynamicQR, DynamicQRBuilder, MpesaExpress,
-    MpesaExpressBuilder, OnboardBuilder, OnboardModifyBuilder, ReconciliationBuilder,
-    SingleInvoiceBuilder, TransactionReversal, TransactionReversalBuilder,
-    TransactionStatusBuilder,
-};
+use crate::services::*;
 use crate::{auth, MpesaError, MpesaResult, ResponseError};
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
@@ -232,8 +226,8 @@ impl Mpesa {
 
     #[cfg(feature = "account_balance")]
     #[doc = include_str!("../docs/client/account_balance.md")]
-    pub fn account_balance<'a>(&'a self, initiator_name: &'a str) -> AccountBalanceBuilder {
-        AccountBalanceBuilder::new(self, initiator_name)
+    pub fn account_balance(&self) -> AccountBalanceBuilder {
+        AccountBalance::builder(self)
     }
 
     #[cfg(feature = "express_request")]
@@ -267,7 +261,7 @@ impl Mpesa {
     ///
     /// # Errors
     /// Returns `EncryptionError` variant of `MpesaError`
-    pub(crate) fn gen_security_credentials(&self) -> MpesaResult<String> {
+    pub fn gen_security_credentials(&self) -> MpesaResult<String> {
         let pem = self.certificate.as_bytes();
         let cert = X509::from_pem(pem)?;
         // getting the public and rsa keys

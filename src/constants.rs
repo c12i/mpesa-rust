@@ -33,7 +33,7 @@ impl Display for CommandId {
 /// Identifier types - both sender and receiver - identify an M-Pesa transaction’s sending and receiving party as
 /// either a shortcode, a till number or a MSISDN (phone number).
 /// There are three identifier types that can be used with M-Pesa APIs.
-#[derive(Debug, Serialize_repr, Deserialize_repr, Copy, Clone)]
+#[derive(Debug, Serialize_repr, Deserialize_repr, Copy, Clone, PartialEq, Eq)]
 #[repr(u16)]
 pub enum IdentifierTypes {
     MSISDN = 1,
