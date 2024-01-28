@@ -1,6 +1,6 @@
 # mpesa-rust
 
-[![Rust](https://github.com/collinsmuriuki/mpesa-rust/actions/workflows/general.yml/badge.svg)](https://github.com/collinsmuriuki/mpesa-rust/actions/workflows/general.yml)
+[![Rust](https://github.com/c12i/mpesa-rust/actions/workflows/general.yml/badge.svg?branch=master)](https://github.com/c12i/mpesa-rust/actions/workflows/general.yml)
 [![](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![](https://img.shields.io/crates/v/mpesa)](https://crates.io/crates/mpesa)
 
