@@ -80,23 +80,23 @@ macro_rules! get_mpesa_client {
         (client, server)
     }};
 
-    ($CONSUMER_KEY:expr, $CONSUMER_SECRET:expr) => {{
+    ($consumer_key:expr, $consumer_secret:expr) => {{
         use mpesa::{Environment, Mpesa};
         use std::str::FromStr;
         dotenv::dotenv().ok();
         let client = Mpesa::new(
-            $CONSUMER_KEY,
-            $CONSUMER_SECRET,
+            $consumer_key,
+            $consumer_secret,
             Environment::from_str("sandbox").unwrap(),
         );
         client
     }};
 
-    ($CONSUMER_KEY:expr, $CONSUMER_SECRET:expr, $environment:expr) => {{
+    ($consumer_key:expr, $consumer_secret:expr, $environment:expr) => {{
         use mpesa::{Environment, Mpesa};
         use std::str::FromStr;
         dotenv::dotenv().ok();
-        let client = Mpesa::new($CONSUMER_KEY, $CONSUMER_SECRET, $environment);
+        let client = Mpesa::new($consumer_key, $consumer_secret, $environment);
         client
     }};
 }
