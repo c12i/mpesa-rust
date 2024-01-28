@@ -29,7 +29,9 @@ mod transaction_reversal;
 mod transaction_status;
 
 #[cfg(feature = "account_balance")]
-pub use account_balance::{AccountBalanceBuilder, AccountBalanceResponse};
+pub use account_balance::{
+    AccountBalance, AccountBalanceBuilder, AccountBalanceRequest, AccountBalanceResponse,
+};
 #[cfg(feature = "b2b")]
 pub use b2b::{B2bBuilder, B2bResponse};
 #[cfg(feature = "b2c")]
