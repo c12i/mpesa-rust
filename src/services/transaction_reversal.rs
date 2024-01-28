@@ -24,6 +24,7 @@ pub struct TransactionReversalRequest<'mpesa> {
     /// The organization that receives the transaction.
     pub receiver_party: &'mpesa str,
     /// Type of organization that receives the transaction.
+    #[serde(rename(serialize = "RecieverIdentifierType"))]
     pub receiver_identifier_type: IdentifierTypes,
     /// The path that stores information about the transaction.
     #[serde(rename = "ResultURL")]
