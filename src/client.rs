@@ -295,21 +295,19 @@ impl Mpesa {
     {
         let url = format!("{}/{}", self.base_url, req.path);
 
-        let req = self
+        let res = self
             .http_client
             .request(req.method, url)
             .bearer_auth(self.auth().await?)
-            .json(&req.body);
-
-        let res = req.send().await?;
+            .json(&req.body)
+            .send()
+            .await?;
 
         if res.status().is_success() {
             let body = res.json().await?;
-
             Ok(body)
         } else {
             let err = res.json::<ResponseError>().await?;
-
             Err(MpesaError::Service(err))
         }
     }
