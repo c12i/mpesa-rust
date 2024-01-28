@@ -47,7 +47,7 @@ impl Mpesa {
     ///
     /// #[tokio::main]
     /// async fn main() {
-    ///    dotenvy::dotenv().expect("env variables not found");
+    ///    dotenvy::dotenv().ok();
     ///
     ///    let client = Mpesa::new(
     ///         dotenvy::var("CLIENT_KEY").unwrap(),
@@ -121,7 +121,7 @@ impl Mpesa {
     ///
     /// #[tokio::main]
     /// async fn main() {
-    ///     dotenvy::dotenv().expect("env variables not found");
+    ///     dotenvy::dotenv().ok();
     ///
     ///     let client = Mpesa::new(
     ///         dotenvy::var("CLIENT_KEY").unwrap(),

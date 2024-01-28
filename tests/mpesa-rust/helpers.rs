@@ -33,7 +33,7 @@ macro_rules! get_mpesa_client {
         use serde_json::json;
         use wiremock::matchers::{path, query_param, method};
 
-        dotenvy::dotenv().expect("env variables not found");
+        dotenvy::dotenv().ok();
         let server = MockServer::start().await;
         let test_environment = TestEnvironment::new(&server).await;
         let client = Mpesa::new(
@@ -60,7 +60,7 @@ macro_rules! get_mpesa_client {
         use serde_json::json;
         use wiremock::matchers::{path, query_param, method};
 
-        dotenvy::dotenv().expect("env variables not found");
+        dotenvy::dotenv().ok();
         let server = MockServer::start().await;
         let test_environment = TestEnvironment::new(&server).await;
         let client = Mpesa::new(
@@ -83,7 +83,7 @@ macro_rules! get_mpesa_client {
     ($client_key:expr, $client_secret:expr) => {{
         use mpesa::{Environment, Mpesa};
         use std::str::FromStr;
-        dotenvy::dotenv().expect("env variables not found");
+        dotenvy::dotenv().ok();
         let client = Mpesa::new(
             $client_key,
             $client_secret,
@@ -95,7 +95,7 @@ macro_rules! get_mpesa_client {
     ($client_key:expr, $client_secret:expr, $environment:expr) => {{
         use mpesa::{Environment, Mpesa};
         use std::str::FromStr;
-        dotenvy::dotenv().expect("env variables not found");
+        dotenvy::dotenv().ok();
         let client = Mpesa::new($client_key, $client_secret, $environment);
         client
     }};

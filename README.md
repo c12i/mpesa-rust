@@ -50,7 +50,7 @@ use mpesa::{Mpesa, Environment};
 
 #[tokio::main]
 async fn main() {
-    dotenvy::dotenv().expect("env variables not found");
+    dotenvy::dotenv().ok();
 
     let client = Mpesa::new(
         dotenvy::var("CLIENT_KEY").unwrap(),
@@ -73,7 +73,7 @@ use std::str::FromStr;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    dotenvy::dotenv().expect("env variables not found");
+    dotenvy::dotenv().ok();
 
     let client = Mpesa::new(
         dotenvy::var("CLIENT_KEY").unwrap(),
@@ -121,7 +121,7 @@ impl ApiEnvironment for CustomEnvironment {
 
 #[tokio::main]
 async fn main() {
-    dotenvy::dotenv().expect("env variables not found");
+    dotenvy::dotenv().ok();
 
     let client = Mpesa::new(
         dotenvy::var("CLIENT_KEY").unwrap(),
@@ -139,7 +139,7 @@ use mpesa::{Mpesa, Environment};
 
 #[tokio::main]
 async fn main() {
-    dotenvy::dotenv().expect("env variables not found");
+    dotenvy::dotenv().ok();
 
     let client = Mpesa::new(
         dotenvy::var("CLIENT_KEY").unwrap(),

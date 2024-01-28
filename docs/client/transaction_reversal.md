@@ -14,7 +14,7 @@ use mpesa::{Mpesa, Environment};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    dotenvy::dotenv().expect("env variables not found");
+    dotenvy::dotenv().ok();
 
     let client = Mpesa::new(
         dotenvy::var("CLIENT_KEY").unwrap(),
