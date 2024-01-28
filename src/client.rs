@@ -22,7 +22,7 @@ use crate::services::{
 use crate::{auth, MpesaError, MpesaResult, ResponseError};
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
-const DEFAULT_INITIATOR_PASSWORD: &str = "Safcom496!";
+const DEFAULT_INITIATOR_PASSWORD: &str = "Safaricom999!*!";
 /// Get current package version from metadata
 const CARGO_PACKAGE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -155,7 +155,7 @@ impl Mpesa {
         }
 
         // Generate a new access token
-        let new_token = auth::auth_prime_cache(self).await?;
+        let new_token = auth::auth(self).await?;
 
         // Double-check if the access token is cached by another thread
         if let Some(token) = AUTH.lock().await.cache_get(&self.client_key) {
