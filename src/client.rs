@@ -261,7 +261,7 @@ impl Mpesa {
     ///
     /// # Errors
     /// Returns `EncryptionError` variant of `MpesaError`
-    pub(crate) fn gen_security_credentials(&self) -> MpesaResult<String> {
+    pub fn gen_security_credentials(&self) -> MpesaResult<String> {
         let pem = self.certificate.as_bytes();
         let cert = X509::from_pem(pem)?;
         // getting the public and rsa keys

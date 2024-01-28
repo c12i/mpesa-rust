@@ -65,7 +65,7 @@ async fn account_balance_using_struct_initialization() {
         queue_time_out_url: "https://testdomain.com/err".try_into().unwrap(),
         remarks: "None",
         result_url: "https://testdomain.com/ok".try_into().unwrap(),
-        security_credential: "dummy".to_owned()
+        security_credential: client.gen_security_credentials().unwrap()
     };
     let response = AccountBalance::from_request(&client, request).send().await.unwrap();
     assert_eq!(response.originator_conversation_id, "29464-48063588-1");
