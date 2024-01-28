@@ -29,11 +29,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>>{
         .business_short_code("174379")
         .phone_number("254708374149")
         .party_a("600584")
-        .party_b("600000")
+        .party_b("174379")
         .amount(500)
         .try_callback_url("https://test.example.com/api")?
         .account_ref("Test")
-        .transaction_type(mpesa::CommandId::CustomerPayBillOnline) // Optional, defaults to `CommandId::CustomerPayBillOnline`
+        .transaction_type(crate::CommandId::CustomerPayBillOnline) // Optional, defaults to `CommandId::CustomerPayBillOnline`
         .transaction_desc("Description") // Optional, defaults to "None"
         .build()?
         .send()
