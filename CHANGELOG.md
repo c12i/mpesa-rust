@@ -13,9 +13,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - fix formatting
 
 ### Other
-- Merge pull request [#104](https://github.com/collinsmuriuki/mpesa-rust/pull/104) from c12i/chore/update-mpesa-variables
-- follow API variable naming as per Daraja
-- move express-request and transaction reversal to builder pattern ([#88](https://github.com/collinsmuriuki/mpesa-rust/pull/88))
 - Add discord badge
 - Merge pull request [#95](https://github.com/collinsmuriuki/mpesa-rust/pull/95) from Tevinthuku/improvements-and-less-noise
 - static lifetime for request path
