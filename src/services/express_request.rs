@@ -142,18 +142,22 @@ pub struct MpesaExpress<'mpesa> {
     /// The password for encrypting the request is obtained by base64 encoding
     /// BusinessShortCode, Passkey and Timestamp.
     /// The timestamp format is YYYYMMDDHHmmss
-    #[builder(setter(into))]
-    pass_key: &'mpesa str,
+    #[builder(setter(into, strip_option), default = "Some(DEFAULT_PASSKEY)")]
+    pass_key: Option<&'mpesa str>,
 }
 
 impl<'mpesa> From<MpesaExpress<'mpesa>> for MpesaExpressRequest<'mpesa> {
     fn from(express: MpesaExpress<'mpesa>) -> MpesaExpressRequest<'mpesa> {
         let timestamp = chrono::Local::now();
 
+        dbg!(timestamp);
+
         let encoded_password = base64::encode_block(
             format!(
                 "{}{}{}",
-                express.business_short_code, express.pass_key, timestamp
+                express.business_short_code,
+                express.pass_key.unwrap_or(DEFAULT_PASSKEY),
+                timestamp
             )
             .as_bytes(),
         );
@@ -239,7 +243,7 @@ impl<'mpesa> MpesaExpress<'mpesa> {
             callback_url: request.call_back_url,
             account_ref: request.account_reference,
             transaction_desc: request.transaction_desc,
-            pass_key: pass_key.unwrap_or(DEFAULT_PASSKEY),
+            pass_key,
         }
     }
 
