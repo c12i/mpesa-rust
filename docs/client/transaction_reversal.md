@@ -28,6 +28,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .try_result_url("https://testdomain.com/ok")?
         .try_timeout_url("https://testdomain.com/err")?
         .transaction_id("OEI2AK4Q16")
+        .receiver_identifier_type(mpesa::IdentifierTypes::ShortCode)
         .remarks("test")
         .amount(100)
         .receiver_party("600111")

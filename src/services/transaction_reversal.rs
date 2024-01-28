@@ -81,6 +81,8 @@ pub struct TransactionReversal<'mpesa> {
     /// Comments that are sent along with the transaction.
     #[builder(setter(into, strip_option), default)]
     occasion: Option<&'mpesa str>,
+    /// Type of organization that receives the transaction.
+    pub receiver_identifier_type: IdentifierTypes,
     /// The amount transacted in the transaction is to be reversed, down to the
     /// cent.
     amount: u32,
@@ -100,7 +102,7 @@ impl<'mpesa> TryFrom<TransactionReversal<'mpesa>> for TransactionReversalRequest
             command_id: CommandId::TransactionReversal,
             transaction_id: value.transaction_id,
             receiver_party: value.receiver_party,
-            receiver_identifier_type: IdentifierTypes::Reversal,
+            receiver_identifier_type: value.receiver_identifier_type,
             result_url: value.result_url,
             queue_timeout_url: value.timeout_url,
             remarks: value.remarks,
@@ -131,6 +133,7 @@ impl<'mpesa> TransactionReversal<'mpesa> {
             remarks: request.remarks,
             occasion: request.occasion,
             amount: request.amount,
+            receiver_identifier_type: request.receiver_identifier_type,
         }
     }
 
