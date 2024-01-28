@@ -215,12 +215,13 @@ impl<'mpesa> MpesaExpress<'mpesa> {
     /// BusinessShortCode, Passkey and Timestamp.
     /// The timestamp format is YYYYMMDDHHmmss
     pub fn encode_password(business_short_code: &str, pass_key: Option<&'mpesa str>) -> String {
+        let timestamp = chrono::Local::now().format("%Y%m%d%H%M%S").to_string();
         base64::encode_block(
             format!(
                 "{}{}{}",
                 business_short_code,
                 pass_key.unwrap_or(DEFAULT_PASSKEY),
-                chrono::Local::now()
+                timestamp
             )
             .as_bytes(),
         )
