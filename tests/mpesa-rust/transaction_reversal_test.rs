@@ -33,7 +33,6 @@ async fn transaction_reversal_success() {
         .amount(100)
         .receiver_party("600111")
         .remarks("wrong recipient")
-        .receiver_identifier_type(IdentifierTypes::Reversal)
         .build()
         .unwrap()
         .send()

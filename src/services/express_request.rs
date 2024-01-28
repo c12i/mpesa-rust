@@ -68,7 +68,6 @@ fn serialize_utc_to_string<S>(date: &DateTime<Local>, serializer: S) -> Result<S
 where
     S: serde::Serializer,
 {
-    let date = date.with_timezone(&Local);
     let s = date.format("%Y%m%d%H%M%S").to_string();
     serializer.serialize_str(&s)
 }
@@ -150,17 +149,8 @@ impl<'mpesa> From<MpesaExpress<'mpesa>> for MpesaExpressRequest<'mpesa> {
     fn from(express: MpesaExpress<'mpesa>) -> MpesaExpressRequest<'mpesa> {
         let timestamp = chrono::Local::now();
 
-        dbg!(timestamp);
-
-        let encoded_password = base64::encode_block(
-            format!(
-                "{}{}{}",
-                express.business_short_code,
-                express.pass_key.unwrap_or(DEFAULT_PASSKEY),
-                timestamp
-            )
-            .as_bytes(),
-        );
+        let encoded_password =
+            MpesaExpress::encode_password(express.business_short_code, express.pass_key);
 
         MpesaExpressRequest {
             business_short_code: express.business_short_code,
