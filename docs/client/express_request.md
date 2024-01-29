@@ -51,6 +51,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>>{
 
 M-PESA Express Query API checks the status of a Lipa Na M-PESA Online Payment.
 
+Safaricom API docs [reference](https://developer.safaricom.co.ke/APIs/MpesaExpressQuery)
+
 ### Example
 
 ```rust,ignore
