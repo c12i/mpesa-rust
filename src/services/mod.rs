@@ -24,7 +24,7 @@ mod bill_manager;
 mod c2b_register;
 mod c2b_simulate;
 mod dynamic_qr;
-mod express_request;
+mod express;
 mod transaction_reversal;
 mod transaction_status;
 
@@ -43,9 +43,7 @@ pub use c2b_simulate::{C2bSimulateBuilder, C2bSimulateResponse};
 #[cfg(feature = "dynamic_qr")]
 pub use dynamic_qr::{DynamicQR, DynamicQRBuilder, DynamicQRRequest, DynamicQRResponse};
 #[cfg(feature = "express_request")]
-pub use express_request::{
-    MpesaExpress, MpesaExpressBuilder, MpesaExpressRequest, MpesaExpressResponse,
-};
+pub use express::{MpesaExpress, MpesaExpressBuilder, MpesaExpressRequest, MpesaExpressResponse};
 #[cfg(feature = "transaction_reversal")]
 pub use transaction_reversal::{
     TransactionReversal, TransactionReversalBuilder, TransactionReversalRequest,
