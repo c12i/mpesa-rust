@@ -29,8 +29,8 @@ const CARGO_PACKAGE_VERSION: &str = env!("CARGO_PKG_VERSION");
 /// Mpesa client that will facilitate communication with the Safaricom API
 #[derive(Clone, Debug)]
 pub struct Mpesa {
-    client_key: String,
-    client_secret: Secret<String>,
+    consumer_key: String,
+    consumer_secret: Secret<String>,
     initiator_password: RefCell<Option<Secret<String>>>,
     pub(crate) base_url: String,
     certificate: String,
@@ -50,8 +50,8 @@ impl Mpesa {
     ///    dotenvy::dotenv().ok();
     ///
     ///    let client = Mpesa::new(
-    ///         dotenvy::var("CLIENT_KEY").unwrap(),
-    ///         dotenvy::var("CLIENT_SECRET").unwrap(),
+    ///         dotenvy::var("CONSUMER_KEY").unwrap(),
+    ///         dotenvy::var("CONSUMER_SECRET").unwrap(),
     ///         Environment::Sandbox,
     ///    );
     ///
@@ -61,8 +61,8 @@ impl Mpesa {
     /// # Panics
     /// This method can panic if a TLS backend cannot be initialized for the internal http_client
     pub fn new<S: Into<String>>(
-        client_key: S,
-        client_secret: S,
+        consumer_key: S,
+        consumer_secret: S,
         environment: impl ApiEnvironment,
     ) -> Self {
         let http_client = HttpClient::builder()
@@ -75,8 +75,8 @@ impl Mpesa {
         let certificate = environment.get_certificate().to_owned();
 
         Self {
-            client_key: client_key.into(),
-            client_secret: Secret::new(client_secret.into()),
+            consumer_key: consumer_key.into(),
+            consumer_secret: Secret::new(consumer_secret.into()),
             initiator_password: RefCell::new(None),
             base_url,
             certificate,
@@ -94,14 +94,14 @@ impl Mpesa {
             .unwrap_or(DEFAULT_INITIATOR_PASSWORD.to_owned())
     }
 
-    /// Get the client key
-    pub(crate) fn client_key(&self) -> &str {
-        &self.client_key
+    /// Get the consumer key
+    pub(crate) fn consumer_key(&self) -> &str {
+        &self.consumer_key
     }
 
-    /// Get the client secret
-    pub(crate) fn client_secret(&self) -> &str {
-        self.client_secret.expose_secret()
+    /// Get the consumer secret
+    pub(crate) fn consumer_secret(&self) -> &str {
+        self.consumer_secret.expose_secret()
     }
 
     /// Optional in development but required for production for the following apis:
@@ -124,8 +124,8 @@ impl Mpesa {
     ///     dotenvy::dotenv().ok();
     ///
     ///     let client = Mpesa::new(
-    ///         dotenvy::var("CLIENT_KEY").unwrap(),
-    ///         dotenvy::var("CLIENT_SECRET").unwrap(),
+    ///         dotenvy::var("CONSUMER_KEY").unwrap(),
+    ///         dotenvy::var("CONSUMER_SECRET").unwrap(),
     ///         Environment::Sandbox,
     ///     );
     ///     client.set_initiator_password("your_initiator_password");
@@ -150,7 +150,7 @@ impl Mpesa {
     /// # Errors
     /// Returns a `MpesaError` on failure
     pub(crate) async fn auth(&self) -> MpesaResult<String> {
-        if let Some(token) = AUTH.lock().await.cache_get(&self.client_key) {
+        if let Some(token) = AUTH.lock().await.cache_get(&self.consumer_key) {
             return Ok(token.to_owned());
         }
 
@@ -158,14 +158,14 @@ impl Mpesa {
         let new_token = auth::auth(self).await?;
 
         // Double-check if the access token is cached by another thread
-        if let Some(token) = AUTH.lock().await.cache_get(&self.client_key) {
+        if let Some(token) = AUTH.lock().await.cache_get(&self.consumer_key) {
             return Ok(token.to_owned());
         }
 
         // Cache the new token
         AUTH.lock()
             .await
-            .cache_set(self.client_key.clone(), new_token.to_owned());
+            .cache_set(self.consumer_key.clone(), new_token.to_owned());
 
         Ok(new_token)
     }
@@ -332,7 +332,7 @@ mod tests {
 
     #[test]
     fn test_setting_initator_password() {
-        let client = Mpesa::new("client_key", "client_secret", Sandbox);
+        let client = Mpesa::new("consumer_key", "consumer_secret", Sandbox);
         assert_eq!(client.initiator_password(), DEFAULT_INITIATOR_PASSWORD);
         client.set_initiator_password("foo_bar");
         assert_eq!(client.initiator_password(), "foo_bar".to_string());
@@ -354,7 +354,7 @@ mod tests {
 
     #[test]
     fn test_custom_environment() {
-        let client = Mpesa::new("client_key", "client_secret", TestEnvironment);
+        let client = Mpesa::new("consumer_key", "consumer_secret", TestEnvironment);
         assert_eq!(&client.base_url, "https://example.com");
         assert_eq!(&client.certificate, "certificate");
     }
@@ -362,7 +362,7 @@ mod tests {
     #[test]
     #[should_panic]
     fn test_gen_security_credentials_fails_with_invalid_pem() {
-        let client = Mpesa::new("client_key", "client_secret", TestEnvironment);
+        let client = Mpesa::new("consumer_key", "consumer_secret", TestEnvironment);
         let _ = client.gen_security_credentials().unwrap();
     }
 }

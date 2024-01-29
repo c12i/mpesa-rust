@@ -17,8 +17,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenvy::dotenv().ok();
 
     let client = Mpesa::new(
-        dotenvy::var("CLIENT_KEY").unwrap(),
-        dotenvy::var("CLIENT_SECRET").unwrap(),
+        dotenvy::var("CONSUMER_KEY").unwrap(),
+        dotenvy::var("CONSUMER_SECRET").unwrap(),
         Environment::Sandbox,
     );
 

@@ -37,8 +37,8 @@ macro_rules! get_mpesa_client {
         let server = MockServer::start().await;
         let test_environment = TestEnvironment::new(&server).await;
         let client = Mpesa::new(
-            dotenvy::var("CLIENT_KEY").unwrap(),
-            dotenvy::var("CLIENT_SECRET").unwrap(),
+            dotenvy::var("CONSUMER_KEY").unwrap(),
+            dotenvy::var("CONSUMER_SECRET").unwrap(),
             test_environment,
         );
         Mock::given(method("GET"))
@@ -64,8 +64,8 @@ macro_rules! get_mpesa_client {
         let server = MockServer::start().await;
         let test_environment = TestEnvironment::new(&server).await;
         let client = Mpesa::new(
-            dotenvy::var("CLIENT_KEY").unwrap(),
-            dotenvy::var("CLIENT_SECRET").unwrap(),
+            dotenvy::var("CONSUMER_KEY").unwrap(),
+            dotenvy::var("CONSUMER_SECRET").unwrap(),
             test_environment,
         );
         Mock::given(method("GET"))
@@ -80,23 +80,23 @@ macro_rules! get_mpesa_client {
         (client, server)
     }};
 
-    ($client_key:expr, $client_secret:expr) => {{
+    ($consumer_key:expr, $consumer_secret:expr) => {{
         use mpesa::{Environment, Mpesa};
         use std::str::FromStr;
         dotenvy::dotenv().ok();
         let client = Mpesa::new(
-            $client_key,
-            $client_secret,
+            $consumer_key,
+            $consumer_secret,
             Environment::from_str("sandbox").unwrap(),
         );
         client
     }};
 
-    ($client_key:expr, $client_secret:expr, $environment:expr) => {{
+    ($consumer_key:expr, $consumer_secret:expr, $environment:expr) => {{
         use mpesa::{Environment, Mpesa};
         use std::str::FromStr;
         dotenvy::dotenv().ok();
-        let client = Mpesa::new($client_key, $client_secret, $environment);
+        let client = Mpesa::new($consumer_key, $consumer_secret, $environment);
         client
     }};
 }
