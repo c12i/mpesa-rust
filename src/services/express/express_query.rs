@@ -6,7 +6,7 @@ use derive_builder::Builder;
 use openssl::base64;
 use serde::{Deserialize, Serialize};
 
-use super::DEFAULT_PASSKEY;
+use super::{serialize_utc_to_string, DEFAULT_PASSKEY};
 use crate::client::Mpesa;
 use crate::errors::{MpesaError, MpesaResult};
 
@@ -29,14 +29,6 @@ pub struct MpesaExpressQueryRequest<'mpesa> {
     /// request.
     #[serde(rename = "CheckoutRequestID")]
     pub checkout_request_id: &'mpesa str,
-}
-
-fn serialize_utc_to_string<S>(date: &DateTime<Local>, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: serde::Serializer,
-{
-    let s = date.format("%Y%m%d%H%M%S").to_string();
-    serializer.serialize_str(&s)
 }
 
 #[derive(Debug, Clone, Deserialize)]

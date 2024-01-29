@@ -7,7 +7,7 @@ use openssl::base64;
 use serde::{Deserialize, Serialize};
 use url::Url;
 
-use super::DEFAULT_PASSKEY;
+use super::{serialize_utc_to_string, DEFAULT_PASSKEY};
 use crate::client::Mpesa;
 use crate::constants::CommandId;
 use crate::errors::{MpesaError, MpesaResult};
@@ -58,14 +58,6 @@ pub struct MpesaExpressRequest<'mpesa> {
     /// This is any additional information/comment that can be sent along with
     /// the request from your system
     pub transaction_desc: Option<&'mpesa str>,
-}
-
-fn serialize_utc_to_string<S>(date: &DateTime<Local>, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: serde::Serializer,
-{
-    let s = date.format("%Y%m%d%H%M%S").to_string();
-    serializer.serialize_str(&s)
 }
 
 // TODO:: The success response has more fields than this

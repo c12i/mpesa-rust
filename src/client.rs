@@ -236,7 +236,7 @@ impl Mpesa {
         AccountBalanceBuilder::new(self, initiator_name)
     }
 
-    #[cfg(feature = "express_request")]
+    #[cfg(feature = "express")]
     #[doc = include_str!("../docs/client/express_request.md")]
     pub fn express_request(&self) -> MpesaExpressBuilder {
         MpesaExpress::builder(self)

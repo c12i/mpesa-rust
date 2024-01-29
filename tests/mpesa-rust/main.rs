@@ -14,7 +14,7 @@ mod c2b_simulate_test;
 mod dynamic_qr_tests;
 mod helpers;
 #[cfg(test)]
-mod stk_push_test;
+mod express;
 #[cfg(test)]
 mod transaction_reversal_test;
 #[cfg(test)]
