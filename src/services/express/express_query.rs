@@ -1,4 +1,4 @@
-// #![doc = include_str!("../../docs/client/express_request.md")]
+#![doc = include_str!("../../../docs/client/express_request.md")]
 
 use chrono::prelude::Local;
 use chrono::DateTime;
@@ -6,13 +6,9 @@ use derive_builder::Builder;
 use openssl::base64;
 use serde::{Deserialize, Serialize};
 
+use super::DEFAULT_PASSKEY;
 use crate::client::Mpesa;
-
 use crate::errors::{MpesaError, MpesaResult};
-
-/// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
-pub static DEFAULT_PASSKEY: &str =
-    "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
 
 const EXPRESS_QUERY_URL: &str = "mpesa/stkpushquery/v1/query";
 
@@ -88,7 +84,7 @@ pub struct MpesaExpressQuery<'mpesa> {
     /// The password for encrypting the request is obtained by base64 encoding
     /// BusinessShortCode, Passkey and Timestamp.
     /// The timestamp format is YYYYMMDDHHmmss
-    #[builder(setter(into))]
+    #[builder(setter(into, strip_option), default = "Some(DEFAULT_PASSKEY)")]
     pass_key: Option<&'mpesa str>,
 
     /// This is a global unique identifier of the processed checkout transaction

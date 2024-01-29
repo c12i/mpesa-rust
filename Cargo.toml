@@ -17,7 +17,7 @@ default = [
 	"bill_manager",
 	"c2b_register",
 	"c2b_simulate",
-	"express_request",
+	"express",
 	"transaction_reversal",
 	"transaction_status",
 	"dynamic_qr",
@@ -29,20 +29,20 @@ b2c = ["dep:openssl"]
 bill_manager = ["dep:chrono"]
 c2b_register = []
 c2b_simulate = []
-express_request = ["dep:chrono"]
+express = ["dep:chrono"]
 transaction_reversal = ["dep:openssl"]
 transaction_status = ["dep:openssl"]
 
 
 [dependencies]
-cached = { version = "0.46", features = ["wasm", "async", "proc_macro"] }
+cached = { version = "0.48", features = ["wasm", "async", "proc_macro"] }
 chrono = { version = "0.4", optional = true, default-features = false, features = [
 	"clock",
 	"serde",
 ] }
 openssl = { version = "0.10", optional = true }
 reqwest = { version = "0.11", features = ["json"] }
-derive_builder = "0.12"
+derive_builder = "0.13"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 serde_repr = "0.1"
@@ -54,6 +54,6 @@ regex = { version = "1.10", default-features = false, features = ["std"] }
 
 
 [dev-dependencies]
-dotenvy = "0.15.7"
+dotenvy = "0.15"
 tokio = { version = "1", features = ["rt", "rt-multi-thread", "macros"] }
 wiremock = "0.5"
