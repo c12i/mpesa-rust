@@ -25,7 +25,7 @@ pub struct MpesaExpressQueryRequest<'mpesa> {
     /// (YYYYMMDDHHMMSS)
     #[serde(serialize_with = "serialize_utc_to_string")]
     pub timestamp: DateTime<Local>,
-    ///This is a global unique identifier of the processed checkout transaction
+    /// This is a global unique identifier of the processed checkout transaction
     /// request.
     #[serde(rename = "CheckoutRequestID")]
     pub checkout_request_id: &'mpesa str,
@@ -34,7 +34,7 @@ pub struct MpesaExpressQueryRequest<'mpesa> {
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct MpesaExpressQueryResponse {
-    ///This is a global unique identifier of the processed checkout transaction
+    /// This is a global unique identifier of the processed checkout transaction
     /// request.
     #[serde(rename = "CheckoutRequestID")]
     pub checkout_request_id: String,
