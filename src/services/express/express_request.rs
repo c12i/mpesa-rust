@@ -1,4 +1,4 @@
-#![doc = include_str!("../../../docs/client/express_request.md")]
+#![doc = include_str!("../../../docs/client/express.md")]
 
 use chrono::prelude::Local;
 use chrono::DateTime;

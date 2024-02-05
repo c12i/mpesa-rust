@@ -237,13 +237,13 @@ impl Mpesa {
     }
 
     #[cfg(feature = "express")]
-    #[doc = include_str!("../docs/client/express_request.md")]
+    #[doc = include_str!("../docs/client/express.md")]
     pub fn express_request(&self) -> MpesaExpressBuilder {
         MpesaExpress::builder(self)
     }
 
     #[cfg(feature = "express")]
-    #[doc = include_str!("../docs/client/express_request.md")]
+    #[doc = include_str!("../docs/client/express.md")]
     pub fn express_query(&self) -> MpesaExpressQueryBuilder {
         MpesaExpressQuery::builder(self)
     }
