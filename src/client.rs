@@ -15,9 +15,9 @@ use crate::environment::ApiEnvironment;
 use crate::services::{
     AccountBalanceBuilder, B2bBuilder, B2cBuilder, BulkInvoiceBuilder, C2bRegisterBuilder,
     C2bSimulateBuilder, CancelInvoiceBuilder, DynamicQR, DynamicQRBuilder, MpesaExpress,
-    MpesaExpressBuilder, OnboardBuilder, OnboardModifyBuilder, ReconciliationBuilder,
-    SingleInvoiceBuilder, TransactionReversal, TransactionReversalBuilder,
-    TransactionStatusBuilder,
+    MpesaExpressBuilder, MpesaExpressQuery, MpesaExpressQueryBuilder, OnboardBuilder,
+    OnboardModifyBuilder, ReconciliationBuilder, SingleInvoiceBuilder, TransactionReversal,
+    TransactionReversalBuilder, TransactionStatusBuilder,
 };
 use crate::{auth, MpesaError, MpesaResult, ResponseError};
 
@@ -236,10 +236,16 @@ impl Mpesa {
         AccountBalanceBuilder::new(self, initiator_name)
     }
 
-    #[cfg(feature = "express_request")]
-    #[doc = include_str!("../docs/client/express_request.md")]
+    #[cfg(feature = "express")]
+    #[doc = include_str!("../docs/client/express.md")]
     pub fn express_request(&self) -> MpesaExpressBuilder {
         MpesaExpress::builder(self)
+    }
+
+    #[cfg(feature = "express")]
+    #[doc = include_str!("../docs/client/express.md")]
+    pub fn express_query(&self) -> MpesaExpressQueryBuilder {
+        MpesaExpressQuery::builder(self)
     }
 
     #[cfg(feature = "transaction_reversal")]

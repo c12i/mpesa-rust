@@ -1,4 +1,4 @@
-#![doc = include_str!("../../docs/client/express_request.md")]
+#![doc = include_str!("../../../docs/client/express.md")]
 
 use chrono::prelude::Local;
 use chrono::DateTime;
@@ -7,15 +7,11 @@ use openssl::base64;
 use serde::{Deserialize, Serialize};
 use url::Url;
 
+use super::{serialize_utc_to_string, DEFAULT_PASSKEY};
 use crate::client::Mpesa;
 use crate::constants::CommandId;
 use crate::errors::{MpesaError, MpesaResult};
 use crate::validator::PhoneNumberValidator;
-
-/// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
-pub static DEFAULT_PASSKEY: &str =
-    "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
-
 const EXPRESS_REQUEST_URL: &str = "mpesa/stkpush/v1/processrequest";
 
 #[derive(Debug, Serialize)]
@@ -62,14 +58,6 @@ pub struct MpesaExpressRequest<'mpesa> {
     /// This is any additional information/comment that can be sent along with
     /// the request from your system
     pub transaction_desc: Option<&'mpesa str>,
-}
-
-fn serialize_utc_to_string<S>(date: &DateTime<Local>, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: serde::Serializer,
-{
-    let s = date.format("%Y%m%d%H%M%S").to_string();
-    serializer.serialize_str(&s)
 }
 
 // TODO:: The success response has more fields than this

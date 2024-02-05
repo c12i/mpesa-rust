@@ -1,4 +1,6 @@
-# Express Request
+# Mpesa Express
+
+## Mpese Express Request
 
 Lipa na M-PESA online API also known as M-PESA express (STK Push/NI push) is a Merchant/Business initiated C2B (Customer to Business) Payment.
 
@@ -9,9 +11,7 @@ returns a `MpesaExpressRequestBuilder` struct
 
 Safaricom API docs [reference](https://developer.safaricom.co.ke/APIs/MpesaExpressSimulate)
 
-## Example
-
-TODO::Should be investigated why the test fails
+### Example
 
 ```rust,ignore
 use mpesa::{Mpesa, Environment};
@@ -37,6 +37,41 @@ async fn main() -> Result<(), Box<dyn std::error::Error>>{
         .account_ref("Test")
         .transaction_type(mpesa::CommandId::CustomerPayBillOnline) // Optional, defaults to `CommandId::CustomerPayBillOnline`
         .transaction_desc("Description") // Optional, defaults to "None"
+        .build()?
+        .send()
+        .await;
+
+    assert!(response.is_ok());
+
+    Ok(())
+}
+```
+
+## Mpesa Express Query
+
+M-PESA Express Query API checks the status of a Lipa Na M-PESA Online Payment.
+
+Safaricom API docs [reference](https://developer.safaricom.co.ke/APIs/MpesaExpressQuery)
+
+### Example
+
+```rust,ignore
+use mpesa::{Mpesa, Environment};
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>>{
+    dotenvy::dotenv().ok();
+
+    let client = Mpesa::new(
+        dotenvy::var("CLIENT_KEY").unwrap(),
+        dotenvy::var("CLIENT_SECRET").unwrap(),
+        Environment::Sandbox,
+    );
+
+    let response = client
+        .express_query()
+        .business_short_code("174379")
+        .checkout_request_id("ws_CO_271120201234567891")
         .build()?
         .send()
         .await;

@@ -167,11 +167,11 @@ The table below shows all the MPESA APIs from Safaricom and those supported by t
 | [Customer To Business (Register URL)](https://developer.safaricom.co.ke/APIs/CustomerToBusinessRegisterURL) | `c2b_register`         | Stable ✅️      | [c2b register example](/docs/client/c2b_register.md)                 |
 | [Customer To Business (Simulate)](#)                                                                        | `c2b_simulate`         | Stable ✅️      | [c2b simulate example](/docs/client/c2b_simulate.md)                 |
 | [Dynamic QR](https://developer.safaricom.co.ke/APIs/DynamicQRCode)                                          | `dynamic_qr`           | Stable ✅️      | [dynamic qr example](/docs/client/dynamic_qr.md)                     |
-| [M-PESA Express (Query)](https://developer.safaricom.co.ke/APIs/MpesaExpressQuery)                          | N/A                    | Unimplemented ️ | N/A                                                                  |
-| [M-PESA Express (Simulate)/ STK push](https://developer.safaricom.co.ke/APIs/MpesaExpressSimulate)          | `express_request`      | Stable ✅️      | [express request example](/docs/client/express_request.md)           |
+| [M-PESA Express (Query)](https://developer.safaricom.co.ke/APIs/MpesaExpressQuery)                          | `express`                    | Stable ✅️           ️ | [express query example](/docs/client/express.md)                                                                         |
+| [M-PESA Express (Simulate)/ STK push](https://developer.safaricom.co.ke/APIs/MpesaExpressSimulate)          | `express`      | Stable ✅️      | [express request example](/docs/client/express.md)           |
 | [Transaction Status](https://developer.safaricom.co.ke/APIs/TransactionStatus)                              | `transaction_status`   | Stable ✅️      | [transaction status example](/docs/client/transaction_status.md)     |
 | [Transaction Reversal](https://developer.safaricom.co.ke/APIs/Reversal)                                     | `transaction_reversal` | Stable ✅️      | [transaction reversal example](/docs/client/transaction_reversal.md) |
-| [Tax Remittance](https://developer.safaricom.co.ke/APIs/TaxRemittance)                                      | N/A                    | Unimplemented   | N/A                                                                  |
+| [Tax Remittance](https://developer.safaricom.co.ke/APIs/TaxRemittance)                                      | N/A                    | Unimplemented   | N/A                                                          |
 
 ## Author
 

@@ -139,3 +139,48 @@ async fn express_request_test_using_struct_initialization() {
         "Success. Request accepted for processing"
     );
 }
+
+#[tokio::test]
+async fn test_express_query_transaction() {
+    //    Arrange
+    let (client, server) = get_mpesa_client!();
+
+    let sample_response_body = json!( {
+        "CheckoutRequestID": "ws_CO_DMZ_12321_23423476",
+        "MerchantRequestID": "16813-1590513-1",
+        "ResponseCode": "0",
+        "ResponseDescription": "Accept the service request successfully.",
+        "ResultCode": "0",
+        "ResultDesc": "The service request is processed successfully.",
+    });
+
+    Mock::given(method("POST"))
+        .and(path("/mpesa/stkpushquery/v1/query"))
+        .respond_with(ResponseTemplate::new(200).set_body_json(sample_response_body))
+        .expect(1)
+        .mount(&server)
+        .await;
+    let response = client
+        .express_query()
+        .checkout_request_id("ws_CO_DMZ_12321_23423476")
+        .business_short_code("174379")
+        .pass_key("test")
+        .build()
+        .unwrap()
+        .send()
+        .await
+        .unwrap();
+
+    assert_eq!(response.merchant_request_id, "16813-1590513-1");
+    assert_eq!(response.checkout_request_id, "ws_CO_DMZ_12321_23423476");
+    assert_eq!(
+        response.response_description,
+        "Accept the service request successfully."
+    );
+    assert_eq!(
+        response.result_desc,
+        "The service request is processed successfully."
+    );
+
+    assert_eq!(response.response_code, "0");
+}
