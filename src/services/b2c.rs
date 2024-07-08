@@ -1,167 +1,80 @@
 #![doc = include_str!("../../docs/client/b2c.md")]
 
+use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
+use url::Url;
 
 use crate::{CommandId, Mpesa, MpesaError, MpesaResult};
 
 const B2C_URL: &str = "mpesa/b2c/v1/paymentrequest";
 
 #[derive(Debug, Serialize)]
-/// Payload to allow for b2c transactions:
-struct B2cPayload<'mpesa> {
-    #[serde(rename(serialize = "InitiatorName"))]
-    initiator_name: &'mpesa str,
-    #[serde(rename(serialize = "SecurityCredential"))]
-    security_credential: &'mpesa str,
-    #[serde(rename(serialize = "CommandID"))]
-    command_id: CommandId,
-    #[serde(rename(serialize = "Amount"))]
-    amount: f64,
-    #[serde(rename(serialize = "PartyA"))]
-    party_a: &'mpesa str,
-    #[serde(rename(serialize = "PartyB"))]
-    party_b: &'mpesa str,
-    #[serde(rename(serialize = "Remarks"))]
-    remarks: &'mpesa str,
-    #[serde(rename(serialize = "QueueTimeOutURL"))]
-    queue_time_out_url: &'mpesa str,
-    #[serde(rename(serialize = "ResultURL"))]
-    result_url: &'mpesa str,
-    #[serde(rename(serialize = "Occasion"))]
-    occasion: &'mpesa str,
+#[serde(rename_all = "PascalCase")]
+pub struct B2cRequest {
+    pub initiator_name: String,
+    pub security_credential: String,
+    pub command_id: CommandId,
+    pub amount: f64,
+    pub party_a: String,
+    pub party_b: String,
+    pub remarks: Option<String>,
+    #[serde(rename = "QueueTimeOutURL")]
+    pub queue_time_out_url: Url,
+    #[serde(rename = "ResultURL")]
+    pub result_url: Url,
+    pub occasion: Option<String>,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct B2cResponse {
     #[serde(rename(deserialize = "ConversationID"))]
     pub conversation_id: String,
     #[serde(rename(deserialize = "OriginatorConversationID"))]
     pub originator_conversation_id: String,
-    #[serde(rename(deserialize = "ResponseCode"))]
     pub response_code: String,
-    #[serde(rename(deserialize = "ResponseDescription"))]
     pub response_description: String,
 }
 
-#[derive(Debug)]
 /// B2C transaction builder struct
-pub struct B2cBuilder<'mpesa> {
-    initiator_name: &'mpesa str,
+#[derive(Builder, Debug, Clone)]
+#[builder(build_fn(error = "MpesaError"))]
+pub struct B2c<'mpesa> {
+    #[builder(pattern = "immutable")]
     client: &'mpesa Mpesa,
-    command_id: Option<CommandId>,
-    amount: Option<f64>,
-    party_a: Option<&'mpesa str>,
-    party_b: Option<&'mpesa str>,
-    remarks: Option<&'mpesa str>,
-    queue_timeout_url: Option<&'mpesa str>,
-    result_url: Option<&'mpesa str>,
-    occasion: Option<&'mpesa str>,
+    /// The credential/ username used to authenticate the transaction request
+    #[builder(setter(into))]
+    initiator_name: String,
+    /// The amount being transacted
+    #[builder(setter(into))]
+    amount: f64,
+    /// Organization's shortcode initiating the transaction
+    #[builder(setter(into))]
+    party_a: String,
+    /// Phone number receiving the transaction
+    #[builder(setter(into))]
+    party_b: String,
+    /// The path that stores information of time out transaction
+    #[builder(try_setter, setter(into))]
+    queue_timeout_url: Url,
+    /// The path that stores information of transaction
+    #[builder(try_setter, setter(into))]
+    result_url: Url,
+    /// Comments that are sent along with the transaction
+    #[builder(setter(into), default = "None")]
+    remarks: Option<String>,
+    /// Optional parameter
+    #[builder(setter(into), default = "None")]
+    occasion: Option<String>,
+    /// The type of operation
+    #[builder(default = "CommandId::BusinessPayment")]
+    command_id: CommandId,
 }
 
-impl<'mpesa> B2cBuilder<'mpesa> {
-    /// Create a new B2C builder.
-    /// Requires an `initiator_name`, the credential/ username used to authenticate the transaction request
-    pub fn new(client: &'mpesa Mpesa, initiator_name: &'mpesa str) -> B2cBuilder<'mpesa> {
-        B2cBuilder {
-            client,
-            initiator_name,
-            amount: None,
-            party_a: None,
-            party_b: None,
-            remarks: None,
-            queue_timeout_url: None,
-            result_url: None,
-            occasion: None,
-            command_id: None,
-        }
-    }
-
-    /// Adds the `CommandId`. Defaults to `CommandId::BusinessPayment` if not explicitly provided.
-    pub fn command_id(mut self, command_id: CommandId) -> B2cBuilder<'mpesa> {
-        self.command_id = Some(command_id);
-        self
-    }
-
-    /// Adds `Party A` which is a required field
-    /// `Party A` should be a paybill number.
-    ///
-    /// # Errors
-    /// If `Party A` is invalid or not provided
-    pub fn party_a(mut self, party_a: &'mpesa str) -> B2cBuilder<'mpesa> {
-        self.party_a = Some(party_a);
-        self
-    }
-
-    /// Adds `Party B` which is a required field
-    /// `Party B` should be a mobile number.
-    ///
-    /// # Errors
-    /// If `Party B` is invalid or not provided
-    pub fn party_b(mut self, party_b: &'mpesa str) -> B2cBuilder<'mpesa> {
-        self.party_b = Some(party_b);
-        self
-    }
-
-    /// Adds `Party A` and `Party B`. Both are required fields
-    /// `Party A` should be a paybill number while `Party B` should be a mobile number.
-    ///
-    /// # Errors
-    /// If either `Party A` or `Party B` is invalid or not provided
-    #[deprecated]
-    pub fn parties(mut self, party_a: &'mpesa str, party_b: &'mpesa str) -> B2cBuilder<'mpesa> {
-        // TODO: add validation
-        self.party_a = Some(party_a);
-        self.party_b = Some(party_b);
-        self
-    }
-
-    /// Adds `Remarks`. This is an optional field, will default to "None" if not explicitly provided
-    pub fn remarks(mut self, remarks: &'mpesa str) -> B2cBuilder<'mpesa> {
-        self.remarks = Some(remarks);
-        self
-    }
-
-    /// Adds `Occasion`. This is an optional field, will default to an empty string
-    pub fn occasion(mut self, occasion: &'mpesa str) -> B2cBuilder<'mpesa> {
-        self.occasion = Some(occasion);
-        self
-    }
-
-    /// Adds an `amount` to the request
-    /// This is a required field
-    pub fn amount<Number: Into<f64>>(mut self, amount: Number) -> B2cBuilder<'mpesa> {
-        self.amount = Some(amount.into());
-        self
-    }
-
-    // Adds `QueueTimeoutUrl` This is a required field
-    ///
-    /// # Error
-    /// If `QueueTimeoutUrl` is invalid or not provided
-    pub fn timeout_url(mut self, timeout_url: &'mpesa str) -> B2cBuilder<'mpesa> {
-        self.queue_timeout_url = Some(timeout_url);
-        self
-    }
-
-    // Adds `ResultUrl` This is a required field
-    ///
-    /// # Error
-    /// If `ResultUrl` is invalid or not provided
-    pub fn result_url(mut self, result_url: &'mpesa str) -> B2cBuilder<'mpesa> {
-        self.result_url = Some(result_url);
-        self
-    }
-
-    /// Adds `QueueTimeoutUrl` and `ResultUrl`. This is a required field
-    ///
-    /// # Error
-    /// If either `QueueTimeoutUrl` and `ResultUrl` is invalid or not provided
-    #[deprecated]
-    pub fn urls(mut self, timeout_url: &'mpesa str, result_url: &'mpesa str) -> B2cBuilder<'mpesa> {
-        // TODO: validate urls; will probably return a `Result` from this
-        self.queue_timeout_url = Some(timeout_url);
-        self.result_url = Some(result_url);
-        self
+impl<'mpesa> B2c<'mpesa> {
+    /// Creates a new B2C builder
+    pub fn builder(client: &'mpesa Mpesa) -> B2cBuilder<'mpesa> {
+        B2cBuilder::default().client(client)
     }
 
     /// # B2C API
@@ -171,7 +84,6 @@ impl<'mpesa> B2cBuilder<'mpesa> {
     /// This API enables Business to Customer (B2C) transactions between a company and
     /// customers who are the end-users of its products or services. Use of this API requires a
     /// valid and verified B2C M-Pesa Short code.
-    /// See more [here](https://developer.safaricom.co.ke/docs?shell#b2c-api)
     ///
     /// A successful request returns a `B2cResponse` type
     ///
@@ -180,27 +92,17 @@ impl<'mpesa> B2cBuilder<'mpesa> {
     pub async fn send(self) -> MpesaResult<B2cResponse> {
         let credentials = self.client.gen_security_credentials()?;
 
-        let payload = B2cPayload {
+        let payload = B2cRequest {
             initiator_name: self.initiator_name,
-            security_credential: &credentials,
-            command_id: self.command_id.unwrap_or(CommandId::BusinessPayment),
-            amount: self
-                .amount
-                .ok_or(MpesaError::Message("amount is required"))?,
-            party_a: self
-                .party_a
-                .ok_or(MpesaError::Message("party_a is required"))?,
-            party_b: self
-                .party_b
-                .ok_or(MpesaError::Message("party_b is required"))?,
-            remarks: self.remarks.unwrap_or_else(|| stringify!(None)),
-            queue_time_out_url: self
-                .queue_timeout_url
-                .ok_or(MpesaError::Message("queue_timeout_url is required"))?,
-            result_url: self
-                .result_url
-                .ok_or(MpesaError::Message("result_url is required"))?,
-            occasion: self.occasion.unwrap_or_else(|| stringify!(None)),
+            security_credential: credentials,
+            command_id: self.command_id,
+            amount: self.amount,
+            party_a: self.party_a,
+            party_b: self.party_b,
+            remarks: self.remarks,
+            queue_time_out_url: self.queue_timeout_url,
+            result_url: self.result_url,
+            occasion: self.occasion,
         };
 
         self.client

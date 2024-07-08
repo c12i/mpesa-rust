@@ -1,4 +1,3 @@
-use mpesa::MpesaError;
 use serde_json::json;
 use wiremock::matchers::{method, path};
 use wiremock::{Mock, ResponseTemplate};
@@ -21,13 +20,18 @@ async fn b2b_success() {
         .mount(&server)
         .await;
     let response = client
-        .b2b("testapi496")
+        .b2b()
+        .initiator_name("testapi496")
         .party_a("600496")
         .party_b("600000")
-        .result_url("https://testdomain.com/ok")
-        .timeout_url("https://testdomain.com/err")
+        .try_result_url("https://testdomain.com/ok")
+        .unwrap()
+        .try_queue_timeout_url("https://testdomain.com/err")
+        .unwrap()
         .account_ref("254708374149")
         .amount(1000)
+        .build()
+        .unwrap()
         .send()
         .await
         .unwrap();
@@ -56,19 +60,18 @@ async fn b2b_fails_if_no_amount_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .b2b("testapi496")
+        .b2b()
+        .initiator_name("testapi496")
         .party_a("600496")
         .party_b("600000")
-        .result_url("https://testdomain.com/ok")
-        .timeout_url("https://testdomain.com/err")
+        .try_result_url("https://testdomain.com/ok")
+        .unwrap()
+        .try_queue_timeout_url("https://testdomain.com/err")
+        .unwrap()
         .account_ref("254708374149")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
-            panic!("Expected MpesaError::Message, but found {}", e);
-        };
-        assert_eq!(msg, "amount is required");
+        assert!(e.to_string().contains("Field [amount] is required"))
     } else {
         panic!("Expected error");
     }
@@ -90,19 +93,18 @@ async fn b2b_fails_if_no_party_a_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .b2b("testapi496")
+        .b2b()
+        .initiator_name("testapi496")
         .party_b("600000")
         .amount(1000)
-        .result_url("https://testdomain.com/ok")
-        .timeout_url("https://testdomain.com/err")
+        .try_result_url("https://testdomain.com/ok")
+        .unwrap()
+        .try_queue_timeout_url("https://testdomain.com/err")
+        .unwrap()
         .account_ref("254708374149")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
-            panic!("Expected MpesaError::Message, but found {}", e);
-        };
-        assert_eq!(msg, "party_a is required");
+        assert!(e.to_string().contains("Field [party_a] is required"),)
     } else {
         panic!("Expected error");
     }
@@ -124,19 +126,18 @@ async fn b2b_fails_if_no_party_b_is_provided() {
         .mount(&server)
         .await;
     if let Err(e) = client
-        .b2b("testapi496")
+        .b2b()
+        .initiator_name("testapi496")
         .party_a("600496")
         .amount(1000)
-        .result_url("https://testdomain.com/ok")
-        .timeout_url("https://testdomain.com/err")
+        .try_result_url("https://testdomain.com/ok")
+        .unwrap()
+        .try_queue_timeout_url("https://testdomain.com/err")
+        .unwrap()
         .account_ref("254708374149")
-        .send()
-        .await
+        .build()
     {
-        let MpesaError::Message(msg) = e else {
-            panic!("Expected MpesaError::Message, but found {}", e);
-        };
-        assert_eq!(msg, "party_b is required");
+        assert!(e.to_string().contains("Field [party_b] is required"))
     } else {
         panic!("Expected error");
     }

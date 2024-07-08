@@ -31,9 +31,9 @@ mod transaction_status;
 #[cfg(feature = "account_balance")]
 pub use account_balance::{AccountBalanceBuilder, AccountBalanceResponse};
 #[cfg(feature = "b2b")]
-pub use b2b::{B2bBuilder, B2bResponse};
+pub use b2b::*;
 #[cfg(feature = "b2c")]
-pub use b2c::{B2cBuilder, B2cResponse};
+pub use b2c::*;
 #[cfg(feature = "bill_manager")]
 pub use bill_manager::*;
 #[cfg(feature = "c2b_register")]
@@ -43,14 +43,8 @@ pub use c2b_simulate::{C2bSimulateBuilder, C2bSimulateResponse};
 #[cfg(feature = "dynamic_qr")]
 pub use dynamic_qr::{DynamicQR, DynamicQRBuilder, DynamicQRRequest, DynamicQRResponse};
 #[cfg(feature = "express")]
-pub use express::{
-    MpesaExpress, MpesaExpressBuilder, MpesaExpressQuery, MpesaExpressQueryBuilder,
-    MpesaExpressQueryResponse, MpesaExpressRequest, MpesaExpressResponse,
-};
+pub use express::*;
 #[cfg(feature = "transaction_reversal")]
-pub use transaction_reversal::{
-    TransactionReversal, TransactionReversalBuilder, TransactionReversalRequest,
-    TransactionReversalResponse,
-};
+pub use transaction_reversal::*;
 #[cfg(feature = "transaction_status")]
-pub use transaction_status::{TransactionStatusBuilder, TransactionStatusResponse};
+pub use transaction_status::*;

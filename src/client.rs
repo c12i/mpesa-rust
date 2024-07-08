@@ -13,9 +13,9 @@ use serde::Serialize;
 use crate::auth::AUTH;
 use crate::environment::ApiEnvironment;
 use crate::services::{
-    AccountBalanceBuilder, B2bBuilder, B2cBuilder, BulkInvoiceBuilder, C2bRegisterBuilder,
-    C2bSimulateBuilder, CancelInvoiceBuilder, DynamicQR, DynamicQRBuilder, MpesaExpress,
-    MpesaExpressBuilder, MpesaExpressQuery, MpesaExpressQueryBuilder, OnboardBuilder,
+    AccountBalanceBuilder, B2b, B2bBuilder, B2c, B2cBuilder, BulkInvoiceBuilder,
+    C2bRegisterBuilder, C2bSimulateBuilder, CancelInvoiceBuilder, DynamicQR, DynamicQRBuilder,
+    MpesaExpress, MpesaExpressBuilder, MpesaExpressQuery, MpesaExpressQueryBuilder, OnboardBuilder,
     OnboardModifyBuilder, ReconciliationBuilder, SingleInvoiceBuilder, TransactionReversal,
     TransactionReversalBuilder, TransactionStatusBuilder,
 };
@@ -172,14 +172,14 @@ impl Mpesa {
 
     #[cfg(feature = "b2c")]
     #[doc = include_str!("../docs/client/b2c.md")]
-    pub fn b2c<'a>(&'a self, initiator_name: &'a str) -> B2cBuilder {
-        B2cBuilder::new(self, initiator_name)
+    pub fn b2c(&self) -> B2cBuilder {
+        B2c::builder(self)
     }
 
     #[cfg(feature = "b2b")]
     #[doc = include_str!("../docs/client/b2b.md")]
-    pub fn b2b<'a>(&'a self, initiator_name: &'a str) -> B2bBuilder {
-        B2bBuilder::new(self, initiator_name)
+    pub fn b2b(&self) -> B2bBuilder {
+        B2b::builder(self)
     }
 
     #[cfg(feature = "bill_manager")]
