@@ -35,7 +35,7 @@ transaction_status = ["dep:openssl"]
 
 
 [dependencies]
-cached = { version = "0.49", features = ["wasm", "async", "proc_macro"] }
+cached = { version = "0.52", features = ["async", "proc_macro"] }
 chrono = { version = "0.4", optional = true, default-features = false, features = [
 	"clock",
 	"serde",

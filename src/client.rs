@@ -2,8 +2,29 @@ use std::cell::RefCell;
 use std::time::Duration;
 
 use cached::Cached;
+#[cfg(any(
+    feature = "account_balance",
+    feature = "b2b",
+    feature = "b2c",
+    feature = "transaction_reversal",
+    feature = "transaction_status"
+))]
 use openssl::base64;
+#[cfg(any(
+    feature = "account_balance",
+    feature = "b2b",
+    feature = "b2c",
+    feature = "transaction_reversal",
+    feature = "transaction_status"
+))]
 use openssl::rsa::Padding;
+#[cfg(any(
+    feature = "account_balance",
+    feature = "b2b",
+    feature = "b2c",
+    feature = "transaction_reversal",
+    feature = "transaction_status"
+))]
 use openssl::x509::X509;
 use reqwest::Client as HttpClient;
 use secrecy::{ExposeSecret, Secret};
@@ -12,13 +33,31 @@ use serde::Serialize;
 
 use crate::auth::AUTH;
 use crate::environment::ApiEnvironment;
+#[cfg(feature = "account_balance")]
+use crate::services::AccountBalanceBuilder;
+#[cfg(feature = "b2b")]
+use crate::services::B2bBuilder;
+#[cfg(feature = "b2c")]
+use crate::services::B2cBuilder;
+#[cfg(feature = "c2b_register")]
+use crate::services::C2bRegisterBuilder;
+#[cfg(feature = "c2b_simulate")]
+use crate::services::C2bSimulateBuilder;
+#[cfg(feature = "transaction_status")]
+use crate::services::TransactionStatusBuilder;
+#[cfg(feature = "bill_manager")]
 use crate::services::{
-    AccountBalanceBuilder, B2bBuilder, B2cBuilder, BulkInvoiceBuilder, C2bRegisterBuilder,
-    C2bSimulateBuilder, CancelInvoiceBuilder, DynamicQR, DynamicQRBuilder, MpesaExpress,
-    MpesaExpressBuilder, MpesaExpressQuery, MpesaExpressQueryBuilder, OnboardBuilder,
-    OnboardModifyBuilder, ReconciliationBuilder, SingleInvoiceBuilder, TransactionReversal,
-    TransactionReversalBuilder, TransactionStatusBuilder,
+    BulkInvoiceBuilder, CancelInvoiceBuilder, OnboardBuilder, OnboardModifyBuilder,
+    ReconciliationBuilder, SingleInvoiceBuilder,
 };
+#[cfg(feature = "dynamic_qr")]
+use crate::services::{DynamicQR, DynamicQRBuilder};
+#[cfg(feature = "express")]
+use crate::services::{
+    MpesaExpress, MpesaExpressBuilder, MpesaExpressQuery, MpesaExpressQueryBuilder,
+};
+#[cfg(feature = "transaction_reversal")]
+use crate::services::{TransactionReversal, TransactionReversalBuilder};
 use crate::{auth, MpesaError, MpesaResult, ResponseError};
 
 /// Source: [test credentials](https://developer.safaricom.co.ke/test_credentials)
@@ -273,6 +312,13 @@ impl Mpesa {
     ///
     /// # Errors
     /// Returns `EncryptionError` variant of `MpesaError`
+    #[cfg(any(
+        feature = "account_balance",
+        feature = "b2b",
+        feature = "b2c",
+        feature = "transaction_reversal",
+        feature = "transaction_status"
+    ))]
     pub(crate) fn gen_security_credentials(&self) -> MpesaResult<String> {
         let pem = self.certificate.as_bytes();
         let cert = X509::from_pem(pem)?;

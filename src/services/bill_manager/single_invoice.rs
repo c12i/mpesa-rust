@@ -3,8 +3,8 @@
 use chrono::prelude::{DateTime, Utc};
 use serde::Deserialize;
 
+use super::{Invoice, InvoiceItem};
 use crate::client::Mpesa;
-use crate::constants::{Invoice, InvoiceItem};
 use crate::errors::{MpesaError, MpesaResult};
 
 const BILL_MANAGER_SINGLE_INVOICE_API_URL: &str = "v1/billmanager-invoice/single-invoicing";

@@ -1,5 +1,6 @@
 use chrono::prelude::Utc;
-use mpesa::{Invoice, InvoiceItem, MpesaError};
+use mpesa::services::{Invoice, InvoiceItem};
+use mpesa::MpesaError;
 use serde_json::json;
 use wiremock::matchers::{method, path};
 use wiremock::{Mock, ResponseTemplate};

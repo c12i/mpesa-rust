@@ -15,6 +15,13 @@ pub enum MpesaError {
     ParseError(#[from] serde_json::Error),
     #[error("An error has occurred while retrieving an environmental variable")]
     EnvironmentalVariableError(#[from] VarError),
+    #[cfg(any(
+        feature = "account_balance",
+        feature = "b2b",
+        feature = "b2c",
+        feature = "transaction_reversal",
+        feature = "transaction_status"
+    ))]
     #[error("An error has occurred while generating security credentials")]
     EncryptionError(#[from] openssl::error::ErrorStack),
     #[error("{0}")]

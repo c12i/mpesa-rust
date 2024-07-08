@@ -17,15 +17,27 @@
 //! 9. [Transaction Status](https://developer.safaricom.co.ke/APIs/TransactionStatus)
 //! 10. [Dynamic QR](https://developer.safaricom.co.ke/APIs/DynamicQRCode)
 
+//! 11. [Express](https://developer.safaricom.co.ke/APIs/ExpressCheckout)
+
+#[cfg(feature = "account_balance")]
 mod account_balance;
+#[cfg(feature = "b2b")]
 mod b2b;
+#[cfg(feature = "b2c")]
 mod b2c;
+#[cfg(feature = "bill_manager")]
 mod bill_manager;
+#[cfg(feature = "c2b_register")]
 mod c2b_register;
+#[cfg(feature = "c2b_simulate")]
 mod c2b_simulate;
+#[cfg(feature = "dynamic_qr")]
 mod dynamic_qr;
+#[cfg(feature = "express")]
 mod express;
+#[cfg(feature = "transaction_reversal")]
 mod transaction_reversal;
+#[cfg(feature = "transaction_status")]
 mod transaction_status;
 
 #[cfg(feature = "account_balance")]
@@ -53,4 +65,6 @@ pub use transaction_reversal::{
     TransactionReversalResponse,
 };
 #[cfg(feature = "transaction_status")]
-pub use transaction_status::{TransactionStatusBuilder, TransactionStatusResponse};
+pub use transaction_status::{
+    TransactionStatusBuilder, TransactionStatusPayload, TransactionStatusResponse,
+};
