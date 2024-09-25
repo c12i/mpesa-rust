@@ -1,4 +1,5 @@
-use std::cell::RefCell;
+use std::borrow::BorrowMut;
+use std::sync::{Arc, RwLock};
 use std::time::Duration;
 
 use cached::Cached;
@@ -31,7 +32,7 @@ const CARGO_PACKAGE_VERSION: &str = env!("CARGO_PKG_VERSION");
 pub struct Mpesa {
     consumer_key: String,
     consumer_secret: Secret<String>,
-    initiator_password: RefCell<Option<Secret<String>>>,
+    initiator_password: Arc<RwLock<Option<Secret<String>>>>,
     pub(crate) base_url: String,
     certificate: String,
     pub(crate) http_client: HttpClient,
@@ -77,7 +78,7 @@ impl Mpesa {
         Self {
             consumer_key: consumer_key.into(),
             consumer_secret: Secret::new(consumer_secret.into()),
-            initiator_password: RefCell::new(None),
+            initiator_password: Arc::new(RwLock::new(None)),
             base_url,
             certificate,
             http_client,
@@ -87,8 +88,9 @@ impl Mpesa {
     /// Gets the initiator password
     /// If `None`, the default password is `"Safcom496!"`
     pub(crate) fn initiator_password(&self) -> String {
-        self.initiator_password
-            .borrow()
+        let mut pass = self.initiator_password.read().unwrap();
+
+        pass.borrow_mut()
             .as_ref()
             .map(|password| password.expose_secret().into())
             .unwrap_or(DEFAULT_INITIATOR_PASSWORD.to_owned())
@@ -132,8 +134,8 @@ impl Mpesa {
     ///     assert!(client.is_connected().await);
     /// }
     /// ```
-    pub fn set_initiator_password<S: Into<String>>(&self, initiator_password: S) {
-        *self.initiator_password.borrow_mut() = Some(Secret::new(initiator_password.into()));
+    pub fn set_initiator_password<S: Into<String>>(&mut self, initiator_password: S) {
+        *self.initiator_password.write().unwrap() = Some(Secret::new(initiator_password.into()));
     }
 
     /// Checks if the client can be authenticated
@@ -332,7 +334,7 @@ mod tests {
 
     #[test]
     fn test_setting_initator_password() {
-        let client = Mpesa::new("consumer_key", "consumer_secret", Sandbox);
+        let mut client = Mpesa::new("consumer_key", "consumer_secret", Sandbox);
         assert_eq!(client.initiator_password(), DEFAULT_INITIATOR_PASSWORD);
         client.set_initiator_password("foo_bar");
         assert_eq!(client.initiator_password(), "foo_bar".to_string());

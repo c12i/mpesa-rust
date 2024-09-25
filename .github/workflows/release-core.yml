@@ -23,24 +23,24 @@ jobs:
         uses: MarcoIeni/release-plz-action@v0.5
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN }}
-          CARGO_REGISTRY_TOKEN: ${{ CARGO_REGISTRY_TOKEN }}
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
 
   sync-cargo-docs:
     name: Sync cargo docs to gh-pages
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-    - uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
-    - name: Sync Docs
-      run: |
-        cargo doc
-        pip install ghp-import
-        echo '<meta http-equiv=refresh content=0;url=mpesa/index.html>' > target/doc/index.html
-        ghp-import -n target/doc
-        git push -qf https://github.com/collinsmuriuki/mpesa-rust.git gh-pages
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      - name: Sync Docs
+        run: |
+          cargo doc
+          pip install ghp-import
+          echo '<meta http-equiv=refresh content=0;url=mpesa/index.html>' > target/doc/index.html
+          ghp-import -n target/doc
+          git push -qf https://github.com/collinsmuriuki/mpesa-rust.git gh-pages
